@@ -50,6 +50,9 @@ class Ui_MainWindow(object):
         self.threeBtn = QtWidgets.QWidget(self.widget_2)
         self.threeBtn.setGeometry(QtCore.QRect(180, 60, 531, 61))
         self.threeBtn.setContentsMargins(10, 0, 50, 0)
+        effect = QtWidgets.QGraphicsDropShadowEffect()
+        effect.setBlurRadius(8)
+        self.threeBtn.setGraphicsEffect(effect)
         self.threeBtn.setStyleSheet("#threeBtn{\n"
                                     "background-color: rgb(255, 255, 255);\n"
                                     "border-radius:28px;\n"
@@ -312,7 +315,7 @@ class Ui_MainWindow(object):
         self.widget_3 = QtWidgets.QWidget(self.widget)
         self.widget_3.setObjectName("widget_3")
         self.widget_6 = QtWidgets.QWidget(self.widget_3)
-        self.widget_6.setGeometry(QtCore.QRect(210, 0, 481, 151))
+        self.widget_6.setGeometry(QtCore.QRect(210, 0, 481,100))
         self.widget_6.setStyleSheet("background-image: url(images/Crackterize.png);\n"
                                     "background-repeat: no-repeat; \n"
                                     "background-position: center;")
@@ -322,23 +325,48 @@ class Ui_MainWindow(object):
         self.widget_4 = QtWidgets.QWidget(self.widget)
         self.widget_4.setObjectName("widget_4")
         self.widgetUpload = QtWidgets.QWidget(self.widget_4)
-        self.widgetUpload.setGeometry(QtCore.QRect(270, 0, 341, 131))
+        self.widgetUpload.setGeometry(QtCore.QRect(270, 0, 341, 120))
+        effect = QtWidgets.QGraphicsDropShadowEffect()
+        effect.setBlurRadius(8)
+        self.widgetUpload.setGraphicsEffect(effect)
         self.widgetUpload.setStyleSheet("#widgetUpload{\n"
                                         "background-color: rgb(255, 255, 255);\n"
                                         "border-radius:28px;\n"
+                                        "box-shadow: 55px 55px 150px black;\n"
                                         "}\n"
                                         "")
         self.widgetUpload.setObjectName("widgetUpload")
-        self.uploadImg = QtWidgets.QPushButton(self.widgetUpload)
-        self.uploadImg.setGeometry(QtCore.QRect(60, 40, 201, 41))
+
+
+        # Upload Button
+        self.uploadImg = QtWidgets.QPushButton("Upload Image",self.widgetUpload)
+        # effect = QtWidgets.QGraphicsDropShadowEffect()
+        # effect.setBlurRadius(8)
+        # self.uploadImg.setGraphicsEffect(effect)
+        self.uploadImg.setGeometry(QtCore.QRect(70, 30, 201, 41))
         self.uploadImg.setStyleSheet("#uploadImg{\n"
+                                     "font-weight:bold;"
+                                     "font-size:12px;"
+                                     "color:white;"
                                      "background-color: rgb(144, 115, 87);\n"
-                                     "border-radius:28px;\n"
+                                     "border-top-left-radius :20px;"
+                                     "border-top-right-radius : 20px; "
+                                     "border-bottom-left-radius : 20px; "
+                                     "border-bottom-right-radius : 20px;"
                                      "}\n"
-                                     "")
+                                     "#uploadImg:hover{\n"
+                                     "color:rgb(144, 115, 87);"
+                                     "border :3px solid rgb(144, 115, 87);"
+                                     "background-color: rgb(255, 255, 255);\n"
+                                     "}\n")
         self.uploadImg.setObjectName("uploadImg")
-        self.textEdit = QtWidgets.QTextEdit(self.widgetUpload)
-        self.textEdit.setGeometry(QtCore.QRect(80, 80, 161, 21))
+
+        self.textEdit = QtWidgets.QLabel("or create a new project",self.widgetUpload)
+        self.textEdit.setGeometry(QtCore.QRect(110, 80, 161, 21))
+        self.textEdit.setStyleSheet("#textEdit{\n"
+                                     "font-weight:bold;"
+                                     "color:#363131;"
+                                     "}\n")
         self.textEdit.setObjectName("textEdit")
         self.verticalLayout.addWidget(self.widget_4)
 
@@ -353,8 +381,7 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
-        self.uploadImg.setText(_translate("MainWindow", "Upload Image"))
-        self.textEdit.setHtml(_translate("MainWindow","Upload Image"))
+
 
 if __name__ == "__main__":
     import sys
