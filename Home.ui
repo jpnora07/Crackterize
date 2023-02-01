@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="windowModality">
+   <enum>Qt::NonModal</enum>
+  </property>
+  <property name="enabled">
+   <bool>true</bool>
+  </property>
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>930</width>
+    <height>590</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>100</width>
+    <height>200</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>1452</width>
+    <height>1024</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">#MainWindow{
+background-color: qlineargradient(spread:pad, x1:0.045, y1:0.261, x2:0.988636, y2:0.955, stop:0 rgba(235, 209, 196, 255), stop:1 rgba(255, 255, 255, 255));
+width: fit-content;
+heigth: fit-content;
+block-size: fit-content;
+}
+</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <property name="styleSheet">
+    <string notr="true">#centralwidget{
+background-color: qlineargradient(spread:pad, x1:0.045, y1:0.261, x2:0.988636, y2:0.955, stop:0 rgba(235, 209, 196, 255), stop:1 rgba(255, 255, 255, 255));
+width: fit-content;
+heigth: fit-content;
+block-size: fit-content;
+}</string>
+   </property>
+   <widget class="QWidget" name="widget" native="true">
+    <property name="geometry">
+     <rect>
+      <x>-1</x>
+      <y>-1</y>
+      <width>931</width>
+      <height>601</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">width: fit-content;
+block-size: fit-content;</string>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <widget class="QWidget" name="widget_2" native="true">
+       <widget class="QWidget" name="threeBtn" native="true">
+        <property name="geometry">
+         <rect>
+          <x>180</x>
+          <y>60</y>
+          <width>531</width>
+          <height>61</height>
+         </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">#threeBtn{
+background-color: rgb(255, 255, 255);
+border-radius:28px;
+}
+</string>
+        </property>
+        <layout class="QHBoxLayout" name="horizontalLayout">
+         <item>
+          <widget class="QComboBox" name="myProjects">
+           <property name="minimumSize">
+            <size>
+             <width>25</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="toolTip">
+            <string/>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">#myProjects{
+border-radius:4px;
+font: 600 12pt &quot;Segoe UI&quot;;
+color:#4A3B28;
+}
+#myProjects::drop-down{
+image:url(:/images/arrowdown.png);
+width: 20px;
+height: 20px;
+}
+#myProjects QAbstractItemView {
+background-color: rgba(255, 255, 255, 0.75);
+border-bottom-left-radius: 15px;
+border-bottom-right-radius: 15px;
+padding: 10px;
+outline: none;
+}
+#myProjects QAbstractItemView::item {
+background-color: #FFFFFF;
+color: #4A3B28;
+text-align: center;
+    }
+#myProjects.comboBoxClass QLineEdit {
+    text-align: center;
+}
+QListView{
+    border:                 none;
+    color:                      rgb(87, 96, 134);
+    background-color:   rgb(255, 255, 255);
+    font-weight:            bold;
+    selection-background-color: rgb(47, 175, 178);
+    show-decoration-selected: 1;
+    margin-left:                -10px;
+    padding-left    :           15px;
+}
+
+QListView::item:hover{
+
+    background-color:   rgb(47, 175, 178);
+    border:                 none;
+}</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QComboBox" name="history">
+           <property name="styleSheet">
+            <string notr="true">#history{
+border-radius:4px;
+font: 600 12pt &quot;Segoe UI&quot;;
+color:#4A3B28;
+background: transparent;
+}
+#history::drop-down{
+image:url(:/images/arrowdown.png);
+width: 20px;
+height: 20px;
+}
+#history QAbstractItemView {
+background-color: rgba(255, 255, 255, 0.75);
+border-bottom-left-radius: 15px;
+border-bottom-right-radius: 15px;
+padding: 10px;
+outline: none;
+}
+#history QAbstractItemView::item {
+background-color: #FFFFFF;
+color: #4A3B28;
+text-align: center;
+    }
+#history.comboBoxClass QLineEdit {
+    text-align: center;
+}</string>
+           </property>
+           <item>
+            <property name="text">
+             <string>        History</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item>
+          <widget class="QComboBox" name="howtoUse">
+           <property name="styleSheet">
+            <string notr="true">#howtoUse{
+border-radius:4px;
+font: 600 12pt &quot;Segoe UI&quot;;
+color:#4A3B28;
+background: transparent;
+}
+#howtoUse::drop-down{
+image:url(:/images/arrowdown.png);
+width: 20px;
+height: 20px;
+}
+#howtoUse QAbstractItemView {
+background-color: rgba(255, 255, 255, 0.75);
+border-bottom-left-radius: 15px;
+border-bottom-right-radius: 15px;
+padding: 10px;
+outline: none;
+}
+#howtoUse QAbstractItemView::item {
+background-color: #FFFFFF;
+color: #4A3B28;
+text-align: center;
+    }
+#howtoUse.comboBoxClass QLineEdit {
+    text-align: center;
+}</string>
+           </property>
+           <item>
+            <property name="text">
+             <string>  How to Use</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </widget>
+     </item>
+     <item>
+      <widget class="QWidget" name="widget_3" native="true">
+       <widget class="QWidget" name="widget_6" native="true">
+        <property name="geometry">
+         <rect>
+          <x>170</x>
+          <y>20</y>
+          <width>551</width>
+          <height>151</height>
+         </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-image:url(:/images/Crackterize.png);
+background-repeat: no-repeat; 
+background-position: center;</string>
+        </property>
+       </widget>
+      </widget>
+     </item>
+     <item>
+      <widget class="QWidget" name="widget_4" native="true">
+       <widget class="QWidget" name="widgetUpload" native="true">
+        <property name="geometry">
+         <rect>
+          <x>270</x>
+          <y>0</y>
+          <width>341</width>
+          <height>131</height>
+         </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">#widgetUpload{
+background-color: rgb(255, 255, 255);
+border-radius:28px;
+}
+</string>
+        </property>
+        <widget class="QPushButton" name="uploadImg">
+         <property name="geometry">
+          <rect>
+           <x>60</x>
+           <y>40</y>
+           <width>201</width>
+           <height>41</height>
+          </rect>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">#uploadImg{
+background-color: rgb(144, 115, 87);
+border-radius:28px;
+}
+</string>
+         </property>
+         <property name="text">
+          <string>PushButton</string>
+         </property>
+        </widget>
+        <widget class="QTextEdit" name="textEdit">
+         <property name="geometry">
+          <rect>
+           <x>80</x>
+           <y>80</y>
+           <width>161</width>
+           <height>21</height>
+          </rect>
+         </property>
+         <property name="html">
+          <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+hr { height: 1px; border-width: 0; }
+li.unchecked::marker { content: &quot;\2610&quot;; }
+li.checked::marker { content: &quot;\2612&quot;; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Segoe UI'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;or create a new project&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+        </widget>
+       </widget>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources>
+  <include location="images/images.qrc"/>
+ </resources>
+ <connections/>
+</ui>

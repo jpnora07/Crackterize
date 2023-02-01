@@ -1,0 +1,9 @@
+<RCC>
+  <qresource prefix="images">
+    <file>arrowdown.png</file>
+    <file>Crackterize.png</file>
+    <file>arrowup.png</file>
+    <file>logo.png</file>
+    <file>bg.jpg</file>
+  </qresource>
+</RCC>
