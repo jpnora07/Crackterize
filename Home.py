@@ -4,7 +4,7 @@ from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QListView, QComboBox, QDialog, QVBoxLayout, QApplication
 
 
-#new
+
 class Ui_MainWindow(object):
 
     def closeIt(self):
@@ -391,7 +391,6 @@ class Ui_MainWindow(object):
                                     )
         #button
         self.textEdit.clicked.connect(self.show_floating_dialog)
-
         self.textEdit.setObjectName("textEdit")
         self.verticalLayout.addWidget(self.widget_4)
         MainWindow.setCentralWidget(self.centralwidget)
@@ -486,6 +485,7 @@ class Ui_MainWindow(object):
         self.back_btn.clicked.connect(dialog.close)
         self.horizontalLayout.addWidget(self.back_btn)
         self.save_btn = QtWidgets.QPushButton(self.widget)
+        self.save_btn.clicked.connect(dialog.close)
         self.save_btn.setStyleSheet("#save_btn{\n"
                                     "height:40px;\n"
                                     "font-weight:bold;\n"
@@ -505,12 +505,59 @@ class Ui_MainWindow(object):
                                     "background-color: rgb(255, 255, 255);\n"
                                     "}")
         self.save_btn.setText("Save")
+        #button
+        self.save_btn.clicked.connect(self.show_floating_dialog_save)
         self.save_btn.setObjectName("save_btn")
         self.horizontalLayout.addWidget(self.save_btn)
         self.verticalLayout_4.addWidget(self.widget)
         self.verticalLayout.addWidget(self.widget_4)
         dialog.exec()
+    def show_floating_dialog_save(self):
+        # Create dialog box
+        Dialog = QtWidgets.QDialog()
+        Dialog.setWindowTitle("Dialog")
+        Dialog.setWindowFlags(Qt.FramelessWindowHint)
+        Dialog.resize(350, 300)
+        Dialog.setStyleSheet("#Dialog{\n"
+                                 "background-color: qlineargradient(spread:pad, x1:0.045, y1:0.261, x2:0.988636, y2:0.955, stop:0 rgba(235, 209, 196, 255), stop:1 rgba(255, 255, 255, 255));\n"
+                                 "width: fit-content;\n"
+                                 "heigth: fit-content;\n"
+                                 "block-size: fit-content;\n"
+                                 "}\n"
+                                 "")
+        self.widget = QtWidgets.QWidget(Dialog)
+        self.widget.setGeometry(QtCore.QRect(-1, -1, 401, 301))
+        self.widget.setObjectName("widget")
+        self.verticalLayout = QtWidgets.QVBoxLayout(self.widget)
+        self.verticalLayout.setContentsMargins(0, 0, 0, 0)
+        self.verticalLayout.setObjectName("verticalLayout")
+        self.widget_2 = QtWidgets.QWidget(self.widget)
+        self.widget_2.setObjectName("widget_2")
+        self.label = QtWidgets.QLabel(self.widget_2)
+        self.label.setGeometry(QtCore.QRect(70, 90, 231, 21))
 
+        self.label.setText("New Project Saved!")
+        font = QtGui.QFont()
+        font.setFamily("Arial")
+        font.setPointSize(16)
+        font.setBold(True)
+        font.setItalic(False)
+        self.label.setFont(font)
+        self.label.setStyleSheet(
+            "QLabel { font: 900 \"Segoe UI\"; color: #4A3B28; font-family: Arial; Text-align: Center; font-size: 16pt;}")
+        self.label.setObjectName("label")
+        self.widget_3 = QtWidgets.QWidget(self.widget_2)
+        self.widget_3.setGeometry(QtCore.QRect(0, 130, 383, 138))
+        self.widget_3.setObjectName("widget_3")
+        self.widget_4 = QtWidgets.QWidget(self.widget_3)
+        self.widget_4.setGeometry(QtCore.QRect(100, 10, 151, 101))
+        self.widget_4.setStyleSheet("#widget_4{\n"
+                                    "background-image: url(images/ok 3.png);\n"
+                                    "background-repeat: no-repeat; \n"
+                                    "background-position: center;}")
+        self.widget_4.setObjectName("widget_4")
+        self.verticalLayout.addWidget(self.widget_2)
+        Dialog.exec()
 
 #QApplication.instance().quit this is clossing application
 if __name__ == "__main__":
