@@ -4,7 +4,7 @@ from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QListView, QComboBox, QDialog, QVBoxLayout, QApplication
 
 
-
+#new
 class Ui_MainWindow(object):
 
     def closeIt(self):
