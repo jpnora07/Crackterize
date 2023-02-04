@@ -389,7 +389,9 @@ class Ui_MainWindow(object):
                                     "#textEdit:hover{\n"
                                     "background-color:rgb(255, 255, 255);"
                                     )
+        #button
         self.textEdit.clicked.connect(self.show_floating_dialog)
+
         self.textEdit.setObjectName("textEdit")
         self.verticalLayout.addWidget(self.widget_4)
         MainWindow.setCentralWidget(self.centralwidget)
