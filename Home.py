@@ -1,7 +1,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QIcon
-from PyQt5.QtWidgets import QListView, QComboBox, QDialog, QVBoxLayout, QApplication
+from PyQt5.QtGui import QIcon, QPixmap
+from PyQt5.QtWidgets import QListView, QComboBox, QDialog, QVBoxLayout, QApplication, QFileDialog
 
 
 class Ui_MainWindow(object):
@@ -355,6 +355,8 @@ class Ui_MainWindow(object):
 
         # Upload Button
         self.uploadImg = QtWidgets.QPushButton("Upload Image", self.widgetUpload)
+        self.uploadImg.clicked.connect(self.upload_image)
+
         # effect = QtWidgets.QGraphicsDropShadowEffect()
         # effect.setBlurRadius(8)
         # self.uploadImg.setGraphicsEffect(effect)
@@ -405,6 +407,8 @@ class Ui_MainWindow(object):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
 
+
+#Dialog Box for creating new project
     def show_floating_dialog(self):
         # Create dialog box
         dialog = QtWidgets.QDialog()
@@ -513,6 +517,7 @@ class Ui_MainWindow(object):
         self.verticalLayout.addWidget(self.widget_4)
         dialog.exec()
 
+# Dialog Box for successfully saved project
     def show_floating_dialog_save(self):
         # Create dialog box
         Dialog = QtWidgets.QDialog()
@@ -561,7 +566,14 @@ class Ui_MainWindow(object):
         self.verticalLayout.addWidget(self.widget_2)
         Dialog.exec()
 
-
+#new image upload function for upload button
+    def upload_image(self):
+        options = QFileDialog.Options()
+        options |= QFileDialog.ReadOnly
+        file_name, _ = QFileDialog.getOpenFileName(None, "QFileDialog.getOpenFileName()", "", "Images (*.png *.xpm *.jpg *.bmp *.gif *.jpeg)", options=options)
+        if file_name:
+            pixmap = QPixmap(file_name)
+            self.image_label.setPixmap(pixmap)
 # QApplication.instance().quit this is clossing application
 if __name__ == "__main__":
     import sys

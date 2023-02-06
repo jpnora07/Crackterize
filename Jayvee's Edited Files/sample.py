@@ -1,17 +1,34 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow, QListWidget, QListWidgetItem
+from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel, QFileDialog
+from PyQt5.QtGui import QPixmap
 
-app = QApplication(sys.argv)
+class UploadImageWindow(QMainWindow):
+    def __init__(self):
+        super().__init__()
 
-window = QMainWindow()
-window.resize(200, 200)
+        # initialize the UI elements
+        self.button = QPushButton("Upload Image", self)
+        self.button.clicked.connect(self.upload_image)
+        self.image_label = QLabel(self)
 
-notification_list = QListWidget(window)
+        # set the layout
+        self.button.move(100, 50)
+        self.image_label.move(250, 250)
 
-for i in range(30):
-    item = QListWidgetItem("Notification " + str(i + 1))
-    notification_list.addItem(item)
+        # set the window properties
+        self.setGeometry(500, 500, 500, 500)
+        self.setWindowTitle("Upload Image")
+        self.show()
 
-notification_list.show()
+    def upload_image(self):
+        options = QFileDialog.Options()
+        options |= QFileDialog.ReadOnly
+        file_name, _ = QFileDialog.getOpenFileName(self, "QFileDialog.getOpenFileName()", "", "Images (*.png *.xpm *.jpg *.bmp *.gif *.jpeg)", options=options)
+        if file_name:
+            pixmap = QPixmap(file_name)
+            self.image_label.setPixmap(pixmap)
 
-sys.exit(app.exec_())
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    window = UploadImageWindow()
+    sys.exit(app.exec_())
