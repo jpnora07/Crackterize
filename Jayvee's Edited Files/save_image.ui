@@ -50,7 +50,7 @@ border-top-right-radius: 20px;
 border-bottom-left-radius: 20px;
 border-bottom-right-radius: 20px;
 font-family: Inter;
-font-size: 12px;
+font-size: 15px;
 text-align: center;
 }
 #existingproject:hover{
@@ -93,7 +93,7 @@ border-top-right-radius: 20px;
 border-bottom-left-radius: 20px;
 border-bottom-right-radius: 20px;
 font-family: Inter;
-font-size: 12px;
+font-size: 15px;
 text-align: center;
 }
 #createnew:hover{
@@ -136,7 +136,7 @@ border-top-right-radius: 20px;
 border-bottom-left-radius: 20px;
 border-bottom-right-radius: 20px;
 font-family: Inter;
-font-size: 12px;
+font-size: 15px;
 text-align: center;
 }
 #back:hover{
