@@ -554,7 +554,7 @@ class Ui_MainWindow(object):
         self.widget_4 = QtWidgets.QWidget(self.widget_3)
         self.widget_4.setGeometry(QtCore.QRect(100, 10, 151, 101))
         self.widget_4.setStyleSheet("#widget_4{\n"
-                                    "background-image: url(images/ok 3.png);\n"
+                                    "background-image: url(images/ok3.png);\n"
                                     "background-repeat: no-repeat; \n"
                                     "background-position: center;}")
         self.widget_4.setObjectName("widget_4")
