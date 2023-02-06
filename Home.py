@@ -4,7 +4,6 @@ from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QListView, QComboBox, QDialog, QVBoxLayout, QApplication
 
 
-
 class Ui_MainWindow(object):
 
     def closeIt(self):
@@ -379,17 +378,18 @@ class Ui_MainWindow(object):
         self.uploadImg.setObjectName("uploadImg")
 
         self.textEdit = QtWidgets.QPushButton("or create a new project", self.widgetUpload)
-        self.textEdit.setGeometry(QtCore.QRect(100, 80, 141, 21))
+
+        self.textEdit.setGeometry(QtCore.QRect(100, 80, 161, 21))
         self.textEdit.setStyleSheet("#textEdit{\n"
                                     "font-weight:bold;"
                                     "color:#363131;"
-                                     "background-color: rgb(255, 255, 255);\n"
+                                    "background-color: rgb(255, 255, 255);\n"
                                     "border :3px solid rgb(255, 255, 255);"
                                     "}\n"
                                     "#textEdit:hover{\n"
                                     "background-color:rgb(255, 255, 255);"
                                     )
-        #button
+        # button
         self.textEdit.clicked.connect(self.show_floating_dialog)
         self.textEdit.setObjectName("textEdit")
         self.verticalLayout.addWidget(self.widget_4)
@@ -409,14 +409,14 @@ class Ui_MainWindow(object):
         # Create dialog box
         dialog = QtWidgets.QDialog()
         dialog.setWindowTitle("Dialog")
-        dialog.resize(431, 236)
+        dialog.resize(500, 300)
         dialog.setWindowFlags(Qt.FramelessWindowHint)
         dialog.setStyleSheet("#dialog{\n"
-                                      "background-color: #EFEEEE;\n"
-                                      "width: fit-content;\n"
-                                      "heigth: fit-content;\n"
-                                      "block-size: fit-content;\n"
-                                      "}")
+                             "background-color: #EFEEEE;\n"
+                             "width: fit-content;\n"
+                             "heigth: fit-content;\n"
+                             "block-size: fit-content;\n"
+                             "}")
         self.widget_1 = QtWidgets.QWidget(dialog)
         self.widget_1.setGeometry(QtCore.QRect(10, 30, 411, 191))
         self.widget_1.setStyleSheet("width: fit-content;\n"
@@ -505,13 +505,14 @@ class Ui_MainWindow(object):
                                     "background-color: rgb(255, 255, 255);\n"
                                     "}")
         self.save_btn.setText("Save")
-        #button
+        # button
         self.save_btn.clicked.connect(self.show_floating_dialog_save)
         self.save_btn.setObjectName("save_btn")
         self.horizontalLayout.addWidget(self.save_btn)
         self.verticalLayout_4.addWidget(self.widget)
         self.verticalLayout.addWidget(self.widget_4)
         dialog.exec()
+
     def show_floating_dialog_save(self):
         # Create dialog box
         Dialog = QtWidgets.QDialog()
@@ -519,12 +520,12 @@ class Ui_MainWindow(object):
         Dialog.setWindowFlags(Qt.FramelessWindowHint)
         Dialog.resize(350, 300)
         Dialog.setStyleSheet("#Dialog{\n"
-                                 "background-color: qlineargradient(spread:pad, x1:0.045, y1:0.261, x2:0.988636, y2:0.955, stop:0 rgba(235, 209, 196, 255), stop:1 rgba(255, 255, 255, 255));\n"
-                                 "width: fit-content;\n"
-                                 "heigth: fit-content;\n"
-                                 "block-size: fit-content;\n"
-                                 "}\n"
-                                 "")
+                             "background-color: qlineargradient(spread:pad, x1:0.045, y1:0.261, x2:0.988636, y2:0.955, stop:0 rgba(235, 209, 196, 255), stop:1 rgba(255, 255, 255, 255));\n"
+                             "width: fit-content;\n"
+                             "heigth: fit-content;\n"
+                             "block-size: fit-content;\n"
+                             "}\n"
+                             "")
         self.widget = QtWidgets.QWidget(Dialog)
         self.widget.setGeometry(QtCore.QRect(-1, -1, 401, 301))
         self.widget.setObjectName("widget")
@@ -537,6 +538,7 @@ class Ui_MainWindow(object):
         self.label.setGeometry(QtCore.QRect(70, 90, 231, 21))
 
         self.label.setText("New Project Saved!")
+
         font = QtGui.QFont()
         font.setFamily("Arial")
         font.setPointSize(16)
@@ -559,7 +561,8 @@ class Ui_MainWindow(object):
         self.verticalLayout.addWidget(self.widget_2)
         Dialog.exec()
 
-#QApplication.instance().quit this is clossing application
+
+# QApplication.instance().quit this is clossing application
 if __name__ == "__main__":
     import sys
 

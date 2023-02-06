@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>419</width>
-    <height>308</height>
+    <height>365</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,7 +17,7 @@
    <property name="geometry">
     <rect>
      <x>0</x>
-     <y>0</y>
+     <y>20</y>
      <width>421</width>
      <height>311</height>
     </rect>
@@ -31,22 +31,34 @@
       <height>71</height>
      </rect>
     </property>
-    <widget class="QPushButton" name="pushButton">
+    <widget class="QPushButton" name="existingproject">
      <property name="geometry">
       <rect>
-       <x>20</x>
+       <x>0</x>
        <y>20</y>
-       <width>171</width>
+       <width>211</width>
        <height>41</height>
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true">#widget_2{
+      <string notr="true">#existingproject{
+font-weight:bold;
+color: white;
 background-color: #6F4B27;
+border-top-left-radius: 20px;
+border-top-right-radius: 20px;
+border-bottom-left-radius: 20px;
+border-bottom-right-radius: 20px;
 font-family: Inter;
-font-size: 40px;
+font-size: 12px;
 text-align: center;
-}</string>
+}
+#existingproject:hover{
+color: rgb(144,115,87);
+border : 3px solid rgb(144,115,87);
+background-color: white;
+}
+</string>
      </property>
      <property name="text">
       <string>Save Existing Project</string>
@@ -62,14 +74,34 @@ text-align: center;
       <height>61</height>
      </rect>
     </property>
-    <widget class="QPushButton" name="pushButton_2">
+    <widget class="QPushButton" name="createnew">
      <property name="geometry">
       <rect>
-       <x>20</x>
+       <x>0</x>
        <y>10</y>
-       <width>171</width>
+       <width>211</width>
        <height>41</height>
       </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">#createnew{
+font-weight:bold;
+color: white;
+background-color: #2E74A9;
+border-top-left-radius: 20px;
+border-top-right-radius: 20px;
+border-bottom-left-radius: 20px;
+border-bottom-right-radius: 20px;
+font-family: Inter;
+font-size: 12px;
+text-align: center;
+}
+#createnew:hover{
+color: #2E74A9;
+border : 3px solid  #2E74A9;
+background-color: white;
+}
+</string>
      </property>
      <property name="text">
       <string>Create New</string>
@@ -85,14 +117,34 @@ text-align: center;
       <height>71</height>
      </rect>
     </property>
-    <widget class="QPushButton" name="pushButton_3">
+    <widget class="QPushButton" name="back">
      <property name="geometry">
       <rect>
-       <x>20</x>
+       <x>0</x>
        <y>10</y>
-       <width>171</width>
+       <width>211</width>
        <height>41</height>
       </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">#back{
+font-weight:bold;
+color: white;
+background-color: #6A6E72;
+border-top-left-radius: 20px;
+border-top-right-radius: 20px;
+border-bottom-left-radius: 20px;
+border-bottom-right-radius: 20px;
+font-family: Inter;
+font-size: 12px;
+text-align: center;
+}
+#back:hover{
+color: #6A6E72;
+border : 3px solid#6A6E72;
+background-color: white;
+}
+</string>
      </property>
      <property name="text">
       <string>Back</string>
