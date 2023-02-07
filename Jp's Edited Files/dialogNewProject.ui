@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>NewFolderDialog</class>
+ <widget class="QDialog" name="NewFolderDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>500</width>
+    <height>300</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>500</width>
+    <height>300</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>500</width>
+    <height>300</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Dialog</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">#NewFolderDialog{
+background-color: #EFEEEE;
+width: fit-content;
+heigth: fit-content;
+block-size: fit-content;
+}</string>
+  </property>
+  <layout class="QHBoxLayout" name="horizontalLayout_2">
+   <item>
+    <widget class="QWidget" name="widget_1" native="true">
+     <property name="styleSheet">
+      <string notr="true">width: fit-content;
+block-size: fit-content;</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <item>
+       <widget class="QWidget" name="widget_3" native="true">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>10</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_2">
+         <item>
+          <widget class="QWidget" name="widget_2" native="true">
+           <property name="layoutDirection">
+            <enum>Qt::RightToLeft</enum>
+           </property>
+           <property name="autoFillBackground">
+            <bool>false</bool>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_3">
+            <property name="topMargin">
+             <number>17</number>
+            </property>
+            <property name="bottomMargin">
+             <number>0</number>
+            </property>
+            <item>
+             <widget class="QTextEdit" name="ET_newproject">
+              <property name="maximumSize">
+               <size>
+                <width>16777215</width>
+                <height>57</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">#ET_newproject{
+text-allign:center;
+font-size:20px;
+padding:8px;
+background-color: rgb(255, 255, 255);
+border-top-left-radius :12px;
+border-top-right-radius : 12px; 
+border-bottom-left-radius : 12px; 
+border-bottom-right-radius : 12px;
+}</string>
+              </property>
+              <property name="tabChangesFocus">
+               <bool>false</bool>
+              </property>
+              <property name="html">
+               <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+hr { height: 1px; border-width: 0; }
+li.unchecked::marker { content: &quot;\2610&quot;; }
+li.checked::marker { content: &quot;\2612&quot;; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Segoe UI'; font-size:20px; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p align=&quot;center&quot; style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+              <property name="placeholderText">
+               <string>         Type name of your new project</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QWidget" name="widget_4" native="true">
+        <layout class="QVBoxLayout" name="verticalLayout_4">
+         <property name="topMargin">
+          <number>30</number>
+         </property>
+         <property name="bottomMargin">
+          <number>30</number>
+         </property>
+         <item>
+          <widget class="QWidget" name="widget" native="true">
+           <property name="styleSheet">
+            <string notr="true"/>
+           </property>
+           <layout class="QHBoxLayout" name="horizontalLayout">
+            <property name="spacing">
+             <number>30</number>
+            </property>
+            <property name="leftMargin">
+             <number>20</number>
+            </property>
+            <property name="rightMargin">
+             <number>20</number>
+            </property>
+            <item>
+             <widget class="QPushButton" name="back_btn">
+              <property name="styleSheet">
+               <string notr="true">#back_btn{
+height:40px;
+font-weight:bold;
+font-size:18px;
+color:white;
+background-color: #6A6E72;
+border-top-left-radius :20px;
+border-top-right-radius : 20px; 
+border-bottom-left-radius : 20px; 
+border-bottom-right-radius : 20px;
+}
+#back_btn:hover{
+color:#6A6E72;
+border :2px solid #6A6E72;
+background-color: rgb(255, 255, 255);
+}</string>
+              </property>
+              <property name="text">
+               <string>Back</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="save_btn">
+              <property name="styleSheet">
+               <string notr="true">#save_btn{
+height:40px;
+font-weight:bold;
+font-size:18px;
+color:white;
+background-color: rgb(144, 115, 87);
+border-top-left-radius :20px;
+border-top-right-radius : 20px; 
+border-bottom-left-radius : 20px; 
+border-bottom-right-radius : 20px;
+}
+#save_btn:hover{
+color:rgb(144, 115, 87);
+border :2px solid rgb(144, 115, 87);
+background-color: rgb(255, 255, 255);
+}</string>
+              </property>
+              <property name="text">
+               <string>Save</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

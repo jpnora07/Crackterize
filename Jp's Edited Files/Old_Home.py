@@ -1,10 +1,11 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QIcon, QPixmap, QPalette
+from PyQt5.QtGui import QIcon, QPixmap
 from PyQt5.QtWidgets import QListView, QComboBox, QDialog, QVBoxLayout, QApplication, QFileDialog
 
 
 class Ui_MainWindow(object):
+
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.setWindowModality(QtCore.Qt.NonModal)
@@ -19,6 +20,7 @@ class Ui_MainWindow(object):
                                  "block-size: fit-content;\n"
                                  "}\n"
                                  "")
+
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setStyleSheet("#centralwidget{\n"
                                          "background-color: qlineargradient(spread:pad, x1:0.045, y1:0.261, x2:0.988636, y2:0.955, stop:0 rgba(235, 209, 196, 255), stop:1 rgba(255, 255, 255, 255));\n"
@@ -27,28 +29,22 @@ class Ui_MainWindow(object):
                                          "block-size: fit-content;\n"
                                          "}")
         self.centralwidget.setObjectName("centralwidget")
-        self.horizontalLayout_2 = QtWidgets.QHBoxLayout(self.centralwidget)
-        self.horizontalLayout_2.setObjectName("horizontalLayout_2")
         self.widget = QtWidgets.QWidget(self.centralwidget)
+        self.widget.setGeometry(QtCore.QRect(-1, -1, 931, 601))
         self.widget.setStyleSheet("width: fit-content;\n"
                                   "block-size: fit-content;")
         self.widget.setObjectName("widget")
         self.verticalLayout = QtWidgets.QVBoxLayout(self.widget)
+        self.verticalLayout.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout.setObjectName("verticalLayout")
         self.widget_2 = QtWidgets.QWidget(self.widget)
         self.widget_2.setObjectName("widget_2")
-        self.verticalLayout_3 = QtWidgets.QVBoxLayout(self.widget_2)
-        self.verticalLayout_3.setContentsMargins(180, 50, 180, 60)
-        self.verticalLayout_3.setObjectName("verticalLayout_3")
         self.threeBtn = QtWidgets.QWidget(self.widget_2)
-
+        self.threeBtn.setGeometry(QtCore.QRect(180, 60, 531, 61))
+        self.threeBtn.setContentsMargins(10, 0, 50, 0)
         effect = QtWidgets.QGraphicsDropShadowEffect()
-        effect.setBlurRadius(5)
-        effect.setColor(QtGui.QColor(144, 115, 87, 100))
-        effect.setOffset(QtCore.QPointF(0, 4))
+        effect.setBlurRadius(8)
         self.threeBtn.setGraphicsEffect(effect)
-
-        self.threeBtn.setMinimumSize(QtCore.QSize(0, 0))
         self.threeBtn.setStyleSheet("#threeBtn{\n"
                                     "background-color: rgb(255, 255, 255);\n"
                                     "border-radius:28px;\n"
@@ -56,10 +52,11 @@ class Ui_MainWindow(object):
                                     "")
         self.threeBtn.setObjectName("threeBtn")
         self.horizontalLayout = QtWidgets.QHBoxLayout(self.threeBtn)
-        self.horizontalLayout.setContentsMargins(20, 15, 20, 15)
-        self.horizontalLayout.setSpacing(20)
+        self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
         self.horizontalLayout.setObjectName("horizontalLayout")
         self.myProjects = QtWidgets.QComboBox(self.threeBtn)
+
+        # edited text allign
         self.myProjects.setMinimumSize(QtCore.QSize(25, 0))
         self.myProjects.setGeometry(200, 150, 150, 30)
         geek_list = ["Project 1", "Project 2", "Project 3", "Project 4"]
@@ -79,13 +76,13 @@ class Ui_MainWindow(object):
         view = QListView()
         view.setWordWrap(True)
         self.myProjects.setView(view)
-        self.myProjects.view().parentWidget().setStyleSheet('border: none;')
-        self.myProjects.setStyleSheet("#myProjects {\n"
+        self.myProjects.setStyleSheet("#myProjects{\n"
                                       "padding-left: 10px;\n"
-                                      "border-radius:14px;\n"
+                                      "border-radius:4px;\n"
                                       "font: 600 12pt \"Segoe UI\";\n"
                                       "color:#4A3B28;\n"
-                                      "border: none;"
+                                      "background: transparent;\n"
+                                      "border:0px;"
                                       "text-align: center;\n"
                                       "}\n"
 
@@ -95,7 +92,7 @@ class Ui_MainWindow(object):
                                       "height: 20px;\n"
                                       "text-align: center;\n"
                                       "}\n"
-                                      "#myProjects QComboBox { background-color: black; }"
+
                                       "#myProjects::drop-down::pressed{\n"
                                       "image:url(images/arrowup.png);\n"
                                       "width: 20px;\n"
@@ -107,6 +104,7 @@ class Ui_MainWindow(object):
                                       "background-color: rgb(255, 255, 255);\n"
                                       "outline: none;"
                                       "text-align: center;\n"
+
                                       "border:0px;"
                                       "\n"
                                       "}\n"
@@ -120,7 +118,7 @@ class Ui_MainWindow(object):
                                       "}\n"
 
                                       "#myProjects QListView{"
-                                      "border: none;"
+                                      "border:0px;"
                                       # "color:rgb(87, 96, 134);"
                                       # "background-color:rgb(255, 255, 255);"
                                       "font-weight:bold;"
@@ -143,9 +141,12 @@ class Ui_MainWindow(object):
                                       "color: white; "
                                       "background-color: #4A3B28}")
         self.myProjects.setObjectName("myProjects")
+
         self.horizontalLayout.addWidget(self.myProjects)
+
         self.history = QtWidgets.QComboBox(self.threeBtn)
-        self.history.view().parentWidget().setStyleSheet('border: none;')
+        # edited text allign
+        self.history.setMinimumSize(QtCore.QSize(25, 0))
         self.history.setGeometry(200, 150, 150, 30)
         geek_list = ["Image 1", "Image 2", "Image 3", "Image 4"]
         self.history.addItems(geek_list)
@@ -228,11 +229,9 @@ class Ui_MainWindow(object):
                                    "background-color: #4A3B28}")
         self.history.setObjectName("history")
         self.horizontalLayout.addWidget(self.history)
+
         self.howtoUse = QtWidgets.QComboBox(self.threeBtn)
-        list_view = QListView()
-        list_view.setLayoutDirection(Qt.RightToLeft)
-        self.howtoUse.setView(list_view)
-        self.howtoUse.view().parentWidget().setStyleSheet('border: none;')
+        # edited text allign
         self.howtoUse.setGeometry(200, 150, 150, 30)
         self.howtoUse.setSizeAdjustPolicy(QtWidgets.QComboBox.AdjustToContents)
         self.howtoUse.addItems(
@@ -324,80 +323,75 @@ class Ui_MainWindow(object):
                                     "background-color: #4A3B28}")
         self.howtoUse.setObjectName("howtoUse")
         self.horizontalLayout.addWidget(self.howtoUse)
-        self.verticalLayout_3.addWidget(self.threeBtn)
+
         self.verticalLayout.addWidget(self.widget_2)
         self.widget_3 = QtWidgets.QWidget(self.widget)
         self.widget_3.setObjectName("widget_3")
-        self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.widget_3)
-        self.verticalLayout_2.setObjectName("verticalLayout_2")
         self.widget_6 = QtWidgets.QWidget(self.widget_3)
-        self.widget_6.setStyleSheet("background-image:url(images/Crackterize.png);\n"
+        self.widget_6.setGeometry(QtCore.QRect(210, 0, 481, 100))
+        self.widget_6.setStyleSheet("background-image: url(images/Crackterize.png);\n"
                                     "background-repeat: no-repeat; \n"
                                     "background-position: center;")
         self.widget_6.setObjectName("widget_6")
-        self.verticalLayout_2.addWidget(self.widget_6)
         self.verticalLayout.addWidget(self.widget_3)
+
         self.widget_4 = QtWidgets.QWidget(self.widget)
         self.widget_4.setObjectName("widget_4")
-        self.verticalLayout_4 = QtWidgets.QVBoxLayout(self.widget_4)
-        self.verticalLayout_4.setContentsMargins(300, 20, 300, 20)
-        self.verticalLayout_4.setObjectName("verticalLayout_4")
         self.widgetUpload = QtWidgets.QWidget(self.widget_4)
+        self.widgetUpload.setGeometry(QtCore.QRect(270, 0, 341, 120))
         effect = QtWidgets.QGraphicsDropShadowEffect()
-        effect.setBlurRadius(5)
-        effect.setColor(QtGui.QColor(144, 115, 87, 100))
-        effect.setOffset(QtCore.QPointF(0, 4))
+        effect.setBlurRadius(8)
         self.widgetUpload.setGraphicsEffect(effect)
-
         self.widgetUpload.setStyleSheet("#widgetUpload{\n"
                                         "background-color: rgb(255, 255, 255);\n"
                                         "border-radius:28px;\n"
+                                        "box-shadow: 55px 55px 150px black;\n"
                                         "}\n"
-                                        "        \n"
                                         "")
         self.widgetUpload.setObjectName("widgetUpload")
-        self.verticalLayout_5 = QtWidgets.QVBoxLayout(self.widgetUpload)
-        self.verticalLayout_5.setContentsMargins(50, -1, 50, -1)
-        self.verticalLayout_5.setSpacing(0)
-        self.verticalLayout_5.setObjectName("verticalLayout_5")
+
+        # Upload Button
         self.uploadImg = QtWidgets.QPushButton("Upload Image", self.widgetUpload)
         self.uploadImg.clicked.connect(self.upload_image)
-        self.uploadImg.setIcon(QIcon('images/uploadIcon.png'))
+
+        # effect = QtWidgets.QGraphicsDropShadowEffect()
+        # effect.setBlurRadius(8)
+        # self.uploadImg.setGraphicsEffect(effect)
+        self.uploadImg.setGeometry(QtCore.QRect(70, 30, 201, 41))
+        self.uploadImg.setIcon(QIcon('../images/uploadIcon.png'))
         self.uploadImg.setStyleSheet("#uploadImg{\n"
-                                     "height:40px;\n"
-                                     "font-weight:bold;\n"
-                                     "font-size:15px;\n"
-                                     "color:white;\n"
+                                     "font-weight:bold;"
+                                     "font-size:12px;"
+                                     "color:white;"
                                      "background-color: rgb(144, 115, 87);\n"
-                                     "border-top-left-radius :20px;\n"
-                                     "border-top-right-radius : 20px; \n"
-                                     "border-bottom-left-radius : 20px; \n"
-                                     "border-bottom-right-radius : 20px;\n"
+                                     "border-top-left-radius :20px;"
+                                     "border-top-right-radius : 20px; "
+                                     "border-bottom-left-radius : 20px; "
+                                     "border-bottom-right-radius : 20px;"
                                      "}\n"
                                      "#uploadImg:hover{\n"
-                                     "color:rgb(144, 115, 87);\n"
-                                     "border :2px solid rgb(144, 115, 87);\n"
+                                     "color:rgb(144, 115, 87);"
+                                     "border :3px solid rgb(144, 115, 87);"
                                      "background-color: rgb(255, 255, 255);\n"
-                                     "}\n"
-                                     "")
+                                     "}\n")
         self.uploadImg.setObjectName("uploadImg")
-        self.verticalLayout_5.addWidget(self.uploadImg)
-        self.create = QtWidgets.QPushButton("or create a new project", self.widgetUpload)
-        self.create.clicked.connect(self.show_floating_dialog)
-        self.create.setStyleSheet("#create{\n"
-                                  "font-weight:bold;\n"
-                                  " color:#363131;\n"
-                                  "background-color: rgb(255, 255, 255);\n"
-                                  "border :3px solid rgb(255, 255, 255);\n"
-                                  " }\n"
-                                  "#create:hover{\n"
-                                  "background-color:rgb(255, 255, 255);}\n"
-                                  "")
-        self.create.setObjectName("create")
-        self.verticalLayout_5.addWidget(self.create)
-        self.verticalLayout_4.addWidget(self.widgetUpload)
+
+        self.textEdit = QtWidgets.QPushButton("or create a new project", self.widgetUpload)
+
+        self.textEdit.setGeometry(QtCore.QRect(100, 80, 161, 21))
+        self.textEdit.setStyleSheet("#textEdit{\n"
+                                    "font-weight:bold;"
+                                    "color:#363131;"
+                                    "background-color: rgb(255, 255, 255);\n"
+                                    "border :3px solid rgb(255, 255, 255);"
+                                    "}\n"
+                                    "#textEdit:hover{\n"
+                                    "background-color:rgb(255, 255, 255);"
+                                    )
+        # button
+        self.textEdit.clicked.connect(self.show_floating_dialog)
+        self.textEdit.setObjectName("textEdit")
         self.verticalLayout.addWidget(self.widget_4)
-        self.horizontalLayout_2.addWidget(self.widget)
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
@@ -410,17 +404,8 @@ class Ui_MainWindow(object):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
 
-    # new image upload function for upload button
-    def upload_image(self):
-        options = QFileDialog.Options()
-        options |= QFileDialog.ReadOnly
-        file_name, _ = QFileDialog.getOpenFileName(None, "QFileDialog.getOpenFileName()", "",
-                                                   "Images (*.png *.xpm *.jpg *.bmp *.gif *.jpeg)", options=options)
-        if file_name:
-            pixmap = QPixmap(file_name)
-            self.image_label.setPixmap(pixmap)
 
-    # Dialog Box for creating new project
+#Dialog Box for creating new project
     def show_floating_dialog(self):
         # Create dialog box
         dialog = QtWidgets.QDialog()
@@ -523,14 +508,71 @@ class Ui_MainWindow(object):
                                     "}")
         self.save_btn.setText("Save")
         # button
-        # self.save_btn.clicked.connect(self.show_floating_dialog_save)
+        self.save_btn.clicked.connect(self.show_floating_dialog_save)
         self.save_btn.setObjectName("save_btn")
         self.horizontalLayout.addWidget(self.save_btn)
         self.verticalLayout_4.addWidget(self.widget)
         self.verticalLayout.addWidget(self.widget_4)
         dialog.exec()
 
+# Dialog Box for successfully saved project
+    def show_floating_dialog_save(self):
+        # Create dialog box
+        Dialog = QtWidgets.QDialog()
+        Dialog.setWindowTitle("Dialog")
+        Dialog.setWindowFlags(Qt.FramelessWindowHint)
+        Dialog.resize(350, 300)
+        Dialog.setStyleSheet("#Dialog{\n"
+                             "background-color: qlineargradient(spread:pad, x1:0.045, y1:0.261, x2:0.988636, y2:0.955, stop:0 rgba(235, 209, 196, 255), stop:1 rgba(255, 255, 255, 255));\n"
+                             "width: fit-content;\n"
+                             "heigth: fit-content;\n"
+                             "block-size: fit-content;\n"
+                             "}\n"
+                             "")
+        self.widget = QtWidgets.QWidget(Dialog)
+        self.widget.setGeometry(QtCore.QRect(-1, -1, 401, 301))
+        self.widget.setObjectName("widget")
+        self.verticalLayout = QtWidgets.QVBoxLayout(self.widget)
+        self.verticalLayout.setContentsMargins(0, 0, 0, 0)
+        self.verticalLayout.setObjectName("verticalLayout")
+        self.widget_2 = QtWidgets.QWidget(self.widget)
+        self.widget_2.setObjectName("widget_2")
+        self.label = QtWidgets.QLabel(self.widget_2)
+        self.label.setGeometry(QtCore.QRect(70, 90, 231, 21))
 
+        self.label.setText("New Project Saved!")
+
+        font = QtGui.QFont()
+        font.setFamily("Arial")
+        font.setPointSize(16)
+        font.setBold(True)
+        font.setItalic(False)
+        self.label.setFont(font)
+        self.label.setStyleSheet(
+            "QLabel { font: 900 \"Segoe UI\"; color: #4A3B28; font-family: Arial; Text-align: Center; font-size: 16pt;}")
+        self.label.setObjectName("label")
+        self.widget_3 = QtWidgets.QWidget(self.widget_2)
+        self.widget_3.setGeometry(QtCore.QRect(0, 130, 383, 138))
+        self.widget_3.setObjectName("widget_3")
+        self.widget_4 = QtWidgets.QWidget(self.widget_3)
+        self.widget_4.setGeometry(QtCore.QRect(100, 10, 151, 101))
+        self.widget_4.setStyleSheet("#widget_4{\n"
+                                    "background-image: url(images/ok3.png);\n"
+                                    "background-repeat: no-repeat; \n"
+                                    "background-position: center;}")
+        self.widget_4.setObjectName("widget_4")
+        self.verticalLayout.addWidget(self.widget_2)
+        Dialog.exec()
+
+#new image upload function for upload button
+    def upload_image(self):
+        options = QFileDialog.Options()
+        options |= QFileDialog.ReadOnly
+        file_name, _ = QFileDialog.getOpenFileName(None, "QFileDialog.getOpenFileName()", "", "Images (*.png *.xpm *.jpg *.bmp *.gif *.jpeg)", options=options)
+        if file_name:
+            pixmap = QPixmap(file_name)
+            self.image_label.setPixmap(pixmap)
+# QApplication.instance().quit this is clossing application
 if __name__ == "__main__":
     import sys
 

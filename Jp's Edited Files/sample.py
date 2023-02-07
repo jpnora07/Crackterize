@@ -1,27 +1,40 @@
-from PyQt5 import QtWidgets, QtGui, QtCore
+import sys
+from PyQt5.Qt import Qt
+from PyQt5.QtWidgets import *
 
-app = QtWidgets.QApplication([])
-window = QtWidgets.QWidget()
-layout = QtWidgets.QVBoxLayout(window)
-label = QtWidgets.QLabel("Text with Neumorphism box shadow")
 
-# Create a first shadow effect for the inner shadow
-inner_shadow = QtWidgets.QGraphicsDropShadowEffect()
-inner_shadow.setBlurRadius(10)
-inner_shadow.setColor(QtGui.QColor(255, 255, 255, 100))
-inner_shadow.setOffset(QtCore.QPointF(2, 2))
+class MainWindow(QMainWindow):
+    def __init__(self):
+        super(MainWindow, self).__init__()
 
-# Create a second shadow effect for the outer shadow
-outer_shadow = QtWidgets.QGraphicsDropShadowEffect()
-outer_shadow.setBlurRadius(10)
-outer_shadow.setColor(QtGui.QColor(0, 0, 0, 100))
-outer_shadow.setOffset(QtCore.QPointF(-2, -2))
+        # Window size
+        self.WIDTH = 300
+        self.HEIGHT = 300
+        self.resize(self.WIDTH, self.HEIGHT)
 
-# Set both shadow effects on the label widget
-label.setGraphicsEffect(inner_shadow)
-label.setGraphicsEffect(outer_shadow)
+        # Widget
+        self.centralwidget = QWidget(self)
+        self.centralwidget.resize(self.WIDTH, self.HEIGHT)
 
-layout.addWidget(label)
+        # Initial
+        self.setWindowFlag(Qt.FramelessWindowHint)
+        self.setAttribute(Qt.WA_TranslucentBackground)
+        self.setWindowOpacity(0.6)
 
-window.show()
-app.exec_()
+        radius = 30
+        self.centralwidget.setStyleSheet(
+            """
+            background:rgb(255, 255, 255);
+            border-top-left-radius:{0}px;
+            border-bottom-left-radius:{0}px;
+            border-top-right-radius:{0}px;
+            border-bottom-right-radius:{0}px;
+            """.format(radius)
+        )
+
+
+if __name__ == '__main__':
+    app = QApplication([])
+    window = MainWindow()
+    window.show()
+    sys.exit(app.exec_())
