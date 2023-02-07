@@ -1,26 +1,27 @@
-import sys
-from PyQt5 import QtWidgets
+from PyQt5 import QtWidgets, QtGui, QtCore
 
-class MainWindow(QtWidgets.QMainWindow):
-    def __init__(self):
-        super().__init__()
-        self.initUI()
+app = QtWidgets.QApplication([])
+window = QtWidgets.QWidget()
+layout = QtWidgets.QVBoxLayout(window)
+label = QtWidgets.QLabel("Text with Neumorphism box shadow")
 
-    def initUI(self):
-        button = QtWidgets.QPushButton("Click me", self)
-        button.clicked.connect(self.show_dialog)
-        button.move(50, 50)
+# Create a first shadow effect for the inner shadow
+inner_shadow = QtWidgets.QGraphicsDropShadowEffect()
+inner_shadow.setBlurRadius(10)
+inner_shadow.setColor(QtGui.QColor(255, 255, 255, 100))
+inner_shadow.setOffset(QtCore.QPointF(2, 2))
 
-        self.setWindowTitle("Dialog Example")
-        self.show()
+# Create a second shadow effect for the outer shadow
+outer_shadow = QtWidgets.QGraphicsDropShadowEffect()
+outer_shadow.setBlurRadius(10)
+outer_shadow.setColor(QtGui.QColor(0, 0, 0, 100))
+outer_shadow.setOffset(QtCore.QPointF(-2, -2))
 
-    def show_dialog(self):
-        dialog = QtWidgets.QMessageBox()
-        dialog.setWindowTitle("Dialog")
-        dialog.setText("This is a dialog")
-        dialog.exec_()
+# Set both shadow effects on the label widget
+label.setGraphicsEffect(inner_shadow)
+label.setGraphicsEffect(outer_shadow)
 
-if __name__ == "__main__":
-    app = QtWidgets.QApplication(sys.argv)
-    window = MainWindow()
-    sys.exit(app.exec_())
+layout.addWidget(label)
+
+window.show()
+app.exec_()

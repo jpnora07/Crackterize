@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="windowModality">
+   <enum>Qt::NonModal</enum>
+  </property>
+  <property name="enabled">
+   <bool>true</bool>
+  </property>
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>983</width>
+    <height>573</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>983</width>
+    <height>573</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>983</width>
+    <height>573</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">#MainWindow{
+background-color: qlineargradient(spread:pad, x1:0.045, y1:0.261, x2:0.988636, y2:0.955, stop:0 rgba(235, 209, 196, 255), stop:1 rgba(255, 255, 255, 255));
+width: fit-content;
+heigth: fit-content;
+block-size: fit-content;
+}
+</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <property name="styleSheet">
+    <string notr="true">#centralwidget{
+background-color: qlineargradient(spread:pad, x1:0.045, y1:0.261, x2:0.988636, y2:0.955, stop:0 rgba(235, 209, 196, 255), stop:1 rgba(255, 255, 255, 255));
+width: fit-content;
+heigth: fit-content;
+block-size: fit-content;
+}</string>
+   </property>
+   <layout class="QHBoxLayout" name="horizontalLayout_2">
+    <item>
+     <widget class="QWidget" name="widget" native="true">
+      <property name="styleSheet">
+       <string notr="true">width: fit-content;
+block-size: fit-content;</string>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <widget class="QWidget" name="widget_2" native="true">
+         <layout class="QVBoxLayout" name="verticalLayout_3">
+          <property name="leftMargin">
+           <number>180</number>
+          </property>
+          <property name="topMargin">
+           <number>50</number>
+          </property>
+          <property name="rightMargin">
+           <number>180</number>
+          </property>
+          <property name="bottomMargin">
+           <number>60</number>
+          </property>
+          <item>
+           <widget class="QWidget" name="threeBtn" native="true">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">#threeBtn{
+background-color: rgb(255, 255, 255);
+border-radius:28px;
+}
+</string>
+            </property>
+            <layout class="QHBoxLayout" name="horizontalLayout">
+             <property name="spacing">
+              <number>20</number>
+             </property>
+             <property name="leftMargin">
+              <number>20</number>
+             </property>
+             <property name="topMargin">
+              <number>15</number>
+             </property>
+             <property name="rightMargin">
+              <number>20</number>
+             </property>
+             <property name="bottomMargin">
+              <number>15</number>
+             </property>
+             <item>
+              <widget class="QComboBox" name="myProjects">
+               <property name="minimumSize">
+                <size>
+                 <width>25</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="toolTip">
+                <string/>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">#myProjects{
+border-radius:4px;
+font: 600 12pt &quot;Segoe UI&quot;;
+color:#4A3B28;
+}
+#myProjects::drop-down{
+image:url(:/images/arrowdown.png);
+width: 20px;
+height: 20px;
+}
+#myProjects QAbstractItemView {
+background-color: rgba(255, 255, 255, 0.75);
+border-bottom-left-radius: 15px;
+border-bottom-right-radius: 15px;
+padding: 10px;
+outline: none;
+}
+#myProjects QAbstractItemView::item {
+background-color: #FFFFFF;
+color: #4A3B28;
+text-align: center;
+    }
+#myProjects.comboBoxClass QLineEdit {
+    text-align: center;
+}
+QListView{
+    border:                 none;
+    color:                      rgb(87, 96, 134);
+    background-color:   rgb(255, 255, 255);
+    font-weight:            bold;
+    selection-background-color: rgb(47, 175, 178);
+    show-decoration-selected: 1;
+    margin-left:                -10px;
+    padding-left    :           15px;
+}
+
+QListView::item:hover{
+
+    background-color:   rgb(47, 175, 178);
+    border:                 none;
+}</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QComboBox" name="history">
+               <property name="styleSheet">
+                <string notr="true">#history{
+border-radius:4px;
+font: 600 12pt &quot;Segoe UI&quot;;
+color:#4A3B28;
+background: transparent;
+}
+#history::drop-down{
+image:url(:/images/arrowdown.png);
+width: 20px;
+height: 20px;
+}
+#history QAbstractItemView {
+background-color: rgba(255, 255, 255, 0.75);
+border-bottom-left-radius: 15px;
+border-bottom-right-radius: 15px;
+padding: 10px;
+outline: none;
+}
+#history QAbstractItemView::item {
+background-color: #FFFFFF;
+color: #4A3B28;
+text-align: center;
+    }
+#history.comboBoxClass QLineEdit {
+    text-align: center;
+}</string>
+               </property>
+               <item>
+                <property name="text">
+                 <string>        History</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+             <item>
+              <widget class="QComboBox" name="howtoUse">
+               <property name="styleSheet">
+                <string notr="true">#howtoUse{
+border-radius:4px;
+font: 600 12pt &quot;Segoe UI&quot;;
+color:#4A3B28;
+background: transparent;
+}
+#howtoUse::drop-down{
+image:url(:/images/arrowdown.png);
+width: 20px;
+height: 20px;
+}
+#howtoUse QAbstractItemView {
+background-color: rgba(255, 255, 255, 0.75);
+border-bottom-left-radius: 15px;
+border-bottom-right-radius: 15px;
+padding: 10px;
+outline: none;
+}
+#howtoUse QAbstractItemView::item {
+background-color: #FFFFFF;
+color: #4A3B28;
+text-align: center;
+    }
+#howtoUse.comboBoxClass QLineEdit {
+    text-align: center;
+}</string>
+               </property>
+               <item>
+                <property name="text">
+                 <string>  How to Use</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QWidget" name="widget_3" native="true">
+         <layout class="QVBoxLayout" name="verticalLayout_2">
+          <item>
+           <widget class="QWidget" name="widget_6" native="true">
+            <property name="styleSheet">
+             <string notr="true">background-image:url(:/images/Crackterize.png);
+background-repeat: no-repeat; 
+background-position: center;</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QWidget" name="widget_4" native="true">
+         <layout class="QVBoxLayout" name="verticalLayout_4">
+          <property name="leftMargin">
+           <number>300</number>
+          </property>
+          <property name="topMargin">
+           <number>20</number>
+          </property>
+          <property name="rightMargin">
+           <number>300</number>
+          </property>
+          <property name="bottomMargin">
+           <number>20</number>
+          </property>
+          <item>
+           <widget class="QWidget" name="widgetUpload" native="true">
+            <property name="styleSheet">
+             <string notr="true">#widgetUpload{
+background-color: rgb(255, 255, 255);
+border-radius:28px;
+}
+        
+</string>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout_5">
+             <property name="spacing">
+              <number>0</number>
+             </property>
+             <property name="leftMargin">
+              <number>50</number>
+             </property>
+             <property name="rightMargin">
+              <number>50</number>
+             </property>
+             <item>
+              <widget class="QPushButton" name="uploadImg">
+               <property name="styleSheet">
+                <string notr="true">#uploadImg{
+height:40px;
+font-weight:bold;
+font-size:18px;
+color:white;
+background-color: rgb(144, 115, 87);
+border-top-left-radius :20px;
+border-top-right-radius : 20px; 
+border-bottom-left-radius : 20px; 
+border-bottom-right-radius : 20px;
+}
+#uploadImg:hover{
+color:rgb(144, 115, 87);
+border :2px solid rgb(144, 115, 87);
+background-color: rgb(255, 255, 255);
+}
+</string>
+               </property>
+               <property name="text">
+                <string>Upload Image</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="create">
+               <property name="styleSheet">
+                <string notr="true">#create{
+font-weight:bold;
+ color:#363131;
+background-color: rgb(255, 255, 255);
+border :3px solid rgb(255, 255, 255);
+ }
+#create:hover{
+background-color:rgb(255, 255, 255);}
+</string>
+               </property>
+               <property name="text">
+                <string>or create a new project</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources>
+  <include location="images/images.qrc"/>
+ </resources>
+ <connections/>
+</ui>
