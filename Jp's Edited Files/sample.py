@@ -1,40 +1,18 @@
-import sys
-from PyQt5.Qt import Qt
-from PyQt5.QtWidgets import *
+from PyQt5 import QtCore, QtGui, QtWidgets
 
+class AlignDelegate(QtWidgets.QStyledItemDelegate):
+    def initStyleOption(self, option, index):
+        super().initStyleOption(option, index)
+        option.displayAlignment = QtCore.Qt.AlignCenter
 
-class MainWindow(QMainWindow):
-    def __init__(self):
-        super(MainWindow, self).__init__()
-
-        # Window size
-        self.WIDTH = 300
-        self.HEIGHT = 300
-        self.resize(self.WIDTH, self.HEIGHT)
-
-        # Widget
-        self.centralwidget = QWidget(self)
-        self.centralwidget.resize(self.WIDTH, self.HEIGHT)
-
-        # Initial
-        self.setWindowFlag(Qt.FramelessWindowHint)
-        self.setAttribute(Qt.WA_TranslucentBackground)
-        self.setWindowOpacity(0.6)
-
-        radius = 30
-        self.centralwidget.setStyleSheet(
-            """
-            background:rgb(255, 255, 255);
-            border-top-left-radius:{0}px;
-            border-bottom-left-radius:{0}px;
-            border-top-right-radius:{0}px;
-            border-bottom-right-radius:{0}px;
-            """.format(radius)
-        )
-
+    def paint(self, painter, option, index):
+        super().paint(painter, option, index)
 
 if __name__ == '__main__':
-    app = QApplication([])
-    window = MainWindow()
-    window.show()
-    sys.exit(app.exec_())
+    app = QtWidgets.QApplication([])
+    combo = QtWidgets.QComboBox()
+    delegate = AlignDelegate(combo)
+    combo.setItemDelegate(delegate)
+    combo.addItems(['Item 1', 'Item 2', 'Item 3'])
+    combo.show()
+    app.exec_()

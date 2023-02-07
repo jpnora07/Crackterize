@@ -1,8 +1,17 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QRect
 from PyQt5.QtGui import QIcon, QPixmap, QPalette
-from PyQt5.QtWidgets import QListView, QComboBox, QDialog, QVBoxLayout, QApplication, QFileDialog
+from PyQt5.QtWidgets import QListView, QComboBox, QDialog, QVBoxLayout, QApplication, QFileDialog, QHBoxLayout, \
+    QStyledItemDelegate
 
+
+class AlignDelegate(QStyledItemDelegate):
+    def initStyleOption(self, option, index):
+        super().initStyleOption(option, index)
+        option.displayAlignment = QtCore.Qt.AlignCenter
+
+    def paint(self, painter, option, index):
+        super().paint(painter, option, index)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -62,12 +71,17 @@ class Ui_MainWindow(object):
         self.myProjects = QtWidgets.QComboBox(self.threeBtn)
         self.myProjects.setMinimumSize(QtCore.QSize(25, 0))
         self.myProjects.setGeometry(200, 150, 150, 30)
-        geek_list = ["Project 1", "Project 2", "Project 3", "Project 4"]
-        self.myProjects.addItems(geek_list)
+
+
+        self.myProjects.setEditable(True)
+        self.myProjects.lineEdit().setAlignment(QtCore.Qt.AlignCenter)
         self.myProjects.setEditable(True)
         self.ledit = self.myProjects.lineEdit()
         self.ledit.setReadOnly(True)
         self.ledit.setAlignment(Qt.AlignCenter)
+        geek_list = ["Project 1", "Project 2", "Project 3", "Project 4"]
+
+        self.myProjects.addItems(geek_list)
         self.myProjects.setEditText("My Projects")
 
         def handleSelection(text):
@@ -75,13 +89,27 @@ class Ui_MainWindow(object):
             self.myProjects.setEditText("My Projects")
 
         self.myProjects.activated[str].connect(handleSelection)
-        # Disable showing the selected item in the title
+
+        # change the background of list in combo box and its corner
+        self.myProjects.view().window().setWindowFlags(Qt.Popup | Qt.FramelessWindowHint)
+        self.myProjects.view().window().setAttribute(Qt.WA_TranslucentBackground)
         view = QListView()
         view.setWordWrap(True)
+        radius = 20
+
+        #border - top - left - radius: {0}px;
+        #border - top - right - radius: {0}px;
+        view.setStyleSheet(
+            """
+            background-color :rgba(255, 255, 255, 0.75);
+            border-bottom-left-radius:{0}px;
+            border-bottom-right-radius:{0}px;
+            """.format(radius)
+        )
         self.myProjects.setView(view)
         self.myProjects.view().parentWidget().setStyleSheet('border: none;')
+
         self.myProjects.setStyleSheet("#myProjects {\n"
-                                      "padding-left: 10px;\n"
                                       "border-radius:14px;\n"
                                       "font: 600 12pt \"Segoe UI\";\n"
                                       "color:#4A3B28;\n"
@@ -95,7 +123,6 @@ class Ui_MainWindow(object):
                                       "height: 20px;\n"
                                       "text-align: center;\n"
                                       "}\n"
-                                      "#myProjects QComboBox { background-color: black; }"
                                       "#myProjects::drop-down::pressed{\n"
                                       "image:url(images/arrowup.png);\n"
                                       "width: 20px;\n"
@@ -107,7 +134,6 @@ class Ui_MainWindow(object):
                                       "background-color: rgb(255, 255, 255);\n"
                                       "outline: none;"
                                       "text-align: center;\n"
-                                      "border:0px;"
                                       "\n"
                                       "}\n"
 
@@ -134,10 +160,8 @@ class Ui_MainWindow(object):
                                       "border-radius: 15px;"
                                       "padding:8px; "
                                       "margin:10px;"
-                                      "text-align: center;\n"
                                       "}"
-                                      "#myProjects QListView::text {"
-                                      "left: 27px;}"
+                                      
 
                                       "#myProjects QListView::item:selected { "
                                       "color: white; "
@@ -161,9 +185,25 @@ class Ui_MainWindow(object):
 
         self.history.activated[str].connect(handleSelection)
         # Disable showing the selected item in the title
+        # change the background of list in combo box and its corner
+        self.history.view().window().setWindowFlags(Qt.Popup | Qt.FramelessWindowHint)
+        self.history.view().window().setAttribute(Qt.WA_TranslucentBackground)
         view = QListView()
         view.setWordWrap(True)
+        radius = 20
+
+        # border - top - left - radius: {0}px;
+        # border - top - right - radius: {0}px;
+        view.setStyleSheet(
+            """
+            background-color :rgba(255, 255, 255, 0.75);
+            border-bottom-left-radius:{0}px;
+            border-bottom-right-radius:{0}px;
+            """.format(radius)
+        )
         self.history.setView(view)
+        self.history.view().parentWidget().setStyleSheet('border: none;')
+
         self.history.setStyleSheet("#history{\n"
                                    "padding-left: 10px;\n"
                                    "border-radius:4px;\n"
@@ -235,6 +275,11 @@ class Ui_MainWindow(object):
         self.howtoUse.view().parentWidget().setStyleSheet('border: none;')
         self.howtoUse.setGeometry(200, 150, 150, 30)
         self.howtoUse.setSizeAdjustPolicy(QtWidgets.QComboBox.AdjustToContents)
+
+        delegate = AlignDelegate(self.howtoUse)
+        self.howtoUse.setItemDelegate(delegate)
+        self.howtoUse.setEditable(True)
+        self.howtoUse.lineEdit().setAlignment(QtCore.Qt.AlignCenter)
         self.howtoUse.addItems(
             [
                 "STEP 1: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
@@ -242,10 +287,6 @@ class Ui_MainWindow(object):
                 "STEP 3: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
 
             ])
-        self.howtoUse.setEditable(True)
-        self.ledit = self.howtoUse.lineEdit()
-        self.ledit.setReadOnly(True)
-        self.ledit.setAlignment(Qt.AlignCenter)
         self.howtoUse.setEditText("How to Use")
 
         def handleSelection(text):
@@ -253,11 +294,27 @@ class Ui_MainWindow(object):
             self.howtoUse.setEditText("How to Use")
 
         self.howtoUse.activated[str].connect(handleSelection)
-        # Disable showing the selected item in the title
+
+        # change the background of list in combo box and its corner
+        self.howtoUse.view().window().setWindowFlags(Qt.Popup | Qt.FramelessWindowHint)
+        self.howtoUse.view().window().setAttribute(Qt.WA_TranslucentBackground)
         view = QListView()
         view.setMinimumSize(500, 200)
         view.setWordWrap(True)
+        radius = 20
+
+        # border - top - left - radius: {0}px;
+        # border - top - right - radius: {0}px;
+        view.setStyleSheet(
+            """
+            background-color :rgba(255, 255, 255, 0.75);
+            border-bottom-left-radius:{0}px;
+            border-bottom-right-radius:{0}px;
+            """.format(radius)
+        )
         self.howtoUse.setView(view)
+        self.howtoUse.view().parentWidget().setStyleSheet('border: none;')
+
         self.howtoUse.setStyleSheet("#howtoUse{\n"
                                     "padding-left: 10px;\n"
                                     "border-radius:4px;\n"
