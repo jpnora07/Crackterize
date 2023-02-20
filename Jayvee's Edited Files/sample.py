@@ -1,34 +1,48 @@
-import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel, QFileDialog
-from PyQt5.QtGui import QPixmap
+from PyQt5.QtGui import QIcon
+from PyQt5.QtWidgets import QApplication, QMainWindow, QHBoxLayout, QPushButton, QWidget
+from PyQt5.QtCore import QSize
 
-class UploadImageWindow(QMainWindow):
+
+class MyWindow(QMainWindow):
     def __init__(self):
         super().__init__()
 
-        # initialize the UI elements
-        self.button = QPushButton("Upload Image", self)
-        self.button.clicked.connect(self.upload_image)
-        self.image_label = QLabel(self)
+        self.central_widget = QWidget(self)
+        self.setCentralWidget(self.central_widget)
 
-        # set the layout
-        self.button.move(100, 50)
-        self.image_label.move(250, 250)
+        self.layout = QHBoxLayout(self.central_widget)
 
-        # set the window properties
-        self.setGeometry(500, 500, 500, 500)
-        self.setWindowTitle("Upload Image")
+        self.button = QPushButton(self.central_widget)
+        self.button.setObjectName("pushButton")
+        self.button.setIcon(QIcon(r'C:\Users\Jayvee\PycharmProjects\Crackterize\images\add_folder.png'))
+        self.button.setStyleSheet("#pushButton{background-image:url("
+                                  "images/add_folder.png);height:100px;background-repeat: "
+                                  "no-repeat;background-position: center;background-size: 2px 2px;}")
+        self.button.setIconSize(QSize(32, 32))
+        self.button.setFixedSize(40, 40)
+        self.button.clicked.connect(self.addNewButton)
+        self.layout.addWidget(self.button)
+
+        self.setGeometry(200, 300, 100, 200)
+        self.setWindowTitle("Folder")
         self.show()
 
-    def upload_image(self):
-        options = QFileDialog.Options()
-        options |= QFileDialog.ReadOnly
-        file_name, _ = QFileDialog.getOpenFileName(self, "QFileDialog.getOpenFileName()", "", "Images (*.png *.xpm *.jpg *.bmp *.gif *.jpeg)", options=options)
-        if file_name:
-            pixmap = QPixmap(file_name)
-            self.image_label.setPixmap(pixmap)
+    def addNewButton(self):
+        new_button = QPushButton("Delete", self.central_widget)
+        new_button.clicked.connect(self.deleteButton)  # connect clicked signal to a delete function
+        self.layout.insertWidget(0, new_button)  # add new button to the beginning of the layout
 
-if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    window = UploadImageWindow()
-    sys.exit(app.exec_())
+    def deleteButton(self):
+        sender_button = self.sender()  # get the button that was clicked
+        self.layout.removeWidget(sender_button)  # remove the button from the layout
+        self.button.setIcon(QIcon(r'C:\Users\Jayvee\PycharmProjects\Crackterize\images\folder.png'))
+        self.button.setStyleSheet("#pushButton{background-image:url("
+                                  "images/add_folder.png);height:100px;background-repeat: "
+                                  "no-repeat;background-position: center;background-size: 2px 2px;}")
+        sender_button.deleteLater()  # delete the button from memory
+
+
+if __name__ == "__main__":
+    app = QApplication([])
+    window = MyWindow()
+    app.exec_()
