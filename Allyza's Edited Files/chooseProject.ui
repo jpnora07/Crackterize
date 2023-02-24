@@ -6,9 +6,21 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>449</width>
-    <height>389</height>
+    <width>421</width>
+    <height>311</height>
    </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>421</width>
+    <height>311</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>421</width>
+    <height>311</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>Dialog</string>
@@ -16,54 +28,179 @@
   <widget class="QWidget" name="widget" native="true">
    <property name="geometry">
     <rect>
-     <x>-20</x>
+     <x>0</x>
      <y>0</y>
-     <width>451</width>
-     <height>381</height>
+     <width>421</width>
+     <height>311</height>
     </rect>
    </property>
-   <widget class="QLabel" name="chooselbl">
-    <property name="geometry">
-     <rect>
-      <x>100</x>
-      <y>70</y>
-      <width>251</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">#chooselbl{
+   <property name="minimumSize">
+    <size>
+     <width>421</width>
+     <height>311</height>
+    </size>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>421</width>
+     <height>311</height>
+    </size>
+   </property>
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QWidget" name="widget_2" native="true">
+      <layout class="QVBoxLayout" name="verticalLayout_2"/>
+     </widget>
+    </item>
+    <item>
+     <widget class="QWidget" name="widget_3" native="true">
+      <layout class="QVBoxLayout" name="verticalLayout_11">
+       <item>
+        <widget class="QWidget" name="widget_5" native="true">
+         <property name="layoutDirection">
+          <enum>Qt::LeftToRight</enum>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_3">
+          <property name="spacing">
+           <number>0</number>
+          </property>
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
+          <item>
+           <widget class="QLabel" name="chooselbl">
+            <property name="styleSheet">
+             <string notr="true">#chooselbl{
 font: 600 16pt &quot;Segoe UI&quot;;
 color:#4A3B28;
 background: transparent;}</string>
-    </property>
-    <property name="text">
-     <string>Choose an Existing Project</string>
-    </property>
-   </widget>
-   <widget class="QWidget" name="widget_2" native="true">
-    <property name="geometry">
-     <rect>
-      <x>100</x>
-      <y>110</y>
-      <width>261</width>
-      <height>201</height>
-     </rect>
-    </property>
-    <widget class="QPushButton" name="pushButton">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>50</y>
-       <width>231</width>
-       <height>51</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>PushButton</string>
-     </property>
-    </widget>
-   </widget>
+            </property>
+            <property name="text">
+             <string>Choose an Existing Project</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QWidget" name="widget_4" native="true">
+         <layout class="QVBoxLayout" name="verticalLayout_4">
+          <item>
+           <widget class="QPushButton" name="uploadImg">
+            <property name="styleSheet">
+             <string notr="true">#uploadImg{
+height:60px;
+width: 10px;
+font-weight:bold;
+font-size:18px;
+color:white;
+background-color: rgb(144, 115, 87);
+border-top-left-radius :20px;
+border-top-right-radius : 20px; 
+border-bottom-left-radius : 20px; 
+border-bottom-right-radius : 20px;
+}
+#uploadImg:hover{
+color:rgb(144, 115, 87);
+border :2px solid rgb(144, 115, 87);
+background-color: rgb(255, 255, 255);
+}
+</string>
+            </property>
+            <property name="text">
+             <string>Project 1</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QWidget" name="widgetUpload_2" native="true">
+            <property name="styleSheet">
+             <string notr="true"/>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout_10">
+             <property name="spacing">
+              <number>10</number>
+             </property>
+             <property name="leftMargin">
+              <number>50</number>
+             </property>
+             <property name="rightMargin">
+              <number>50</number>
+             </property>
+             <item>
+              <widget class="QWidget" name="widgetUpload_3" native="true">
+               <property name="styleSheet">
+                <string notr="true"/>
+               </property>
+               <layout class="QVBoxLayout" name="verticalLayout_12">
+                <property name="spacing">
+                 <number>10</number>
+                </property>
+                <property name="leftMargin">
+                 <number>50</number>
+                </property>
+                <property name="rightMargin">
+                 <number>50</number>
+                </property>
+                <item>
+                 <widget class="QPushButton" name="uploadImg_7">
+                  <property name="minimumSize">
+                   <size>
+                    <width>146</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">#uploadImg_7{
+height:40px;
+font-weight:bold;
+font-size:18px;
+color:white;
+background-color: #6A6E72;
+border-top-left-radius :20px;
+border-top-right-radius : 20px; 
+border-bottom-left-radius : 20px; 
+border-bottom-right-radius : 20px;
+}
+#uploadImg_7:hover{
+color:#6A6E72;
+border :2px solid rgb
+#6A6E72;
+background-color: rgb(255, 255, 255);
+}
+</string>
+                  </property>
+                  <property name="text">
+                   <string>Back</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+   </layout>
   </widget>
  </widget>
  <resources/>
