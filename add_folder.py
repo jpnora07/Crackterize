@@ -36,10 +36,10 @@ class Ui_MainWindow(object):
         self.pushButton.setLayoutDirection(QtCore.Qt.LeftToRight)
         self.pushButton.setAutoFillBackground(False)
         self.pushButton.setStyleSheet("#pushButton{background-image:url(:/images/add_folder.png);\n"
-                                      "height:100px;\n"
-                                      "background-repeat: no-repeat;\n"
-                                      "background-position: center;\n"
-                                      "background-size: 2px 2px;}")
+"height:100px;\n"
+"background-repeat: no-repeat;\n"
+"background-position: center;\n"
+"background-size: 2px 2px;}")
         self.pushButton.setObjectName("pushButton")
         self.horizontalLayout.addWidget(self.pushButton)
         self.verticalLayout_2.addWidget(self.widget_3)
@@ -56,11 +56,11 @@ class Ui_MainWindow(object):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.pushButton.setText(_translate("MainWindow", "PushButton"))
+import images_rc
 
 
 if __name__ == "__main__":
     import sys
-
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
     ui = Ui_MainWindow()
