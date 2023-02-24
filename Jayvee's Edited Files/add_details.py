@@ -30,13 +30,13 @@ class Ui_MainWindow(object):
         self.widget.setStyleSheet("")
         self.widget.setObjectName("widget")
         self.widget_2 = QtWidgets.QWidget(self.widget)
-        self.widget_2.setGeometry(QtCore.QRect(40, -10, 581, 171))
+        self.widget_2.setGeometry(QtCore.QRect(30, -20, 581, 171))
         self.widget_2.setStyleSheet("#widget_2 {\n"
                                     "border-image: url(images/Crackterize.png) 100 -200 150 100 stretch stretch;\n"
                                     "}")
         self.widget_2.setObjectName("widget_2")
         self.cracktype = QtWidgets.QLabel(self.widget)
-        self.cracktype.setGeometry(QtCore.QRect(50, 190, 181, 71))
+        self.cracktype.setGeometry(QtCore.QRect(50, 210, 171, 51))
         self.cracktype.setStyleSheet("#cracktype {\n"
                                      "    font: 700 9pt \"Segoe UI\";\n"
                                      "    font: 700 9pt \"Segoe UI\";\n"
@@ -59,7 +59,7 @@ class Ui_MainWindow(object):
                                      "}")
         self.cracktype.setObjectName("cracktype")
         self.crackprogression = QtWidgets.QLabel(self.widget)
-        self.crackprogression.setGeometry(QtCore.QRect(50, 250, 201, 31))
+        self.crackprogression.setGeometry(QtCore.QRect(50, 270, 201, 31))
         self.crackprogression.setStyleSheet("#crackprogression {\n"
                                             "    font: 700 9pt \"Segoe UI\";\n"
                                             "    font: 700 9pt \"Segoe UI\";\n"
@@ -82,7 +82,7 @@ class Ui_MainWindow(object):
                                             "}")
         self.crackprogression.setObjectName("crackprogression")
         self.remarks = QtWidgets.QLabel(self.widget)
-        self.remarks.setGeometry(QtCore.QRect(50, 300, 121, 21))
+        self.remarks.setGeometry(QtCore.QRect(50, 310, 71, 21))
         self.remarks.setStyleSheet("#remarks {\n"
                                    "    font: 700 9pt \"Segoe UI\";\n"
                                    "    font: 700 9pt \"Segoe UI\";\n"
@@ -105,7 +105,7 @@ class Ui_MainWindow(object):
                                    "}")
         self.remarks.setObjectName("remarks")
         self.notes = QtWidgets.QTextEdit(self.widget)
-        self.notes.setGeometry(QtCore.QRect(50, 330, 661, 161))
+        self.notes.setGeometry(QtCore.QRect(50, 340, 661, 161))
         self.notes.setStyleSheet("#notes {\n"
                                  "        border-radius: 10px;\n"
                                  "        font-size: 18px;\n"
@@ -147,7 +147,7 @@ class Ui_MainWindow(object):
                                   "}")
         self.print1.setObjectName("print1")
         self.combo1 = QtWidgets.QComboBox(self.widget)
-        self.combo1.setGeometry(QtCore.QRect(250, 170, 381, 31))
+        self.combo1.setGeometry(QtCore.QRect(250, 170, 381, 41))
         self.combo1.setStyleSheet("#combo1 {\n"
                                   "        border-radius: 10px;\n"
                                   "        font-size: 18px;\n"
@@ -158,9 +158,18 @@ class Ui_MainWindow(object):
                                   "        padding: 10px;\n"
                                   "    }")
         self.combo1.setObjectName("combo1")
-        self.combo1.addItem("item 1")
+        self.combo1.addItem("None")
+        self.combo1.addItem("Vertical Crack/s on Wall")
+        self.combo1.addItem("Horizontal Crack/s on Wall")
+        self.combo1.addItem("Corner Crack/s")
+        self.combo1.addItem("Crack/s at the Beam Column Junction")
+        self.combo1.addItem("Crack/s on Column ")
+        self.combo1.addItem("Crack/s on Slabs")
+        self.combo1.addItem("Crack/s on Slab Foundation")
+        self.combo1.addItem("Crack/s on Foundation")
+        self.combo1.addItem("Crack/s on Pavement")
         self.loccrack = QtWidgets.QLabel(self.widget)
-        self.loccrack.setGeometry(QtCore.QRect(50, 160, 181, 51))
+        self.loccrack.setGeometry(QtCore.QRect(50, 160, 181, 61))
         self.loccrack.setStyleSheet("#loccrack {\n"
                                     "    font: 700 9pt \"Franklin Gothic Medium\";\n"
                                     "    font: 600 9pt \"Franklin Gothic Medium\";\n"
@@ -182,7 +191,7 @@ class Ui_MainWindow(object):
                                     "}")
         self.loccrack.setObjectName("loccrack")
         self.combo2 = QtWidgets.QComboBox(self.widget)
-        self.combo2.setGeometry(QtCore.QRect(250, 210, 381, 31))
+        self.combo2.setGeometry(QtCore.QRect(250, 220, 381, 41))
         self.combo2.setStyleSheet("#combo2 {\n"
                                   "        border-radius: 10px;\n"
                                   "        font-size: 18px;\n"
@@ -193,8 +202,18 @@ class Ui_MainWindow(object):
                                   "        padding: 10px;\n"
                                   "    }")
         self.combo2.setObjectName("combo2")
+        self.combo2.addItem("None")
+        self.combo2.addItem("Drying Shrinkage Crack/s")
+        self.combo2.addItem("Thermal Crack/s")
+        self.combo2.addItem("Structural Crack/s")
+        self.combo2.addItem("Settlement Crack/s")
+        self.combo2.addItem("Corrosion Induced Crack/s")
+        self.combo2.addItem("Alkali-Silica Reaction")
+        self.combo2.addItem("Heaving Crack/s")
+        self.combo2.addItem("Overloading Crack/s")
+        self.combo2.addItem("Joint Crack/s")
         self.combo3 = QtWidgets.QComboBox(self.widget)
-        self.combo3.setGeometry(QtCore.QRect(250, 250, 381, 31))
+        self.combo3.setGeometry(QtCore.QRect(250, 270, 381, 41))
         self.combo3.setStyleSheet("#combo3 {\n"
                                   "        border-radius: 10px;\n"
                                   "        font-size: 18px;\n"
@@ -205,6 +224,20 @@ class Ui_MainWindow(object):
                                   "        padding: 10px;\n"
                                   "    }")
         self.combo3.setObjectName("combo3")
+        self.combo3.addItem("None")
+        self.combo3.addItem("Fatigue Crack/s")
+        self.combo3.addItem("Environmental Crack/s")
+        self.combo3.addItem("Creep Crack Growth")
+        self.combo3.addItem("Overload Crack Growth")
+        self.combo3.addItem("Thermal Fatigue Crack Growth")
+        self.combo3.addItem("Corrosion Fatigue Crack Growth")
+        self.combo3.addItem("Corrosion Fatigue Crack Growth")
+        self.combo3.addItem("Stress Corrosion Cracking")
+        self.combo3.addItem("Hydrogen Embrittlement")
+        self.combo3.addItem("Well-Induced Crack Growth")
+
+
+
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
