@@ -32,7 +32,7 @@ class Ui_MainWindow(object):
         self.widget_2 = QtWidgets.QWidget(self.widget)
         self.widget_2.setGeometry(QtCore.QRect(30, -20, 581, 171))
         self.widget_2.setStyleSheet("#widget_2 {\n"
-                                    "border-image: url(images/Crackterize.png) 100 -200 150 100 stretch stretch;\n"
+                                    "border-image: url(../images/Crackterize.png) 100 -200 150 100 stretch stretch;\n"
                                     "}")
         self.widget_2.setObjectName("widget_2")
         self.cracktype = QtWidgets.QLabel(self.widget)

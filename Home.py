@@ -18,9 +18,9 @@ class Ui_MainWindow(object):
         MainWindow.setObjectName("MainWindow")
         MainWindow.setWindowModality(QtCore.Qt.NonModal)
         MainWindow.setEnabled(True)
-        MainWindow.resize(983, 573)
-        MainWindow.setMinimumSize(QtCore.QSize(983, 573))
-        MainWindow.setMaximumSize(QtCore.QSize(983, 573))
+        #MainWindow.resize(983, 573)
+        MainWindow.setMinimumSize(QtCore.QSize(1000, 600))
+        #MainWindow.setMaximumSize(QtCore.QSize(983, 573))
         MainWindow.setStyleSheet("#MainWindow{\n"
                                  "background-color: qlineargradient(spread:pad, x1:0.045, y1:0.261, x2:0.988636, y2:0.955, stop:0 rgba(235, 209, 196, 255), stop:1 rgba(255, 255, 255, 255));\n"
                                  "width: fit-content;\n"
@@ -56,8 +56,8 @@ class Ui_MainWindow(object):
         effect.setColor(QtGui.QColor(144, 115, 87, 100))
         effect.setOffset(QtCore.QPointF(0, 4))
         self.threeBtn.setGraphicsEffect(effect)
-
         self.threeBtn.setMinimumSize(QtCore.QSize(0, 0))
+        self.threeBtn.setMaximumSize(QtCore.QSize(700, 60))
         self.threeBtn.setStyleSheet("#threeBtn{\n"
                                     "background-color: rgb(255, 255, 255);\n"
                                     "border-radius:28px;\n"

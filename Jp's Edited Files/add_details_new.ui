@@ -1,0 +1,516 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>542</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">#MainWindow{
+background-color: qlineargradient(spread:pad, x1:0.045, y1:0.261, x2:0.988636, y2:0.955, stop:0 rgba(235, 209, 196, 255), stop:1 rgba(255, 255, 255, 255));
+width: fit-content;
+                                heigth: fit-content;
+                                 block-size: fit-content;
+} </string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <property name="styleSheet">
+    <string notr="true">#centralwidget{
+background-color: qlineargradient(spread:pad, x1:0.045, y1:0.261, x2:0.988636, y2:0.955, stop:0 rgba(235, 209, 196, 255), stop:1 rgba(255, 255, 255, 255));
+width: fit-content;
+                                heigth: fit-content;
+                                 block-size: fit-content;
+} </string>
+   </property>
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QWidget" name="widget" native="true">
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item>
+        <widget class="QWidget" name="widget_2" native="true">
+         <property name="minimumSize">
+          <size>
+           <width>764</width>
+           <height>89</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>764</width>
+           <height>89</height>
+          </size>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">#widget_2 {
+border-image:url(:/images/Crackterize.png) 200 -350 190 100 stretch stretch;
+}</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_3"/>
+        </widget>
+       </item>
+       <item>
+        <widget class="QWidget" name="widget_5" native="true">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <layout class="QHBoxLayout" name="horizontalLayout">
+          <item>
+           <widget class="QWidget" name="widget_7" native="true">
+            <layout class="QVBoxLayout" name="verticalLayout_4">
+             <item>
+              <widget class="QLabel" name="loccrack">
+               <property name="styleSheet">
+                <string notr="true">#loccrack {
+	font: 700 9pt &quot;Franklin Gothic Medium&quot;;
+	font: 600 9pt &quot;Franklin Gothic Medium&quot;;
+position: absolute;
+width: 50px;
+height: 50px;
+left: 143px;
+top: 236px;
+
+font-family: 'Franklin Gothic Medium';
+font-style: normal;
+font-weight: 600;
+font-size: 20px;
+line-height: 42px;
+text-align: center;
+
+color: 
+#664323;
+}</string>
+               </property>
+               <property name="text">
+                <string>Location of Crack:</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="cracktype">
+               <property name="styleSheet">
+                <string notr="true">#cracktype {
+	font: 700 9pt &quot;Segoe UI&quot;;
+	font: 700 9pt &quot;Segoe UI&quot;;
+	font: 600 9pt &quot;Segoe UI&quot;;
+position: absolute;
+width: 50px;
+height: 50px;
+left: 143px;
+top: 236px;
+
+font-family: 'Franklin Gothic Medium';
+font-style: normal;
+font-weight: 600;
+font-size: 20px;
+line-height: 42px;
+text-align: center;
+
+color: 
+#664323;
+}</string>
+               </property>
+               <property name="text">
+                <string>Crack Type:</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="crackprogression">
+               <property name="styleSheet">
+                <string notr="true">#crackprogression {
+	font: 700 9pt &quot;Segoe UI&quot;;
+	font: 700 9pt &quot;Segoe UI&quot;;
+	font: 600 9pt &quot;Segoe UI&quot;;
+position: absolute;
+width: 50px;
+height: 50px;
+left: 143px;
+top: 236px;
+
+font-family: 'Franklin Gothic Medium';
+font-style: normal;
+font-weight: 600;
+font-size: 20px;
+line-height: 42px;
+text-align: center;
+
+color: 
+#664323;
+}</string>
+               </property>
+               <property name="text">
+                <string>Crack Progression:</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QWidget" name="widget_8" native="true">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <horstretch>20</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout_5">
+             <property name="spacing">
+              <number>15</number>
+             </property>
+             <property name="rightMargin">
+              <number>150</number>
+             </property>
+             <item>
+              <widget class="QComboBox" name="loc_box">
+               <property name="maximumSize">
+                <size>
+                 <width>396</width>
+                 <height>41</height>
+                </size>
+               </property>
+               <property name="autoFillBackground">
+                <bool>false</bool>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">#loc_box {
+        border-radius: 10px;
+        font-size: 18px;
+        font-family: Arial;
+        color: #333;
+        background-color: #fff;
+        border: 2px solid #aaa;
+        padding: 10px;
+    }
+
+                                      #loc_box::drop-down{
+                                      image:url(images/arrowdown.png);
+                                      width: 20px;
+                                      height: 20px;
+        padding: 8px;
+                                      }
+                                      #loc_box::drop-down::pressed{
+                                      image:url(images/arrowup.png);
+                                      width: 20px;
+                                      height: 20px;
+                                      text-align: center;
+                                      }
+
+                                      #loc_box QAbstractItemView {
+                                      background-color: rgb(255, 255, 255);
+                                      outline: none;
+                                      text-align: center;}
+
+                                      #loc_box QAbstractItemView::item {
+                                      background-color: #F4EBE6;
+                                      color: #4A3B28;
+                                      text-align: center;
+                                      min-height: 35px; min-width: 50px;
+                                      border:0px;}
+
+                                      #loc_box QListView{
+                                      border: none;
+                                      font-weight:bold;
+                                      text-align: center;}
+
+                                      #loc_box QListView::item{
+                                      border:0px;
+                                      border-radius: 15px;
+                                      padding:8px; 
+                                      margin:5px;}
+                                      
+
+                                      #loc_box QListView::item:selected { 
+                                      color: white; 
+                                      background-color: #4A3B28}</string>
+               </property>
+               <property name="placeholderText">
+                <string>Select the location of crack</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QComboBox" name="type_box">
+               <property name="maximumSize">
+                <size>
+                 <width>396</width>
+                 <height>41</height>
+                </size>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">#type_box {
+        border-radius: 10px;
+        font-size: 18px;
+        font-family: Arial;
+        color: #333;
+        background-color: #fff;
+        border: 2px solid #aaa;
+        padding: 10px;
+    }
+
+                                      #type_box::drop-down{
+                                      image:url(images/arrowdown.png);
+                                      width: 20px;
+                                      height: 20px;
+        padding: 8px;
+                                      }
+                                      #type_box::drop-down::pressed{
+                                      image:url(images/arrowup.png);
+                                      width: 20px;
+                                      height: 20px;
+                                      text-align: center;
+                                      }
+
+                                      #type_box QAbstractItemView {
+                                      background-color: rgb(255, 255, 255);
+                                      outline: none;
+                                      text-align: center;}
+
+                                      #type_box QAbstractItemView::item {
+                                      background-color: #F4EBE6;
+                                      color: #4A3B28;
+                                      text-align: center;
+                                      min-height: 35px; min-width: 50px;
+                                      border:0px;}
+
+                                      #type_box QListView{
+                                      border: none;
+                                      font-weight:bold;
+                                      text-align: center;}
+
+                                      #type_box QListView::item{
+                                      border:0px;
+                                      border-radius: 15px;
+                                      padding:8px; 
+                                      margin:5px;}
+                                      
+
+                                      #type_box QListView::item:selected { 
+                                      color: white; 
+                                      background-color: #4A3B28}</string>
+               </property>
+               <property name="placeholderText">
+                <string>Select the crack type</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QComboBox" name="progression_box">
+               <property name="maximumSize">
+                <size>
+                 <width>396</width>
+                 <height>41</height>
+                </size>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">#progression_box {
+        border-radius: 10px;
+        font-size: 18px;
+        font-family: Arial;
+        color: #333;
+        background-color: #fff;
+        border: 2px solid #aaa;
+        padding: 10px;
+    }
+
+                                      #progression_box::drop-down{
+                                      image:url(images/arrowdown.png);
+                                      width: 20px;
+                                      height: 20px;
+        padding: 8px;
+                                      }
+                                      #progression_box::drop-down::pressed{
+                                      image:url(images/arrowup.png);
+                                      width: 20px;
+                                      height: 20px;
+                                      text-align: center;
+                                      }
+
+                                      #progression_box QAbstractItemView {
+                                      background-color: rgb(255, 255, 255);
+                                      outline: none;
+                                      text-align: center;}
+
+                                      #progression_box QAbstractItemView::item {
+                                      background-color: #F4EBE6;
+                                      color: #4A3B28;
+                                      text-align: center;
+                                      min-height: 35px; min-width: 50px;
+                                      border:0px;}
+
+                                      #progression_box QListView{
+                                      border: none;
+                                      font-weight:bold;
+                                      text-align: center;}
+
+                                      #progression_box QListView::item{
+                                      border:0px;
+                                      border-radius: 15px;
+                                      padding:8px; 
+                                      margin:5px;}
+                                      
+
+                                      #progression_box QListView::item:selected { 
+                                      color: white; 
+                                      background-color: #4A3B28}</string>
+               </property>
+               <property name="placeholderText">
+                <string>Select the crack progression</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QWidget" name="widget_3" native="true">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+           <horstretch>100</horstretch>
+           <verstretch>10</verstretch>
+          </sizepolicy>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_6">
+          <item>
+           <widget class="QLabel" name="remarks">
+            <property name="styleSheet">
+             <string notr="true">#remarks {
+	font: 700 9pt &quot;Segoe UI&quot;;
+	font: 700 9pt &quot;Segoe UI&quot;;
+	font: 600 9pt &quot;Segoe UI&quot;;
+position: absolute;
+width: 50px;
+height: 50px;
+left: 143px;
+top: 236px;
+
+font-family: 'Franklin Gothic Medium';
+font-style: normal;
+font-weight: 600;
+font-size: 15px;
+line-height: 42px;
+text-align: center;
+
+color: 
+#664323;
+}</string>
+            </property>
+            <property name="text">
+             <string>Remarks:</string>
+            </property>
+            <property name="indent">
+             <number>10</number>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QTextEdit" name="notes">
+            <property name="styleSheet">
+             <string notr="true">#notes {
+        border-radius: 10px;
+        font-size: 18px;
+        font-family: Arial;
+        color: #333;
+        background-color: #fff;
+        border: 2px solid #aaa;
+        padding: 10px;
+    }</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QWidget" name="widget_6" native="true">
+         <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="0,0,0">
+          <property name="spacing">
+           <number>50</number>
+          </property>
+          <property name="leftMargin">
+           <number>100</number>
+          </property>
+          <property name="rightMargin">
+           <number>100</number>
+          </property>
+          <item>
+           <widget class="QPushButton" name="discard">
+            <property name="styleSheet">
+             <string notr="true">#discard{
+ background-color: #6A6E72;
+            color: white;
+font: bold;
+            border-radius: 10px;
+            padding: 10px 20px;
+}</string>
+            </property>
+            <property name="text">
+             <string>Discard</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="save1">
+            <property name="styleSheet">
+             <string notr="true">#save1{
+ background-color: #6F4B27;
+            color: white;
+font: bold;
+            border-radius: 10px;
+            padding: 10px 20px;
+}</string>
+            </property>
+            <property name="text">
+             <string>Save</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="print1">
+            <property name="styleSheet">
+             <string notr="true">#print1{
+ background-color: #2E74A9;
+            color: white;
+font: bold;
+            border-radius: 10px;
+            padding: 10px 20px;
+}</string>
+            </property>
+            <property name="text">
+             <string>Print</string>
+            </property>
+            <property name="icon">
+             <iconset resource="../images/images.qrc">
+              <normaloff>:/images/print_icon.png</normaloff>:/images/print_icon.png</iconset>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources>
+  <include location="../images/images.qrc"/>
+ </resources>
+ <connections/>
+</ui>
