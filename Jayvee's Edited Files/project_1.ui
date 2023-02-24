@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Dialog</class>
+ <widget class="QDialog" name="Dialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>295</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Dialog</string>
+  </property>
+  <widget class="QLabel" name="proj1">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>30</y>
+     <width>141</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">#proj1 {
+   font-family: Arial;
+   font-size: 30px;
+font-weight: bold;
+   color: #6F4B27;
+}</string>
+   </property>
+   <property name="text">
+    <string>Project 1</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>100</y>
+     <width>91</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">from PyQt5.QtWidgets
+import QApplication, QWidget, QPushButton, QVBoxLayout
+from PyQt5.QtGui
+import QIcon
+import sys
+
+class Example(QWidget):
+ def __init__(self):
+        super().__init__()
+    self.initUI()
+
+  def initUI(self):
+
+ vbox = QVBoxLayout()
+
+btn = QPushButton(QIcon('add_folder.png'), 'Create Folder', self)
+
+  btn.setIconSize(btn.size())
+
+        btn.setToolTip('Create a new folder')
+
+   btn.setStyleSheet(&quot;QPushButton { background-color: #4CAF50; color: white; border-radius: 10px; font-size: 20px; padding: 10px; }&quot;
+                          &quot;QPushButton:hover { background-color: #3e8e41; }&quot;
+                          &quot;QPushButton:pressed { background-color: #2c6324; }&quot;)
+ 
+        vbox.addWidget(btn)
+        
+        self.setLayout(vbox)
+        
+        self.setGeometry(300, 300, 250, 150)
+        self.setWindowTitle('Create Folder')
+        self.show()
+
+
+if __name__ == '__main__':
+    
+    app = QApplication(sys.argv)
+    ex = Example()
+    sys.exit(app.exec_())
+
+</string>
+   </property>
+   <property name="text">
+    <string>PushButton</string>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
