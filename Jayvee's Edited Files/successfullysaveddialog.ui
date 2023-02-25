@@ -39,8 +39,8 @@ font-weight: bold;
     <rect>
      <x>100</x>
      <y>150</y>
-     <width>171</width>
-     <height>91</height>
+     <width>161</width>
+     <height>101</height>
     </rect>
    </property>
    <property name="styleSheet">

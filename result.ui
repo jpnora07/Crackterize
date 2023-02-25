@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>595</width>
-    <height>402</height>
+    <width>691</width>
+    <height>473</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,23 +15,74 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QWidget" name="widget" native="true">
-     <widget class="QWidget" name="widget_2" native="true">
+    <widget class="QWidget" name="roundWdgt" native="true">
+     <property name="styleSheet">
+      <string notr="true">#roundWdgt {
+            background: #FFFFFF;
+            border-radius: 20px;
+            opacity: 100;
+            border: none;
+        }
+</string>
+     </property>
+     <widget class="QWidget" name="logoWdgt" native="true">
       <property name="geometry">
        <rect>
-        <x>100</x>
-        <y>30</y>
-        <width>391</width>
-        <height>61</height>
+        <x>140</x>
+        <y>-30</y>
+        <width>341</width>
+        <height>241</height>
        </rect>
       </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+        <horstretch>30</horstretch>
+        <verstretch>100</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">#logoWdgt{
+border-image: url(:/images/Crackterize.png) 10 10 10 10 stretch;
+
+}</string>
+      </property>
+      <widget class="QWidget" name="widget" native="true">
+       <property name="geometry">
+        <rect>
+         <x>200</x>
+         <y>150</y>
+         <width>311</width>
+         <height>301</height>
+        </rect>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QWidget" name="outimg" native="true">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>120</y>
+        <width>311</width>
+        <height>301</height>
+       </rect>
+      </property>
+      <widget class="QWidget" name="img" native="true">
+       <property name="geometry">
+        <rect>
+         <x>40</x>
+         <y>20</y>
+         <width>261</width>
+         <height>221</height>
+        </rect>
+       </property>
+      </widget>
      </widget>
     </widget>
    </item>
   </layout>
  </widget>
  <resources>
-  <include location="../images/images.qrc"/>
+  <include location="images/images.qrc"/>
  </resources>
  <connections/>
 </ui>
