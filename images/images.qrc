@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="images">
+    <file>print_icon.png</file>
     <file>i.png</file>
     <file>img.png</file>
     <file>add_folder.png</file>
