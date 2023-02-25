@@ -1,8 +1,10 @@
+import sqlite3
+
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import Qt, QRect
+from PyQt5.QtCore import Qt, QRect, QTimer
 from PyQt5.QtGui import QIcon, QPixmap, QPalette
 from PyQt5.QtWidgets import QListView, QComboBox, QDialog, QVBoxLayout, QApplication, QFileDialog, QHBoxLayout, \
-    QStyledItemDelegate
+    QStyledItemDelegate, QMessageBox
 
 
 class AlignDelegate(QStyledItemDelegate):
@@ -13,14 +15,15 @@ class AlignDelegate(QStyledItemDelegate):
     def paint(self, painter, option, index):
         super().paint(painter, option, index)
 
+
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.setWindowModality(QtCore.Qt.NonModal)
         MainWindow.setEnabled(True)
-        MainWindow.resize(983, 573)
-        MainWindow.setMinimumSize(QtCore.QSize(983, 573))
-        MainWindow.setMaximumSize(QtCore.QSize(983, 573))
+        # MainWindow.resize(983, 573)
+        MainWindow.setMinimumSize(QtCore.QSize(1000, 600))
+        # MainWindow.setMaximumSize(QtCore.QSize(983, 573))
         MainWindow.setStyleSheet("#MainWindow{\n"
                                  "background-color: qlineargradient(spread:pad, x1:0.045, y1:0.261, x2:0.988636, y2:0.955, stop:0 rgba(235, 209, 196, 255), stop:1 rgba(255, 255, 255, 255));\n"
                                  "width: fit-content;\n"
@@ -46,18 +49,24 @@ class Ui_MainWindow(object):
         self.verticalLayout.setObjectName("verticalLayout")
         self.widget_2 = QtWidgets.QWidget(self.widget)
         self.widget_2.setObjectName("widget_2")
-        self.verticalLayout_3 = QtWidgets.QVBoxLayout(self.widget_2)
+        self.verticalLayout_3 = QtWidgets.QHBoxLayout(self.widget_2)
         self.verticalLayout_3.setContentsMargins(180, 50, 180, 60)
         self.verticalLayout_3.setObjectName("verticalLayout_3")
         self.threeBtn = QtWidgets.QWidget(self.widget_2)
+
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.threeBtn.sizePolicy().hasHeightForWidth())
+        self.threeBtn.setSizePolicy(sizePolicy)
 
         effect = QtWidgets.QGraphicsDropShadowEffect()
         effect.setBlurRadius(5)
         effect.setColor(QtGui.QColor(144, 115, 87, 100))
         effect.setOffset(QtCore.QPointF(0, 4))
         self.threeBtn.setGraphicsEffect(effect)
-
         self.threeBtn.setMinimumSize(QtCore.QSize(0, 0))
+        self.threeBtn.setMaximumSize(QtCore.QSize(650, 58))
         self.threeBtn.setStyleSheet("#threeBtn{\n"
                                     "background-color: rgb(255, 255, 255);\n"
                                     "border-radius:28px;\n"
@@ -72,16 +81,18 @@ class Ui_MainWindow(object):
         self.myProjects.setMinimumSize(QtCore.QSize(25, 0))
         self.myProjects.setGeometry(200, 150, 150, 30)
 
-
         self.myProjects.setEditable(True)
         self.myProjects.lineEdit().setAlignment(QtCore.Qt.AlignCenter)
         self.myProjects.setEditable(True)
         self.ledit = self.myProjects.lineEdit()
         self.ledit.setReadOnly(True)
         self.ledit.setAlignment(Qt.AlignCenter)
-        geek_list = ["Project 1", "Project 2", "Project 3", "Project 4"]
-
-        self.myProjects.addItems(geek_list)
+        conn = sqlite3.connect('Projects.db')
+        c = conn.cursor()
+        c.execute("SELECT project_name FROM Projects ORDER BY created_at DESC")
+        rows = c.fetchall()
+        for row in rows:
+            self.myProjects.addItem(row[0])
         self.myProjects.setEditText("My Projects")
 
         def handleSelection(text):
@@ -97,8 +108,8 @@ class Ui_MainWindow(object):
         view.setWordWrap(True)
         radius = 20
 
-        #border - top - left - radius: {0}px;
-        #border - top - right - radius: {0}px;
+        # border - top - left - radius: {0}px;
+        # border - top - right - radius: {0}px;
         view.setStyleSheet(
             """
             background-color :rgba(255, 255, 255, 0.75);
@@ -161,7 +172,7 @@ class Ui_MainWindow(object):
                                       "padding:8px; "
                                       "margin:10px;"
                                       "}"
-                                      
+
 
                                       "#myProjects QListView::item:selected { "
                                       "color: white; "
@@ -388,21 +399,21 @@ class Ui_MainWindow(object):
         self.verticalLayout.addWidget(self.widget_2)
         self.widget_3 = QtWidgets.QWidget(self.widget)
         self.widget_3.setObjectName("widget_3")
-        self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.widget_3)
+        self.verticalLayout_2 = QtWidgets.QHBoxLayout(self.widget_3)
         self.verticalLayout_2.setObjectName("verticalLayout_2")
         self.widget_6 = QtWidgets.QWidget(self.widget_3)
-        self.widget_6.setStyleSheet("background-image:url(images/Crackterize.png);\n"
-                                    "background-repeat: no-repeat; \n"
-                                    "background-position: center;")
+        self.widget_6.setMaximumSize(QtCore.QSize(929, 150))
+        self.widget_6.setStyleSheet("border-image:url(images/Crackterize.png) 180 0 180 0 stretch stretch;")
         self.widget_6.setObjectName("widget_6")
         self.verticalLayout_2.addWidget(self.widget_6)
         self.verticalLayout.addWidget(self.widget_3)
         self.widget_4 = QtWidgets.QWidget(self.widget)
         self.widget_4.setObjectName("widget_4")
-        self.verticalLayout_4 = QtWidgets.QVBoxLayout(self.widget_4)
+        self.verticalLayout_4 = QtWidgets.QHBoxLayout(self.widget_4)
         self.verticalLayout_4.setContentsMargins(300, 20, 300, 20)
         self.verticalLayout_4.setObjectName("verticalLayout_4")
         self.widgetUpload = QtWidgets.QWidget(self.widget_4)
+        self.widgetUpload.setMaximumSize(QtCore.QSize(347, 128))
         effect = QtWidgets.QGraphicsDropShadowEffect()
         effect.setBlurRadius(5)
         effect.setColor(QtGui.QColor(144, 115, 87, 100))
@@ -595,15 +606,42 @@ class Ui_MainWindow(object):
                                     "}")
         self.save_btn.setObjectName("save_btn")
         self.save_btn.clicked.connect(NewProjectDialog.close)
-        self.save_btn.clicked.connect(self.show_dialog_success_save)
+        self.save_btn.clicked.connect(self.add_new_project_in_db)
         self.horizontalLayout.addWidget(self.save_btn)
         self.verticalLayout_4.addWidget(self.widget)
         self.verticalLayout.addWidget(self.widget_4)
         self.horizontalLayout_2.addWidget(self.widget_1)
         NewProjectDialog.exec()
 
+    def add_new_project_in_db(self):
+        # Get the text from the QTextEdit widget
+        new_projects = self.ET_newproject.toPlainText()
+
+        # Create a connection to a SQLite database or create it if it doesn't exist
+        self.conn = sqlite3.connect('Projects.db')
+        self.c = self.conn.cursor()
+
+        # Create a table in the database if it doesn't exist
+        self.c.execute('''CREATE TABLE IF NOT EXISTS Projects
+                         (id INTEGER PRIMARY KEY, project_name TEXT, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)''')
+
+        # Check if the project name already exists in the database
+        self.c.execute("SELECT COUNT(*) FROM Projects WHERE project_name = ?", (new_projects,))
+        result = self.c.fetchone()
+
+        if result[0] == 0:
+            # If the project name doesn't exist, insert it into the database
+            self.c.execute("INSERT INTO Projects (project_name) VALUES (?)", (new_projects,))
+            self.conn.commit()
+            # Show a dialog message to indicate that the project has been added to the database
+            self.show_dialog_success_save()
+        else:
+            # If the project name already exists, show a dialog message to inform the user
+            self.show_dialog_failed_save()
+
     # Dialog Box for successfully saved project
     def show_dialog_success_save(self):
+
         # Create dialog box
         Dialog = QtWidgets.QDialog()
         Dialog.setObjectName("Dialog")
@@ -613,6 +651,9 @@ class Ui_MainWindow(object):
         Dialog.setMaximumSize(QtCore.QSize(400, 300))
         # set corner radius of dialog box
         Dialog.setAttribute(Qt.WA_TranslucentBackground)
+        self.timer = QTimer()
+        self.timer.timeout.connect(Dialog.close)
+        self.timer.start(1000)
         # Dialog.setWindowOpacity(0.6)
         radius = 20
         Dialog.setStyleSheet("""
@@ -640,6 +681,80 @@ class Ui_MainWindow(object):
         self.verticalLayout_4.setObjectName("verticalLayout_4")
         self.label = QtWidgets.QLabel(self.widget_5)
         self.label.setText("New Project Saved!")
+        font = QtGui.QFont()
+        font.setFamily("Arial")
+        font.setPointSize(22)
+        font.setBold(True)
+        font.setItalic(False)
+        font.setUnderline(False)
+        font.setStrikeOut(False)
+        font.setKerning(False)
+        self.label.setFont(font)
+        self.label.setStyleSheet(
+            "QLabel { font: 900 \"Segoe UI\"; color: #4A3B28; font-family: Arial; Text-align: Center; font-size: 22pt;}")
+        self.label.setAlignment(QtCore.Qt.AlignCenter)
+        self.label.setWordWrap(True)
+        self.label.setObjectName("label")
+        self.verticalLayout_4.addWidget(self.label)
+        self.verticalLayout.addWidget(self.widget_5)
+        self.widget_3 = QtWidgets.QWidget(self.widget_2)
+        self.widget_3.setObjectName("widget_3")
+        self.verticalLayout_3 = QtWidgets.QVBoxLayout(self.widget_3)
+        self.verticalLayout_3.setContentsMargins(-1, 0, -1, 20)
+        self.verticalLayout_3.setObjectName("verticalLayout_3")
+        self.widget_4 = QtWidgets.QWidget(self.widget_3)
+        self.widget_4.setAutoFillBackground(False)
+        self.widget_4.setStyleSheet("#widget_4{\n"
+                                    "background-image: url(images/ok3.png);\n"
+                                    "background-repeat: no-repeat; \n"
+                                    "background-position: center;}")
+        self.widget_4.setObjectName("widget_4")
+        self.verticalLayout_3.addWidget(self.widget_4)
+        self.verticalLayout.addWidget(self.widget_3)
+        self.horizontalLayout.addWidget(self.widget_2)
+        self.verticalLayout_2.addWidget(self.widget)
+        Dialog.exec()
+
+    def show_dialog_failed_save(self):
+        # Create dialog box
+        Dialog = QtWidgets.QDialog()
+        Dialog.setObjectName("Dialog")
+        Dialog.setWindowFlags(Qt.FramelessWindowHint)
+        Dialog.resize(400, 300)
+        Dialog.setMinimumSize(QtCore.QSize(400, 300))
+        Dialog.setMaximumSize(QtCore.QSize(400, 300))
+        # set corner radius of dialog box
+        Dialog.setAttribute(Qt.WA_TranslucentBackground)
+        self.timer = QTimer()
+        self.timer.timeout.connect(Dialog.close)
+        self.timer.start(1000)
+        # Dialog.setWindowOpacity(0.6)
+        radius = 20
+        Dialog.setStyleSheet("""
+                                    background:#EFEEEE;
+                                    border-top-left-radius:{0}px;
+                                    border-bottom-left-radius:{0}px;
+                                    border-top-right-radius:{0}px;
+                                    border-bottom-right-radius:{0}px;
+                                    """.format(radius))
+
+        self.verticalLayout_2 = QtWidgets.QVBoxLayout(Dialog)
+        self.verticalLayout_2.setObjectName("verticalLayout_2")
+        self.widget = QtWidgets.QWidget(Dialog)
+        self.widget.setObjectName("widget")
+        self.horizontalLayout = QtWidgets.QHBoxLayout(self.widget)
+        self.horizontalLayout.setObjectName("horizontalLayout")
+        self.widget_2 = QtWidgets.QWidget(self.widget)
+        self.widget_2.setObjectName("widget_2")
+        self.verticalLayout = QtWidgets.QVBoxLayout(self.widget_2)
+        self.verticalLayout.setObjectName("verticalLayout")
+        self.widget_5 = QtWidgets.QWidget(self.widget_2)
+        self.widget_5.setObjectName("widget_5")
+        self.verticalLayout_4 = QtWidgets.QVBoxLayout(self.widget_5)
+        self.verticalLayout_4.setContentsMargins(-1, 20, -1, 0)
+        self.verticalLayout_4.setObjectName("verticalLayout_4")
+        self.label = QtWidgets.QLabel(self.widget_5)
+        self.label.setText("Project name already exists in the database!")
         font = QtGui.QFont()
         font.setFamily("Arial")
         font.setPointSize(22)
