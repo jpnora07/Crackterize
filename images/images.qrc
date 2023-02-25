@@ -1,7 +1,5 @@
 <RCC>
   <qresource prefix="images">
-    <file>i.png</file>
-    <file>img.png</file>
     <file>add_folder.png</file>
     <file>folder.png</file>
     <file>ok3.png</file>
