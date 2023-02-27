@@ -2,6 +2,7 @@ import os
 import sqlite3
 import sys
 import subprocess
+import view_folders
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import Qt, QRect, QTimer, QStringListModel
@@ -105,7 +106,13 @@ class Ui_MainWindow(object):
             self.myProjects.setEditText("My Projects")
             with open('selected_item.txt', 'w') as f:
                 f.write(text)
-            subprocess.Popen(['python', 'view_folders.py', text])
+            # Get the path to the directory where the executable is run from
+            app_path = getattr(sys, '_MEIPASS', None) or os.path.abspath('.')
+            # Create the path to the view_folders.py file
+            view_folders_path = os.path.join(app_path, 'view_folders.py')
+            # Execute the view_folders.py file using QProcess
+            process = QtCore.QProcess(self.myProjects)
+            process.start('python', [view_folders_path])
 
         self.myProjects.activated[str].connect(handleSelection)
 
