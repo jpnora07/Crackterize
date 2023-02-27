@@ -1,10 +1,13 @@
+import os
 import sqlite3
+import sys
+import subprocess
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import Qt, QRect, QTimer
+from PyQt5.QtCore import Qt, QRect, QTimer, QStringListModel
 from PyQt5.QtGui import QIcon, QPixmap, QPalette
 from PyQt5.QtWidgets import QListView, QComboBox, QDialog, QVBoxLayout, QApplication, QFileDialog, QHBoxLayout, \
-    QStyledItemDelegate, QMessageBox
+    QStyledItemDelegate, QMessageBox, QScrollBar, QAbstractItemView
 
 
 class AlignDelegate(QStyledItemDelegate):
@@ -17,7 +20,7 @@ class AlignDelegate(QStyledItemDelegate):
 
 
 class Ui_MainWindow(object):
-    def setupUi(self, MainWindow):
+    def setupUi(self, MainWindow, application_path=None):
         MainWindow.setObjectName("MainWindow")
         MainWindow.setWindowModality(QtCore.Qt.NonModal)
         MainWindow.setEnabled(True)
@@ -87,7 +90,9 @@ class Ui_MainWindow(object):
         self.ledit = self.myProjects.lineEdit()
         self.ledit.setReadOnly(True)
         self.ledit.setAlignment(Qt.AlignCenter)
-        conn = sqlite3.connect('Projects.db')
+        BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+        db_path = os.path.join(BASE_DIR, 'Projects.db')
+        conn = sqlite3.connect(db_path)
         c = conn.cursor()
         c.execute("SELECT project_name FROM Projects ORDER BY created_at DESC")
         rows = c.fetchall()
@@ -98,6 +103,9 @@ class Ui_MainWindow(object):
         def handleSelection(text):
             # change back to default title after item is selected
             self.myProjects.setEditText("My Projects")
+            with open('selected_item.txt', 'w') as f:
+                f.write(text)
+            subprocess.Popen(['python', 'view_folders.py', text])
 
         self.myProjects.activated[str].connect(handleSelection)
 
@@ -106,19 +114,79 @@ class Ui_MainWindow(object):
         self.myProjects.view().window().setAttribute(Qt.WA_TranslucentBackground)
         view = QListView()
         view.setWordWrap(True)
-        radius = 20
 
         # border - top - left - radius: {0}px;
         # border - top - right - radius: {0}px;
         view.setStyleSheet(
             """
+    QListView{
             background-color :rgba(255, 255, 255, 0.75);
-            border-bottom-left-radius:{0}px;
-            border-bottom-right-radius:{0}px;
-            """.format(radius)
+            border-bottom-left-radius:20px;
+            border-bottom-right-radius:20px;
+            }
+    QScrollBar:vertical
+    {
+        background-color: #c3c3c3;
+        width: 15px;
+        margin: 15px 3px 15px 3px;
+        border: 1px transparent #2A2929;
+        border-radius: 4px;
+    }
+
+    QScrollBar::handle:vertical
+    {
+        background-color: #8c8c8c;         /* #605F5F; */
+        min-height: 5px;
+        border-radius: 4px;
+    }
+
+    QScrollBar::sub-line:vertical
+    {
+        margin: 3px 0px 3px 0px;
+        border-image: url(:/images/up_arrow_disabled.png);        /* # <-------- */
+        height: 10px;
+        width: 10px;
+        subcontrol-position: top;
+        subcontrol-origin: margin;
+    }
+
+    QScrollBar::add-line:vertical
+    {
+        margin: 3px 0px 3px 0px;
+        border-image: url(:/images/down_arrow_disabled.png);       /* # <-------- */
+        height: 10px;
+        width: 10px;
+        subcontrol-position: bottom;
+        subcontrol-origin: margin;
+    }
+    QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical
+    {
+        background: none;
+    }
+
+    QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
+    {
+        background: none;
+    }
+            """
         )
+
+        scroll_bar = QScrollBar()
+        view.setVerticalScrollBar(scroll_bar)
         self.myProjects.setView(view)
         self.myProjects.view().parentWidget().setStyleSheet('border: none;')
+
+        # set the minimum data list and set the scrollbar
+        self.myProjects.setMaxVisibleItems(5)
+        self.myProjects.setMaxCount(100)
+        # Set the size adjust policy to adjust to contents
+        self.myProjects.setSizeAdjustPolicy(QComboBox.AdjustToContents)
+
+        # Set the vertical scrolling mode to ScrollPerPixel for smooth scrolling
+        self.myProjects.view().setVerticalScrollMode(QAbstractItemView.ScrollPerPixel)
+
+        # Show the vertical scrollbar
+        self.myProjects.view().setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
 
         self.myProjects.setStyleSheet("#myProjects {\n"
                                       "border-radius:14px;\n"
@@ -127,7 +195,6 @@ class Ui_MainWindow(object):
                                       "border: none;"
                                       "text-align: center;\n"
                                       "}\n"
-
                                       "#myProjects::drop-down{\n"
                                       "image:url(images/arrowdown.png);\n"
                                       "width: 20px;\n"
@@ -140,14 +207,11 @@ class Ui_MainWindow(object):
                                       "height: 20px;\n"
                                       "text-align: center;\n"
                                       "}\n"
-
                                       "#myProjects QAbstractItemView {\n"
                                       "background-color: rgb(255, 255, 255);\n"
                                       "outline: none;"
                                       "text-align: center;\n"
-                                      "\n"
                                       "}\n"
-
                                       "#myProjects QAbstractItemView::item {\n"
                                       "background-color: #F4EBE6;\n"
                                       "color: #4A3B28;\n"
@@ -155,34 +219,31 @@ class Ui_MainWindow(object):
                                       "min-height: 35px; min-width: 50px;"
                                       "border:0px;"
                                       "}\n"
-
                                       "#myProjects QListView{"
                                       "border: none;"
-                                      # "color:rgb(87, 96, 134);"
-                                      # "background-color:rgb(255, 255, 255);"
                                       "font-weight:bold;"
-                                      # "selection-background-color: rgb(47, 175, 178);"
-                                      # "show-decoration-selected: 1;"
                                       "text-align: center;\n"
                                       "}"
-
                                       "#myProjects QListView::item{"
                                       "border:0px;"
                                       "border-radius: 15px;"
                                       "padding:8px; "
                                       "margin:10px;"
                                       "}"
-
-
                                       "#myProjects QListView::item:selected { "
                                       "color: white; "
-                                      "background-color: #4A3B28}")
+                                      "background-color: #4A3B28}\n"
+                                      "#myProjects::-webkit-scrollbar {\n"
+                                      "width: 10px;\n"
+                                      "height: 10px;\n"
+                                      "}\n")
+
         self.myProjects.setObjectName("myProjects")
         self.horizontalLayout.addWidget(self.myProjects)
         self.history = QtWidgets.QComboBox(self.threeBtn)
         self.history.view().parentWidget().setStyleSheet('border: none;')
         self.history.setGeometry(200, 150, 150, 30)
-        geek_list = ["Image 1", "Image 2", "Image 3", "Image 4"]
+        geek_list = ["Image 1", "Image 2", "Image 3", "Image 4", "Image 1", "Image 2", "Image 3", "Image 4"]
         self.history.addItems(geek_list)
         self.history.setEditable(True)
         self.ledit = self.history.lineEdit()
@@ -207,13 +268,73 @@ class Ui_MainWindow(object):
         # border - top - right - radius: {0}px;
         view.setStyleSheet(
             """
+    QListView{
             background-color :rgba(255, 255, 255, 0.75);
-            border-bottom-left-radius:{0}px;
-            border-bottom-right-radius:{0}px;
-            """.format(radius)
+            border-bottom-left-radius:20px;
+            border-bottom-right-radius:20px;
+            }
+    QScrollBar:vertical
+    {
+        background-color: #c3c3c3;
+        width: 15px;
+        margin: 15px 3px 15px 3px;
+        border: 1px transparent #2A2929;
+        border-radius: 4px;
+    }
+
+    QScrollBar::handle:vertical
+    {
+        background-color: #8c8c8c;         /* #605F5F; */
+        min-height: 5px;
+        border-radius: 4px;
+    }
+
+    QScrollBar::sub-line:vertical
+    {
+        margin: 3px 0px 3px 0px;
+        border-image: url(:/images/up_arrow_disabled.png);        /* # <-------- */
+        height: 10px;
+        width: 10px;
+        subcontrol-position: top;
+        subcontrol-origin: margin;
+    }
+
+    QScrollBar::add-line:vertical
+    {
+        margin: 3px 0px 3px 0px;
+        border-image: url(:/images/down_arrow_disabled.png);       /* # <-------- */
+        height: 10px;
+        width: 10px;
+        subcontrol-position: bottom;
+        subcontrol-origin: margin;
+    }
+    QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical
+    {
+        background: none;
+    }
+
+    QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
+    {
+        background: none;
+    }
+            """
         )
+        scroll_bar = QScrollBar()
+        view.setVerticalScrollBar(scroll_bar)
         self.history.setView(view)
         self.history.view().parentWidget().setStyleSheet('border: none;')
+
+        # set the minimum data list and set the scrollbar
+        self.history.setMaxVisibleItems(5)
+        self.history.setMaxCount(100)
+        # Set the size adjust policy to adjust to contents
+        self.history.setSizeAdjustPolicy(QComboBox.AdjustToContents)
+
+        # Set the vertical scrolling mode to ScrollPerPixel for smooth scrolling
+        self.history.view().setVerticalScrollMode(QAbstractItemView.ScrollPerPixel)
+
+        # Show the vertical scrollbar
+        self.history.view().setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
 
         self.history.setStyleSheet("#history{\n"
                                    "padding-left: 10px;\n"
@@ -328,7 +449,7 @@ class Ui_MainWindow(object):
         )
         self.howtoUse.setView(view)
         self.howtoUse.view().parentWidget().setStyleSheet('border: none;')
-
+        image_path = self.resource_path("qrc:/images/arrowdown.png")
         self.howtoUse.setStyleSheet("#howtoUse{\n"
                                     "padding-left: 10px;\n"
                                     "border-radius:4px;\n"
@@ -617,27 +738,43 @@ class Ui_MainWindow(object):
         # Get the text from the QTextEdit widget
         new_projects = self.ET_newproject.toPlainText()
 
-        # Create a connection to a SQLite database or create it if it doesn't exist
-        self.conn = sqlite3.connect('Projects.db')
-        self.c = self.conn.cursor()
+        if len(new_projects) == 0:
+            # If new_projects is empty, show an error message
+            self.show_dialog_empty_text_error()
+            self.creating_new_project()
+        else:
 
-        # Create a table in the database if it doesn't exist
-        self.c.execute('''CREATE TABLE IF NOT EXISTS Projects
+            BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+            db_path = os.path.join(BASE_DIR, 'Projects.db')
+            # Create a connection to a SQLite database or create it if it doesn't exist
+            self.conn = sqlite3.connect(db_path)
+            self.c = self.conn.cursor()
+
+            # Create a table in the database if it doesn't exist
+            self.c.execute('''CREATE TABLE IF NOT EXISTS Projects
                          (id INTEGER PRIMARY KEY, project_name TEXT, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)''')
 
-        # Check if the project name already exists in the database
-        self.c.execute("SELECT COUNT(*) FROM Projects WHERE project_name = ?", (new_projects,))
-        result = self.c.fetchone()
+            # Check if the project name already exists in the database
+            self.c.execute("SELECT COUNT(*) FROM Projects WHERE project_name = ?", (new_projects,))
+            result = self.c.fetchone()
 
-        if result[0] == 0:
-            # If the project name doesn't exist, insert it into the database
-            self.c.execute("INSERT INTO Projects (project_name) VALUES (?)", (new_projects,))
-            self.conn.commit()
-            # Show a dialog message to indicate that the project has been added to the database
-            self.show_dialog_success_save()
-        else:
-            # If the project name already exists, show a dialog message to inform the user
-            self.show_dialog_failed_save()
+            if result[0] == 0:
+                # If the project name doesn't exist, insert it into the database
+                self.c.execute("INSERT INTO Projects (project_name) VALUES (?)", (new_projects,))
+                self.conn.commit()
+
+                self.myProjects.clear()
+                self.c.execute("SELECT project_name FROM Projects ORDER BY created_at DESC")
+                rows = self.c.fetchall()
+
+                for row in rows:
+                    self.myProjects.addItem(row[0])
+                # Show a dialog message to indicate that the project has been added to the database
+                self.show_dialog_success_save()
+            else:
+                # If the project name already exists, show a dialog message to inform the user
+                self.show_dialog_failed_save()
+                self.creating_new_project()
 
     # Dialog Box for successfully saved project
     def show_dialog_success_save(self):
@@ -765,7 +902,7 @@ class Ui_MainWindow(object):
         font.setKerning(False)
         self.label.setFont(font)
         self.label.setStyleSheet(
-            "QLabel { font: 900 \"Segoe UI\"; color: #4A3B28; font-family: Arial; Text-align: Center; font-size: 22pt;}")
+            "QLabel { font:\"Segoe UI\"; color: #4A3B28; font-family: Arial; Text-align: Center; font-size: 15pt;}")
         self.label.setAlignment(QtCore.Qt.AlignCenter)
         self.label.setWordWrap(True)
         self.label.setObjectName("label")
@@ -788,6 +925,90 @@ class Ui_MainWindow(object):
         self.horizontalLayout.addWidget(self.widget_2)
         self.verticalLayout_2.addWidget(self.widget)
         Dialog.exec()
+
+    def show_dialog_empty_text_error(self):
+        # Create dialog box
+        Dialog = QtWidgets.QDialog()
+        Dialog.setObjectName("Dialog")
+        Dialog.setWindowFlags(Qt.FramelessWindowHint)
+        Dialog.resize(400, 300)
+        Dialog.setMinimumSize(QtCore.QSize(400, 300))
+        Dialog.setMaximumSize(QtCore.QSize(400, 300))
+        # set corner radius of dialog box
+        Dialog.setAttribute(Qt.WA_TranslucentBackground)
+        self.timer = QTimer()
+        self.timer.timeout.connect(Dialog.close)
+        self.timer.start(1500)
+        # Dialog.setWindowOpacity(0.6)
+        radius = 20
+        Dialog.setStyleSheet("""
+                                            background:#EFEEEE;
+                                            border-top-left-radius:{0}px;
+                                            border-bottom-left-radius:{0}px;
+                                            border-top-right-radius:{0}px;
+                                            border-bottom-right-radius:{0}px;
+                                            """.format(radius))
+
+        self.verticalLayout_2 = QtWidgets.QVBoxLayout(Dialog)
+        self.verticalLayout_2.setObjectName("verticalLayout_2")
+        self.widget = QtWidgets.QWidget(Dialog)
+        self.widget.setObjectName("widget")
+        self.horizontalLayout = QtWidgets.QHBoxLayout(self.widget)
+        self.horizontalLayout.setObjectName("horizontalLayout")
+        self.widget_2 = QtWidgets.QWidget(self.widget)
+        self.widget_2.setObjectName("widget_2")
+        self.verticalLayout = QtWidgets.QVBoxLayout(self.widget_2)
+        self.verticalLayout.setObjectName("verticalLayout")
+        self.widget_5 = QtWidgets.QWidget(self.widget_2)
+        self.widget_5.setObjectName("widget_5")
+        self.verticalLayout_4 = QtWidgets.QVBoxLayout(self.widget_5)
+        self.verticalLayout_4.setContentsMargins(-1, 20, -1, 0)
+        self.verticalLayout_4.setObjectName("verticalLayout_4")
+        self.label = QtWidgets.QLabel(self.widget_5)
+        self.label.setText("Project name cannot be empty")
+        font = QtGui.QFont()
+        font.setFamily("Arial")
+        font.setPointSize(22)
+        font.setBold(True)
+        font.setItalic(False)
+        font.setUnderline(False)
+        font.setStrikeOut(False)
+        font.setKerning(False)
+        self.label.setFont(font)
+        self.label.setStyleSheet(
+            "QLabel { font:\"Segoe UI\"; color: #4A3B28; font-family: Arial; Text-align: Center; font-size: 15pt;}")
+        self.label.setAlignment(QtCore.Qt.AlignCenter)
+        self.label.setWordWrap(True)
+        self.label.setObjectName("label")
+        self.verticalLayout_4.addWidget(self.label)
+        self.verticalLayout.addWidget(self.widget_5)
+        self.widget_3 = QtWidgets.QWidget(self.widget_2)
+        self.widget_3.setObjectName("widget_3")
+        self.verticalLayout_3 = QtWidgets.QVBoxLayout(self.widget_3)
+        self.verticalLayout_3.setContentsMargins(-1, 0, -1, 20)
+        self.verticalLayout_3.setObjectName("verticalLayout_3")
+        self.widget_4 = QtWidgets.QWidget(self.widget_3)
+        self.widget_4.setAutoFillBackground(False)
+        self.widget_4.setStyleSheet("#widget_4{\n"
+                                    "background-image: url(images/ok3.png);\n"
+                                    "background-repeat: no-repeat; \n"
+                                    "background-position: center;}")
+        self.widget_4.setObjectName("widget_4")
+        self.verticalLayout_3.addWidget(self.widget_4)
+        self.verticalLayout.addWidget(self.widget_3)
+        self.horizontalLayout.addWidget(self.widget_2)
+        self.verticalLayout_2.addWidget(self.widget)
+        Dialog.exec()
+
+    def resource_path(self, relative_path):
+        """ Get absolute path to resource, works for dev and for PyInstaller """
+        try:
+            # PyInstaller creates a temp folder and stores path in _MEIPASS
+            base_path = sys._MEIPASS
+        except AttributeError:
+            base_path = os.path.abspath(".")
+
+        return os.path.join(base_path, relative_path)
 
 
 if __name__ == "__main__":
