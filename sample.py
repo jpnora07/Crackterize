@@ -1,69 +1,54 @@
-import sys
-from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QHBoxLayout, QVBoxLayout, QSizePolicy, QScrollArea
-
+import sqlite3
+from PyQt5.QtWidgets import *
 
 class Example(QWidget):
-
     def __init__(self):
         super().__init__()
 
-        self.initUI()
+        # create a layout for the scrollable area
+        self.scroll_layout = QVBoxLayout()
 
-    def initUI(self):
-
-        self.buttons = []
-        self.max_per_row = 5
-
-        # create initial button
-        self.add_button = QPushButton('Add button', self)
-        self.add_button.clicked.connect(self.add_new_button)
-        self.buttons.append(self.add_button)
-
-        # create scroll area
-        self.scroll = QScrollArea(self)
-        self.scroll.setWidgetResizable(True)
+        # create a scrollable area
+        self.scroll_area = QScrollArea()
+        self.scroll_area.setWidgetResizable(True)
         self.scroll_widget = QWidget()
-        self.scroll.setWidget(self.scroll_widget)
+        self.scroll_widget.setLayout(self.scroll_layout)
+        self.scroll_area.setWidget(self.scroll_widget)
 
-        # set layout
-        hbox = QHBoxLayout()
-        hbox.addWidget(self.add_button)
-        vbox = QVBoxLayout(self.scroll_widget)
-        vbox.addLayout(hbox)
+        # create a layout for the main window
+        self.layout = QVBoxLayout()
+        self.layout.addWidget(self.scroll_area)
 
-        # set main layout
-        main_layout = QVBoxLayout(self)
-        main_layout.addWidget(self.scroll)
+        # set the main window layout
+        self.setLayout(self.layout)
 
-        self.setGeometry(300, 300, 300, 150)
-        self.setWindowTitle('Adding buttons')
-        self.show()
+        # create a connection to the database
+        self.conn = sqlite3.connect('Projects.db')
+        self.c = self.conn.cursor()
 
-    def add_new_button(self):
-        # create new button
-        btn = QPushButton('Button {}'.format(len(self.buttons)), self.scroll_widget)
-        btn.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
-        self.buttons.append(btn)
+        # create a table if it doesn't exist
+        self.c.execute('''CREATE TABLE IF NOT EXISTS Location_Folder
+                                     (id INTEGER PRIMARY KEY, project_name TEXT, folder_name TEXT, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)''')
 
-        # add to layout
-        row_num = len(self.buttons) // self.max_per_row
-        col_num = len(self.buttons) % self.max_per_row
+        # fetch data from the database
+        self.c.execute("SELECT * FROM Location_Folder")
+        data = self.c.fetchall()
 
-        if col_num == 0:
-            hbox = QHBoxLayout()
-            self.scroll_widget.layout().addLayout(hbox)
-        else:
-            hbox = self.scroll_widget.layout().itemAt(self.scroll_widget.layout().count() - 1).layout()
+        # generate buttons for each record in the table
+        for record in data:
+            name = record[1]
+            description = record[2]
 
-        hbox.addWidget(btn)
+            btn = QPushButton(name, self.scroll_widget)
+            btn.setToolTip(description)
+            btn.clicked.connect(lambda checked, name=name: self.buttonClicked(name))
+            self.scroll_layout.addWidget(btn)
 
-        # move add button to bottom left corner
-        self.scroll_widget.layout().removeWidget(self.add_button)
-        self.scroll_widget.layout().itemAt(row_num).insertWidget(col_num, self.add_button)
-
+    def buttonClicked(self, name):
+        print(f"Button '{name}' clicked")
 
 if __name__ == '__main__':
-
-    app = QApplication(sys.argv)
+    app = QApplication([])
     ex = Example()
-    sys.exit(app.exec_())
+    ex.show()
+    app.exec_()

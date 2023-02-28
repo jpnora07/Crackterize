@@ -6,9 +6,9 @@ import view_folders
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import Qt, QRect, QTimer, QStringListModel
-from PyQt5.QtGui import QIcon, QPixmap, QPalette
+from PyQt5.QtGui import QIcon, QPixmap, QPalette, QMouseEvent
 from PyQt5.QtWidgets import QListView, QComboBox, QDialog, QVBoxLayout, QApplication, QFileDialog, QHBoxLayout, \
-    QStyledItemDelegate, QMessageBox, QScrollBar, QAbstractItemView
+    QStyledItemDelegate, QMessageBox, QScrollBar, QAbstractItemView, QLineEdit
 
 
 class AlignDelegate(QStyledItemDelegate):
@@ -19,8 +19,15 @@ class AlignDelegate(QStyledItemDelegate):
     def paint(self, painter, option, index):
         super().paint(painter, option, index)
 
-
 class Ui_MainWindow(object):
+    class QTComboBoxButton(QLineEdit):
+        def __init__(self, combo):
+            super().__init__(combo)
+
+        def mousePressEvent(self, e: QMouseEvent) -> None:
+            combo = self.parent()
+            if isinstance(combo, QComboBox):
+                combo.showPopup()
     def setupUi(self, MainWindow, application_path=None):
         MainWindow.setObjectName("MainWindow")
         MainWindow.setWindowModality(QtCore.Qt.NonModal)
@@ -84,10 +91,7 @@ class Ui_MainWindow(object):
         self.myProjects = QtWidgets.QComboBox(self.threeBtn)
         self.myProjects.setMinimumSize(QtCore.QSize(25, 0))
         self.myProjects.setGeometry(200, 150, 150, 30)
-
-        self.myProjects.setEditable(True)
-        self.myProjects.lineEdit().setAlignment(QtCore.Qt.AlignCenter)
-        self.myProjects.setEditable(True)
+        self.myProjects.setLineEdit(self.QTComboBoxButton(self.myProjects))
         self.ledit = self.myProjects.lineEdit()
         self.ledit.setReadOnly(True)
         self.ledit.setAlignment(Qt.AlignCenter)
@@ -103,6 +107,7 @@ class Ui_MainWindow(object):
 
         def handleSelection(text):
             # change back to default title after item is selected
+
             self.myProjects.setEditText("My Projects")
             with open('selected_item.txt', 'w') as f:
                 f.write(text)
@@ -115,7 +120,6 @@ class Ui_MainWindow(object):
             process.start('python', [view_folders_path])
 
         self.myProjects.activated[str].connect(handleSelection)
-
         # change the background of list in combo box and its corner
         self.myProjects.view().window().setWindowFlags(Qt.Popup | Qt.FramelessWindowHint)
         self.myProjects.view().window().setAttribute(Qt.WA_TranslucentBackground)
@@ -253,6 +257,7 @@ class Ui_MainWindow(object):
         geek_list = ["Image 1", "Image 2", "Image 3", "Image 4", "Image 1", "Image 2", "Image 3", "Image 4"]
         self.history.addItems(geek_list)
         self.history.setEditable(True)
+        self.history.setLineEdit(self.QTComboBoxButton(self.history))
         self.ledit = self.history.lineEdit()
         self.ledit.setReadOnly(True)
         self.ledit.setAlignment(Qt.AlignCenter)
@@ -559,9 +564,10 @@ class Ui_MainWindow(object):
         self.verticalLayout_5.setContentsMargins(50, -1, 50, -1)
         self.verticalLayout_5.setSpacing(0)
         self.verticalLayout_5.setObjectName("verticalLayout_5")
-        self.uploadImg = QtWidgets.QPushButton("Upload Image", self.widgetUpload)
+        self.uploadImg = QtWidgets.QPushButton("  Upload Image", self.widgetUpload)
         self.uploadImg.clicked.connect(self.upload_image)
         self.uploadImg.setIcon(QIcon('images/uploadIcon.png'))
+        self.uploadImg.setIconSize(QtCore.QSize(20, 20))
         self.uploadImg.setStyleSheet("#uploadImg{\n"
                                      "height:40px;\n"
                                      "font-weight:bold;\n"
