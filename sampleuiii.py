@@ -14,20 +14,20 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(680, 489)
+        MainWindow.resize(680, 243)
         MainWindow.setStyleSheet("#MainWindow{\n"
-                                 "background-color: qlineargradient(spread:pad, x1:0.045, y1:0.261, x2:0.988636, y2:0.955, stop:0 rgba(235, 209, 196, 255), stop:1 rgba(255, 255, 255, 255));\n"
-                                 "width: fit-content;\n"
-                                 "heigth: fit-content;\n"
-                                 "block-size: fit-content;\n"
-                                 "} ")
+"background-color: qlineargradient(spread:pad, x1:0.045, y1:0.261, x2:0.988636, y2:0.955, stop:0 rgba(235, 209, 196, 255), stop:1 rgba(255, 255, 255, 255));\n"
+"width: fit-content;\n"
+"heigth: fit-content;\n"
+"block-size: fit-content;\n"
+"} ")
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setStyleSheet("#centralwidget{\n"
-                                         "background-color: qlineargradient(spread:pad, x1:0.045, y1:0.261, x2:0.988636, y2:0.955, stop:0 rgba(235, 209, 196, 255), stop:1 rgba(255, 255, 255, 255));\n"
-                                         "width: fit-content;\n"
-                                         "heigth: fit-content;\n"
-                                         "block-size: fit-content;\n"
-                                         "} ")
+"background-color: qlineargradient(spread:pad, x1:0.045, y1:0.261, x2:0.988636, y2:0.955, stop:0 rgba(235, 209, 196, 255), stop:1 rgba(255, 255, 255, 255));\n"
+"width: fit-content;\n"
+"heigth: fit-content;\n"
+"block-size: fit-content;\n"
+"} ")
         self.centralwidget.setObjectName("centralwidget")
         self.verticalLayout = QtWidgets.QVBoxLayout(self.centralwidget)
         self.verticalLayout.setObjectName("verticalLayout")
@@ -38,30 +38,30 @@ class Ui_MainWindow(object):
         self.horizontalLayout_4.setObjectName("horizontalLayout_4")
         self.project_name_lbl = QtWidgets.QLabel(self.widget)
         self.project_name_lbl.setStyleSheet("#project_name_lbl {\n"
-                                            "font: 700 9pt \"Franklin Gothic Medium\";\n"
-                                            "position: absolute;\n"
-                                            "width: 50px;\n"
-                                            "height: 50px;\n"
-                                            "left: 143px;\n"
-                                            "top: 236px;\n"
-                                            "font-family: \'Franklin Gothic Medium\';\n"
-                                            "font-style: normal;\n"
-                                            "font-weight: 600;\n"
-                                            "font-size: 30px;\n"
-                                            "line-height: 42px;\n"
-                                            "text-align: center;\n"
-                                            "color: #664323;\n"
-                                            "}")
+"font: 700 9pt \"Franklin Gothic Medium\";\n"
+"position: absolute;\n"
+"width: 50px;\n"
+"height: 50px;\n"
+"left: 143px;\n"
+"top: 236px;\n"
+"font-family: \'Franklin Gothic Medium\';\n"
+"font-style: normal;\n"
+"font-weight: 600;\n"
+"font-size: 30px;\n"
+"line-height: 42px;\n"
+"text-align: center;\n"
+"color: #664323;\n"
+"}")
         self.project_name_lbl.setObjectName("project_name_lbl")
         self.horizontalLayout_4.addWidget(self.project_name_lbl)
         self.addfolder_icon = QtWidgets.QPushButton(self.widget)
         self.addfolder_icon.setStyleSheet("#addfolder_icon{\n"
-                                          "padding:5px;\n"
-                                          "color:#664323;\n"
-                                          "font: 700 9pt \"Inter\";\n"
-                                          "margin-left:150px;\n"
-                                          "margin-right:50px;\n"
-                                          "}")
+"padding:5px;\n"
+"color:#664323;\n"
+"font: 700 9pt \"Inter\";\n"
+"margin-left:150px;\n"
+"margin-right:50px;\n"
+"}")
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(":/images/add_folder.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.addfolder_icon.setIcon(icon)
@@ -78,6 +78,29 @@ class Ui_MainWindow(object):
         self.widget_3.setObjectName("widget_3")
         self.horizontalLayout = QtWidgets.QHBoxLayout(self.widget_3)
         self.horizontalLayout.setObjectName("horizontalLayout")
+        self.widget_10 = QtWidgets.QWidget(self.widget_3)
+        self.widget_10.setObjectName("widget_10")
+        self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.widget_10)
+        self.verticalLayout_2.setObjectName("verticalLayout_2")
+
+        self.pushButton = QtWidgets.QPushButton(self.widget_10)
+        self.pushButton.setObjectName("pushButton")
+
+        self.verticalLayout_2.addWidget(self.pushButton)
+        self.label = QtWidgets.QLabel(self.widget_10)
+        self.label.setAlignment(QtCore.Qt.AlignCenter)
+        self.label.setObjectName("label")
+        self.verticalLayout_2.addWidget(self.label)
+        self.horizontalLayout.addWidget(self.widget_10)
+        self.widget_9 = QtWidgets.QWidget(self.widget_3)
+        self.widget_9.setObjectName("widget_9")
+        self.horizontalLayout.addWidget(self.widget_9)
+        self.widget_8 = QtWidgets.QWidget(self.widget_3)
+        self.widget_8.setObjectName("widget_8")
+        self.horizontalLayout.addWidget(self.widget_8)
+        self.widget_7 = QtWidgets.QWidget(self.widget_3)
+        self.widget_7.setObjectName("widget_7")
+        self.horizontalLayout.addWidget(self.widget_7)
         self.verticalLayout.addWidget(self.widget_3)
         self.widget_2 = QtWidgets.QWidget(self.centralwidget)
         self.widget_2.setObjectName("widget_2")
@@ -95,22 +118,22 @@ class Ui_MainWindow(object):
         self.horizontalLayout_5.setObjectName("horizontalLayout_5")
         self.back_2 = QtWidgets.QPushButton(self.widget_5)
         self.back_2.setStyleSheet("#back_2{\n"
-                                  "height:40px;\n"
-                                  "font-weight:bold;\n"
-                                  "font-size:18px;\n"
-                                  "color:white;\n"
-                                  "background-color:#6A6E72;\n"
-                                  "border-top-left-radius :20px;\n"
-                                  "border-top-right-radius : 20px; \n"
-                                  "border-bottom-left-radius : 20px; \n"
-                                  "border-bottom-right-radius : 20px;\n"
-                                  "}\n"
-                                  "#back_2:hover{\n"
-                                  "color:#6A6E72;\n"
-                                  "border :2px solid #6A6E72;\n"
-                                  "background-color: rgb(255, 255, 255);\n"
-                                  "}\n"
-                                  "")
+"height:40px;\n"
+"font-weight:bold;\n"
+"font-size:18px;\n"
+"color:white;\n"
+"background-color:#6A6E72;\n"
+"border-top-left-radius :20px;\n"
+"border-top-right-radius : 20px; \n"
+"border-bottom-left-radius : 20px; \n"
+"border-bottom-right-radius : 20px;\n"
+"}\n"
+"#back_2:hover{\n"
+"color:#6A6E72;\n"
+"border :2px solid #6A6E72;\n"
+"background-color: rgb(255, 255, 255);\n"
+"}\n"
+"")
         self.back_2.setFlat(False)
         self.back_2.setObjectName("back_2")
         self.horizontalLayout_5.addWidget(self.back_2)
@@ -124,22 +147,22 @@ class Ui_MainWindow(object):
         self.horizontalLayout_3.setObjectName("horizontalLayout_3")
         self.back = QtWidgets.QPushButton(self.frame)
         self.back.setStyleSheet("#back{\n"
-                                "height:40px;\n"
-                                "font-weight:bold;\n"
-                                "font-size:18px;\n"
-                                "color:white;\n"
-                                "background-color: rgb(144, 115, 87);\n"
-                                "border-top-left-radius :20px;\n"
-                                "border-top-right-radius : 20px; \n"
-                                "border-bottom-left-radius : 20px; \n"
-                                "border-bottom-right-radius : 20px;\n"
-                                "}\n"
-                                "#back:hover{\n"
-                                "color:rgb(144, 115, 87);\n"
-                                "border :2px solid rgb(144, 115, 87);\n"
-                                "background-color: rgb(255, 255, 255);\n"
-                                "}\n"
-                                "")
+"height:40px;\n"
+"font-weight:bold;\n"
+"font-size:18px;\n"
+"color:white;\n"
+"background-color: rgb(144, 115, 87);\n"
+"border-top-left-radius :20px;\n"
+"border-top-right-radius : 20px; \n"
+"border-bottom-left-radius : 20px; \n"
+"border-bottom-right-radius : 20px;\n"
+"}\n"
+"#back:hover{\n"
+"color:rgb(144, 115, 87);\n"
+"border :2px solid rgb(144, 115, 87);\n"
+"background-color: rgb(255, 255, 255);\n"
+"}\n"
+"")
         self.back.setFlat(False)
         self.back.setObjectName("back")
         self.horizontalLayout_3.addWidget(self.back)
@@ -155,15 +178,15 @@ class Ui_MainWindow(object):
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.project_name_lbl.setText(_translate("MainWindow", "Project Name"))
         self.addfolder_icon.setText(_translate("MainWindow", "  Add Folder"))
+        self.pushButton.setText(_translate("MainWindow", "PushButton"))
+        self.label.setText(_translate("MainWindow", "TextLabel"))
         self.back_2.setText(_translate("MainWindow", "Back"))
         self.back.setText(_translate("MainWindow", "Save"))
-
-
 import images_rc
+
 
 if __name__ == "__main__":
     import sys
-
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
     ui = Ui_MainWindow()

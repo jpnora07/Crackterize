@@ -2,13 +2,15 @@ import os
 import sqlite3
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import QSize, Qt, QTimer, pyqtSignal
+from PyQt5.QtCore import QSize, Qt, QTimer, pyqtSignal, QObject
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QPushButton, QHBoxLayout, QVBoxLayout, QSizePolicy, QScrollArea, QWidget, QLabel
 
 
 class Ui_MainWindow(object):
+
     def setupUi(self, MainWindow):
+        #self.data_added.connect(self.refreshWidget)
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(600, 489)
         MainWindow.setMaximumSize(600, 489)
@@ -367,15 +369,18 @@ class Ui_MainWindow(object):
                 self.c.execute("INSERT INTO Location_Folder (project_name, folder_name) VALUES (?, ?)",
                                (self.selected_item, location_folder_name,))
                 self.conn.commit()
-                self.widget_3.repaint()
-
-
+                self.folder_id = self.c.lastrowid  # assuming the id column is auto-incremented
+                self.c.execute("SELECT * FROM Location_Folder WHERE id=?", (self.folder_id,))
+                new_data = self.c.fetchone()
+                self.add_button_folder(new_data)
+                print(new_data)
             else:
                 # If the project name already exists, show a dialog message to inform the user
                 self.show_dialog_empty_text_error()
                 self.creating_new_Location()
 
-    def add_button_folder(self, data):
+    def add_button_folder(self, data, new_data):
+        data.append(new_data)
         for row in data:
             # Create a new button for each row in the fetched data
             btn = QPushButton(self.scroll_widget)
@@ -505,6 +510,11 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+
+    def fetch_location_folder_by_id(self, folder_id):
+        self.c.execute("SELECT * FROM Location_Folder WHERE id=?", (folder_id,))
+        row = self.c.fetchone()
+        return row
 
 
 if __name__ == "__main__":
