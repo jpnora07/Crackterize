@@ -10,7 +10,7 @@ from PyQt5.QtWidgets import QPushButton, QHBoxLayout, QVBoxLayout, QSizePolicy, 
 class Ui_MainWindow(object):
 
     def setupUi(self, MainWindow):
-        #self.data_added.connect(self.refreshWidget)
+        # self.data_added.connect(self.refreshWidget)
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(600, 489)
         MainWindow.setMaximumSize(600, 489)
@@ -54,7 +54,7 @@ class Ui_MainWindow(object):
                                             "color: #664323;\n"
                                             "}")
         self.project_name_lbl.setObjectName("project_name_lbl")
-        with open('selected_item.txt', 'r') as f:
+        with open('selected_project.txt', 'r') as f:
             self.selected_item = f.read()
             self.project_name_lbl.setText(self.selected_item)
         self.horizontalLayout_2.addWidget(self.project_name_lbl)
@@ -350,7 +350,6 @@ class Ui_MainWindow(object):
             self.show_dialog_empty_text_error()
             self.creating_new_Location()
         else:
-
             BASE_DIR = os.path.dirname(os.path.abspath(__file__))
             db_path = os.path.join(BASE_DIR, 'Projects.db')
             # Create a connection to a SQLite database or create it if it doesn't exist
@@ -369,41 +368,47 @@ class Ui_MainWindow(object):
                 self.c.execute("INSERT INTO Location_Folder (project_name, folder_name) VALUES (?, ?)",
                                (self.selected_item, location_folder_name,))
                 self.conn.commit()
-                self.folder_id = self.c.lastrowid  # assuming the id column is auto-incremented
-                self.c.execute("SELECT * FROM Location_Folder WHERE id=?", (self.folder_id,))
-                new_data = self.c.fetchone()
-                self.add_button_folder(new_data)
-                print(new_data)
+                self.buttons.clear()
+                self.clear_layout(self.scroll_widget.layout())
+                self.fetch_folders_of_projects()
             else:
                 # If the project name already exists, show a dialog message to inform the user
                 self.show_dialog_empty_text_error()
                 self.creating_new_Location()
 
-    def add_button_folder(self, data, new_data):
-        data.append(new_data)
+    def clear_layout(self, layout):
+        while layout.count():
+            child = layout.takeAt(0)
+            if child.widget():
+                child.widget().deleteLater()
+            elif child.layout():
+                self.clear_layout(child.layout())
+
+    def add_button_folder(self, data):
         for row in data:
             # Create a new button for each row in the fetched data
-            btn = QPushButton(self.scroll_widget)
-            btn.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
-            btn.setIcon(QIcon("images/folder.png"))
-            btn.setStyleSheet("QPushButton {border: none; font-size: 16px; text-align: center;padding-bottom: 58px;}")
+            self.btn = QPushButton(self.scroll_widget)
+            self.btn.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+            self.btn.setIcon(QIcon("images/folder.png"))
+            self.btn.setStyleSheet(
+                "QPushButton {border: none; font-size: 16px; text-align: center;padding-bottom: 58px;}")
 
-            btn.setIconSize(QSize(90, 100))
-            btn.setFixedSize(120, 140)
-            self.buttons.append(btn)
+            self.btn.setIconSize(QSize(90, 100))
+            self.btn.setFixedSize(120, 140)
+            self.buttons.append(self.btn)
 
             # add to layout
             if len(self.buttons) % self.max_per_row == 1:
-                hbox = QHBoxLayout()
-                self.scroll_widget.layout().insertLayout(0, hbox)
+                self.hbox = QHBoxLayout()
+                self.scroll_widget.layout().insertLayout(0, self.hbox)
             else:
-                hbox = self.scroll_widget.layout().itemAt(0).layout()
+                self.hbox = self.scroll_widget.layout().itemAt(0).layout()
 
-            hbox.insertWidget(0, btn)
-            hbox.setAlignment(Qt.AlignTop | Qt.AlignLeft)
+            self.hbox.insertWidget(0, self.btn)
+            self.hbox.setAlignment(Qt.AlignTop | Qt.AlignLeft)
 
             # Set the label text of the button
-            btn_label = QLabel(f"{row[2]}", btn)
+            btn_label = QLabel(str(row[2]), self.btn)
             btn_label.setAlignment(Qt.AlignTop | Qt.AlignCenter)
             btn_label.move(0, 75)
             btn_label.resize(120, 77)

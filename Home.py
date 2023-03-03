@@ -109,7 +109,7 @@ class Ui_MainWindow(object):
             # change back to default title after item is selected
 
             self.myProjects.setEditText("My Projects")
-            with open('selected_item.txt', 'w') as f:
+            with open('selected_project.txt', 'w') as f:
                 f.write(text)
             # Get the path to the directory where the executable is run from
             app_path = getattr(sys, '_MEIPASS', None) or os.path.abspath('.')
@@ -461,7 +461,6 @@ class Ui_MainWindow(object):
         )
         self.howtoUse.setView(view)
         self.howtoUse.view().parentWidget().setStyleSheet('border: none;')
-        image_path = self.resource_path("qrc:/images/arrowdown.png")
         self.howtoUse.setStyleSheet("#howtoUse{\n"
                                     "padding-left: 10px;\n"
                                     "border-radius:4px;\n"
@@ -610,10 +609,6 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
-
-    def retranslateUi(self, MainWindow):
-        _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
 
     # new image upload function for upload button
     def upload_image(self):
@@ -779,11 +774,19 @@ class Ui_MainWindow(object):
                 self.myProjects.clear()
                 self.c.execute("SELECT project_name FROM Projects ORDER BY created_at DESC")
                 rows = self.c.fetchall()
-
+                with open('selected_project.txt', 'w') as f:
+                    f.write(new_projects)
+                # Get the path to the directory where the executable is run from
+                app_path = getattr(sys, '_MEIPASS', None) or os.path.abspath('.')
+                # Create the path to the view_folders.py file
+                view_folders_path = os.path.join(app_path, 'view_folders.py')
+                # Execute the view_folders.py file using QProcess
+                process = QtCore.QProcess()
+                process.start('python', [view_folders_path])
+                if process.waitForFinished() == 0:
+                    print('Error: failed to execute view_folders.py')
                 for row in rows:
                     self.myProjects.addItem(row[0])
-                # Show a dialog message to indicate that the project has been added to the database
-                self.show_dialog_success_save()
             else:
                 # If the project name already exists, show a dialog message to inform the user
                 self.show_dialog_failed_save()
@@ -1023,7 +1026,9 @@ class Ui_MainWindow(object):
 
         return os.path.join(base_path, relative_path)
 
-
+    def retranslateUi(self, MainWindow):
+        _translate = QtCore.QCoreApplication.translate
+        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
 if __name__ == "__main__":
     import sys
 
