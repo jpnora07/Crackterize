@@ -19,6 +19,7 @@ class AlignDelegate(QStyledItemDelegate):
     def paint(self, painter, option, index):
         super().paint(painter, option, index)
 
+
 class Ui_MainWindow(object):
     class QTComboBoxButton(QLineEdit):
         def __init__(self, combo):
@@ -28,6 +29,7 @@ class Ui_MainWindow(object):
             combo = self.parent()
             if isinstance(combo, QComboBox):
                 combo.showPopup()
+
     def setupUi(self, MainWindow, application_path=None):
         MainWindow.setObjectName("MainWindow")
         MainWindow.setWindowModality(QtCore.Qt.NonModal)
@@ -57,6 +59,7 @@ class Ui_MainWindow(object):
                                   "block-size: fit-content;")
         self.widget.setObjectName("widget")
         self.verticalLayout = QtWidgets.QVBoxLayout(self.widget)
+
         self.verticalLayout.setObjectName("verticalLayout")
         self.widget_2 = QtWidgets.QWidget(self.widget)
         self.widget_2.setObjectName("widget_2")
@@ -120,6 +123,7 @@ class Ui_MainWindow(object):
             process.start('python', [view_folders_path])
 
         self.myProjects.activated[str].connect(handleSelection)
+
         # change the background of list in combo box and its corner
         self.myProjects.view().window().setWindowFlags(Qt.Popup | Qt.FramelessWindowHint)
         self.myProjects.view().window().setAttribute(Qt.WA_TranslucentBackground)
@@ -542,7 +546,7 @@ class Ui_MainWindow(object):
         self.widget_4 = QtWidgets.QWidget(self.widget)
         self.widget_4.setObjectName("widget_4")
         self.verticalLayout_4 = QtWidgets.QHBoxLayout(self.widget_4)
-        self.verticalLayout_4.setContentsMargins(300, 20, 300, 20)
+        self.verticalLayout_4.setContentsMargins(100, 20, 100, 20)
         self.verticalLayout_4.setObjectName("verticalLayout_4")
         self.widgetUpload = QtWidgets.QWidget(self.widget_4)
         self.widgetUpload.setMaximumSize(QtCore.QSize(347, 128))
@@ -600,6 +604,58 @@ class Ui_MainWindow(object):
         self.create.setObjectName("create")
         self.verticalLayout_5.addWidget(self.create)
         self.verticalLayout_4.addWidget(self.widgetUpload)
+        # new
+        self.widgetUpload_2 = QtWidgets.QWidget(self.widget_4)
+        self.widgetUpload_2.setMaximumSize(QtCore.QSize(347, 128))
+        effect = QtWidgets.QGraphicsDropShadowEffect()
+        effect.setBlurRadius(5)
+        effect.setColor(QtGui.QColor(144, 115, 87, 100))
+        effect.setOffset(QtCore.QPointF(0, 4))
+        self.widgetUpload_2.setGraphicsEffect(effect)
+        self.widgetUpload_2.setStyleSheet("#widgetUpload_2{\n"
+                                          "background-color: rgb(255, 255, 255);\n"
+                                          "border-radius:28px;\n"
+                                          "}\n"
+                                          "        \n"
+                                          "")
+        self.widgetUpload_2.setObjectName("widgetUpload_2")
+        self.verticalLayout_6 = QtWidgets.QVBoxLayout(self.widgetUpload_2)
+        self.verticalLayout_6.setContentsMargins(50, -1, 50, -1)
+        self.verticalLayout_6.setSpacing(0)
+        self.verticalLayout_6.setObjectName("verticalLayout_6")
+        self.calLbl = QtWidgets.QPushButton("Calculate Measurements", self.widgetUpload_2)
+        self.calLbl.setStyleSheet("#calLbl{\n"
+                                  "font-weight:bold;\n"
+                                  " color:#363131;\n"
+                                  "background-color: rgb(255, 255, 255);\n"
+                                  "border :3px solid rgb(255, 255, 255);\n"
+                                  " }\n"
+                                  "#calLbl:hover{\n"
+                                  "background-color:rgb(255, 255, 255);}\n"
+                                  "")
+        self.calLbl.setObjectName("calLbl")
+        self.verticalLayout_6.addWidget(self.calLbl)
+        self.ButtonCal = QtWidgets.QPushButton(self.widgetUpload_2)
+        self.ButtonCal.setStyleSheet("#ButtonCal{\n"
+                                       "height:40px;\n"
+                                       "font-weight:bold;\n"
+                                       "font-size:18px;\n"
+                                       "color:white;\n"
+                                       "background-color: rgb(144, 115, 87);\n"
+                                       "border-top-left-radius :20px;\n"
+                                       "border-top-right-radius : 20px; \n"
+                                       "border-bottom-left-radius : 20px; \n"
+                                       "border-bottom-right-radius : 20px;\n"
+                                       "}\n"
+                                       "#ButtonCal:hover{\n"
+                                       "color:rgb(144, 115, 87);\n"
+                                       "border :2px solid rgb(144, 115, 87);\n"
+                                       "background-color: rgb(255, 255, 255);\n"
+                                       "}\n"
+                                       "")
+        self.ButtonCal.setObjectName("ButtonCal")
+        self.verticalLayout_6.addWidget(self.ButtonCal)
+        self.verticalLayout_4.addWidget(self.widgetUpload_2)
         self.verticalLayout.addWidget(self.widget_4)
         self.horizontalLayout_2.addWidget(self.widget)
         MainWindow.setCentralWidget(self.centralwidget)
@@ -1029,6 +1085,8 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+
+
 if __name__ == "__main__":
     import sys
 

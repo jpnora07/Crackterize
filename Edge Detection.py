@@ -1,10 +1,10 @@
 import sys
-
+import numpy as np
 import cv2
 from PyQt5.QtCore import Qt, QRectF
 from PyQt5.QtGui import QImage, QPixmap, QPainter
 from PyQt5.QtWidgets import QMainWindow, QWidget, QLabel, QGraphicsView, QGraphicsScene, QSlider, QGridLayout, \
-    QApplication
+    QApplication, QPushButton
 
 
 class MainWindow(QMainWindow):
@@ -51,14 +51,22 @@ class MainWindow(QMainWindow):
         self.show_image(self.img, self.original_view)
 
         # Initialize the edge detector with the default threshold values
-        self.threshold1 = 50
-        self.threshold2 = 150
-        edges = cv2.Canny(self.img, self.threshold1, self.threshold2)
+        self.threshold1 = 52
+        self.threshold2 = 1000
+        self.gray = cv2.cvtColor(self.img, cv2.COLOR_BGR2GRAY)
+        self.blurred = cv2.GaussianBlur(self.img, (5, 5), 0)
+        edges = cv2.Canny(self.blurred, self.threshold1, self.threshold2)
+        edges = cv2.dilate(edges, None, iterations=1)
+        edges = cv2.erode(edges, None, iterations=1)
+
         self.show_edges(edges, self.edges_view)
 
         # Find contours and draw non-overlapping bounding boxes around them
         contours, _ = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        contours = [x for x in contours if cv2.contourArea(x) > 50]
         boxes = []
+        self.lengths = []
+        self.widths = []
         for contour in contours:
             x, y, w, h = cv2.boundingRect(contour)
             new_box = [x, y, x + w, y + h]
@@ -71,14 +79,13 @@ class MainWindow(QMainWindow):
                 boxes.append(new_box)
                 cv2.rectangle(self.img, (x, y), (x + w, y + h), (0, 255, 0), 2)
 
-            # Measure length and width of the bounding box in cm
-            pixel_to_cm = 0.1
-            length_cm = w * pixel_to_cm
-            width_cm = h * pixel_to_cm
 
-            # Print length and width of the bounding box in cm
-            print("Length: {} cm".format(round(length_cm, 2)))
-            print("Width: {} cm".format(round(width_cm, 2)))
+        # Create a button to calculate and print total length and width of the detected cracks
+        self.calculate_button = QPushButton("Calculate")
+        self.calculate_button.clicked.connect(self.calculate_totals)
+
+        # Add the button to the layout
+        layout.addWidget(self.calculate_button)
 
         # Display the result
         self.show_image(self.img, self.edges_view)
@@ -86,6 +93,14 @@ class MainWindow(QMainWindow):
         # Connect the sliders to update the edge detection in real-time
         self.threshold1_slider.valueChanged.connect(self.update_edges)
         self.threshold2_slider.valueChanged.connect(self.update_edges)
+
+    def calculate_totals(self):
+        # Calculate total length and width of the detected cracks in cm
+        total_length = sum(self.lengths)
+        total_width = sum(self.widths)
+        # Print total length and width of the detected cracks in cm
+        print("Total Length: {} cm".format(round(total_length, 2)))
+        print("Total Width: {} cm".format(round(total_width, 2)))
 
     def show_image(self, img, view):
         # Convert the image to a QPixmap and display it in the view
@@ -114,14 +129,33 @@ class MainWindow(QMainWindow):
         self.threshold2 = self.threshold2_slider.value()
 
         # Detect edges using Canny algorithm
-        edges = cv2.Canny(self.img, self.threshold1, self.threshold2)
+        edges = cv2.Canny(self.blurred, self.threshold1, self.threshold2)
 
         # Find contours and draw bounding boxes around them
         contours, _ = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         img_with_boxes = self.img.copy()
         for contour in contours:
+            # Compute the bounding box and aspect ratio
             x, y, w, h = cv2.boundingRect(contour)
-            cv2.rectangle(img_with_boxes, (x, y), (x + w, y + h), (0, 255, 0), 2)
+
+            # Check if the contour is roughly horizontal and has a minimum area
+            min_area = 10  # adjust this to suit your needs
+            max_aspect_ratio = 1.0  # adjust this to suit your needs
+            aspect_ratio = 0
+            if h != 0 and w != 0 and aspect_ratio < max_aspect_ratio and cv2.contourArea(contour) > min_area:
+                # Draw the bounding box
+                cv2.rectangle(img_with_boxes, (x, y), (x + w, y + h), (0, 255, 0), 2)
+
+                # Measure length and width of the bounding box in cm
+                pixel_to_cm = 0.0264583333
+                length_cm = np.sqrt(w ** 2 + h ** 2) * pixel_to_cm
+                width_cm = w / 2 * pixel_to_cm + h / 2 * pixel_to_cm
+
+                print("Number of pixels: {}".format(w * h))
+                print("Length of crack: {:.2f} cm".format(length_cm))
+                print("Width of crack: {:.2f} cm".format(width_cm))
+                self.lengths.append(length_cm)
+                self.widths.append(width_cm)
 
         # Display the updated images
         self.show_edges(edges, self.edges_view)

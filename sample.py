@@ -1,54 +1,68 @@
-import sqlite3
-from PyQt5.QtWidgets import *
+import sys
+from PyQt5.QtWidgets import QApplication, QWidget, QComboBox, QListView, QVBoxLayout
+
+class CustomComboBox(QComboBox):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+
+        # Create a list view widget
+        self.list_view = QListView(self)
+
+    def showPopup(self):
+        # Adjust the position and width of the list view widget
+        combo_rect = self.rect()
+        list_rect = self.list_view.geometry()
+        list_rect.setWidth(400)
+        list_rect.moveCenter(combo_rect.center())
+        self.list_view.setGeometry(list_rect)
+
+        # Show the list view widget
+        super().showPopup()
 
 class Example(QWidget):
     def __init__(self):
         super().__init__()
+        self.initUI()
 
-        # create a layout for the scrollable area
-        self.scroll_layout = QVBoxLayout()
+    def initUI(self):
+        # Create a custom combo box widget
+        combo = CustomComboBox(self)
 
-        # create a scrollable area
-        self.scroll_area = QScrollArea()
-        self.scroll_area.setWidgetResizable(True)
-        self.scroll_widget = QWidget()
-        self.scroll_widget.setLayout(self.scroll_layout)
-        self.scroll_area.setWidget(self.scroll_widget)
+        # Add some items to the combo box
+        combo.addItem('Item 1')
+        combo.addItem('Item 2')
+        combo.addItem('Item 3')
+        combo.addItem('Item 4')
+        combo.addItem('Item 5')
+        combo.addItem('Item 6')
 
-        # create a layout for the main window
-        self.layout = QVBoxLayout()
-        self.layout.addWidget(self.scroll_area)
+        # Set the minimum width and maximum width of the combo box
+        combo.setMinimumWidth(200)
+        combo.setMaximumWidth(200)
 
-        # set the main window layout
-        self.setLayout(self.layout)
+        # Create a vertical layout
+        vbox = QVBoxLayout(self)
+        vbox.setContentsMargins(0, 0, 0, 0)
+        self.setLayout(vbox)
 
-        # create a connection to the database
-        self.conn = sqlite3.connect('Projects.db')
-        self.c = self.conn.cursor()
+        # Set the list view size
+        combo.list_view.setFixedWidth(400)
+        combo.list_view.setFixedHeight(50)
 
-        # create a table if it doesn't exist
-        self.c.execute('''CREATE TABLE IF NOT EXISTS Location_Folder
-                                     (id INTEGER PRIMARY KEY, project_name TEXT, folder_name TEXT, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)''')
+        # Center the list view widget to the combo box widget
+        combo.list_view.move(combo.rect().center() - combo.list_view.rect().center())
 
-        # fetch data from the database
-        self.c.execute("SELECT * FROM Location_Folder")
-        data = self.c.fetchall()
+        # Add the combo box to the layout
+        vbox.addStretch(1)
+        vbox.addWidget(combo)
+        vbox.addStretch(1)
 
-        # generate buttons for each record in the table
-        for record in data:
-            name = record[1]
-            description = record[2]
-
-            btn = QPushButton(name, self.scroll_widget)
-            btn.setToolTip(description)
-            btn.clicked.connect(lambda checked, name=name: self.buttonClicked(name))
-            self.scroll_layout.addWidget(btn)
-
-    def buttonClicked(self, name):
-        print(f"Button '{name}' clicked")
+        # Set the window properties
+        self.setGeometry(300, 300, 600, 400)
+        self.setWindowTitle('Combo Box Example')
+        self.show()
 
 if __name__ == '__main__':
-    app = QApplication([])
+    app = QApplication(sys.argv)
     ex = Example()
-    ex.show()
-    app.exec_()
+    sys.exit(app.exec_())

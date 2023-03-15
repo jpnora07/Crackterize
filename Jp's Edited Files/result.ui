@@ -1,0 +1,446 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>600</width>
+    <height>489</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>600</width>
+    <height>489</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>600</width>
+    <height>489</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <item>
+     <widget class="QWidget" name="widget" native="true">
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <widget class="QWidget" name="WithLogo" native="true">
+         <property name="minimumSize">
+          <size>
+           <width>564</width>
+           <height>80</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>564</width>
+           <height>80</height>
+          </size>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">#WithLogo{border-image: url(:/images/Crackterize.png) 175 0 175 0 stretch;}</string>
+         </property>
+         <layout class="QHBoxLayout" name="horizontalLayout_3"/>
+        </widget>
+       </item>
+       <item>
+        <widget class="QWidget" name="widget_4" native="true">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>30</verstretch>
+          </sizepolicy>
+         </property>
+         <layout class="QHBoxLayout" name="horizontalLayout_2">
+          <item>
+           <widget class="QWidget" name="result_Img" native="true">
+            <property name="styleSheet">
+             <string notr="true">#result_Img{
+border-image: url(:/images/img.png) 10 10 10 10 stretch;
+border-radius: 20px;
+opacity: 100;
+border: none;
+}</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QWidget" name="widget_6" native="true">
+            <layout class="QVBoxLayout" name="verticalLayout_2">
+             <item>
+              <widget class="QWidget" name="widget_12" native="true">
+               <layout class="QHBoxLayout" name="horizontalLayout_9">
+                <item>
+                 <widget class="QLabel" name="label">
+                  <property name="styleSheet">
+                   <string notr="true">font-family: 'Inter';
+color:#250000;
+font-style: normal;
+font-weight: bold;
+font-size: 23px;
+line-height: 61px;
+text-align: center;
+</string>
+                  </property>
+                  <property name="text">
+                   <string>Crack Detected:</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QWidget" name="widget_10" native="true">
+               <layout class="QHBoxLayout" name="horizontalLayout_10">
+                <item>
+                 <widget class="QLabel" name="label_2">
+                  <property name="styleSheet">
+                   <string notr="true">#label_2{
+color: rgba(111, 75, 39, 0.77);
+font-size: 22px;
+font-weight: bold;
+}</string>
+                  </property>
+                  <property name="text">
+                   <string>Length:</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="lengthlbl">
+                  <property name="styleSheet">
+                   <string notr="true">#lengthlbl{
+	color:  #555555;
+font: bold;
+	font-size: 18px}</string>
+                  </property>
+                  <property name="text">
+                   <string>609.5 mm</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QWidget" name="widget_13" native="true">
+               <layout class="QHBoxLayout" name="horizontalLayout_11">
+                <item>
+                 <widget class="QLabel" name="label_3">
+                  <property name="styleSheet">
+                   <string notr="true">#label_3{
+color: rgba(111, 75, 39, 0.77);
+font-size: 22px;
+font-weight: bold;
+}</string>
+                  </property>
+                  <property name="text">
+                   <string>Width: </string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="widthlbl">
+                  <property name="styleSheet">
+                   <string notr="true">#widthlbl{
+	color:  #555555;
+font: bold;
+	font-size: 18px;
+}</string>
+                  </property>
+                  <property name="text">
+                   <string>50.91 mm</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QWidget" name="widget_11" native="true">
+               <layout class="QHBoxLayout" name="horizontalLayout_13">
+                <item>
+                 <widget class="QLabel" name="widgetPosition">
+                  <property name="styleSheet">
+                   <string notr="true">#widgetPosition{
+color: rgba(111, 75, 39, 0.77);
+font-size: 22px;
+font-weight: bold;
+}</string>
+                  </property>
+                  <property name="text">
+                   <string>Position:</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="position_lbl">
+                  <property name="styleSheet">
+                   <string notr="true">#position_lbl{
+	color:  #555555;
+font: bold;
+	font-size: 18px;
+}</string>
+                  </property>
+                  <property name="text">
+                   <string>Horizontal</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QWidget" name="widget_14" native="true">
+               <layout class="QHBoxLayout" name="horizontalLayout_12">
+                <item>
+                 <widget class="QWidget" name="i" native="true">
+                  <property name="minimumSize">
+                   <size>
+                    <width>20</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">#i{
+	border-image: url(:/images/i.png)  ;}</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="concretecracked">
+                  <property name="styleSheet">
+                   <string notr="true">#concretecracked{
+color: #2E74A9;
+font: bold;
+font-size: 20px;
+}</string>
+                  </property>
+                  <property name="text">
+                   <string>Concrete is 2.87% cracked.</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QWidget" name="widget_3" native="true">
+         <layout class="QHBoxLayout" name="horizontalLayout_4">
+          <item>
+           <widget class="QWidget" name="widget_2" native="true">
+            <layout class="QHBoxLayout" name="horizontalLayout_5">
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="QPushButton" name="discardbtn">
+               <property name="minimumSize">
+                <size>
+                 <width>114</width>
+                 <height>35</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>114</width>
+                 <height>35</height>
+                </size>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">#discardbtn{
+background: #6A6E72;
+font-weight:bold;
+color: white;
+border-radius: 16px;
+font-family: Inter;
+}
+
+#discardbtn:hover{
+color: #6A6E72;
+border : 3px solid#6A6E72;
+background-color: white;
+}</string>
+               </property>
+               <property name="text">
+                <string>Discard</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QWidget" name="widget_7" native="true">
+            <layout class="QHBoxLayout" name="horizontalLayout_6">
+             <item>
+              <widget class="QPushButton" name="savebtn">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>35</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>16777215</width>
+                 <height>35</height>
+                </size>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">#savebtn{
+background: #2E74A9;
+font-weight:bold;
+color: white;
+border-radius: 16px;
+font-family: Inter;
+}
+
+
+#savebtn::hover{
+color: #2E74A9;
+border : 3px solid  #2E74A9;
+background-color: white;
+}
+</string>
+               </property>
+               <property name="text">
+                <string>Save</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QWidget" name="widget_8" native="true">
+            <layout class="QHBoxLayout" name="horizontalLayout_7">
+             <item>
+              <widget class="QPushButton" name="adddetails">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>35</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>16777215</width>
+                 <height>35</height>
+                </size>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">#adddetails{
+background: #6F4B27;
+font-weight:bold;
+color: white;
+border-radius: 16px;
+font-family: Inter;
+}
+
+
+#adddetails:hover{
+color: #6F4B27;
+border : 3px solid rgb(144,115,87);
+background-color: white;
+}
+</string>
+               </property>
+               <property name="text">
+                <string>Add Details</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QWidget" name="widget_9" native="true">
+            <layout class="QHBoxLayout" name="horizontalLayout_8">
+             <item>
+              <widget class="QPushButton" name="print1">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>35</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>16777215</width>
+                 <height>35</height>
+                </size>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">#print1{
+background: #2E74A9;
+font-weight:bold;
+color: white;
+border-radius: 16px;
+font-family: Inter;
+}
+
+
+#print1::hover{
+color: #2E74A9;
+border : 3px solid  #2E74A9;
+background-color: white;
+}
+</string>
+               </property>
+               <property name="text">
+                <string>Print</string>
+               </property>
+               <property name="icon">
+                <iconset resource="../images/images.qrc">
+                 <normaloff>:/images/print_icon.png</normaloff>:/images/print_icon.png</iconset>
+               </property>
+               <property name="iconSize">
+                <size>
+                 <width>30</width>
+                 <height>30</height>
+                </size>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources>
+  <include location="../images/images.qrc"/>
+ </resources>
+ <connections/>
+</ui>
