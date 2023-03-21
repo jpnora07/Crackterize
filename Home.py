@@ -635,7 +635,7 @@ class Ui_MainWindow(object):
                                   "")
         self.calLbl.setObjectName("calLbl")
         self.verticalLayout_6.addWidget(self.calLbl)
-        self.ButtonCal = QtWidgets.QPushButton(self.widgetUpload_2)
+        self.ButtonCal = QtWidgets.QPushButton("Calculator", self.widgetUpload_2)
         self.ButtonCal.setStyleSheet("#ButtonCal{\n"
                                        "height:40px;\n"
                                        "font-weight:bold;\n"

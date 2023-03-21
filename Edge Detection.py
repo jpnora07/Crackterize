@@ -36,6 +36,12 @@ class MainWindow(QMainWindow):
         self.threshold2_slider.setMinimum(0)
         self.threshold2_slider.setMaximum(255)
         self.threshold2_slider.setSingleStep(1)
+        # Initialize the edge detector with the default threshold values
+        self.threshold1 = 52
+        self.threshold2 = 1000
+
+        self.threshold1_label = QLabel("0")
+        self.threshold2_label = QLabel("0")
 
         # Create a grid layout to hold the widgets
         layout = QGridLayout(central_widget)
@@ -45,14 +51,16 @@ class MainWindow(QMainWindow):
         layout.addWidget(self.threshold1_slider, 1, 1)
         layout.addWidget(QLabel('Threshold 2'), 2, 0)
         layout.addWidget(self.threshold2_slider, 2, 1)
+        layout.addWidget(QLabel('Current Threshold 1:'), 3, 0)
+        layout.addWidget(self.threshold1_label, 3, 1)
+        layout.addWidget(QLabel('Current Threshold 2:'), 4, 0)
+        layout.addWidget(self.threshold2_label, 4, 1)
 
         # Load the input image and display it
         self.img = cv2.imread('images/crack_sample.jpg')
         self.show_image(self.img, self.original_view)
 
-        # Initialize the edge detector with the default threshold values
-        self.threshold1 = 52
-        self.threshold2 = 1000
+
         self.gray = cv2.cvtColor(self.img, cv2.COLOR_BGR2GRAY)
         self.blurred = cv2.GaussianBlur(self.img, (5, 5), 0)
         edges = cv2.Canny(self.blurred, self.threshold1, self.threshold2)
@@ -124,12 +132,21 @@ class MainWindow(QMainWindow):
         view.scene().addPixmap(pixmap)
 
     def update_edges(self):
+        # Define the actual dimensions of the image in cm
+        img_width_cm = 48
+        img_height_cm = 49
+
+        # Define the pixel-to-size ratio for the image
+        pixel_to_cm = img_width_cm / self.img.shape[1]
+
         # Get the new threshold values from the sliders
-        self.threshold1 = self.threshold1_slider.value()
-        self.threshold2 = self.threshold2_slider.value()
+        threshold1 = 157
+        threshold2 = 21
+        self.threshold1_label.setText(str(threshold1))
+        self.threshold2_label.setText(str(threshold2))
 
         # Detect edges using Canny algorithm
-        edges = cv2.Canny(self.blurred, self.threshold1, self.threshold2)
+        edges = cv2.Canny(self.blurred, threshold1, threshold2)
 
         # Find contours and draw bounding boxes around them
         contours, _ = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
@@ -147,13 +164,15 @@ class MainWindow(QMainWindow):
                 cv2.rectangle(img_with_boxes, (x, y), (x + w, y + h), (0, 255, 0), 2)
 
                 # Measure length and width of the bounding box in cm
-                pixel_to_cm = 0.0264583333
                 length_cm = np.sqrt(w ** 2 + h ** 2) * pixel_to_cm
-                width_cm = w / 2 * pixel_to_cm + h / 2 * pixel_to_cm
+                width_cm = w * pixel_to_cm
 
+                # Print the length and width in cm
                 print("Number of pixels: {}".format(w * h))
                 print("Length of crack: {:.2f} cm".format(length_cm))
                 print("Width of crack: {:.2f} cm".format(width_cm))
+
+                # Store the length and width in lists for later use
                 self.lengths.append(length_cm)
                 self.widths.append(width_cm)
 
