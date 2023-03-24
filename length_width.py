@@ -1,3 +1,5 @@
+import os
+
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 import cv2
@@ -21,7 +23,9 @@ class Ui_MainWindow(object):
         self.horizontalLayout_4.setObjectName("horizontalLayout_4")
 
         # Load image and convert to grayscale
-        self.image = cv2.imread("images/10cm.jpg")
+        image_path = sys.argv[1]
+        import cv2
+        self.image = cv2.imread(image_path)
         self.gray = cv2.cvtColor(self.image, cv2.COLOR_BGR2GRAY)
 
         self.imageLabel = QtWidgets.QLabel(self.widget_4)
@@ -98,7 +102,8 @@ class Ui_MainWindow(object):
         self.get_Heigth_Width = QtWidgets.QPushButton("Proceed", self.widget_2)
         self.get_Heigth_Width.setMaximumSize(QtCore.QSize(100, 16777215))
         self.get_Heigth_Width.setObjectName("get_Heigth_Width")
-        self.get_Heigth_Width.clicked.connect()
+        self.get_Heigth_Width.clicked.connect(MainWindow.close)
+        self.get_Heigth_Width.clicked.connect(self.Proceed_to_Result)
         self.horizontalLayout_3.addWidget(self.get_Heigth_Width)
         self.verticalLayout.addWidget(self.widget_2)
         MainWindow.setCentralWidget(self.centralwidget)
@@ -108,6 +113,20 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
+
+    def Proceed_to_Result(self):
+        try:
+            # Get the path to the directory where the executable is run from
+            app_path = getattr(sys, '_MEIPASS', None) or os.path.abspath('.')
+            # Create the path to the view_folders.py file
+            view_result = os.path.join(app_path, 'result.py')
+            # Execute the view_folders.py file using QProcess
+            process = QtCore.QProcess()
+            process.start('python', [view_result])
+            if process.waitForFinished() == 0:
+                print('Error: failed to execute view_result.py')
+        except Exception as e:
+            print(e)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate

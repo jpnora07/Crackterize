@@ -31,6 +31,7 @@ class Ui_MainWindow(object):
                 combo.showPopup()
 
     def setupUi(self, MainWindow, application_path=None):
+
         MainWindow.setObjectName("MainWindow")
         MainWindow.setWindowModality(QtCore.Qt.NonModal)
         MainWindow.setEnabled(True)
@@ -668,14 +669,20 @@ class Ui_MainWindow(object):
 
     # new image upload function for upload button
     def upload_image(self):
-        options = QFileDialog.Options()
-        options |= QFileDialog.ReadOnly
-        file_name, _ = QFileDialog.getOpenFileName(None, "QFileDialog.getOpenFileName()", "",
-                                                   "Images (*.png *.jpg *.jpeg)", options=options)
-        if file_name:
-            pixmap = QPixmap(file_name)
-            self.image_label.setPixmap(pixmap)
+        # Open file dialog to select an image
+        image_path = self.open_file_dialog()
 
+        # Launch the second file and pass the image path as a command-line argument
+        script_path = os.path.join(os.path.dirname(__file__), 'length_width.py')
+        subprocess.Popen(['python', script_path, image_path])
+
+    def open_file_dialog(self):
+        file_dialog = QFileDialog()
+        file_dialog.setNameFilter('Images (*.png *.jpg *.bmp)')
+        file_dialog.setFileMode(QFileDialog.ExistingFile)
+        if file_dialog.exec_():
+            selected_files = file_dialog.selectedFiles()
+            return selected_files[0]
     # Dialog Box for creating new project
     def creating_new_project(self):
         # Create dialog box
