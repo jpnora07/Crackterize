@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Dialog</class>
+ <widget class="QDialog" name="Dialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>656</width>
+    <height>495</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Dialog</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">#Dialog{
+background-image: url(:/images/bg.jpg);
+}</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QWidget" name="roundWdgt" native="true">
+     <property name="styleSheet">
+      <string notr="true">#roundWdgt {
+            background: #FFFFFF;
+            border-radius: 20px;
+            opacity: 100;
+            border: none;
+        }
+</string>
+     </property>
+     <widget class="QWidget" name="logoWdgt" native="true">
+      <property name="geometry">
+       <rect>
+        <x>100</x>
+        <y>-60</y>
+        <width>441</width>
+        <height>311</height>
+       </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+        <horstretch>30</horstretch>
+        <verstretch>100</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">#logoWdgt{
+border-image: url(:/images/Crackterize.png) 10 10 10 10 stretch;
+
+}</string>
+      </property>
+      <widget class="QWidget" name="widget" native="true">
+       <property name="geometry">
+        <rect>
+         <x>190</x>
+         <y>170</y>
+         <width>311</width>
+         <height>301</height>
+        </rect>
+       </property>
+       <widget class="QLabel" name="label_2">
+        <property name="geometry">
+         <rect>
+          <x>40</x>
+          <y>90</y>
+          <width>101</width>
+          <height>41</height>
+         </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">#label_2{
+color: rgba(111, 75, 39, 0.77);
+font-size: 22px;
+font-weight: bold;
+}</string>
+        </property>
+        <property name="text">
+         <string>Length:</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="lengthlbl">
+        <property name="geometry">
+         <rect>
+          <x>150</x>
+          <y>90</y>
+          <width>91</width>
+          <height>41</height>
+         </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">#lengthlbl{
+	color:  #555555;
+font: bold;
+	font-size: 18px}</string>
+        </property>
+        <property name="text">
+         <string>609.5 mm</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label">
+        <property name="geometry">
+         <rect>
+          <x>40</x>
+          <y>50</y>
+          <width>261</width>
+          <height>41</height>
+         </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">font-family: 'Inter';
+color:#250000;
+font-style: normal;
+font-weight: bold;
+font-size: 23px;
+line-height: 61px;
+text-align: center;
+</string>
+        </property>
+        <property name="text">
+         <string>Crack Detected:</string>
+        </property>
+       </widget>
+      </widget>
+     </widget>
+     <widget class="QWidget" name="outimg" native="true">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>120</y>
+        <width>311</width>
+        <height>301</height>
+       </rect>
+      </property>
+      <widget class="QWidget" name="img" native="true">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>20</y>
+         <width>271</width>
+         <height>211</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">#img{
+	border-image: url(:/images/img.png) 10 10 10 10 stretch;
+	border-radius: 20px;
+            opacity: 100;
+            border: none;
+}</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="discardbtn">
+       <property name="geometry">
+        <rect>
+         <x>30</x>
+         <y>260</y>
+         <width>91</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">#discardbtn{
+background: #6A6E72;
+font-weight:bold;
+color: white;
+border-radius: 10px;
+font-family: Inter;
+}
+
+#discardbtn:hover{
+color: #6A6E72;
+border : 3px solid#6A6E72;
+background-color: white;
+}</string>
+       </property>
+       <property name="text">
+        <string>Discard</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="savebtn">
+       <property name="geometry">
+        <rect>
+         <x>180</x>
+         <y>260</y>
+         <width>91</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">#savebtn{
+background: #2E74A9;
+font-weight:bold;
+color: white;
+border-radius: 10px;
+font-family: Inter;
+}
+
+
+#savebtn::hover{
+color: #2E74A9;
+border : 3px solid  #2E74A9;
+background-color: white;
+}
+</string>
+       </property>
+       <property name="text">
+        <string>Save</string>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QLabel" name="label_3">
+      <property name="geometry">
+       <rect>
+        <x>330</x>
+        <y>250</y>
+        <width>81</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">#label_3{
+color: rgba(111, 75, 39, 0.77);
+font-size: 22px;
+font-weight: bold;
+}</string>
+      </property>
+      <property name="text">
+       <string> Width: </string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="widthlbl">
+      <property name="geometry">
+       <rect>
+        <x>440</x>
+        <y>250</y>
+        <width>81</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">#widthlbl{
+	color:  #555555;
+font: bold;
+	font-size: 18px;
+}</string>
+      </property>
+      <property name="text">
+       <string>50.91 mm</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="concretecracked">
+      <property name="geometry">
+       <rect>
+        <x>370</x>
+        <y>300</y>
+        <width>261</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">#concretecracked{
+color: #2E74A9;
+font: bold;
+font-size: 20px;
+}</string>
+      </property>
+      <property name="text">
+       <string>Concrete is 2.87% cracked.</string>
+      </property>
+     </widget>
+     <widget class="QWidget" name="i" native="true">
+      <property name="geometry">
+       <rect>
+        <x>330</x>
+        <y>300</y>
+        <width>31</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">#i{
+	border-image: url(:/images/i.png)  ;}</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="adddetails">
+      <property name="geometry">
+       <rect>
+        <x>390</x>
+        <y>350</y>
+        <width>131</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">#adddetails{
+background: #6F4B27;
+font-weight:bold;
+color: white;
+border-radius: 10px;
+font-family: Inter;
+}
+
+
+#adddetails:hover{
+color: #6F4B27;
+border : 3px solid rgb(144,115,87);
+background-color: white;
+}
+</string>
+      </property>
+      <property name="text">
+       <string>Add More Details</string>
+      </property>
+     </widget>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources>
+  <include location="../PycharmProjects/Crackterize/images/images.qrc"/>
+ </resources>
+ <connections/>
+</ui>

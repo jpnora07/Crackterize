@@ -58,11 +58,14 @@ class MainWindow(QMainWindow):
 
         # Load the input image and display it
         self.img = cv2.imread('images/crack_sample.jpg')
+        desired_size = (2000, 2000)
+
+        # Resize the image to the desired size
+        self.img = cv2.resize(self.img, desired_size)
         self.show_image(self.img, self.original_view)
 
-
         self.gray = cv2.cvtColor(self.img, cv2.COLOR_BGR2GRAY)
-        self.blurred = cv2.GaussianBlur(self.img, (5, 5), 0)
+        self.blurred = cv2.medianBlur(self.img, 5, 0)
         edges = cv2.Canny(self.blurred, self.threshold1, self.threshold2)
         edges = cv2.dilate(edges, None, iterations=1)
         edges = cv2.erode(edges, None, iterations=1)
@@ -71,11 +74,13 @@ class MainWindow(QMainWindow):
 
         # Find contours and draw non-overlapping bounding boxes around them
         contours, _ = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-        contours = [x for x in contours if cv2.contourArea(x) > 50]
         boxes = []
         self.lengths = []
         self.widths = []
         for contour in contours:
+            area = cv2.contourArea(contour)
+            if area < 50:
+                continue
             x, y, w, h = cv2.boundingRect(contour)
             new_box = [x, y, x + w, y + h]
             overlaps = False
@@ -86,7 +91,6 @@ class MainWindow(QMainWindow):
             if not overlaps:
                 boxes.append(new_box)
                 cv2.rectangle(self.img, (x, y), (x + w, y + h), (0, 255, 0), 2)
-
 
         # Create a button to calculate and print total length and width of the detected cracks
         self.calculate_button = QPushButton("Calculate")
@@ -140,16 +144,20 @@ class MainWindow(QMainWindow):
         pixel_to_cm = img_width_cm / self.img.shape[1]
 
         # Get the new threshold values from the sliders
-        threshold1 = 157
-        threshold2 = 21
+        threshold1 = self.threshold1_slider.value()
+        threshold2 = self.threshold2_slider.value()
         self.threshold1_label.setText(str(threshold1))
         self.threshold2_label.setText(str(threshold2))
 
         # Detect edges using Canny algorithm
         edges = cv2.Canny(self.blurred, threshold1, threshold2)
 
+        # Apply closing operation to remove noise
+        kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3))
+        closed = cv2.morphologyEx(edges, cv2.MORPH_CLOSE, kernel)
+
         # Find contours and draw bounding boxes around them
-        contours, _ = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        contours, _ = cv2.findContours(closed, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         img_with_boxes = self.img.copy()
         for contour in contours:
             # Compute the bounding box and aspect ratio
@@ -163,7 +171,7 @@ class MainWindow(QMainWindow):
                 # Draw the bounding box
                 cv2.rectangle(img_with_boxes, (x, y), (x + w, y + h), (0, 255, 0), 2)
 
-                # Measure length and width of the bounding box in cm
+        # Measure length and width of the bounding box in cm
                 length_cm = np.sqrt(w ** 2 + h ** 2) * pixel_to_cm
                 width_cm = w * pixel_to_cm
 

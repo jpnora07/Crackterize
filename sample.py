@@ -1,68 +1,74 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QWidget, QComboBox, QListView, QVBoxLayout
+from PyQt5 import QtWidgets, QtGui, QtCore
+import cv2
+import numpy as np
+import tensorflow as tf
+from tensorflow import keras
 
-class CustomComboBox(QComboBox):
-    def __init__(self, parent=None):
-        super().__init__(parent)
 
-        # Create a list view widget
-        self.list_view = QListView(self)
-
-    def showPopup(self):
-        # Adjust the position and width of the list view widget
-        combo_rect = self.rect()
-        list_rect = self.list_view.geometry()
-        list_rect.setWidth(400)
-        list_rect.moveCenter(combo_rect.center())
-        self.list_view.setGeometry(list_rect)
-
-        # Show the list view widget
-        super().showPopup()
-
-class Example(QWidget):
+class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
-        self.initUI()
+        # Load the model from the H5 file
+        self.model = keras.models.load_model('resnet_model_cnn.h5')
 
-    def initUI(self):
-        # Create a custom combo box widget
-        combo = CustomComboBox(self)
+        # Create a file dialog to select an image file
+        self.file_dialog = QtWidgets.QFileDialog(self)
+        self.file_dialog.setFileMode(QtWidgets.QFileDialog.ExistingFile)
+        self.file_dialog.setNameFilter("Image files (*.jpg *.jpeg *.png)")
 
-        # Add some items to the combo box
-        combo.addItem('Item 1')
-        combo.addItem('Item 2')
-        combo.addItem('Item 3')
-        combo.addItem('Item 4')
-        combo.addItem('Item 5')
-        combo.addItem('Item 6')
+        # Create a label to display the selected image
+        self.image_label = QtWidgets.QLabel(self)
+        self.image_label.setAlignment(QtCore.Qt.AlignCenter)
+        self.image_label.setFixedSize(256, 256)
 
-        # Set the minimum width and maximum width of the combo box
-        combo.setMinimumWidth(200)
-        combo.setMaximumWidth(200)
+        # Create a button to open the file dialog
+        self.open_button = QtWidgets.QPushButton("Select Image", self)
+        self.open_button.clicked.connect(self.open_file_dialog)
 
-        # Create a vertical layout
-        vbox = QVBoxLayout(self)
-        vbox.setContentsMargins(0, 0, 0, 0)
-        self.setLayout(vbox)
+        # Create a label to display the prediction result
+        self.prediction_label = QtWidgets.QLabel(self)
+        self.prediction_label.setAlignment(QtCore.Qt.AlignCenter)
 
-        # Set the list view size
-        combo.list_view.setFixedWidth(400)
-        combo.list_view.setFixedHeight(50)
+        # Create a vertical layout for the widgets
+        self.layout = QtWidgets.QVBoxLayout()
+        self.layout.addWidget(self.image_label)
+        self.layout.addWidget(self.open_button)
+        self.layout.addWidget(self.prediction_label)
 
-        # Center the list view widget to the combo box widget
-        combo.list_view.move(combo.rect().center() - combo.list_view.rect().center())
+        # Create a central widget and set the layout
+        self.central_widget = QtWidgets.QWidget()
+        self.central_widget.setLayout(self.layout)
+        self.setCentralWidget(self.central_widget)
 
-        # Add the combo box to the layout
-        vbox.addStretch(1)
-        vbox.addWidget(combo)
-        vbox.addStretch(1)
+    def open_file_dialog(self):
+        # Show the file dialog and get the selected file path
+        file_path, _ = self.file_dialog.getOpenFileName()
 
-        # Set the window properties
-        self.setGeometry(300, 300, 600, 400)
-        self.setWindowTitle('Combo Box Example')
-        self.show()
+        # If a file was selected, load the image and make a prediction
+        if file_path:
+            image = cv2.imread(file_path)
+            image = cv2.resize(image, (224, 224))
+            image = np.expand_dims(image, axis=0)
+            predictions = self.model.predict(image)
+            score = tf.nn.softmax(predictions[0])
 
-if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    ex = Example()
+            # Set the image label to display the selected image
+            pixmap = QtGui.QPixmap(file_path).scaled(256, 256, QtCore.Qt.KeepAspectRatio)
+            self.image_label.setPixmap(pixmap)
+
+            # Set the prediction label to display the result
+            if np.argmax(score) == 0:
+                self.prediction_label.setText("The image does not contain a crack.")
+            else:
+                self.prediction_label.setText("The image contains a crack.")
+
+            # Resize the window to fit the image
+            self.adjustSize()
+
+
+if __name__ == "__main__":
+    app = QtWidgets.QApplication(sys.argv)
+    window = MainWindow()
+    window.show()
     sys.exit(app.exec_())
