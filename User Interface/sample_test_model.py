@@ -10,7 +10,7 @@ class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
         # Load the model from the H5 file
-        self.model = keras.models.load_model('resnet_model_cnn.h5')
+        self.model = keras.models.load_model('../resnet_model_cnn.h5')
 
         # Create a file dialog to select an image file
         self.file_dialog = QtWidgets.QFileDialog(self)
