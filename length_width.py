@@ -1,18 +1,148 @@
 import os
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-
 import cv2
 import numpy as np
-from PyQt5.QtWidgets import QApplication, QLabel, QMainWindow, QPushButton, QInputDialog, QSlider
-from PyQt5.QtGui import QPixmap, QImage
+from PyQt5.QtWidgets import QSlider
+from PyQt5.QtGui import QPixmap, QImage, QMovie
 from PyQt5.QtCore import Qt
+from PyQt5.QtCore import QThread, pyqtSignal
 from collections import deque
+import tensorflow as tf
+from tensorflow import keras
+class FindBlackBlocksThread(QThread):
+    finished = pyqtSignal()
+    progress_signal = pyqtSignal(int)
+    result_signal = pyqtSignal(list)
+
+    def __init__(self, image, nBlock):
+        super().__init__()
+        self.image = image
+        self.nBlock = nBlock
+        self.blocks = []
+
+    def is_black(pixel):
+        """Check whether the given pixel is black."""
+        return pixel == 0  # assuming that 0 represents black in the image
+
+    def run(self):
+        height, width = self.image.shape
+        track = {}
+        for y in range(height):
+            for x in range(width):
+                if is_black(self.image[y, x]) and (y, x) not in track:
+                    stack = deque()
+                    stack.append((y, x))
+                    block = []
+                    while stack:
+                        cy, cx = stack.pop()
+                        if (cy, cx) in track:
+                            continue
+                        track[(cy, cx)] = True
+                        block.append((cy, cx))
+                        for dy, dx in [(0, 0), (0, 1), (0, -1), (-1, 0), (1, 0)]:
+                            ny, nx = cy + dy, cx + dx
+                            if ny < 0 or ny >= height or nx < 0 or nx >= width:
+                                continue
+                            if is_black(self.image[ny, nx]):
+                                stack.append((ny, nx))
+                    if len(block) >= self.nBlock:
+                        self.blocks.append(block)
+        self.result_signal.emit(self.blocks)
+        self.finished.emit()
+
+class CrackAnalyzer(QThread):
+
+    def __init__(self, distance, unit, focal_length):
+        super().__init__()
+        self.distance = distance
+        self.unit = unit
+        self.focal_length = focal_length
+
+    def get_Heigth_Width_Function(self, result):
+        # Convert the known distance to centimeters
+        if self.unit == "Millimeter (mm)":
+            known_distance_cm = self.distance / 10
+        elif self.unit == "Centimeter (cm)":
+            known_distance_cm = self.distance
+        elif self.unit == "Inch (in)":
+            known_distance_cm = self.distance * 2.54
+        elif self.unit == "Foot (ft)":
+            known_distance_cm = self.distance * 30.48
+        elif self.unit == "Yard (yd)":
+            known_distance_cm = self.distance * 91.44
+        elif self.unit == "Meter (m)":
+            known_distance_cm = self.distance * 100
+        else:
+            print("Invalid unit selected")
+            return
+
+        # Measure the width of the crack
+        crack_widths = []
+        for y in range(result.shape[0]):
+            left_edge, right_edge = None, None
+            for x in range(result.shape[1]):
+                if result[y, x] == 0:
+                    if left_edge is None:
+                        left_edge = x
+                    right_edge = x
+            if left_edge is not None and right_edge is not None:
+                width = right_edge - left_edge
+                # Convert pixel width to mm
+                width_mm = width * known_distance_cm / self.focal_length
+                crack_widths.append(width_mm)
+
+        # Measure the height of the crack in non-broken areas
+        crack_heights = []
+        for x in range(result.shape[1]):
+            top_edge, bottom_edge = None, None
+            for y in range(result.shape[0]):
+                if result[y, x] == 0:
+                    if top_edge is None:
+                        top_edge = y
+                    bottom_edge = y
+            if top_edge is not None and bottom_edge is not None:
+                # Check if the pixels between top_edge and bottom_edge are part of the crack
+                if any(result[top_edge:bottom_edge + 1, x] == 0):
+                    height = bottom_edge - top_edge
+                    # Convert pixel height to cm
+                    height_cm = height * known_distance_cm / self.focal_length
+                    crack_heights.append(height_cm / 10)
+                    print(f"Crack area height: {height_cm:.2f} mm")
+
+        if len(crack_heights) == 0:
+            print("No crack areas found")
+        else:
+            avg_height = sum(crack_heights) / len(crack_heights)
+            print(f"Crack height: {avg_height:.2f} cm")
+            avg_width = sum(crack_widths) / len(crack_widths)
+            print(f"Crack width: {avg_width:.2f} mm")
+
+class NoiseRemovalThread(QThread):
+    finished = pyqtSignal(np.ndarray)
+    progress_signal = pyqtSignal(int)
+
+    def __init__(self, thresholded):
+        super().__init__()
+        self.thresholded = thresholded
+
+    def run(self):
+        nBlock = 130  # Threshold for black block size
+        black_blocks_thread = FindBlackBlocksThread(self.thresholded, nBlock)
+        black_blocks_thread.start()
+        black_blocks_thread.wait()
+        blocks = black_blocks_thread.blocks
+        mask = np.zeros_like(self.thresholded, dtype=bool)
+        for block in blocks:
+            for y, x in block:
+                mask[y, x] = True
+        result = np.where(mask, self.thresholded, 255)
+        self.finished.emit(result)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(643, 454)
+        MainWindow.resize(643, 502)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.verticalLayout = QtWidgets.QVBoxLayout(self.centralwidget)
@@ -24,9 +154,20 @@ class Ui_MainWindow(object):
 
         # Load image and convert to grayscale
         image_path = sys.argv[1]
-        import cv2
         self.image = cv2.imread(image_path)
+        #self.image = cv2.imread('images/10cm.jpg')
+        self.imageCnn = cv2.resize(self.image, (224, 224))
+        self.imageCnn = np.expand_dims(self.image, axis=0)
         self.gray = cv2.cvtColor(self.image, cv2.COLOR_BGR2GRAY)
+
+        self.model = keras.models.load_model('resnet_model_cnn.h5')
+        predictions = self.model.predict(self.imageCnn)
+        score = tf.nn.softmax(predictions[0])
+        # Set the prediction label to display the result
+        if np.argmax(score) == 0:
+            print("The image does not contain a crack.")
+        else:
+            print("The image contains a crack.")
 
         self.imageLabel = QtWidgets.QLabel(self.widget_4)
         self.imageLabel.setMaximumSize(QtCore.QSize(500, 16777215))
@@ -36,16 +177,15 @@ class Ui_MainWindow(object):
 
         # Set the image on the label
         self.update_image(self.gray)
-
         self.horizontalLayout_4.addWidget(self.imageLabel)
+
         self.verticalLayout.addWidget(self.widget_4)
         self.widget = QtWidgets.QWidget(self.centralwidget)
         self.widget.setMaximumSize(QtCore.QSize(16777215, 50))
         self.widget.setObjectName("widget")
         self.horizontalLayout = QtWidgets.QHBoxLayout(self.widget)
+        self.horizontalLayout.setContentsMargins(-1, -1, -1, 0)
         self.horizontalLayout.setObjectName("horizontalLayout")
-
-
         self.thresholder = QtWidgets.QWidget(self.widget)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(10)
@@ -54,58 +194,121 @@ class Ui_MainWindow(object):
         self.thresholder.setSizePolicy(sizePolicy)
         self.thresholder.setMaximumSize(QtCore.QSize(16777215, 50))
         self.thresholder.setObjectName("thresholder")
-        self.horizontalLayout.addWidget(self.thresholder)
-
         self.horizontalLayout_5 = QtWidgets.QHBoxLayout(self.thresholder)
         self.horizontalLayout_5.setObjectName("horizontalLayout_5")
-        # Create a button for threshold adjustment
+
+        self.thresholderLbl = QtWidgets.QLabel("Threshold", self.thresholder)
+        self.thresholderLbl.setMaximumSize(QtCore.QSize(50, 16777215))
+        self.thresholderLbl.setObjectName("thresholderNum")
+        self.thresholderLbl.setWordWrap(True)
+        self.horizontalLayout_5.addWidget(self.thresholderLbl)
+
         self.threshold_slider = QSlider(Qt.Horizontal, self.thresholder)
         self.threshold_slider.setRange(0, 255)
         self.threshold_slider.setValue(128)
+        self.threshold_slider.setFixedSize(250, self.thresholder.height())
         self.threshold_slider.valueChanged.connect(self.adjust_threshold)
         # Connect the valueChanged signal of the slider to a function that updates the label
         self.threshold_slider.valueChanged.connect(self.update_slider_value_label)
         self.horizontalLayout_5.addWidget(self.threshold_slider)
 
+        self.progressBar = QtWidgets.QLabel("ad", self.thresholder)
+        self.progressBar.setMaximumSize(QtCore.QSize(30, 30))
+        self.progressBar.setObjectName("progressBar")
+        # Loading the GIF
+        self.movie = QMovie("images/giphy.gif")
+        self.progressBar.setMovie(self.movie)
+        self.progressBar.setAttribute(QtCore.Qt.WA_TranslucentBackground)
+
+        self.movie.setScaledSize(QtCore.QSize(30, 30))
+        # set the scaledContents property to True
+        self.progressBar.setScaledContents(True)
+        self.horizontalLayout_5.addWidget(self.progressBar)
+
+        self.thresholderNum = QtWidgets.QLabel(self.thresholder)
+        self.thresholderNum.setMaximumSize(QtCore.QSize(40, 16777215))
+        self.thresholderNum.setObjectName("thresholderNum")
+        self.horizontalLayout_5.addWidget(self.thresholderNum)
+
+
+        self.horizontalLayout.addWidget(self.thresholder)
         self.verticalLayout.addWidget(self.widget)
         self.widget_3 = QtWidgets.QWidget(self.centralwidget)
-        self.widget_3.setMaximumSize(QtCore.QSize(16777215, 50))
+        self.widget_3.setMaximumSize(QtCore.QSize(16777215, 150))
         self.widget_3.setObjectName("widget_3")
         self.horizontalLayout_2 = QtWidgets.QHBoxLayout(self.widget_3)
+        self.horizontalLayout_2.setContentsMargins(-1, 0, -1, -1)
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
-        self.thresholderNum = QtWidgets.QLabel("128", self.widget_3)
-        self.thresholderNum.setObjectName("thresholderNum")
-        self.thresholderNum.setAlignment(QtCore.Qt.AlignCenter)
-        self.horizontalLayout_2.addWidget(self.thresholderNum)
+        self.widget_5 = QtWidgets.QWidget(self.widget_3)
+        self.widget_5.setMinimumSize(QtCore.QSize(10, 0))
+        self.widget_5.setMaximumSize(QtCore.QSize(300, 16777215))
+        self.widget_5.setObjectName("widget_5")
+        self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.widget_5)
+        self.verticalLayout_2.setSpacing(0)
+        self.verticalLayout_2.setObjectName("verticalLayout_2")
+        self.widget_6 = QtWidgets.QWidget(self.widget_5)
+        self.widget_6.setObjectName("widget_6")
+        self.horizontalLayout_6 = QtWidgets.QHBoxLayout(self.widget_6)
+        self.horizontalLayout_6.setObjectName("horizontalLayout_6")
+        self.distanceLbl = QtWidgets.QLabel(self.widget_6)
+        font = QtGui.QFont()
+        font.setPointSize(12)
+        self.distanceLbl.setFont(font)
+        self.distanceLbl.setObjectName("distanceLbl")
+        self.horizontalLayout_6.addWidget(self.distanceLbl)
+        self.verticalLayout_2.addWidget(self.widget_6)
+        self.widget_7 = QtWidgets.QWidget(self.widget_5)
+        self.widget_7.setMinimumSize(QtCore.QSize(0, 0))
+        font = QtGui.QFont()
+        font.setPointSize(9)
+        self.widget_7.setFont(font)
+        self.widget_7.setObjectName("widget_7")
+        self.horizontalLayout_7 = QtWidgets.QHBoxLayout(self.widget_7)
+        self.horizontalLayout_7.setContentsMargins(-1, 0, -1, -1)
+        self.horizontalLayout_7.setSpacing(0)
+        self.horizontalLayout_7.setObjectName("horizontalLayout_7")
 
-        self.removeNoise = QtWidgets.QPushButton("Remove Noise", self.widget_3)
-        self.removeNoise.setMaximumSize(QtCore.QSize(100, 16777215))
+        self.NumOfDistance = QtWidgets.QTextEdit(self.widget_7)
+        self.NumOfDistance.setMinimumSize(QtCore.QSize(0, 30))
+        self.NumOfDistance.setMaximumSize(QtCore.QSize(50, 30))
+        self.NumOfDistance.setObjectName("NumOfDistance")
+        self.horizontalLayout_7.addWidget(self.NumOfDistance)
+
+        self.units = QtWidgets.QComboBox(self.widget_7)
+        self.units.setMinimumSize(QtCore.QSize(0, 30))
+        self.units.setMaximumSize(QtCore.QSize(150, 30))
+        self.units.setObjectName("units")
+        self.units.addItems(["Millimeter (mm)", "Centimeter (cm)", "Inch (in)", "Foot (ft)", "Yard (yd)", "Meter (m)"])
+        self.horizontalLayout_7.addWidget(self.units)
+
+        self.verticalLayout_2.addWidget(self.widget_7)
+        self.horizontalLayout_2.addWidget(self.widget_5)
+        self.widget_2 = QtWidgets.QWidget(self.widget_3)
+        self.widget_2.setMinimumSize(QtCore.QSize(250, 0))
+        self.widget_2.setMaximumSize(QtCore.QSize(250, 16777215))
+        self.widget_2.setObjectName("widget_2")
+        self.verticalLayout_3 = QtWidgets.QVBoxLayout(self.widget_2)
+        self.verticalLayout_3.setObjectName("verticalLayout_3")
+
+        self.removeNoise = QtWidgets.QPushButton("Remove Noise", self.widget_2)
+        self.removeNoise.setMaximumSize(QtCore.QSize(10000, 16777215))
         self.removeNoise.setObjectName("removeNoise")
         self.removeNoise.clicked.connect(self.remove_noise)
-        self.horizontalLayout_2.addWidget(self.removeNoise)
-        self.cropImg = QtWidgets.QPushButton("Crop", self.widget_3)
-        self.cropImg.setMaximumSize(QtCore.QSize(100, 16777215))
-        self.cropImg.setObjectName("cropImg")
-        self.horizontalLayout_2.addWidget(self.cropImg)
+        self.verticalLayout_3.addWidget(self.removeNoise)
+
+        self.pushButton_2 = QtWidgets.QPushButton(self.widget_2)
+        self.pushButton_2.setMaximumSize(QtCore.QSize(10000, 16777215))
+        self.pushButton_2.setObjectName("pushButton_2")
+        self.verticalLayout_3.addWidget(self.pushButton_2)
+
+        self.proceed = QtWidgets.QPushButton("Proceed", self.widget_2)
+        self.proceed.setObjectName("proceed")
+        self.proceed.clicked.connect(MainWindow.close)
+        self.proceed.clicked.connect(self.Proceed_to_Result)
+        self.verticalLayout_3.addWidget(self.proceed)
+
+        self.horizontalLayout_2.addWidget(self.widget_2)
         self.verticalLayout.addWidget(self.widget_3)
-        self.widget_2 = QtWidgets.QWidget(self.centralwidget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
-        sizePolicy.setHorizontalStretch(100)
-        sizePolicy.setVerticalStretch(99)
-        sizePolicy.setHeightForWidth(self.widget_2.sizePolicy().hasHeightForWidth())
-        self.widget_2.setSizePolicy(sizePolicy)
-        self.widget_2.setMaximumSize(QtCore.QSize(16777215, 50))
-        self.widget_2.setObjectName("widget_2")
-        self.horizontalLayout_3 = QtWidgets.QHBoxLayout(self.widget_2)
-        self.horizontalLayout_3.setContentsMargins(500, 0, 0, 0)
-        self.horizontalLayout_3.setObjectName("horizontalLayout_3")
-        self.get_Heigth_Width = QtWidgets.QPushButton("Proceed", self.widget_2)
-        self.get_Heigth_Width.setMaximumSize(QtCore.QSize(100, 16777215))
-        self.get_Heigth_Width.setObjectName("get_Heigth_Width")
-        self.get_Heigth_Width.clicked.connect(MainWindow.close)
-        self.get_Heigth_Width.clicked.connect(self.Proceed_to_Result)
-        self.horizontalLayout_3.addWidget(self.get_Heigth_Width)
-        self.verticalLayout.addWidget(self.widget_2)
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
@@ -113,6 +316,14 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
+
+    def retranslateUi(self, MainWindow):
+        _translate = QtCore.QCoreApplication.translate
+        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        self.thresholderNum.setText(_translate("MainWindow", "0"))
+        self.distanceLbl.setText(_translate("MainWindow", "Distance Between Crack and Camera"))
+        self.pushButton_2.setText(_translate("MainWindow", "Crop"))
+
 
     def Proceed_to_Result(self):
         try:
@@ -127,10 +338,6 @@ class Ui_MainWindow(object):
                 print('Error: failed to execute view_result.py')
         except Exception as e:
             print(e)
-
-    def retranslateUi(self, MainWindow):
-        _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
 
     def update_image(self, image):
         # Get the size of the label
@@ -150,10 +357,6 @@ class Ui_MainWindow(object):
         pixmap = QPixmap(q_image)
         self.imageLabel.setPixmap(pixmap)
 
-    # Function to update the slider value label
-    def update_slider_value_label(self, value):
-        self.thresholderNum.setText(str(value))
-
     # Function to adjust the threshold
     def adjust_threshold(self, value):
         # Apply thresholding
@@ -161,121 +364,49 @@ class Ui_MainWindow(object):
         # Update the image on the label
         self.update_image(self.thresholded)
 
+    # Function to update the slider value label
+    def update_slider_value_label(self, value):
+        self.thresholderNum.setText(str(value))
+
     # Function to remove noise
     def remove_noise(self):
-        nBlock = 10  # Threshold for black block size
+        try:
+            distance = float(self.NumOfDistance.toPlainText())
+        except ValueError:
+            QtWidgets.QMessageBox.critical(self.centralwidget, "Error", "Please enter a valid distance.")
+            return
 
-        # Find connected black blocks
-        blocks = find_black_blocks(self.thresholded, nBlock)
+        if not distance:
+            QtWidgets.QMessageBox.critical(self.centralwidget, "Error", "Please enter a distance.")
+            return
 
-        # Create a mask containing all black blocks
-        mask = np.zeros_like(self.thresholded, dtype=bool)
-        for block in blocks:
-            for y, x in block:
-                mask[y, x] = True
+        try:
+            # Create the noise removal thread and start it
+            self.noise_thread = NoiseRemovalThread(self.thresholded)
+            self.noise_thread.started.connect(self.on_noise_removal_started)
+            self.noise_thread.finished.connect(self.on_noise_removal_finished)
 
-        # Apply the mask to the thresholded image
-        result = np.where(mask, self.thresholded, 255)
+            # Add progress bar to layout
+            self.horizontalLayout_5.addWidget(self.progressBar)
 
-        # Update the image on the label
+            self.noise_thread.start()
+        except AttributeError:
+            QtWidgets.QMessageBox.critical(self.centralwidget, "Error", "Thresholder value is empty.")
+            return
+
+    def on_noise_removal_started(self):
+        self.movie.start()
+
+    def on_noise_removal_finished(self, result):
         self.update_image(result)
-        self.get_Heigth_Width_Function(result)
+        analyzer = CrackAnalyzer(float(self.NumOfDistance.toPlainText()), self.units.currentText(), 132.28)
+        analyzer.get_Heigth_Width_Function(result)
+        self.movie.stop()
 
-    def get_Heigth_Width_Function(self, result):
-        # Set the known distance and focal length of the camera
-        known_distance = 10  # in cm
-        focal_length = 132.28  # in pixels (estimate based on camera specs of samsung a6)
-
-        # Measure the width of the crack
-        crack_widths = []
-        for y in range(result.shape[0]):
-            left_edge, right_edge = None, None
-            for x in range(result.shape[1]):
-                if result[y, x] == 0:
-                    if left_edge is None:
-                        left_edge = x
-                    right_edge = x
-            if left_edge is not None and right_edge is not None:
-                width = right_edge - left_edge
-                # Convert pixel width to mm
-                width_mm = width * known_distance / focal_length
-                crack_widths.append(width_mm)
-
-        # Measure the height of the crack in non-broken areas
-        crack_heights = []
-        for x in range(result.shape[1]):
-            top_edge, bottom_edge = None, None
-            for y in range(result.shape[0]):
-                if result[y, x] == 0:
-                    if top_edge is None:
-                        top_edge = y
-                    bottom_edge = y
-            if top_edge is not None and bottom_edge is not None:
-                # Check if the pixels between top_edge and bottom_edge are part of the crack
-                if any(result[top_edge:bottom_edge + 1, x] == 0):
-                    height = bottom_edge - top_edge
-                    # Convert pixel height to cm
-                    height_cm = height * known_distance / focal_length
-                    crack_heights.append(height_cm / 10)
-                    print(f"Crack area height: {height_cm:.2f} mm")
-
-        if len(crack_heights) == 0:
-            print("No crack areas found")
-        else:
-            avg_height = sum(crack_heights) / len(crack_heights)
-            print(f"Crack height: {avg_height:.2f} cm")
-
-        avg_width = sum(crack_widths) / len(crack_widths)
-        print(f"Crack width: {avg_width:.2f} mm")
-
-# Function to find connected black blocks
-def find_black_blocks(image, nBlock):
-    height, width = image.shape
-
-    # Create hashmap to store visited vertices
-    track = {}
-
-    # Loop through each pixel in the image
-    for y in range(height):
-        for x in range(width):
-
-            # Check if the current pixel is black and not already visited
-            if is_black(image[y, x]) and (y, x) not in track:
-
-                # Create a stack to store adjacent vertices
-                stack = deque()
-                stack.append((y, x))
-
-                # Create a list to store the
-                # Create a list to store the current block of black pixels
-                block = []
-
-                # Traverse adjacent vertices
-                while stack:
-                    cy, cx = stack.pop()
-                    if (cy, cx) in track:
-                        continue
-                    track[(cy, cx)] = True
-                    block.append((cy, cx))
-
-                    # Visit adjacent vertices in sequence A -> A right -> A left -> A up -> A down
-                    for dy, dx in [(0, 0), (0, 1), (0, -1), (-1, 0), (1, 0)]:
-                        ny, nx = cy + dy, cx + dx
-                        if ny < 0 or ny >= height or nx < 0 or nx >= width:
-                            continue
-                        if is_black(image[ny, nx]):
-                            stack.append((ny, nx))
-
-                # Check if the block size is greater than the threshold
-                if len(block) >= nBlock:
-                    yield block
-
-# Function to check if a pixel is black
 def is_black(pixel):
     return pixel == 0
 if __name__ == "__main__":
     import sys
-
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
     ui = Ui_MainWindow()
