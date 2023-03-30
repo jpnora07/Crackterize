@@ -1,15 +1,14 @@
 import os
+import pickle
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 import cv2
 import numpy as np
-from PyQt5.QtWidgets import QSlider
+from PyQt5.QtWidgets import QSlider, QApplication
 from PyQt5.QtGui import QPixmap, QImage, QMovie
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QProcess
 from PyQt5.QtCore import QThread, pyqtSignal
 from collections import deque
-import tensorflow as tf
-from tensorflow import keras
 class FindBlackBlocksThread(QThread):
     finished = pyqtSignal()
     progress_signal = pyqtSignal(int)
@@ -20,10 +19,6 @@ class FindBlackBlocksThread(QThread):
         self.image = image
         self.nBlock = nBlock
         self.blocks = []
-
-    def is_black(pixel):
-        """Check whether the given pixel is black."""
-        return pixel == 0  # assuming that 0 represents black in the image
 
     def run(self):
         height, width = self.image.shape
@@ -48,8 +43,11 @@ class FindBlackBlocksThread(QThread):
                                 stack.append((ny, nx))
                     if len(block) >= self.nBlock:
                         self.blocks.append(block)
+
         self.result_signal.emit(self.blocks)
         self.finished.emit()
+
+
 
 class CrackAnalyzer(QThread):
 
@@ -114,9 +112,15 @@ class CrackAnalyzer(QThread):
             print("No crack areas found")
         else:
             avg_height = sum(crack_heights) / len(crack_heights)
-            print(f"Crack height: {avg_height:.2f} cm")
             avg_width = sum(crack_widths) / len(crack_widths)
+            avg_height_write = f"{avg_height:.2f} cm"
+            avg_width_write = f"{avg_width:.2f} cm"
+            print(f"Crack height: {avg_height:.2f} cm")
             print(f"Crack width: {avg_width:.2f} mm")
+            with open('Predicted_height.txt', 'w') as f:
+                f.write(avg_height_write)
+            with open('Predicted_width.txt', 'w') as f:
+                f.write(avg_width_write)
 
 class NoiseRemovalThread(QThread):
     finished = pyqtSignal(np.ndarray)
@@ -137,9 +141,12 @@ class NoiseRemovalThread(QThread):
             for y, x in block:
                 mask[y, x] = True
         result = np.where(mask, self.thresholded, 255)
+        cv2.imwrite("output.png", result)
         self.finished.emit(result)
 
 class Ui_MainWindow(object):
+    signal_close = QtCore.pyqtSignal()
+
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(643, 502)
@@ -156,18 +163,8 @@ class Ui_MainWindow(object):
         image_path = sys.argv[1]
         self.image = cv2.imread(image_path)
         #self.image = cv2.imread('images/10cm.jpg')
-        self.imageCnn = cv2.resize(self.image, (224, 224))
-        self.imageCnn = np.expand_dims(self.image, axis=0)
         self.gray = cv2.cvtColor(self.image, cv2.COLOR_BGR2GRAY)
 
-        self.model = keras.models.load_model('resnet_model_cnn.h5')
-        predictions = self.model.predict(self.imageCnn)
-        score = tf.nn.softmax(predictions[0])
-        # Set the prediction label to display the result
-        if np.argmax(score) == 0:
-            print("The image does not contain a crack.")
-        else:
-            print("The image contains a crack.")
 
         self.imageLabel = QtWidgets.QLabel(self.widget_4)
         self.imageLabel.setMaximumSize(QtCore.QSize(500, 16777215))
@@ -296,16 +293,23 @@ class Ui_MainWindow(object):
         self.removeNoise.clicked.connect(self.remove_noise)
         self.verticalLayout_3.addWidget(self.removeNoise)
 
-        self.pushButton_2 = QtWidgets.QPushButton(self.widget_2)
-        self.pushButton_2.setMaximumSize(QtCore.QSize(10000, 16777215))
-        self.pushButton_2.setObjectName("pushButton_2")
-        self.verticalLayout_3.addWidget(self.pushButton_2)
+        self.crop = QtWidgets.QPushButton("Crop Image",self.widget_2)
+        self.crop.setMaximumSize(QtCore.QSize(10000, 16777215))
+        self.crop.setObjectName("crop")
+        self.verticalLayout_3.addWidget(self.crop)
 
         self.proceed = QtWidgets.QPushButton("Proceed", self.widget_2)
         self.proceed.setObjectName("proceed")
         self.proceed.clicked.connect(MainWindow.close)
         self.proceed.clicked.connect(self.Proceed_to_Result)
         self.verticalLayout_3.addWidget(self.proceed)
+
+        self.process = QProcess()
+        self.exit = QtWidgets.QPushButton("Exit", self.widget_2)
+        self.exit.setObjectName("Exit")
+        self.exit.clicked.connect(MainWindow.close)
+        self.process.finished.connect(self.finished)
+        self.verticalLayout_3.addWidget(self.exit)
 
         self.horizontalLayout_2.addWidget(self.widget_2)
         self.verticalLayout.addWidget(self.widget_3)
@@ -322,20 +326,29 @@ class Ui_MainWindow(object):
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.thresholderNum.setText(_translate("MainWindow", "0"))
         self.distanceLbl.setText(_translate("MainWindow", "Distance Between Crack and Camera"))
-        self.pushButton_2.setText(_translate("MainWindow", "Crop"))
 
+    def finished(self, exit_code, exit_status):
+        # Re-enable the main window when the subprocess finishes
+        self.centralwidget.setEnabled(True)
+    def closeEvent(self, event):
+        # emit the signal when the window is closed
+        self.signal_close.emit()
+        event.accept()
 
     def Proceed_to_Result(self):
         try:
+
             # Get the path to the directory where the executable is run from
             app_path = getattr(sys, '_MEIPASS', None) or os.path.abspath('.')
-            # Create the path to the view_folders.py file
-            view_result = os.path.join(app_path, 'result.py')
-            # Execute the view_folders.py file using QProcess
+
+            # Create the path to the result.py file
+            result_file_path = os.path.join(app_path, 'result.py')
+            # Execute the result.py file using QProcess
             process = QtCore.QProcess()
-            process.start('python', [view_result])
+            process.start('python', [result_file_path])
+
             if process.waitForFinished() == 0:
-                print('Error: failed to execute view_result.py')
+                print('Error: failed to execute result.py')
         except Exception as e:
             print(e)
 
@@ -405,6 +418,7 @@ class Ui_MainWindow(object):
 
 def is_black(pixel):
     return pixel == 0
+
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)

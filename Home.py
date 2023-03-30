@@ -2,8 +2,12 @@ import os
 import sqlite3
 import sys
 import subprocess
-import view_folders
 
+import cv2
+from flatbuffers.builder import np
+
+import tensorflow as tf
+from tensorflow import keras
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import Qt, QRect, QTimer, QStringListModel
 from PyQt5.QtGui import QIcon, QPixmap, QPalette, QMouseEvent
@@ -30,7 +34,7 @@ class Ui_MainWindow(object):
             if isinstance(combo, QComboBox):
                 combo.showPopup()
 
-    def setupUi(self, MainWindow, application_path=None):
+    def setupUi(self, MainWindow):
 
         MainWindow.setObjectName("MainWindow")
         MainWindow.setWindowModality(QtCore.Qt.NonModal)
@@ -666,15 +670,48 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
-
-    # new image upload function for upload button
     def upload_image(self):
-        # Open file dialog to select an image
         image_path = self.open_file_dialog()
+        image = cv2.imread(image_path)
+        # Save the image to a temporary file
+        temp_file_path = 'temp.jpg'
+        cv2.imwrite(temp_file_path, image)
+        # Check if the image is valid
+        if image is not None:
+            self.imageCnn = cv2.resize(image, (224, 224))
+            self.imageCnn = np.expand_dims(self.imageCnn, axis=0)
 
-        # Launch the second file and pass the image path as a command-line argument
-        script_path = os.path.join(os.path.dirname(__file__), 'length_width.py')
-        subprocess.Popen(['python', script_path, image_path])
+            self.modelCnn = keras.models.load_model('resnet_model_cnn.h5')
+            predictions = self.modelCnn.predict(self.imageCnn)
+            score = tf.nn.softmax(predictions[0])
+
+            class_names = ['no crack', 'cracked']
+            # Get the index of the predicted class
+            predicted_class_index = np.argmax(score)
+
+            # Get the name and score of the predicted class
+            predicted_class_name = class_names[predicted_class_index]
+            predicted_class_score = 100 * score[predicted_class_index]
+            print(f"The image is classified as {predicted_class_name} with {predicted_class_score:.2f}% confidence.")
+            write_score = f"{predicted_class_score:.2f}%"
+            with open('Predicted_Score.txt', 'w') as f:
+                f.write(write_score)
+            with open('Predicted_Class_name.txt', 'w') as f:
+                f.write(predicted_class_name)
+            if np.argmax(score) == 0:
+                script_path = os.path.join(os.path.dirname(__file__), 'result.py')
+                subprocess.Popen(['python', script_path])
+                try:
+                    os.remove('Predicted_width.txt')
+                    os.remove('Predicted_height.txt')
+                except FileNotFoundError:
+                    print("The file does not exist.")
+
+            else:
+                script_path = os.path.join(os.path.dirname(__file__), 'length_width.py')
+                subprocess.Popen(['python', script_path, image_path])
+        else:
+            print("Invalid image format")
 
     def open_file_dialog(self):
         file_dialog = QFileDialog()
@@ -683,6 +720,7 @@ class Ui_MainWindow(object):
         if file_dialog.exec_():
             selected_files = file_dialog.selectedFiles()
             return selected_files[0]
+
     # Dialog Box for creating new project
     def creating_new_project(self):
         # Create dialog box
@@ -1093,6 +1131,11 @@ class Ui_MainWindow(object):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
 
+    def disable_main_window(self):
+        self.centralwidget.setEnabled(False)
+
+    def enable_main_window(self):
+        self.centralwidget.setEnabled(True)
 
 if __name__ == "__main__":
     import sys
