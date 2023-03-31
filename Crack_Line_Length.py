@@ -5,7 +5,7 @@ import cv2
 from PyQt5.QtCore import Qt, QRectF, QPoint
 from PyQt5.QtGui import QImage, QPixmap, QPainter, QPen, QCursor
 from PyQt5.QtWidgets import QMainWindow, QWidget, QLabel, QGraphicsView, QGraphicsScene, QSlider, QGridLayout, \
-    QApplication, QPushButton
+    QApplication
 
 class DrawingWidget(QLabel):
     def __init__(self, image, parent=None):
@@ -63,6 +63,7 @@ class MainWindow(QMainWindow):
 
         # Create a grid layout to hold the widgets
         layout = QGridLayout(central_widget)
+
         # Load the input image and display i
         self.img = cv2.imread('segment_img.jpg')
         desired_size = (2500, 2500)
@@ -97,7 +98,7 @@ class MainWindow(QMainWindow):
 
                 with open('Input_Distance.txt', 'r') as f:
                     dist = f.read()
-                distance_cm = dist
+                distance_cm = float(dist)
                 angle_degrees = 47.8
                 angle_radians = np.deg2rad(angle_degrees)
                 length_pixels = np.sqrt(w ** 2 + h ** 2)
@@ -109,8 +110,11 @@ class MainWindow(QMainWindow):
                     self.box_lengths.append(length_cm)  # Add the length of this crack to the total length in the current box
                 self.widths.append(h)
 
-        print(f"Total length of cracks in each bounding box: {self.box_lengths} cm")
-
+        total_length = sum(self.box_lengths)
+        total_length_write = f"{total_length:.2f}"
+        print(total_length_write + " cm")
+        with open('Predicted_height.txt', 'w') as f:
+            f.write(str(total_length_write))
         # Create the DrawingWidget and pass the image to it
         self.edges_label = DrawingWidget(self.img)
         self.show_image(self.img)

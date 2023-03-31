@@ -674,7 +674,7 @@ class Ui_MainWindow(object):
         image_path = self.open_file_dialog()
         image = cv2.imread(image_path)
         # Save the image to a temporary file
-        temp_file_path = 'temp.jpg'
+        temp_file_path = 'temp_image.jpg'
         cv2.imwrite(temp_file_path, image)
         # Check if the image is valid
         if image is not None:

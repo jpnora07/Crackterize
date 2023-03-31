@@ -1,11 +1,13 @@
 import os
 import pickle
+import sqlite3
 
 import cv2
 import numpy as np
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPixmap, QImage
+from PyQt5.QtWidgets import QVBoxLayout, QLabel, QPushButton, QScrollArea, QWidget
 
 
 class Ui_MainWindow(object):
@@ -50,11 +52,10 @@ class Ui_MainWindow(object):
 
         # Get the image data from the command line argument
         # image_str = sys.argv[1]
-        self.image = cv2.imread('temp.jpg')
+        self.image = cv2.imread('temp_image.jpg')
 
         # Convert the QImage object to a QPixmap object
         # qpixmap = QPixmap.fromImage(self.image)
-
         # Set the QPixmap object as the image in the label widget
         self.update_image(self.image)
 
@@ -126,7 +127,7 @@ class Ui_MainWindow(object):
                                     "    font-size: 18px;\n"
                                     "}")
         self.widthlbl.setObjectName("widthlbl")
-        file_path_Width = 'Predicted_height.txt'
+        file_path_Width = 'Predicted_width.txt'
         if os.path.isfile(file_path_Width):
             with open(file_path_Width, 'r') as f:
                 width = f.read()
@@ -220,6 +221,7 @@ class Ui_MainWindow(object):
         self.savebtn = QtWidgets.QPushButton(self.widget_7)
         self.savebtn.setMinimumSize(QtCore.QSize(0, 35))
         self.savebtn.setMaximumSize(QtCore.QSize(16777215, 35))
+        self.savebtn.clicked.connect(self.Choose_where_to_save)
         self.savebtn.setStyleSheet("#savebtn{\n"
                                    "background: #2E74A9;\n"
                                    "font-weight:bold;\n"
@@ -286,7 +288,7 @@ class Ui_MainWindow(object):
                                   "}\n"
                                   "")
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(":/images/print_icon.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap("images/print_icon.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.print1.setIcon(icon)
         self.print1.setIconSize(QtCore.QSize(30, 30))
         self.print1.setObjectName("print1")
@@ -315,6 +317,147 @@ class Ui_MainWindow(object):
         self.adddetails.setText(_translate("MainWindow", "Add Details"))
         self.print1.setText(_translate("MainWindow", "Print"))
 
+    def Choose_where_to_save(self):
+        Dialog = QtWidgets.QDialog()
+        Dialog.setObjectName("Dialog")
+        Dialog.resize(419, 365)
+        self.widget = QtWidgets.QWidget(Dialog)
+        self.widget.setGeometry(QtCore.QRect(0, 20, 421, 311))
+        self.widget.setObjectName("widget")
+        self.widget_2 = QtWidgets.QWidget(self.widget)
+        self.widget_2.setGeometry(QtCore.QRect(100, 50, 211, 71))
+        self.widget_2.setObjectName("widget_2")
+        self.existingproject = QtWidgets.QPushButton("Save Existing Project", self.widget_2)
+        self.existingproject.setGeometry(QtCore.QRect(0, 20, 211, 41))
+        self.existingproject.clicked.connect(self.Save_to_existing_folder)
+        self.existingproject.setStyleSheet("#existingproject{\n"
+                                           "font-weight:bold;\n"
+                                           "color: white;\n"
+                                           "background-color: #6F4B27;\n"
+                                           "border-top-left-radius: 20px;\n"
+                                           "border-top-right-radius: 20px;\n"
+                                           "border-bottom-left-radius: 20px;\n"
+                                           "border-bottom-right-radius: 20px;\n"
+                                           "font-family: Inter;\n"
+                                           "font-size: 12px;\n"
+                                           "text-align: center;\n"
+                                           "}\n"
+                                           "#existingproject:hover{\n"
+                                           "color: rgb(144,115,87);\n"
+                                           "border : 3px solid rgb(144,115,87);\n"
+                                           "background-color: white;\n"
+                                           "}\n"
+                                           "")
+        self.existingproject.setObjectName("existingproject")
+        self.widget_3 = QtWidgets.QWidget(self.widget)
+        self.widget_3.setGeometry(QtCore.QRect(100, 120, 211, 61))
+        self.widget_3.setObjectName("widget_3")
+        self.createnew = QtWidgets.QPushButton("Create New", self.widget_3)
+        self.createnew.setGeometry(QtCore.QRect(0, 10, 211, 41))
+        self.createnew.setStyleSheet("#createnew{\n"
+                                     "font-weight:bold;\n"
+                                     "color: white;\n"
+                                     "background-color: #2E74A9;\n"
+                                     "border-top-left-radius: 20px;\n"
+                                     "border-top-right-radius: 20px;\n"
+                                     "border-bottom-left-radius: 20px;\n"
+                                     "border-bottom-right-radius: 20px;\n"
+                                     "font-family: Inter;\n"
+                                     "font-size: 12px;\n"
+                                     "text-align: center;\n"
+                                     "}\n"
+                                     "#createnew:hover{\n"
+                                     "color: #2E74A9;\n"
+                                     "border : 3px solid  #2E74A9;\n"
+                                     "background-color: white;\n"
+                                     "}\n"
+                                     "")
+        self.createnew.setObjectName("createnew")
+        self.widget_4 = QtWidgets.QWidget(self.widget)
+        self.widget_4.setGeometry(QtCore.QRect(100, 180, 211, 71))
+        self.widget_4.setObjectName("widget_4")
+        self.back = QtWidgets.QPushButton("Back", self.widget_4)
+        self.back.setGeometry(QtCore.QRect(0, 10, 211, 41))
+        self.back.clicked.connect(Dialog.close)
+        self.back.setStyleSheet("#back{\n"
+                                "font-weight:bold;\n"
+                                "color: white;\n"
+                                "background-color: #6A6E72;\n"
+                                "border-top-left-radius: 20px;\n"
+                                "border-top-right-radius: 20px;\n"
+                                "border-bottom-left-radius: 20px;\n"
+                                "border-bottom-right-radius: 20px;\n"
+                                "font-family: Inter;\n"
+                                "font-size: 12px;\n"
+                                "text-align: center;\n"
+                                "}\n"
+                                "#back:hover{\n"
+                                "color: #6A6E72;\n"
+                                "border : 3px solid#6A6E72;\n"
+                                "background-color: white;\n"
+                                "}\n"
+                                "")
+        self.back.setObjectName("back")
+        Dialog.exec()
+
+    def Save_to_existing_folder(self):
+        dialog = QtWidgets.QDialog()
+        dialog.setObjectName("Dialog")
+        dialog.resize(419, 365)
+        # Create the main layout
+        layout = QVBoxLayout(dialog)
+        BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+        db_path = os.path.join(BASE_DIR, 'Projects.db')
+        # Create a connection to a SQLite database or create it if it doesn't exist
+        conn = sqlite3.connect(db_path)
+        c = conn.cursor()
+        # create a table if it doesn't exist
+        c.execute('''CREATE TABLE IF NOT EXISTS Location_Folder
+                                                     (id INTEGER PRIMARY KEY, project_name TEXT, folder_name TEXT, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)''')
+        # fetch data from the database
+        c.execute("SELECT * FROM Projects")
+        data = c.fetchall()
+        print(data)  # Debugging line
+
+        # Create a label above the scroll area
+        label = QLabel("This is a label above the scroll area")
+        label.setAlignment(Qt.AlignCenter)
+        label.setStyleSheet("font-size: 16pt; font-weight: bold;")
+        layout.addWidget(label)
+
+        # Create buttons based on the data
+        for item in data:
+            project_name = str(item[1])
+            button = QPushButton(project_name)
+            button.setMinimumSize(0, 70)
+            button.setMaximumSize(500, 70)
+            layout.addWidget(button)
+
+        # Create a button below the scroll area
+        button = QPushButton("This is a button below the scroll area")
+        button.setMinimumSize(0, 70)
+        button.setMaximumSize(500, 70)
+        layout.addWidget(button)
+
+        # Create a scroll area for the layout
+        scroll_area = QScrollArea()
+        scroll_area.setWidgetResizable(True)
+        scroll_area.setFixedSize(300, 300)
+
+        # Create a widget to contain the layout
+        widget = QWidget()
+        widget.setLayout(layout)
+
+        # Set the widget as the content of the scroll area
+        scroll_area.setWidget(widget)
+
+        # Set the main layout for the dialog to the scroll area
+        main_layout = QVBoxLayout()
+        main_layout.addWidget(label)
+        main_layout.addWidget(scroll_area)
+        main_layout.addWidget(button)
+        dialog.setLayout(main_layout)
+        dialog.exec()
     def update_image(self, image):
         # Get the size of the label
         label_size = self.result_Img.size()

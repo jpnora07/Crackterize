@@ -61,16 +61,28 @@ class CrackAnalyzer(QThread):
         # Convert the known distance to centimeters
         if self.unit == "Millimeter (mm)":
             known_distance_cm = self.distance / 10
+            with open('Input_Distance.txt', 'w') as f:
+                f.write(str(known_distance_cm))
         elif self.unit == "Centimeter (cm)":
             known_distance_cm = self.distance
+            with open('Input_Distance.txt', 'w') as f:
+                f.write(str(known_distance_cm))
         elif self.unit == "Inch (in)":
             known_distance_cm = self.distance * 2.54
+            with open('Input_Distance.txt', 'w') as f:
+                f.write(str(known_distance_cm))
         elif self.unit == "Foot (ft)":
             known_distance_cm = self.distance * 30.48
+            with open('Input_Distance.txt', 'w') as f:
+                f.write(str(known_distance_cm))
         elif self.unit == "Yard (yd)":
             known_distance_cm = self.distance * 91.44
+            with open('Input_Distance.txt', 'w') as f:
+                f.write(str(known_distance_cm))
         elif self.unit == "Meter (m)":
             known_distance_cm = self.distance * 100
+            with open('Input_Distance.txt', 'w') as f:
+                f.write(str(known_distance_cm))
         else:
             print("Invalid unit selected")
             return
@@ -141,7 +153,7 @@ class NoiseRemovalThread(QThread):
             for y, x in block:
                 mask[y, x] = True
         result = np.where(mask, self.thresholded, 255)
-        cv2.imwrite("output.png", result)
+        cv2.imwrite("segment_img.jpg", result)
         self.finished.emit(result)
 
 class Ui_MainWindow(object):
@@ -293,10 +305,11 @@ class Ui_MainWindow(object):
         self.removeNoise.clicked.connect(self.remove_noise)
         self.verticalLayout_3.addWidget(self.removeNoise)
 
-        self.crop = QtWidgets.QPushButton("Crop Image",self.widget_2)
+        self.crop = QtWidgets.QPushButton("View Height",self.widget_2)
         self.crop.setMaximumSize(QtCore.QSize(10000, 16777215))
         self.crop.setObjectName("crop")
         self.verticalLayout_3.addWidget(self.crop)
+        self.crop.clicked.connect(self.Height)
 
         self.proceed = QtWidgets.QPushButton("Proceed", self.widget_2)
         self.proceed.setObjectName("proceed")
@@ -337,7 +350,6 @@ class Ui_MainWindow(object):
 
     def Proceed_to_Result(self):
         try:
-
             # Get the path to the directory where the executable is run from
             app_path = getattr(sys, '_MEIPASS', None) or os.path.abspath('.')
 
@@ -346,6 +358,22 @@ class Ui_MainWindow(object):
             # Execute the result.py file using QProcess
             process = QtCore.QProcess()
             process.start('python', [result_file_path])
+
+            if process.waitForFinished() == 0:
+                print('Error: failed to execute result.py')
+        except Exception as e:
+            print(e)
+
+    def Height(self):
+        try:
+            # Get the path to the directory where the executable is run from
+            app_path = getattr(sys, '_MEIPASS', None) or os.path.abspath('.')
+
+            # Create the path to the result.py file
+            Crack_Line_Length = os.path.join(app_path, 'Crack_Line_Length.py')
+            # Execute the result.py file using QProcess
+            process = QtCore.QProcess()
+            process.start('python', [Crack_Line_Length])
 
             if process.waitForFinished() == 0:
                 print('Error: failed to execute result.py')
