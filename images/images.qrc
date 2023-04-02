@@ -1,5 +1,7 @@
 <RCC>
   <qresource prefix="images">
+    <file>slider_1.png</file>
+    <file>slider.png</file>
     <file>exit.png</file>
     <file>print_icon.png</file>
     <file>i.png</file>

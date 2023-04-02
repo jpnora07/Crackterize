@@ -6,9 +6,21 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>728</width>
-    <height>522</height>
+    <width>700</width>
+    <height>600</height>
    </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>700</width>
+    <height>600</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>700</width>
+    <height>600</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>Dialog</string>
@@ -50,6 +62,49 @@ width: fit-content;
        <number>0</number>
       </property>
       <item>
+       <widget class="QLabel" name="label_5">
+        <property name="minimumSize">
+         <size>
+          <width>30</width>
+          <height>30</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>30</width>
+          <height>30</height>
+         </size>
+        </property>
+        <property name="styleSheet">
+         <string notr="true"/>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="pixmap">
+         <pixmap resource="images/images.qrc">:/images/slider_1.png</pixmap>
+        </property>
+        <property name="scaledContents">
+         <bool>true</bool>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
+        </property>
+        <property name="wordWrap">
+         <bool>false</bool>
+        </property>
+        <property name="margin">
+         <number>0</number>
+        </property>
+        <property name="indent">
+         <number>23</number>
+        </property>
+        <property name="openExternalLinks">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QWidget" name="widget_7" native="true">
         <property name="minimumSize">
          <size>
@@ -86,16 +141,19 @@ width: fit-content;
           <widget class="QLabel" name="label">
            <property name="styleSheet">
             <string notr="true">#label{
-	font: 200 12pt &quot;Segoe UI Black&quot;;
+	font: 200 17pt &quot;Segoe UI Black&quot;;
     color: rgba(111, 75, 39, 0.77);}</string>
            </property>
            <property name="text">
-            <string>         Adjust Threshold</string>
+            <string>Adjust Threshold</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton">
+          <widget class="QPushButton" name="exit">
            <property name="minimumSize">
             <size>
              <width>30</width>
@@ -109,7 +167,14 @@ width: fit-content;
             </size>
            </property>
            <property name="text">
-            <string>x</string>
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset resource="images/images.qrc">
+             <normaloff>:/images/exit.png</normaloff>:/images/exit.png</iconset>
+           </property>
+           <property name="flat">
+            <bool>true</bool>
            </property>
           </widget>
          </item>
@@ -122,6 +187,9 @@ width: fit-content;
    <item>
     <widget class="QWidget" name="widget" native="true">
      <layout class="QHBoxLayout" name="horizontalLayout_4">
+      <property name="topMargin">
+       <number>0</number>
+      </property>
       <item>
        <widget class="QWidget" name="widget_6" native="true">
         <property name="sizePolicy">
@@ -146,19 +214,35 @@ width: fit-content;
          <string notr="true"/>
         </property>
         <layout class="QVBoxLayout" name="verticalLayout_6">
+         <property name="topMargin">
+          <number>0</number>
+         </property>
          <item>
           <widget class="QWidget" name="widget_8" native="true">
+           <property name="styleSheet">
+            <string notr="true">#widget_8{
+	
+border: 3px solid white;
+border-color: rgb(172, 172, 172);;
+}</string>
+           </property>
            <layout class="QVBoxLayout" name="verticalLayout_8">
             <item>
-             <widget class="QLabel" name="label_3">
+             <widget class="QLabel" name="imageLabel">
+              <property name="cursor">
+               <cursorShape>CrossCursor</cursorShape>
+              </property>
               <property name="styleSheet">
-               <string notr="true">#label_3{
-	background-image: url(:/images/img.png);
-
-}</string>
+               <string notr="true"/>
               </property>
               <property name="text">
                <string/>
+              </property>
+              <property name="pixmap">
+               <pixmap resource="images/images.qrc">:/images/img.png</pixmap>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
               </property>
              </widget>
             </item>
@@ -173,11 +257,30 @@ width: fit-content;
              <height>50</height>
             </size>
            </property>
+           <property name="styleSheet">
+            <string notr="true">#widget_9{
+border: 3px solid white;
+border-color: rgb(172, 172, 172);;
+}</string>
+           </property>
            <layout class="QHBoxLayout" name="horizontalLayout_3">
             <item>
-             <widget class="QSlider" name="horizontalSlider">
+             <widget class="QSlider" name="threshold_slider">
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="thresholderNum">
+              <property name="text">
+               <string>12312341</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
+              </property>
+              <property name="margin">
+               <number>2</number>
               </property>
              </widget>
             </item>
@@ -221,9 +324,12 @@ width: fit-content;
            </property>
            <property name="styleSheet">
             <string notr="true">#label_2{
-	font: 200 10pt &quot;Segoe UI Black&quot;;
-	alignment: center;
-    color: rgba(111, 75, 39, 0.77);}</string>
+	
+color: #2E74A9;
+font: bold;
+font-size: 13px;
+border-bottom-color: rgb(172, 172, 172);;
+}</string>
            </property>
            <property name="text">
             <string>Distance between Crack and Camera</string>
@@ -264,7 +370,7 @@ width: fit-content;
              <number>0</number>
             </property>
             <item>
-             <widget class="QTextEdit" name="distanceNum">
+             <widget class="QTextEdit" name="NumOfDistance">
               <property name="enabled">
                <bool>true</bool>
               </property>
@@ -293,7 +399,7 @@ width: fit-content;
                <string notr="true">#distanceNum{
 font-size:18px;
 text-allign:center;
-border:0px;
+border:1px solid grey;
 }</string>
               </property>
               <property name="lineWidth">
@@ -305,6 +411,12 @@ border:0px;
               <property name="sizeAdjustPolicy">
                <enum>QAbstractScrollArea::AdjustIgnored</enum>
               </property>
+              <property name="lineWrapMode">
+               <enum>QTextEdit::NoWrap</enum>
+              </property>
+              <property name="readOnly">
+               <bool>false</bool>
+              </property>
               <property name="html">
                <string notr="true">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
@@ -313,7 +425,7 @@ hr { height: 1px; border-width: 0; }
 li.unchecked::marker { content: &quot;\2610&quot;; }
 li.checked::marker { content: &quot;\2612&quot;; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Segoe UI'; font-size:18px; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:9pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
               </property>
               <property name="placeholderText">
                <string>0</string>
@@ -321,7 +433,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
              </widget>
             </item>
             <item>
-             <widget class="QComboBox" name="comboBox">
+             <widget class="QComboBox" name="units">
               <property name="minimumSize">
                <size>
                 <width>0</width>
@@ -406,7 +518,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
              <number>0</number>
             </property>
             <item>
-             <widget class="QPushButton" name="remove">
+             <widget class="QPushButton" name="removeNoise">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
                 <horstretch>0</horstretch>
@@ -416,13 +528,13 @@ li.checked::marker { content: &quot;\2612&quot;; }
               <property name="minimumSize">
                <size>
                 <width>0</width>
-                <height>40</height>
+                <height>35</height>
                </size>
               </property>
               <property name="maximumSize">
                <size>
                 <width>400</width>
-                <height>40</height>
+                <height>35</height>
                </size>
               </property>
               <property name="styleSheet">
@@ -460,13 +572,13 @@ background-color: white;
               <property name="minimumSize">
                <size>
                 <width>68</width>
-                <height>40</height>
+                <height>35</height>
                </size>
               </property>
               <property name="maximumSize">
                <size>
                 <width>16777215</width>
-                <height>40</height>
+                <height>35</height>
                </size>
               </property>
               <property name="styleSheet">
@@ -504,13 +616,13 @@ background-color: white;
            <property name="minimumSize">
             <size>
              <width>0</width>
-             <height>70</height>
+             <height>50</height>
             </size>
            </property>
            <property name="maximumSize">
             <size>
              <width>16777215</width>
-             <height>70</height>
+             <height>50</height>
             </size>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -518,6 +630,9 @@ background-color: white;
              <number>0</number>
             </property>
             <property name="rightMargin">
+             <number>0</number>
+            </property>
+            <property name="bottomMargin">
              <number>0</number>
             </property>
             <item>
@@ -531,13 +646,13 @@ background-color: white;
               <property name="minimumSize">
                <size>
                 <width>0</width>
-                <height>40</height>
+                <height>35</height>
                </size>
               </property>
               <property name="maximumSize">
                <size>
                 <width>400</width>
-                <height>40</height>
+                <height>35</height>
                </size>
               </property>
               <property name="styleSheet">

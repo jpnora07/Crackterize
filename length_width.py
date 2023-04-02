@@ -47,8 +47,6 @@ class FindBlackBlocksThread(QThread):
         self.result_signal.emit(self.blocks)
         self.finished.emit()
 
-
-
 class CrackAnalyzer(QThread):
 
     def __init__(self, distance, unit, focal_length):
