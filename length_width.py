@@ -102,37 +102,11 @@ class CrackAnalyzer(QThread):
                 width_mm = width * known_distance_cm / self.focal_length
                 crack_widths.append(width_mm)
 
-        # Measure the height of the crack in non-broken areas
-        crack_heights = []
-        for x in range(result.shape[1]):
-            top_edge, bottom_edge = None, None
-            for y in range(result.shape[0]):
-                if result[y, x] == 0:
-                    if top_edge is None:
-                        top_edge = y
-                    bottom_edge = y
-            if top_edge is not None and bottom_edge is not None:
-                # Check if the pixels between top_edge and bottom_edge are part of the crack
-                if any(result[top_edge:bottom_edge + 1, x] == 0):
-                    height = bottom_edge - top_edge
-                    # Convert pixel height to cm
-                    height_cm = height * known_distance_cm / self.focal_length
-                    crack_heights.append(height_cm / 10)
-                    print(f"Crack area height: {height_cm:.2f} mm")
-
-        if len(crack_heights) == 0:
-            print("No crack areas found")
-        else:
-            avg_height = sum(crack_heights) / len(crack_heights)
-            avg_width = sum(crack_widths) / len(crack_widths)
-            avg_height_write = f"{avg_height:.2f} cm"
-            avg_width_write = f"{avg_width:.2f} cm"
-            print(f"Crack height: {avg_height:.2f} cm")
-            print(f"Crack width: {avg_width:.2f} mm")
-            with open('Predicted_height.txt', 'w') as f:
-                f.write(avg_height_write)
-            with open('Predicted_width.txt', 'w') as f:
-                f.write(avg_width_write)
+        avg_width = sum(crack_widths) / len(crack_widths)
+        avg_width_write = f"{avg_width:.2f} cm"
+        print(f"Crack width: {avg_width:.2f} mm")
+        with open('Predicted_width.txt', 'w') as f:
+            f.write(avg_width_write)
 
 class NoiseRemovalThread(QThread):
     finished = pyqtSignal(np.ndarray)

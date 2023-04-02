@@ -103,14 +103,17 @@ class Ui_MainWindow(object):
         self.ledit = self.myProjects.lineEdit()
         self.ledit.setReadOnly(True)
         self.ledit.setAlignment(Qt.AlignCenter)
-        BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-        db_path = os.path.join(BASE_DIR, 'Projects.db')
-        conn = sqlite3.connect(db_path)
-        c = conn.cursor()
-        c.execute("SELECT project_name FROM Projects ORDER BY created_at DESC")
-        rows = c.fetchall()
-        for row in rows:
-            self.myProjects.addItem(row[0])
+        try:
+            BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+            db_path = os.path.join(BASE_DIR, 'Projects.db')
+            conn = sqlite3.connect(db_path)
+            c = conn.cursor()
+            c.execute("SELECT project_name FROM Projects ORDER BY created_at DESC")
+            rows = c.fetchall()
+            for row in rows:
+                self.myProjects.addItem(row[0])
+        except Exception as e:
+            print("Empty Projects! Users not yet add projects: ", e)
         self.myProjects.setEditText("My Projects")
 
         def handleSelection(text):
@@ -207,7 +210,6 @@ class Ui_MainWindow(object):
 
         # Show the vertical scrollbar
         self.myProjects.view().setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
-
         self.myProjects.setStyleSheet("#myProjects {\n"
                                       "border-radius:14px;\n"
                                       "font: 600 12pt \"Segoe UI\";\n"
@@ -270,6 +272,17 @@ class Ui_MainWindow(object):
         self.ledit = self.history.lineEdit()
         self.ledit.setReadOnly(True)
         self.ledit.setAlignment(Qt.AlignCenter)
+        try:
+            BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+            db_path = os.path.join(BASE_DIR, 'Projects.db')
+            conn = sqlite3.connect(db_path)
+            c = conn.cursor()
+            c.execute("SELECT folder_name FROM Save_Files ORDER BY created_at DESC")
+            rows = c.fetchall()
+            for row in rows:
+                self.history.addItem(row[2])
+        except Exception as e:
+            print("Empty History! Users not yet add results: ", e)
         self.history.setEditText("History")
 
         def handleSelection(text):
@@ -683,19 +696,35 @@ class Ui_MainWindow(object):
 
             self.modelCnn = keras.models.load_model('resnet_model_cnn.h5')
             predictions = self.modelCnn.predict(self.imageCnn)
-            score = tf.nn.softmax(predictions[0])
+            score = tf.nn.softmax(predictions)
+            class_names = ['No Detected Crack', 'Contains Crack']
 
-            class_names = ['no crack', 'cracked']
             # Get the index of the predicted class
-            predicted_class_index = np.argmax(score)
+            predicted_class_index = np.argmax(score, axis=1)[0]
 
             # Get the name and score of the predicted class
             predicted_class_name = class_names[predicted_class_index]
-            predicted_class_score = 100 * score[predicted_class_index]
-            print(f"The image is classified as {predicted_class_name} with {predicted_class_score:.2f}% confidence.")
-            write_score = f"{predicted_class_score:.2f}%"
-            with open('Predicted_Score.txt', 'w') as f:
-                f.write(write_score)
+            predicted_class_score = 100 * score[0][predicted_class_index]
+
+            # Print the results
+            print(f"The image is classified as {predicted_class_name} with a score of {predicted_class_score:.2f}.")
+
+            if predicted_class_index == 0:
+                predicted_Negative_score = predicted_class_score
+                predicted_Positive_score = 100 - predicted_Negative_score
+            else:
+                predicted_Positive_score = predicted_class_score
+                predicted_Negative_score = 100 - predicted_Positive_score
+
+            print(f"Positive crack probability: {predicted_Positive_score:.2f}%")
+            print(f"Negative crack probability: {predicted_Negative_score:.2f}%")
+
+            Negative_score = f"{predicted_Negative_score:.2f}%"
+            Positive_score = f"{predicted_Positive_score:.2f}%"
+            with open('Negative_score.txt', 'w') as f:
+                f.write(Negative_score)
+            with open('Positive_score.txt', 'w') as f:
+                f.write(Positive_score)
             with open('Predicted_Class_name.txt', 'w') as f:
                 f.write(predicted_class_name)
             if np.argmax(score) == 0:
@@ -852,16 +881,19 @@ class Ui_MainWindow(object):
             self.show_dialog_empty_text_error()
             self.creating_new_project()
         else:
-
             BASE_DIR = os.path.dirname(os.path.abspath(__file__))
             db_path = os.path.join(BASE_DIR, 'Projects.db')
             # Create a connection to a SQLite database or create it if it doesn't exist
             self.conn = sqlite3.connect(db_path)
             self.c = self.conn.cursor()
 
-            # Create a table in the database if it doesn't exist
-            self.c.execute('''CREATE TABLE IF NOT EXISTS Projects
-                         (id INTEGER PRIMARY KEY, project_name TEXT, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)''')
+            # Check if the Projects table already exists in the database
+            self.c.execute("SELECT count(name) FROM sqlite_master WHERE type='table' AND name='Projects'")
+            if self.c.fetchone()[0] == 0:
+                # If the Projects table does not exist, create it
+                self.c.execute(
+                    '''CREATE TABLE Projects (id INTEGER PRIMARY KEY, project_name TEXT, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)''')
+                self.conn.commit()
 
             # Check if the project name already exists in the database
             self.c.execute("SELECT COUNT(*) FROM Projects WHERE project_name = ?", (new_projects,))

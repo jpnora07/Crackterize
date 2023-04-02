@@ -6,6 +6,7 @@ from PyQt5.QtCore import Qt, QIODevice, QBuffer, QByteArray
 from PyQt5.QtGui import QImage, QPixmap
 from PyQt5.QtWidgets import QVBoxLayout, QWidget, QScrollArea, QPushButton, QLabel
 
+
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
@@ -32,7 +33,7 @@ class Ui_Dialog(object):
         self.exit.setFlat(True)
 
         ExitIcon = QtGui.QIcon()
-        ExitIcon.addPixmap(QtGui.QPixmap("images/exit.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        ExitIcon.addPixmap(QtGui.QPixmap("../images/exit.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.exit.setIcon(ExitIcon)
         self.exit.setIconSize(QtCore.QSize(30, 30))
 
@@ -119,7 +120,7 @@ class Ui_Dialog(object):
                                      "font: bold;\n"
                                      "    font-size: 15px}")
         self.lengthlbl.setObjectName("lengthlbl")
-        file_path_length = 'Predicted_height.txt'
+        file_path_length = '../Predicted_height.txt'
         if os.path.isfile(file_path_length):
             with open(file_path_length, 'r') as f:
                 self.length = f.read()
@@ -147,7 +148,7 @@ class Ui_Dialog(object):
                                     "    font-size: 15px;\n"
                                     "}")
         self.widthlbl.setObjectName("widthlbl")
-        file_path_Width = 'Predicted_width.txt'
+        file_path_Width = '../Predicted_width.txt'
         if os.path.isfile(file_path_Width):
             with open(file_path_Width, 'r') as f:
                 self.width = f.read()
@@ -235,9 +236,9 @@ class Ui_Dialog(object):
         self.concretecracked.setAlignment(QtCore.Qt.AlignCenter)
         self.concretecracked.setWordWrap(True)
 
-        file_path_Neg = 'Negative_score.txt'
-        file_path_Pos = 'Positive_score.txt'
-        file_path_Class = 'Predicted_Class_name.txt'
+        file_path_Neg = '../Negative_score.txt'
+        file_path_Pos = '../Positive_score.txt'
+        file_path_Class = '../Predicted_Class_name.txt'
         if os.path.isfile(file_path_Neg and file_path_Pos and file_path_Class):
             with open(file_path_Neg, 'r') as f:
                 self.Neg_score = f.read()
@@ -245,7 +246,7 @@ class Ui_Dialog(object):
             with open(file_path_Pos, 'r') as f:
                 self.Pos_score = f.read()
             self.LabelPos.setText("Positive Crack Probability is " + self.Pos_score)
-            with open('Predicted_Class_name.txt', 'r') as f:
+            with open('../Predicted_Class_name.txt', 'r') as f:
                 self.name = f.read()
 
             self.concretecracked.setText("The image is classified as " + self.name + ".")
@@ -446,7 +447,7 @@ class Ui_Dialog(object):
         # Create the main layout
         layout = QVBoxLayout(self.existing_folder_dialog)
         BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-        db_path = os.path.join(BASE_DIR, 'Projects.db')
+        db_path = os.path.join(BASE_DIR, '../Projects.db')
         # Create a connection to a SQLite database or create it if it doesn't exist
         conn = sqlite3.connect(db_path)
         c = conn.cursor()
@@ -508,7 +509,7 @@ class Ui_Dialog(object):
         # Create the main layout
         layout = QVBoxLayout(self.select_folder_dialog)
         BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-        db_path = os.path.join(BASE_DIR, 'Projects.db')
+        db_path = os.path.join(BASE_DIR, '../Projects.db')
         # Create a connection to a SQLite database or create it if it doesn't exist
         conn = sqlite3.connect(db_path)
         c = conn.cursor()
@@ -573,7 +574,7 @@ class Ui_Dialog(object):
 
         self.folder_name = self.select_folder_dialog.sender().text()
         BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-        db_path = os.path.join(BASE_DIR, 'Projects.db')
+        db_path = os.path.join(BASE_DIR, '../Projects.db')
 
         # Create a connection to a SQLite database or create it if it doesn't exist
         conn = sqlite3.connect(db_path)
