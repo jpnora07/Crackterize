@@ -4,7 +4,7 @@ import sys
 import subprocess
 
 import cv2
-from flatbuffers.builder import np
+import numpy as np
 
 import tensorflow as tf
 from tensorflow import keras
@@ -40,7 +40,7 @@ class Ui_MainWindow(object):
         MainWindow.setWindowModality(QtCore.Qt.NonModal)
         MainWindow.setEnabled(True)
         # MainWindow.resize(983, 573)
-        MainWindow.setMinimumSize(QtCore.QSize(1000, 600))
+        MainWindow.setMinimumSize(QtCore.QSize(1000, 700))
         # MainWindow.setMaximumSize(QtCore.QSize(983, 573))
         MainWindow.setStyleSheet("#MainWindow{\n"
                                  "background-color: qlineargradient(spread:pad, x1:0.045, y1:0.261, x2:0.988636, y2:0.955, stop:0 rgba(235, 209, 196, 255), stop:1 rgba(255, 255, 255, 255));\n"
@@ -265,8 +265,6 @@ class Ui_MainWindow(object):
         self.history = QtWidgets.QComboBox(self.threeBtn)
         self.history.view().parentWidget().setStyleSheet('border: none;')
         self.history.setGeometry(200, 150, 150, 30)
-        geek_list = ["Image 1", "Image 2", "Image 3", "Image 4", "Image 1", "Image 2", "Image 3", "Image 4"]
-        self.history.addItems(geek_list)
         self.history.setEditable(True)
         self.history.setLineEdit(self.QTComboBoxButton(self.history))
         self.ledit = self.history.lineEdit()
@@ -277,10 +275,13 @@ class Ui_MainWindow(object):
             db_path = os.path.join(BASE_DIR, 'Projects.db')
             conn = sqlite3.connect(db_path)
             c = conn.cursor()
-            c.execute("SELECT folder_name FROM Save_Files ORDER BY created_at DESC")
+            c.execute("SELECT * FROM Save_Files ORDER BY created_at DESC")
             rows = c.fetchall()
+            print(rows)
             for row in rows:
-                self.history.addItem(row[2])
+                status = str(row[8])
+                recent = str(row[9])
+                self.history.addItem(status + " - " + recent)
         except Exception as e:
             print("Empty History! Users not yet add results: ", e)
         self.history.setEditText("History")
@@ -324,14 +325,7 @@ class Ui_MainWindow(object):
     }
 
     QScrollBar::sub-line:vertical
-    {
-        margin: 3px 0px 3px 0px;
-        border-image: url(:/images/up_arrow_disabled.png);        /* # <-------- */
-        height: 10px;
-        width: 10px;
-        subcontrol-position: top;
-        subcontrol-origin: margin;
-    }
+    {margin: 3px 0px 3px 0px;border-image: url(:/images/up_arrow_disabled.png);height: 10px;width: 10px;subcontrol-position: top;subcontrol-origin: margin;}
 
     QScrollBar::add-line:vertical
     {
@@ -342,15 +336,9 @@ class Ui_MainWindow(object):
         subcontrol-position: bottom;
         subcontrol-origin: margin;
     }
-    QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical
-    {
-        background: none;
-    }
+    QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical{background: none;}
 
-    QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
-    {
-        background: none;
-    }
+    QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical{background: none;}
             """
         )
         scroll_bar = QScrollBar()
@@ -470,9 +458,6 @@ class Ui_MainWindow(object):
         view.setMinimumSize(500, 200)
         view.setWordWrap(True)
         radius = 20
-
-        # border - top - left - radius: {0}px;
-
         view.setStyleSheet(
             """
             background-color :rgba(255, 255, 255, 0.75);
@@ -655,23 +640,25 @@ class Ui_MainWindow(object):
         self.verticalLayout_6.addWidget(self.calLbl)
         self.ButtonCal = QtWidgets.QPushButton("Calculator", self.widgetUpload_2)
         self.ButtonCal.setStyleSheet("#ButtonCal{\n"
-                                       "height:40px;\n"
-                                       "font-weight:bold;\n"
-                                       "font-size:18px;\n"
-                                       "color:white;\n"
-                                       "background-color: rgb(144, 115, 87);\n"
-                                       "border-top-left-radius :20px;\n"
-                                       "border-top-right-radius : 20px; \n"
-                                       "border-bottom-left-radius : 20px; \n"
-                                       "border-bottom-right-radius : 20px;\n"
-                                       "}\n"
-                                       "#ButtonCal:hover{\n"
-                                       "color:rgb(144, 115, 87);\n"
-                                       "border :2px solid rgb(144, 115, 87);\n"
-                                       "background-color: rgb(255, 255, 255);\n"
-                                       "}\n"
-                                       "")
+                                     "height:40px;\n"
+                                     "font-weight:bold;\n"
+                                     "font-size:18px;\n"
+                                     "color:white;\n"
+                                     "background-color: rgb(144, 115, 87);\n"
+                                     "border-top-left-radius :20px;\n"
+                                     "border-top-right-radius : 20px; \n"
+                                     "border-bottom-left-radius : 20px; \n"
+                                     "border-bottom-right-radius : 20px;\n"
+                                     "}\n"
+                                     "#ButtonCal:hover{\n"
+                                     "color:rgb(144, 115, 87);\n"
+                                     "border :2px solid rgb(144, 115, 87);\n"
+                                     "background-color: rgb(255, 255, 255);\n"
+                                     "}\n"
+                                     "")
         self.ButtonCal.setObjectName("ButtonCal")
+
+        self.ButtonCal.clicked.connect(self.ButtonCal_function)
         self.verticalLayout_6.addWidget(self.ButtonCal)
         self.verticalLayout_4.addWidget(self.widgetUpload_2)
         self.verticalLayout.addWidget(self.widget_4)
@@ -683,6 +670,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
+
     def upload_image(self):
         image_path = self.open_file_dialog()
         image = cv2.imread(image_path)
@@ -737,7 +725,7 @@ class Ui_MainWindow(object):
                     print("The file does not exist.")
 
             else:
-                script_path = os.path.join(os.path.dirname(__file__), 'length_width.py')
+                script_path = os.path.join(os.path.dirname(__file__), 'Segment_Image.py')
                 subprocess.Popen(['python', script_path, image_path])
         else:
             print("Invalid image format")
@@ -1148,26 +1136,25 @@ class Ui_MainWindow(object):
         self.horizontalLayout.addWidget(self.widget_2)
         self.verticalLayout_2.addWidget(self.widget)
         Dialog.exec()
-
-    def resource_path(self, relative_path):
-        """ Get absolute path to resource, works for dev and for PyInstaller """
+    def ButtonCal_function(self):
         try:
-            # PyInstaller creates a temp folder and stores path in _MEIPASS
-            base_path = sys._MEIPASS
-        except AttributeError:
-            base_path = os.path.abspath(".")
+            # Get the path to the directory where the executable is run from
+            app_path = getattr(sys, '_MEIPASS', None) or os.path.abspath('.')
 
-        return os.path.join(base_path, relative_path)
+            # Create the path to the result.py file
+            calculatorButtons = os.path.join(app_path, 'calculatorButtons.py')
+            # Execute the result.py file using QProcess
+            process = QtCore.QProcess()
+            process.start('python', [calculatorButtons])
 
+            if process.waitForFinished() == 0:
+                print('Error: failed to execute result.py')
+        except Exception as e:
+            print(e)
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
 
-    def disable_main_window(self):
-        self.centralwidget.setEnabled(False)
-
-    def enable_main_window(self):
-        self.centralwidget.setEnabled(True)
 
 if __name__ == "__main__":
     import sys

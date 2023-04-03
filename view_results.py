@@ -58,7 +58,7 @@ class Ui_MainWindow(object):
             self.project_name_lbl.setText(self.selected_item)
         self.horizontalLayout_2.addWidget(self.project_name_lbl)
 
-        self.addfolder_icon = QtWidgets.QPushButton("  Add Folder", self.widget)
+        self.addfolder_icon = QtWidgets.QPushButton("  Add Image", self.widget)
         self.addfolder_icon.setStyleSheet("#addfolder_icon{\n"
                                           "padding:5px;\n"
                                           "background-color:#E3E9ED;"
@@ -146,7 +146,7 @@ class Ui_MainWindow(object):
 
         # create label for add button
         self.add_label = QLabel(button)
-        self.add_label.setText('Create New Folder ')
+        self.add_label.setText('Add Image ')
         self.add_label.setWordWrap(True)
         self.add_label.move(0, 77)
         self.add_label.resize(120, 77)

@@ -59,28 +59,16 @@ class CrackAnalyzer(QThread):
         # Convert the known distance to centimeters
         if self.unit == "Millimeter (mm)":
             known_distance_cm = self.distance / 10
-            with open('Input_Distance.txt', 'w') as f:
-                f.write(str(known_distance_cm))
         elif self.unit == "Centimeter (cm)":
             known_distance_cm = self.distance
-            with open('Input_Distance.txt', 'w') as f:
-                f.write(str(known_distance_cm))
         elif self.unit == "Inch (in)":
             known_distance_cm = self.distance * 2.54
-            with open('Input_Distance.txt', 'w') as f:
-                f.write(str(known_distance_cm))
         elif self.unit == "Foot (ft)":
             known_distance_cm = self.distance * 30.48
-            with open('Input_Distance.txt', 'w') as f:
-                f.write(str(known_distance_cm))
         elif self.unit == "Yard (yd)":
             known_distance_cm = self.distance * 91.44
-            with open('Input_Distance.txt', 'w') as f:
-                f.write(str(known_distance_cm))
         elif self.unit == "Meter (m)":
             known_distance_cm = self.distance * 100
-            with open('Input_Distance.txt', 'w') as f:
-                f.write(str(known_distance_cm))
         else:
             print("Invalid unit selected")
             return
@@ -100,6 +88,9 @@ class CrackAnalyzer(QThread):
                 width_mm = width * known_distance_cm / self.focal_length
                 crack_widths.append(width_mm)
 
+
+        with open('Input_Distance.txt', 'w') as f:
+            f.write(str(known_distance_cm))
         avg_width = sum(crack_widths) / len(crack_widths)
         avg_width_write = f"{avg_width:.2f} cm"
         print(f"Crack width: {avg_width:.2f} mm")

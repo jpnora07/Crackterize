@@ -1,7 +1,140 @@
-import cv2
-from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtGui import QImage, QPixmap
+import os
+from collections import deque
 
+import cv2
+import numpy as np
+from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtCore import QThread, pyqtSignal, Qt
+from PyQt5.QtGui import QImage, QPixmap, QMovie
+from PyQt5.QtWidgets import QMessageBox, QDialog, QLabel, QVBoxLayout
+
+
+class CustomDialog(QDialog):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setWindowTitle("Custom Dialog")
+        self.setModal(True)
+
+        # Create a label to display the GIF
+        gif_label = QLabel(self)
+        movie = QMovie("images/giphy.gif")
+        gif_label.setMovie(movie)
+        movie.start()
+
+        # Create a layout and add the label to it
+        layout = QVBoxLayout(self)
+        layout.addWidget(gif_label)
+
+class NoiseRemovalThread(QThread):
+    finished = pyqtSignal(np.ndarray)
+    progress_signal = pyqtSignal(int)
+
+    def __init__(self, thresholded):
+        super().__init__()
+        self.thresholded = thresholded
+
+    def run(self):
+        nBlock = 130  # Threshold for black block size
+        black_blocks_thread = FindBlackBlocksThread(self.thresholded, nBlock)
+        black_blocks_thread.start()
+        black_blocks_thread.wait()
+        blocks = black_blocks_thread.blocks
+        mask = np.zeros_like(self.thresholded, dtype=bool)
+        for block in blocks:
+            for y, x in block:
+                mask[y, x] = True
+        result = np.where(mask, self.thresholded, 255)
+        cv2.imwrite("threshold_image.jpg", result)
+        self.finished.emit(result)
+
+class FindBlackBlocksThread(QThread):
+    finished = pyqtSignal()
+    progress_signal = pyqtSignal(int)
+    result_signal = pyqtSignal(list)
+
+    def __init__(self, image, nBlock):
+        super().__init__()
+        self.image = image
+        self.nBlock = nBlock
+        self.blocks = []
+
+    def run(self):
+        height, width = self.image.shape
+        track = {}
+        for y in range(height):
+            for x in range(width):
+                if is_black(self.image[y, x]) and (y, x) not in track:
+                    stack = deque()
+                    stack.append((y, x))
+                    block = []
+                    while stack:
+                        cy, cx = stack.pop()
+                        if (cy, cx) in track:
+                            continue
+                        track[(cy, cx)] = True
+                        block.append((cy, cx))
+                        for dy, dx in [(0, 0), (0, 1), (0, -1), (-1, 0), (1, 0)]:
+                            ny, nx = cy + dy, cx + dx
+                            if ny < 0 or ny >= height or nx < 0 or nx >= width:
+                                continue
+                            if is_black(self.image[ny, nx]):
+                                stack.append((ny, nx))
+                    if len(block) >= self.nBlock:
+                        self.blocks.append(block)
+
+        self.result_signal.emit(self.blocks)
+        self.finished.emit()
+
+class CrackAnalyzer(QThread):
+
+    def __init__(self, distance, unit, focal_length):
+        super().__init__()
+        self.distance = distance
+        self.unit = unit
+        self.focal_length = focal_length
+
+    def get_Heigth_Width_Function(self, result):
+        # Convert the known distance to centimeters
+        if self.unit == "Millimeter (mm)":
+            known_distance_cm = self.distance / 10
+        elif self.unit == "Centimeter (cm)":
+            known_distance_cm = self.distance
+        elif self.unit == "Inch (in)":
+            known_distance_cm = self.distance * 2.54
+        elif self.unit == "Foot (ft)":
+            known_distance_cm = self.distance * 30.48
+        elif self.unit == "Yard (yd)":
+            known_distance_cm = self.distance * 91.44
+        elif self.unit == "Meter (m)":
+            known_distance_cm = self.distance * 100
+        else:
+            print("Invalid unit selected")
+            return
+
+        # Measure the width of the crack
+        crack_widths = []
+        for y in range(result.shape[0]):
+            left_edge, right_edge = None, None
+            for x in range(result.shape[1]):
+                if result[y, x] == 0:
+                    if left_edge is None:
+                        left_edge = x
+                    right_edge = x
+            if left_edge is not None and right_edge is not None:
+                width = right_edge - left_edge
+                # Convert pixel width to mm
+                width_mm = width * known_distance_cm / self.focal_length
+                crack_widths.append(width_mm)
+
+        with open('Input_Distance.txt', 'w') as f:
+            f.write(str(known_distance_cm))
+        avg_width = sum(crack_widths) / len(crack_widths)
+        avg_width_write = f"{avg_width:.2f} cm"
+        print(f"Crack width: {avg_width:.2f} mm")
+        with open('Predicted_width.txt', 'w') as f:
+            f.write(avg_width_write)
+def is_black(pixel):
+    return pixel == 0
 
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
@@ -9,11 +142,12 @@ class Ui_Dialog(object):
         Dialog.resize(700, 600)
         Dialog.setMinimumSize(QtCore.QSize(700, 600))
         Dialog.setMaximumSize(QtCore.QSize(700, 600))
+        Dialog.setWindowFlags(Qt.FramelessWindowHint)
         Dialog.setStyleSheet("#Dialog{\n"
                              "background-color: qlineargradient(spread:pad, x1:0.045, y1:0.261, x2:0.988636, y2:0.955, stop:0 rgba(235, 209, 196, 255), stop:1 rgba(255, 255, 255, 255));\n"
                              "width: fit-content;\n"
-                             "                                heigth: fit-content;\n"
-                             "                                 block-size: fit-content;\n"
+                             "heigth: fit-content;\n"
+                             "block-size: fit-content;\n"
                              "} ")
 
         # Load image and convert to grayscale
@@ -37,7 +171,7 @@ class Ui_Dialog(object):
         self.label_5.setMaximumSize(QtCore.QSize(30, 30))
         self.label_5.setStyleSheet("")
         self.label_5.setText("")
-        self.label_5.setPixmap(QtGui.QPixmap(":/images/slider_1.png"))
+        self.label_5.setPixmap(QtGui.QPixmap("images/slider_1.png"))
         self.label_5.setScaledContents(True)
         self.label_5.setAlignment(QtCore.Qt.AlignBottom | QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft)
         self.label_5.setWordWrap(False)
@@ -64,6 +198,7 @@ class Ui_Dialog(object):
         self.exit = QtWidgets.QPushButton(self.widget_7)
         self.exit.setMinimumSize(QtCore.QSize(30, 30))
         self.exit.setMaximumSize(QtCore.QSize(30, 30))
+        self.exit.clicked.connect(Dialog.close)
         self.exit.setText("")
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap("images/exit.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
@@ -130,7 +265,7 @@ class Ui_Dialog(object):
         self.threshold_slider.valueChanged.connect(self.update_slider_value_label)
 
         self.horizontalLayout_3.addWidget(self.threshold_slider)
-        self.thresholderNum = QtWidgets.QLabel(self.widget_9)
+        self.thresholderNum = QtWidgets.QLabel("0", self.widget_9)
         self.thresholderNum.setAlignment(QtCore.Qt.AlignCenter)
         self.thresholderNum.setFixedSize(40, 30)
         self.thresholderNum.setObjectName("thresholderNum")
@@ -189,12 +324,7 @@ class Ui_Dialog(object):
         self.units.setMinimumSize(QtCore.QSize(0, 40))
         self.units.setMaximumSize(QtCore.QSize(16777215, 40))
         self.units.setObjectName("units")
-        self.units.addItem("")
-        self.units.addItem("")
-        self.units.addItem("")
-        self.units.addItem("")
-        self.units.addItem("")
-        self.units.addItem("")
+        self.units.addItems(["Millimeter (mm)", "Centimeter (cm)", "Inch (in)", "Foot (ft)", "Yard (yd)", "Meter (m)"])
         self.horizontalLayout_2.addWidget(self.units)
         self.verticalLayout_7.addWidget(self.widget_10)
         self.widget_4 = QtWidgets.QWidget(self.widget_3)
@@ -232,6 +362,7 @@ class Ui_Dialog(object):
                                        "}\n"
                                        "")
         self.removeNoise.setObjectName("removeNoise")
+        self.removeNoise.clicked.connect(self.remove_noise)
         self.verticalLayout_2.addWidget(self.removeNoise)
         self.height = QtWidgets.QPushButton(self.widget_4)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
@@ -296,6 +427,9 @@ class Ui_Dialog(object):
                                    "background-color: white;\n"
                                    "}\n"
                                    "")
+
+        self.proceed.clicked.connect(Dialog.close)
+        self.proceed.clicked.connect(self.Proceed_to_Result)
         self.proceed.setObjectName("proceed")
         self.verticalLayout_3.addWidget(self.proceed)
         self.verticalLayout_7.addWidget(self.widget_5)
@@ -310,16 +444,50 @@ class Ui_Dialog(object):
         Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
         self.label.setText(_translate("Dialog", "Adjust Threshold"))
         self.label_2.setText(_translate("Dialog", "Distance between Crack and Camera"))
-        self.NumOfDistance.setPlaceholderText(_translate("Dialog", "0"))
-        self.units.setItemText(0, _translate("Dialog", "Milimeter (mm)"))
-        self.units.setItemText(1, _translate("Dialog", "Centimeter (cm)"))
-        self.units.setItemText(2, _translate("Dialog", "Meter (m)"))
-        self.units.setItemText(3, _translate("Dialog", "Foot (ft)"))
-        self.units.setItemText(4, _translate("Dialog", "Yard (yd)"))
-        self.units.setItemText(5, _translate("Dialog", "Inch (in)"))
         self.removeNoise.setText(_translate("Dialog", "Remove Noise"))
         self.height.setText(_translate("Dialog", "View Height"))
         self.proceed.setText(_translate("Dialog", "Proceed"))
+
+    def Proceed_to_Result(self):
+        try:
+            # Get the path to the directory where the executable is run from
+            app_path = getattr(sys, '_MEIPASS', None) or os.path.abspath('.')
+
+            # Create the path to the result.py file
+            result_file_path = os.path.join(app_path, 'result.py')
+            # Execute the result.py file using QProcess
+            process = QtCore.QProcess()
+            process.start('python', [result_file_path])
+
+            if process.waitForFinished() == 0:
+                print('Error: failed to execute result.py')
+        except Exception as e:
+            print(e)
+
+    def remove_noise(self):
+        try:
+            distance = float(self.NumOfDistance.toPlainText())
+        except ValueError:
+            QMessageBox.critical(Dialog, "Error", "Please enter a valid distance.")
+            return
+
+        if not distance:
+            QMessageBox.critical(Dialog, "Error", "Please enter a distance.")
+            return
+
+        try:
+            # Create the noise removal thread and start it
+            self.noise_thread = NoiseRemovalThread(self.thresholded)
+            self.noise_thread.start()
+
+            self.noise_thread.finished.connect(self.on_noise_removal_finished)
+        except AttributeError:
+            QtWidgets.QMessageBox.critical(Dialog, "Error", "Thresholder value is empty.")
+            return
+    def on_noise_removal_finished(self, result):
+        self.update_image(result)
+        analyzer = CrackAnalyzer(float(self.NumOfDistance.toPlainText()), self.units.currentText(), 132.28)
+        analyzer.get_Heigth_Width_Function(result)
 
     def update_image(self, image):
             # Get the size of the label
