@@ -1,4 +1,3 @@
-
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 
@@ -366,19 +365,7 @@ class Ui_MainWindow(object):
                                  "}")
         self.save1.setObjectName("save1")
         self.horizontalLayout_2.addWidget(self.save1)
-        self.print1 = QtWidgets.QPushButton(self.widget_6)
-        self.print1.setStyleSheet("#print1{\n"
-                                  " background-color: #2E74A9;\n"
-                                  "            color: white;\n"
-                                  "font: bold;\n"
-                                  "            border-radius: 10px;\n"
-                                  "            padding: 10px 20px;\n"
-                                  "}")
-        icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(":/images/print_icon.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.print1.setIcon(icon)
-        self.print1.setObjectName("print1")
-        self.horizontalLayout_2.addWidget(self.print1)
+
         self.verticalLayout_2.addWidget(self.widget_6)
         self.verticalLayout.addWidget(self.widget)
         MainWindow.setCentralWidget(self.centralwidget)
@@ -401,7 +388,6 @@ class Ui_MainWindow(object):
         self.remarks.setText(_translate("MainWindow", "Remarks:"))
         self.discard.setText(_translate("MainWindow", "Discard"))
         self.save1.setText(_translate("MainWindow", "Save"))
-        self.print1.setText(_translate("MainWindow", "Print"))
 
 
 if __name__ == "__main__":

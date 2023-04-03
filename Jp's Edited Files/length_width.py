@@ -89,12 +89,12 @@ class CrackAnalyzer(QThread):
                 crack_widths.append(width_mm)
 
 
-        with open('Input_Distance.txt', 'w') as f:
+        with open('../Input_Distance.txt', 'w') as f:
             f.write(str(known_distance_cm))
         avg_width = sum(crack_widths) / len(crack_widths)
         avg_width_write = f"{avg_width:.2f} cm"
         print(f"Crack width: {avg_width:.2f} mm")
-        with open('Predicted_width.txt', 'w') as f:
+        with open('../Predicted_width.txt', 'w') as f:
             f.write(avg_width_write)
 
 class NoiseRemovalThread(QThread):
@@ -188,7 +188,7 @@ class Ui_MainWindow(object):
         self.progressBar.setMaximumSize(QtCore.QSize(30, 30))
         self.progressBar.setObjectName("progressBar")
         # Loading the GIF
-        self.movie = QMovie("images/giphy.gif")
+        self.movie = QMovie("../images/giphy.gif")
         self.progressBar.setMovie(self.movie)
         self.progressBar.setAttribute(QtCore.Qt.WA_TranslucentBackground)
 
@@ -314,10 +314,10 @@ class Ui_MainWindow(object):
     def Proceed_to_Result(self):
         try:
             # Get the path to the directory where the executable is run from
-            app_path = getattr(sys, '_MEIPASS', None) or os.path.abspath('.')
+            app_path = getattr(sys, '_MEIPASS', None) or os.path.abspath('..')
 
             # Create the path to the result.py file
-            result_file_path = os.path.join(app_path, 'result.py')
+            result_file_path = os.path.join(app_path, '../result.py')
             # Execute the result.py file using QProcess
             process = QtCore.QProcess()
             process.start('python', [result_file_path])
@@ -330,10 +330,10 @@ class Ui_MainWindow(object):
     def Height(self):
         try:
             # Get the path to the directory where the executable is run from
-            app_path = getattr(sys, '_MEIPASS', None) or os.path.abspath('.')
+            app_path = getattr(sys, '_MEIPASS', None) or os.path.abspath('..')
 
             # Create the path to the result.py file
-            Crack_Line_Length = os.path.join(app_path, 'Crack_Line_Length.py')
+            Crack_Line_Length = os.path.join(app_path, '../Crack_Line_Length.py')
             # Execute the result.py file using QProcess
             process = QtCore.QProcess()
             process.start('python', [Crack_Line_Length])

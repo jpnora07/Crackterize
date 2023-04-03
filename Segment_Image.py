@@ -151,9 +151,9 @@ class Ui_Dialog(object):
                              "} ")
 
         # Load image and convert to grayscale
-        #image_path = sys.argv[1]
-        #self.image = cv2.imread(image_path)
-        self.image = cv2.imread('images/10cm.jpg')
+        image_path = sys.argv[1]
+        self.image = cv2.imread(image_path)
+        #self.image = cv2.imread('images/10cm.jpg')
         self.gray = cv2.cvtColor(self.image, cv2.COLOR_BGR2GRAY)
 
         self.verticalLayout = QtWidgets.QVBoxLayout(Dialog)

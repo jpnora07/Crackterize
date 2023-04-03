@@ -1,0 +1,520 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Dialog</class>
+ <widget class="QDialog" name="Dialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>618</width>
+    <height>548</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Dialog</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout_4">
+   <item>
+    <widget class="QWidget" name="widget_16" native="true">
+     <property name="layoutDirection">
+      <enum>Qt::LeftToRight</enum>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_5">
+      <property name="spacing">
+       <number>0</number>
+      </property>
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QPushButton" name="pushButton">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>25</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="layoutDirection">
+         <enum>Qt::RightToLeft</enum>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset resource="images/images.qrc">
+          <normaloff>:/images/exit.png</normaloff>:/images/exit.png</iconset>
+        </property>
+        <property name="default">
+         <bool>false</bool>
+        </property>
+        <property name="flat">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QWidget" name="widget" native="true">
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QWidget" name="widget_2" native="true">
+        <layout class="QHBoxLayout" name="horizontalLayout_2">
+         <item>
+          <widget class="QWidget" name="WithLogo" native="true">
+           <property name="minimumSize">
+            <size>
+             <width>564</width>
+             <height>80</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>564</width>
+             <height>80</height>
+            </size>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">#WithLogo{border-image: url(:/images/Crackterize.png) 175 0 175 0 stretch;}</string>
+           </property>
+           <layout class="QHBoxLayout" name="horizontalLayout_3"/>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QWidget" name="widget_3" native="true">
+        <layout class="QVBoxLayout" name="verticalLayout_2">
+         <item>
+          <widget class="QWidget" name="widget_6" native="true">
+           <layout class="QHBoxLayout" name="horizontalLayout_4">
+            <item>
+             <widget class="QLabel" name="loccrack">
+              <property name="minimumSize">
+               <size>
+                <width>200</width>
+                <height>30</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>200</width>
+                <height>30</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">#loccrack {
+font-family: 'Franklin Gothic Medium';
+font-size: 17px;
+color: 
+#664323;
+}</string>
+              </property>
+              <property name="text">
+               <string>Location of Crack:</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QComboBox" name="loc_box">
+              <property name="maximumSize">
+               <size>
+                <width>396</width>
+                <height>35</height>
+               </size>
+              </property>
+              <property name="autoFillBackground">
+               <bool>false</bool>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">#loc_box {
+        border-radius: 10px;
+        font-size: 18px;
+        font-family: Arial;
+        color: #333;
+        background-color: #fff;
+        border: 2px solid #aaa;
+        padding: 2px;
+padding-left:8px;
+    }
+
+#loc_box::drop-down{
+ image:url(images/arrowdown.png);
+ width: 15px;
+ height: 15px;
+padding: 6px;
+}
+#loc_box::drop-down::pressed{
+ image:url(images/arrowup.png);
+width: 15px;
+ height: 15px;
+text-align: center;
+}
+#loc_box QAbstractItemView {
+background-color: rgb(255, 255, 255);
+outline: none;
+ text-align: center;}
+
+#loc_box QAbstractItemView::item {
+background-color: #F4EBE6;
+ color: #4A3B28;
+ text-align: center;
+min-height: 35px; min-width: 50px;
+ border:0px;}
+
+#loc_box QListView{
+border: none;
+ font-weight:bold;
+ text-align: center;}
+#loc_box QListView::item{border:0px;
+border-radius: 15px;
+  padding:8px; 
+margin:5px;}
+#loc_box QListView::item:selected { 
+color: white; 
+background-color: #4A3B28}</string>
+              </property>
+              <property name="placeholderText">
+               <string>Select the location of crack</string>
+              </property>
+              <item>
+               <property name="text">
+                <string>sf</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>sf</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>gr</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>New Item</string>
+               </property>
+              </item>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QWidget" name="widget_7" native="true">
+           <layout class="QHBoxLayout" name="horizontalLayout_5">
+            <item>
+             <widget class="QLabel" name="cracktype">
+              <property name="minimumSize">
+               <size>
+                <width>200</width>
+                <height>30</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>200</width>
+                <height>30</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">#cracktype {
+font-family: 'Franklin Gothic Medium';
+font-size: 17px;
+color: 
+#664323;
+}</string>
+              </property>
+              <property name="text">
+               <string>Crack Type:</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QComboBox" name="type_box">
+              <property name="maximumSize">
+               <size>
+                <width>396</width>
+                <height>41</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">#type_box {
+        border-radius: 10px;
+        font-size: 18px;
+        font-family: Arial;
+        color: #333;
+        background-color: #fff;
+        border: 2px solid #aaa;
+        padding: 2px;
+padding-left:8px;
+    }
+
+#type_box::drop-down{
+ image:url(images/arrowdown.png);
+ width: 15px;
+ height: 15px;
+padding: 6px;
+}
+#type_box::drop-down::pressed{
+ image:url(images/arrowup.png);
+width: 15px;
+ height: 15px;
+text-align: center;
+}
+#type_box QAbstractItemView {
+background-color: rgb(255, 255, 255);
+outline: none;
+ text-align: center;}
+
+#type_box QAbstractItemView::item {
+background-color: #F4EBE6;
+ color: #4A3B28;
+ text-align: center;
+min-height: 35px; min-width: 50px;
+ border:0px;}
+
+#type_box QListView{
+border: none;
+ font-weight:bold;
+ text-align: center;}
+#type_box QListView::item{border:0px;
+border-radius: 15px;
+  padding:8px; 
+margin:5px;}
+#type_box QListView::item:selected { 
+color: white; 
+background-color: #4A3B28}</string>
+              </property>
+              <property name="placeholderText">
+               <string>Select the crack type</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QWidget" name="widget_8" native="true">
+           <layout class="QHBoxLayout" name="horizontalLayout_6">
+            <item>
+             <widget class="QLabel" name="crackprogression">
+              <property name="minimumSize">
+               <size>
+                <width>200</width>
+                <height>30</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>200</width>
+                <height>30</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">#crackprogression {
+font-family: 'Franklin Gothic Medium';
+font-size: 17px;
+color: 
+#664323;
+}</string>
+              </property>
+              <property name="text">
+               <string>Crack Progression:</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QComboBox" name="progression_box">
+              <property name="maximumSize">
+               <size>
+                <width>396</width>
+                <height>41</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">#progression_box {
+        border-radius: 10px;
+        font-size: 18px;
+        font-family: Arial;
+        color: #333;
+        background-color: #fff;
+        border: 2px solid #aaa;
+        padding: 2px;
+padding-left:8px;
+    }
+
+#progression_box::drop-down{
+ image:url(images/arrowdown.png);
+ width: 15px;
+ height: 15px;
+padding: 6px;
+}
+#progression_box::drop-down::pressed{
+ image:url(images/arrowup.png);
+width: 15px;
+ height: 15px;
+text-align: center;
+}
+#progression_box QAbstractItemView {
+background-color: rgb(255, 255, 255);
+outline: none;
+ text-align: center;}
+
+#progression_box QAbstractItemView::item {
+background-color: #F4EBE6;
+ color: #4A3B28;
+ text-align: center;
+min-height: 35px; min-width: 50px;
+ border:0px;}
+
+#progression_box QListView{
+border: none;
+ font-weight:bold;
+ text-align: center;}
+#progression_box QListView::item{border:0px;
+border-radius: 15px;
+  padding:8px; 
+margin:5px;}
+#progression_box QListView::item:selected { 
+color: white; 
+background-color: #4A3B28}</string>
+              </property>
+              <property name="placeholderText">
+               <string>Select the crack progression</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QWidget" name="widget_4" native="true">
+        <layout class="QVBoxLayout" name="verticalLayout_3">
+         <item>
+          <widget class="QLabel" name="remarks">
+           <property name="styleSheet">
+            <string notr="true">#remarks {
+	font: 700 9pt &quot;Segoe UI&quot;;
+	font: 700 9pt &quot;Segoe UI&quot;;
+	font: 600 9pt &quot;Segoe UI&quot;;
+position: absolute;
+width: 50px;
+height: 50px;
+left: 143px;
+top: 236px;
+
+font-family: 'Franklin Gothic Medium';
+font-style: normal;
+font-weight: 600;
+font-size: 15px;
+line-height: 42px;
+text-align: center;
+
+color: 
+#664323;
+}</string>
+           </property>
+           <property name="text">
+            <string>Remarks:</string>
+           </property>
+           <property name="indent">
+            <number>10</number>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QTextEdit" name="notes">
+           <property name="styleSheet">
+            <string notr="true">#notes {
+        border-radius: 10px;
+        font-size: 18px;
+        font-family: Arial;
+        color: #333;
+        background-color: #fff;
+        border: 2px solid #aaa;
+        padding: 10px;
+    }</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QWidget" name="widget_5" native="true">
+        <layout class="QHBoxLayout" name="horizontalLayout_7">
+         <item>
+          <widget class="QPushButton" name="savebtn">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>35</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>100</width>
+             <height>35</height>
+            </size>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">#savebtn{
+background: #2E74A9;
+font-weight:bold;
+color: white;
+border-radius: 7px;
+font-family: Inter;
+}
+
+
+#savebtn::hover{
+color: #2E74A9;
+border : 3px solid  #2E74A9;
+background-color: white;
+}
+</string>
+           </property>
+           <property name="text">
+            <string>Save</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources>
+  <include location="images/images.qrc"/>
+ </resources>
+ <connections/>
+</ui>

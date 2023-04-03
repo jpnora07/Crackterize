@@ -338,7 +338,8 @@ class Ui_MainWindow(object):
     }
     QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical{background: none;}
 
-    QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical{background: none;}
+    QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical{background: none;
+    }
             """
         )
         scroll_bar = QScrollBar()
@@ -675,7 +676,7 @@ class Ui_MainWindow(object):
         image_path = self.open_file_dialog()
         image = cv2.imread(image_path)
         # Save the image to a temporary file
-        temp_file_path = 'temp_image.jpg'
+        temp_file_path = 'temp_image_original.jpg'
         cv2.imwrite(temp_file_path, image)
         # Check if the image is valid
         if image is not None:
@@ -719,8 +720,10 @@ class Ui_MainWindow(object):
                 script_path = os.path.join(os.path.dirname(__file__), 'result.py')
                 subprocess.Popen(['python', script_path])
                 try:
-                    os.remove('Predicted_width.txt')
-                    os.remove('Predicted_height.txt')
+                    with open('Predicted_width.txt', 'w') as f:
+                        f.write("0 mm")
+                    with open('Predicted_height.txt', 'w') as f:
+                        f.write("0 cm")
                 except FileNotFoundError:
                     print("The file does not exist.")
 
