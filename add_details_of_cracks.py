@@ -362,26 +362,34 @@ class Ui_Dialog(object):
         print(self.selected_prog)
 
     def add_to_text_file(self):
+        error = False
         try:
             with open('Selected_location_crack.txt', 'w') as f:
                 f.write(self.selected_loc)
         except AttributeError:
             QMessageBox.critical(Dialog, "Error", "Please select location of crack.")
+            error = True
         try:
             with open('Selected_type_crack.txt', 'w') as f:
                 f.write(self.selected_type)
         except AttributeError:
             QMessageBox.critical(Dialog, "Error", "Please select type of crack.")
+            error = True
         try:
             with open('Selected_progression_crack.txt', 'w') as f:
                 f.write(self.selected_prog)
         except AttributeError:
             QMessageBox.critical(Dialog, "Error", "Please select progression of crack.")
+            error = True
         try:
             with open('Remarks_written.txt', 'w') as f:
                 f.write(self.notes.toPlainText())
-        except AttributeError:
-            QMessageBox.critical(Dialog, "Error", "Remarks cannot be empty.")
+        except Exception as e:
+            QMessageBox.critical(Dialog, "Error", str(e))
+            error = True
+
+        if not error:
+            Dialog.close()
 
 
 if __name__ == "__main__":

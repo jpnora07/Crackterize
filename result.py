@@ -979,25 +979,30 @@ class Ui_Dialog(object):
         self.select_folder_dialog.exec()
 
     def save_result_image_to_db(self):
+        with open('Selected_location_crack.txt', 'r') as f:
+            selected_loc1 = f.read()
+        with open('Selected_type_crack.txt', 'r') as f:
+            selected_type1 = f.read()
+        with open('Selected_progression_crack.txt', 'r') as f:
+            selected_prog1 = f.read()
+        with open('Remarks_written.txt', 'r') as f:
+            remarks1 = f.read()
+
+        print(selected_loc1,selected_type1,selected_prog1,remarks1)
         file_path_Class = 'Predicted_Class_name.txt'
         if os.path.isfile(file_path_Class):
             with open(file_path_Class, 'r') as f:
                 status = f.read()
                 if status == 'No Detected Crack':
-                    self.selected_loc = 'No Detected Crack'
-                    self.selected_type = 'No Detected Crack'
-                    self.selected_prog = 'No Detected Crack'
-                    self.remarks = 'No Detected Crack'
-
+                    selected_loc = 'No Detected Crack'
+                    selected_type = 'No Detected Crack'
+                    selected_prog = 'No Detected Crack'
+                    remarks = 'No Detected Crack'
                 else:
-                    with open('Selected_location_crack.txt', 'r') as f:
-                        self.selected_loc = f.read()
-                    with open('Selected_type_crack.txt', 'r') as f:
-                        self.selected_type = f.read()
-                    with open('Selected_progression_crack.txt', 'r') as f:
-                        self.selected_prog = f.read()
-                    with open('Remarks_written.txt', 'r') as f:
-                        self.remarks = f.read()
+                    selected_loc = selected_loc1
+                    selected_type = selected_type1
+                    selected_prog = selected_prog1
+                    remarks = remarks1
 
         # Convert the QImage to a QPixmap
         qimage = QImage(self.image.data, self.image.shape[1], self.image.shape[0], QImage.Format_RGB888)
@@ -1032,7 +1037,7 @@ class Ui_Dialog(object):
         selected_loc , selected_type , selected_prog, remarks ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) """
         c.execute(sql, (
             self.folder_name, image_data, self.width, self.length, "horizontal", self.Neg_score, self.Pos_score,
-            self.status, self.selected_loc, self.selected_type, self.selected_prog, self.remarks))
+            self.status, selected_loc, selected_type, selected_prog, remarks))
         conn.commit()
         conn.close()
         self.show_dialog_success_save()
