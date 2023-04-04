@@ -80,7 +80,7 @@ class Ui_Dialog(object):
         self.result_Img.setObjectName("result_Img")
         file_path_Class = 'Predicted_Class_name.txt'
         if os.path.isfile(file_path_Class):
-            with open(file_path_Class, 'r') as f:
+            with open(file_path_Class, 'rb') as f:
                 status = f.read()
                 if status == 'No Detected Crack':
                     self.image = cv2.imread('temp_image_original.jpg')

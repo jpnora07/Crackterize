@@ -461,7 +461,7 @@ class Ui_DialogSegment(object):
             return
 
         if os.path.exists('threshold_image.jpg'):
-            with open('threshold_image.jpg', 'r') as f:
+            with open('threshold_image.jpg', 'rb') as f:
                 selected_loc = f.read()
             if selected_loc.strip() != '':
                 try:

@@ -5,21 +5,23 @@ import cv2
 from PyQt5.QtCore import Qt, QRectF, QPoint
 from PyQt5.QtGui import QImage, QPixmap, QPainter, QPen, QCursor
 from PyQt5.QtWidgets import QMainWindow, QWidget, QLabel, QGraphicsView, QGraphicsScene, QSlider, QGridLayout, \
-    QApplication, QDialog
+    QApplication, QDialog, QPushButton, QHBoxLayout
 
 
 class DrawingWidget(QLabel):
     def __init__(self, image, parent=None):
         super().__init__(parent)
         self.image = image
+        self.lines = []  # Add a list to keep track of the lines
         self.drawing = False
-        self.drawn = False  # Add this variable to keep track of whether the line has been drawn
+        self.drawn = False
         self.start_point = QPoint()
         self.end_point = QPoint()
         self.setMouseTracking(True)
+        self.setCursor(QCursor(Qt.CrossCursor))
 
     def mousePressEvent(self, event):
-        if event.button() == Qt.LeftButton and not self.drawn:  # Check if the line has been drawn before allowing a new drawing
+        if event.button() == Qt.LeftButton and not self.drawn:
             self.drawing = True
             self.start_point = event.pos()
             self.end_point = event.pos()
@@ -35,7 +37,31 @@ class DrawingWidget(QLabel):
     def mouseReleaseEvent(self, event):
         if event.button() == Qt.LeftButton and self.drawing:
             self.drawing = False
-            self.drawn = True  # Mark the line as drawn when the mouse is released
+            self.drawn = True
+
+            y_diff = self.start_point.y() - self.end_point.y()
+            x_diff = self.start_point.x() - self.end_point.x()
+
+            angle_rad = math.atan2(y_diff, x_diff)
+
+            angle_deg = math.degrees(angle_rad)
+
+            if angle_deg < -45 and angle_deg >= -135:
+                orientation = "vertical"
+            elif angle_deg >= -45 and angle_deg <= 45:
+                orientation = "horizontal"
+            elif angle_deg > 45 and angle_deg <= 135:
+                orientation = "vertical"
+            else:
+                orientation = "horizontal"
+            orientation_write = f"{orientation}"
+            angle_write = f"{angle_deg:.2f}"
+            print(f"The line is " + orientation_write + " and has an angle of " + angle_write + " degrees.")
+            with open('Orientation.txt', 'w') as f:
+                f.write(orientation_write)
+            with open('angle_write.txt', 'w') as f:
+                f.write(angle_write)
+            self.lines.append((self.start_point, self.end_point))  # Add the start and end points to the list of lines
             self.update()
 
     def paintEvent(self, event):
@@ -44,26 +70,33 @@ class DrawingWidget(QLabel):
             q_image = QImage(self.image.data, self.image.shape[1], self.image.shape[0], QImage.Format_RGB888)
             painter.drawPixmap(self.rect(), QPixmap.fromImage(q_image))
         if self.drawn:
-            # draw start point
             painter.setPen(QPen(Qt.blue, 10, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin))
             painter.drawPoint(self.start_point)
-            # draw end point
-            painter.setPen(QPen(Qt.blue, 10, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin))
             painter.drawPoint(self.end_point)
-            # draw line
             painter.setPen(QPen(Qt.red, 2, Qt.SolidLine))
             painter.drawLine(self.start_point, self.end_point)
+
+    def remove_last_line(self):
+        if len(self.lines) > 0:
+            self.lines.pop()  # Remove the last line from the list
+            self.drawn = False  # Reset the flag to allow drawing a new line
+            self.update()  # Redraw the image
+
 
 class Line_length(QDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
-
-
+        self.setWindowFlags(Qt.CustomizeWindowHint | Qt.FramelessWindowHint)
         # Create a grid layout to hold the widgets
         layout = QGridLayout()
 
+        # self.slider = QSlider(Qt.Horizontal)
+        # self.slider.setRange(0, 100)
+        # self.slider.setValue(50)
+        # layout.addWidget(self.slider, 1, 1)
+
         # Load the input image and display i
-        self.img = cv2.imread('segment_img.jpg')
+        self.img = cv2.imread('threshold_image.jpg')
         desired_size = (2500, 2500)
         self.img = cv2.resize(self.img, desired_size)
         self.gray = cv2.cvtColor(self.img, cv2.COLOR_BGR2GRAY)
@@ -105,7 +138,8 @@ class Line_length(QDialog):
                 if self.box_lengths:
                     self.box_lengths[-1] += length_cm
                 else:
-                    self.box_lengths.append(length_cm)  # Add the length of this crack to the total length in the current box
+                    self.box_lengths.append(
+                        length_cm)  # Add the length of this crack to the total length in the current box
                 self.widths.append(h)
 
         total_length = sum(self.box_lengths)
@@ -117,12 +151,70 @@ class Line_length(QDialog):
         self.edges_label = DrawingWidget(self.img)
         self.show_image(self.img)
         layout.addWidget(self.edges_label, 0, 1)
+
+
+        # Create a button and add it to the layout
+        button = QPushButton("Done")
+        button.setFixedSize(150, 35)
+        button.setStyleSheet("#button{\n"
+                           "margin-right: 12px;"
+                           "font-weight:bold;\n"
+                           "color: white;\n"
+                           "background-color: #6F4B27;\n"
+                           "border-top-left-radius: 7px;\n"
+                           "border-top-right-radius: 7px;\n"
+                           "border-bottom-left-radius: 7px;\n"
+                           "border-bottom-right-radius: 7px;\n"
+                           "font-family: Inter;\n"
+                           "font-size: 11px;\n"
+                           "text-align: center;\n"
+                           "}\n"
+                           "#button:hover{\n"
+                           "color: rgb(144,115,87);\n"
+                           "border : 3px solid rgb(144,115,87);\n"
+                           "background-color: white;\n"
+                           "}\n"
+                           "")
+        button.setObjectName("button")
+        button.clicked.connect(self.done_view_length)
+
+        remove_last_line_button = QPushButton('Undo Line')
+        remove_last_line_button.clicked.connect(self.remove_last_line)
+        remove_last_line_button.setFixedSize(150, 35)
+        remove_last_line_button.setStyleSheet("#remove_last_line_button{\n"
+                             "margin-right: 12px;"
+                             "font-weight:bold;\n"
+                             "color: white;\n"
+                             "background-color: #6F4B27;\n"
+                             "border-top-left-radius: 7px;\n"
+                             "border-top-right-radius: 7px;\n"
+                             "border-bottom-left-radius: 7px;\n"
+                             "border-bottom-right-radius: 7px;\n"
+                             "font-family: Inter;\n"
+                             "font-size: 11px;\n"
+                             "text-align: center;\n"
+                             "}\n"
+                             "#remove_last_line_button:hover{\n"
+                             "color: rgb(144,115,87);\n"
+                             "border : 3px solid rgb(144,115,87);\n"
+                             "background-color: white;\n"
+                             "}\n"
+                             "")
+        remove_last_line_button.setObjectName("remove_last_line_button")
+        layout.addWidget(remove_last_line_button, 1, 1, Qt.AlignHCenter)
+        layout.addWidget(button, 2, 1, Qt.AlignHCenter)
         self.setLayout(layout)
         print(f"Image dimensions: {self.img.shape}")
 
+    def done_view_length(self):
+        self.close()
+    def remove_last_line(self):
+        if self.edges_label.drawn:
+            self.edges_label.drawn = False
+            self.edges_label.update()
     def show_image(self, image):
         # Create a DrawingWidget object and set its size
-        self.edges_label.setFixedSize(900, 800)
+        self.edges_label.setFixedSize(500, 400)
 
         # Get the size of the label
         label_size = self.edges_label.size()
@@ -136,9 +228,17 @@ class Line_length(QDialog):
         pixmap = QPixmap(q_image)
         self.edges_label.setPixmap(pixmap.scaled(label_size, Qt.KeepAspectRatio, Qt.SmoothTransformation))
 
+
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     main_window = Line_length()
     main_window.show()
-    main_window.setGeometry(100, 100, 800, 600)
+    main_window.setGeometry(100, 100, 600, 500)
+
+    # Center the main window on the screen
+    screen_geometry = app.desktop().screenGeometry()
+    x = (screen_geometry.width() - main_window.width()) // 2
+    y = (screen_geometry.height() - main_window.height()) // 2
+    main_window.move(x, y)
+
     sys.exit(app.exec_())
