@@ -7,7 +7,7 @@ from PyQt5.QtGui import QImage, QPixmap
 from PyQt5.QtWidgets import QVBoxLayout, QWidget, QScrollArea, QPushButton, QLabel, QHBoxLayout, QLayout, QMessageBox
 
 
-class Ui_Dialog(object):
+class Result_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
         Dialog.resize(700, 600)
@@ -372,20 +372,7 @@ class Ui_Dialog(object):
             if os.path.isfile(file_path_Class):
                 with open(file_path_Class, 'r') as f:
                     status = f.read()
-                    if status == 'No Detected Crack':
-                        QMessageBox.critical(Dialog, "Error", "No detected cracks! Not able to add details.")
-                    else:
-                        # Get the path to the directory where the executable is run from
-                        app_path = getattr(sys, '_MEIPASS', None) or os.path.abspath('.')
-
-                        # Create the path to the result.py file
-                        add_details = os.path.join(app_path, 'add_details_of_cracks.py')
-                        # Execute the result.py file using QProcess
-                        process = QtCore.QProcess()
-                        process.start('python', [add_details])
-
-                        if process.waitForFinished() == 0:
-                            print('Error: failed to execute result.py')
+                    print(status)
         except Exception as e:
             print(e)
 
@@ -1289,12 +1276,3 @@ class Ui_Dialog(object):
         self.result_Img.setPixmap(pixmap.scaled(label_size, Qt.KeepAspectRatio, Qt.SmoothTransformation))
 
 
-if __name__ == "__main__":
-    import sys
-
-    app = QtWidgets.QApplication(sys.argv)
-    Dialog = QtWidgets.QDialog()
-    ui = Ui_Dialog()
-    ui.setupUi(Dialog)
-    Dialog.show()
-    sys.exit(app.exec_())

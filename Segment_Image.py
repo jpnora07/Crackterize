@@ -1,5 +1,6 @@
 import os
 from collections import deque
+import sys
 
 import cv2
 import numpy as np
@@ -7,6 +8,8 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import QThread, pyqtSignal, Qt
 from PyQt5.QtGui import QImage, QPixmap, QMovie
 from PyQt5.QtWidgets import QMessageBox, QDialog, QLabel, QVBoxLayout
+
+from result import Result_Dialog
 
 
 class CustomDialog(QDialog):
@@ -138,6 +141,7 @@ def is_black(pixel):
 
 class Ui_DialogSegment(object):
     def setupUi(self, Dialog):
+        self.Dialog = Dialog
         Dialog.setObjectName("Dialog")
         Dialog.resize(700, 600)
         Dialog.setMinimumSize(QtCore.QSize(700, 600))
@@ -151,9 +155,9 @@ class Ui_DialogSegment(object):
                              "} ")
 
         # Load image and convert to grayscale
-        image_path = sys.argv[1]
-        self.image = cv2.imread(image_path)
-        #self.image = cv2.imread('images/10cm.jpg')
+        #image_path = sys.argv[1]
+        #self.image = cv2.imread(image_path)
+        self.image = cv2.imread('temp_image_original.jpg')
         self.gray = cv2.cvtColor(self.image, cv2.COLOR_BGR2GRAY)
 
         self.verticalLayout = QtWidgets.QVBoxLayout(Dialog)
@@ -453,11 +457,11 @@ class Ui_DialogSegment(object):
         try:
             distance = float(self.NumOfDistance.toPlainText())
         except ValueError:
-            QMessageBox.critical(Dialog, "Error", "Please enter a valid distance.")
+            QMessageBox.critical(self.Dialog, "Error", "Please enter a valid distance.")
             return
 
         if not distance:
-            QMessageBox.critical(Dialog, "Error", "Please enter a distance.")
+            QMessageBox.critical(self.Dialog, "Error", "Please enter a distance.")
             return
 
         if os.path.exists('threshold_image.jpg'):
@@ -482,19 +486,16 @@ class Ui_DialogSegment(object):
                 print('Error: threshold_image.jpg is empty')
         else:
             print('Error: threshold_image.jpg does not exist')
+
     def Proceed_to_Result(self):
         try:
-            # Get the path to the directory where the executable is run from
-            app_path = getattr(sys, '_MEIPASS', None) or os.path.abspath('.')
-
-            # Create the path to the result.py file
-            result_file_path = os.path.join(app_path, 'result.py')
-            # Execute the result.py file using QProcess
-            process = QtCore.QProcess()
-            process.start('python', [result_file_path])
-
-            if process.waitForFinished() == 0:
-                print('Error: failed to execute result.py')
+            result_dialog = QtWidgets.QDialog(self.Dialog)
+            result_dialog.ui_result = Result_Dialog()
+            result_dialog.ui_result.setupUi(result_dialog)
+            result_dialog.raise_()
+            result_dialog.show()
+            result_dialog.exec_()
+            print("done")
         except Exception as e:
             print(e)
 
@@ -502,11 +503,11 @@ class Ui_DialogSegment(object):
         try:
             distance = float(self.NumOfDistance.toPlainText())
         except ValueError:
-            QMessageBox.critical(Dialog, "Error", "Please enter a valid distance.")
+            QMessageBox.critical(self.Dialog, "Error", "Please enter a valid distance.")
             return
 
         if not distance:
-            QMessageBox.critical(Dialog, "Error", "Please enter a distance.")
+            QMessageBox.critical(self.Dialog, "Error", "Please enter a distance.")
             return
 
         try:
@@ -516,7 +517,7 @@ class Ui_DialogSegment(object):
 
             self.noise_thread.finished.connect(self.on_noise_removal_finished)
         except AttributeError:
-            QtWidgets.QMessageBox.critical(Dialog, "Error", "Thresholder value is empty.")
+            QtWidgets.QMessageBox.critical(self.Dialog, "Error", "Thresholder value is empty.")
             return
     def on_noise_removal_finished(self, result):
         self.update_image(result)
@@ -550,12 +551,3 @@ class Ui_DialogSegment(object):
     def update_slider_value_label(self, value):
         self.thresholderNum.setText(str(value))
 
-if __name__ == "__main__":
-    import sys
-
-    app = QtWidgets.QApplication(sys.argv)
-    Dialog = QtWidgets.QDialog()
-    ui = Ui_DialogSegment()
-    ui.setupUi(Dialog)
-    Dialog.show()
-    sys.exit(app.exec_())

@@ -14,6 +14,9 @@ from PyQt5.QtGui import QIcon, QPixmap, QPalette, QMouseEvent
 from PyQt5.QtWidgets import QListView, QComboBox, QDialog, QVBoxLayout, QApplication, QFileDialog, QHBoxLayout, \
     QStyledItemDelegate, QMessageBox, QScrollBar, QAbstractItemView, QLineEdit
 
+from Segment_Image import Ui_DialogSegment
+from result import Result_Dialog
+
 
 class AlignDelegate(QStyledItemDelegate):
     def initStyleOption(self, option, index):
@@ -717,8 +720,6 @@ class Ui_MainWindow(object):
             with open('Predicted_Class_name.txt', 'w') as f:
                 f.write(predicted_class_name)
             if np.argmax(score) == 0:
-                script_path = os.path.join(os.path.dirname(__file__), 'result.py')
-                subprocess.Popen(['python', script_path])
                 try:
                     with open('Predicted_width.txt', 'w') as f:
                         f.write("0 mm")
@@ -726,10 +727,20 @@ class Ui_MainWindow(object):
                         f.write("0 cm")
                 except FileNotFoundError:
                     print("The file does not exist.")
+                result_dialog = QtWidgets.QDialog(MainWindow)
+                result_dialog.ui_result = Result_Dialog()
+                result_dialog.ui_result.setupUi(result_dialog)
+                result_dialog.show()
+                result_dialog.exec_()
 
             else:
-                script_path = os.path.join(os.path.dirname(__file__), 'Segment_Image.py')
-                subprocess.Popen(['python', script_path, image_path])
+
+                segment_dialog = QtWidgets.QDialog(MainWindow)
+                segment_dialog.ui_result = Ui_DialogSegment()
+                segment_dialog.ui_result.setupUi(segment_dialog)
+                segment_dialog.show()
+                segment_dialog.exec_()
+
         else:
             print("Invalid image format")
 
@@ -1139,6 +1150,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout.addWidget(self.widget_2)
         self.verticalLayout_2.addWidget(self.widget)
         Dialog.exec()
+
     def ButtonCal_function(self):
         try:
             # Get the path to the directory where the executable is run from
@@ -1154,6 +1166,7 @@ class Ui_MainWindow(object):
                 print('Error: failed to execute result.py')
         except Exception as e:
             print(e)
+
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
