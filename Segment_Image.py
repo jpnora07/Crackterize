@@ -136,7 +136,7 @@ class CrackAnalyzer(QThread):
 def is_black(pixel):
     return pixel == 0
 
-class Ui_Dialog(object):
+class Ui_DialogSegment(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
         Dialog.resize(700, 600)
@@ -390,6 +390,7 @@ class Ui_Dialog(object):
                                   "}\n"
                                   "")
         self.height.setObjectName("height")
+        self.height.clicked.connect(self.view_height)
         self.verticalLayout_2.addWidget(self.height)
         self.verticalLayout_7.addWidget(self.widget_4)
         self.widget_11 = QtWidgets.QWidget(self.widget_3)
@@ -448,6 +449,39 @@ class Ui_Dialog(object):
         self.height.setText(_translate("Dialog", "View Height"))
         self.proceed.setText(_translate("Dialog", "Proceed"))
 
+    def view_height(self):
+        try:
+            distance = float(self.NumOfDistance.toPlainText())
+        except ValueError:
+            QMessageBox.critical(Dialog, "Error", "Please enter a valid distance.")
+            return
+
+        if not distance:
+            QMessageBox.critical(Dialog, "Error", "Please enter a distance.")
+            return
+
+        if os.path.exists('threshold_image.jpg'):
+            with open('threshold_image.jpg', 'r') as f:
+                selected_loc = f.read()
+            if selected_loc.strip() != '':
+                try:
+                    # Get the path to the directory where the executable is run from
+                    app_path = getattr(sys, '_MEIPASS', None) or os.path.abspath('.')
+
+                    # Create the path to the result.py file
+                    result_lenght = os.path.join(app_path, 'Crack_Line_Length.py')
+                    # Execute the result.py file using QProcess
+                    process = QtCore.QProcess()
+                    process.start('python', [result_lenght])
+
+                    if process.waitForFinished() == 0:
+                        print('Error: failed to execute Crack_Line_Length.py')
+                except Exception as e:
+                    print(e)
+            else:
+                print('Error: threshold_image.jpg is empty')
+        else:
+            print('Error: threshold_image.jpg does not exist')
     def Proceed_to_Result(self):
         try:
             # Get the path to the directory where the executable is run from
@@ -521,7 +555,7 @@ if __name__ == "__main__":
 
     app = QtWidgets.QApplication(sys.argv)
     Dialog = QtWidgets.QDialog()
-    ui = Ui_Dialog()
+    ui = Ui_DialogSegment()
     ui.setupUi(Dialog)
     Dialog.show()
     sys.exit(app.exec_())

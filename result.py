@@ -386,6 +386,7 @@ class Ui_Dialog(object):
                             print('Error: failed to execute result.py')
         except Exception as e:
             print(e)
+
     def Choose_where_to_save(self):
         Dialog = QtWidgets.QDialog()
         Dialog.setObjectName("Dialog")
@@ -513,10 +514,16 @@ class Ui_Dialog(object):
         # create a table if it doesn't exist
         c.execute('''CREATE TABLE IF NOT EXISTS Location_Folder
                                                      (id INTEGER PRIMARY KEY, project_name TEXT, folder_name TEXT, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)''')
+        # check if table Projects exists, and create it if it doesn't
+        c.execute('''SELECT count(name) FROM sqlite_master WHERE type='table' AND name='Projects' ''')
+        if c.fetchone()[0] == 0:
+            c.execute(
+                '''CREATE TABLE Projects (id INTEGER PRIMARY KEY, project_name TEXT, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)''')
         # fetch data from the database
         c.execute("SELECT * FROM Projects")
         data = c.fetchall()
-        print(data)  # Debugging line
+        print(data)
+        # Debugging line
 
         # Create a label above the scroll area
         label = QLabel("Choose an existing project")
@@ -853,24 +860,24 @@ class Ui_Dialog(object):
             folder_button.clicked.connect(self.select_folder_dialog.close)
             folder_button.clicked.connect(self.save_result_image_to_db)
             folder_button.setStyleSheet("#button{\n"
-                                         "margin: 0px 0px 0px 10px;"
-                                         "font-weight:bold;\n"
-                                         "color: white;\n"
-                                         "background-color: #6F4B27;\n"
-                                         "border-top-left-radius: 7px;\n"
-                                         "border-top-right-radius: 7px;\n"
-                                         "border-bottom-left-radius: 7px;\n"
-                                         "border-bottom-right-radius: 7px;\n"
-                                         "font-family: Inter;\n"
-                                         "font-size: 11px;\n"
-                                         "text-align: center;\n"
-                                         "}\n"
-                                         "#button:hover{\n"
-                                         "color: rgb(144,115,87);\n"
-                                         "border : 3px solid rgb(144,115,87);\n"
-                                         "background-color: white;\n"
-                                         "}\n"
-                                         "")
+                                        "margin: 0px 0px 0px 10px;"
+                                        "font-weight:bold;\n"
+                                        "color: white;\n"
+                                        "background-color: #6F4B27;\n"
+                                        "border-top-left-radius: 7px;\n"
+                                        "border-top-right-radius: 7px;\n"
+                                        "border-bottom-left-radius: 7px;\n"
+                                        "border-bottom-right-radius: 7px;\n"
+                                        "font-family: Inter;\n"
+                                        "font-size: 11px;\n"
+                                        "text-align: center;\n"
+                                        "}\n"
+                                        "#button:hover{\n"
+                                        "color: rgb(144,115,87);\n"
+                                        "border : 3px solid rgb(144,115,87);\n"
+                                        "background-color: white;\n"
+                                        "}\n"
+                                        "")
             folder_button.setObjectName("button")
             layout.addWidget(folder_button)
 
@@ -913,24 +920,24 @@ class Ui_Dialog(object):
         Create_new_folder.setMaximumSize(143, 35)
         Create_new_folder.setObjectName("Create_new")
         Create_new_folder.setStyleSheet("#Create_new{\n"
-                                 "margin-left: 9px;"
-                                 "font-weight:bold;\n"
-                                 "color: white;\n"
-                                 "background-color: #6F4B27;\n"
-                                 "border-top-left-radius: 7px;\n"
-                                 "border-top-right-radius: 7px;\n"
-                                 "border-bottom-left-radius: 7px;\n"
-                                 "border-bottom-right-radius: 7px;\n"
-                                 "font-family: Inter;\n"
-                                 "font-size: 11px;\n"
-                                 "text-align: center;\n"
-                                 "}\n"
-                                 "#Create_new:hover{\n"
-                                 "color: rgb(144,115,87);\n"
-                                 "border : 3px solid rgb(144,115,87);\n"
-                                 "background-color: white;\n"
-                                 "}\n"
-                                 "")
+                                        "margin-left: 9px;"
+                                        "font-weight:bold;\n"
+                                        "color: white;\n"
+                                        "background-color: #6F4B27;\n"
+                                        "border-top-left-radius: 7px;\n"
+                                        "border-top-right-radius: 7px;\n"
+                                        "border-bottom-left-radius: 7px;\n"
+                                        "border-bottom-right-radius: 7px;\n"
+                                        "font-family: Inter;\n"
+                                        "font-size: 11px;\n"
+                                        "text-align: center;\n"
+                                        "}\n"
+                                        "#Create_new:hover{\n"
+                                        "color: rgb(144,115,87);\n"
+                                        "border : 3px solid rgb(144,115,87);\n"
+                                        "background-color: white;\n"
+                                        "}\n"
+                                        "")
         button_layout.addWidget(Create_new_folder)
 
         # Create the new button and add it to the layout
@@ -970,6 +977,27 @@ class Ui_Dialog(object):
         self.select_folder_dialog.exec()
 
     def save_result_image_to_db(self):
+
+        file_path_Class = 'Predicted_Class_name.txt'
+        if os.path.isfile(file_path_Class):
+            with open(file_path_Class, 'r') as f:
+                status = f.read()
+                if status == 'No Detected Crack':
+                    self.selected_loc = 'No Detected Crack'
+                    self.selected_type = 'No Detected Crack'
+                    self.selected_prog = 'No Detected Crack'
+                    self.remarks = 'No Detected Crack'
+
+                else:
+                    with open('Selected_location_crack.txt', 'r') as f:
+                        self.selected_loc = f.read()
+                    with open('Selected_type_crack.txt', 'r') as f:
+                        self.selected_type = f.read()
+                    with open('Selected_progression_crack.txt', 'r') as f:
+                        self.selected_prog = f.read()
+                    with open('Remarks_written.txt', 'r') as f:
+                        self.remarks = f.read()
+
         # Convert the QImage to a QPixmap
         qimage = QImage(self.image.data, self.image.shape[1], self.image.shape[0], QImage.Format_RGB888)
         pixmap = QPixmap.fromImage(qimage)
@@ -988,19 +1016,21 @@ class Ui_Dialog(object):
         # Create a connection to a SQLite database or create it if it doesn't exist
         conn = sqlite3.connect(db_path)
         c = conn.cursor()
-
+        # Check if the Save_Files table exists, and delete it if it does
+        # c.execute('''DROP TABLE IF EXISTS Save_Files''')
         # Check if the Save_Files table exists, and create it if it doesn't
         c.execute('''SELECT count(name) FROM sqlite_master WHERE type='table' AND name='Save_Files' ''')
         if c.fetchone()[0] == 0:
-            c.execute('''CREATE TABLE Save_Files
-                                 (id INTEGER PRIMARY KEY, folder_name TEXT, image BLOB, width TEXT, length TEXT, position TEXT, No_Crack TEXT, Crack TEXT, Status TEXT, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)''')
+            c.execute('''CREATE TABLE Save_Files (id INTEGER PRIMARY KEY, folder_name TEXT, image BLOB, width TEXT, 
+            length TEXT, position TEXT, No_Crack TEXT, Crack TEXT, Status TEXT, selected_loc TEXT, selected_type 
+            TEXT, selected_prog TEXT, remarks TEXT created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)''')
 
         # Insert the data into the Save_Files table
-        sql = """INSERT INTO Save_Files (folder_name, image, width, length, position, No_Crack, Crack, Status)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?)"""
+        sql = """INSERT INTO Save_Files (folder_name, image, width, length, position, No_Crack, Crack, Status, 
+        selected_loc , selected_type , selected_prog, remarks ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) """
         c.execute(sql, (
-        self.folder_name, image_data, self.width, self.length, "horizontal", self.Neg_score, self.Pos_score,
-        self.status))
+            self.folder_name, image_data, self.width, self.length, "horizontal", self.Neg_score, self.Pos_score,
+            self.status, self.selected_loc, self.selected_type, self.selected_prog, self.remarks))
         conn.commit()
         conn.close()
         self.show_dialog_success_save()
@@ -1029,7 +1059,7 @@ class Ui_Dialog(object):
         horizontalLayout_2.setObjectName("horizontalLayout_2")
         widget_1 = QtWidgets.QWidget(NewFolderDialog)
         widget_1.setStyleSheet("width: fit-content;\n"
-                                    "block-size: fit-content;")
+                               "block-size: fit-content;")
         widget_1.setObjectName("widget_1")
         verticalLayout = QtWidgets.QVBoxLayout(widget_1)
         verticalLayout.setObjectName("verticalLayout")
@@ -1050,15 +1080,15 @@ class Ui_Dialog(object):
         self.ET_newfolder = QtWidgets.QTextEdit(widget_2)
         self.ET_newfolder.setMaximumSize(QtCore.QSize(16777215, 53))
         self.ET_newfolder.setStyleSheet("#ET_newproject{\n"
-                                    "text-allign:center;\n"
-                                    "font-size:20px;\n"
-                                    "padding:8px;\n"
-                                    "background-color: rgb(255, 255, 255);\n"
-                                    "border-top-left-radius :12px;\n"
-                                    "border-top-right-radius : 12px; \n"
-                                    "border-bottom-left-radius : 12px; \n"
-                                    "border-bottom-right-radius : 12px;\n"
-                                    "}")
+                                        "text-allign:center;\n"
+                                        "font-size:20px;\n"
+                                        "padding:8px;\n"
+                                        "background-color: rgb(255, 255, 255);\n"
+                                        "border-top-left-radius :12px;\n"
+                                        "border-top-right-radius : 12px; \n"
+                                        "border-bottom-left-radius : 12px; \n"
+                                        "border-bottom-right-radius : 12px;\n"
+                                        "}")
         self.ET_newfolder.setTabChangesFocus(False)
         self.ET_newfolder.setPlaceholderText("          Type name of your new folder")
         self.ET_newfolder.setAlignment(Qt.AlignCenter)
@@ -1154,13 +1184,15 @@ class Ui_Dialog(object):
 
             if result[0] == 0:
                 # If the project name doesn't exist, insert it into the database
-                self.c.execute("INSERT INTO Location_Folder (project_name,folder_name) VALUES (?,?)", (self.project_name,new_folder,))
+                self.c.execute("INSERT INTO Location_Folder (project_name,folder_name) VALUES (?,?)",
+                               (self.project_name, new_folder,))
                 self.conn.commit()
                 self.show_dialog_success_save()
                 self.select_folder()
             else:
                 # If the project name already exists, show a dialog message to inform the user
                 self.creating_new_folder()
+
     def show_dialog_success_save(self):
         # Create dialog box
         Dialog = QtWidgets.QDialog()
@@ -1226,15 +1258,16 @@ class Ui_Dialog(object):
         widget_4 = QtWidgets.QWidget(widget_3)
         widget_4.setAutoFillBackground(False)
         widget_4.setStyleSheet("#widget_4{\n"
-                                    "background-image: url(images/ok3.png);\n"
-                                    "background-repeat: no-repeat; \n"
-                                    "background-position: center;}")
+                               "background-image: url(images/ok3.png);\n"
+                               "background-repeat: no-repeat; \n"
+                               "background-position: center;}")
         widget_4.setObjectName("widget_4")
         verticalLayout_3.addWidget(widget_4)
         verticalLayout.addWidget(widget_3)
         horizontalLayout.addWidget(widget_2)
         verticalLayout_2.addWidget(widget)
         Dialog.exec()
+
     def update_image(self, image):
         # Get the size of the label
         label_size = self.result_Img.size()

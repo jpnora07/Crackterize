@@ -5,7 +5,8 @@ import cv2
 from PyQt5.QtCore import Qt, QRectF, QPoint
 from PyQt5.QtGui import QImage, QPixmap, QPainter, QPen, QCursor
 from PyQt5.QtWidgets import QMainWindow, QWidget, QLabel, QGraphicsView, QGraphicsScene, QSlider, QGridLayout, \
-    QApplication
+    QApplication, QDialog
+
 
 class DrawingWidget(QLabel):
     def __init__(self, image, parent=None):
@@ -53,16 +54,13 @@ class DrawingWidget(QLabel):
             painter.setPen(QPen(Qt.red, 2, Qt.SolidLine))
             painter.drawLine(self.start_point, self.end_point)
 
-class MainWindow(QMainWindow):
-    def __init__(self):
-        super().__init__()
+class Line_length(QDialog):
+    def __init__(self, parent=None):
+        super().__init__(parent)
 
-        # Create a widget to hold the image and sliders
-        central_widget = QWidget()
-        self.setCentralWidget(central_widget)
 
         # Create a grid layout to hold the widgets
-        layout = QGridLayout(central_widget)
+        layout = QGridLayout()
 
         # Load the input image and display i
         self.img = cv2.imread('segment_img.jpg')
@@ -119,6 +117,7 @@ class MainWindow(QMainWindow):
         self.edges_label = DrawingWidget(self.img)
         self.show_image(self.img)
         layout.addWidget(self.edges_label, 0, 1)
+        self.setLayout(layout)
         print(f"Image dimensions: {self.img.shape}")
 
     def show_image(self, image):
@@ -139,7 +138,7 @@ class MainWindow(QMainWindow):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    main_window = MainWindow()
+    main_window = Line_length()
     main_window.show()
     main_window.setGeometry(100, 100, 800, 600)
     sys.exit(app.exec_())
