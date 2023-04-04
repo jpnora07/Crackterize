@@ -80,12 +80,14 @@ class Ui_Dialog(object):
         self.result_Img.setObjectName("result_Img")
         file_path_Class = 'Predicted_Class_name.txt'
         if os.path.isfile(file_path_Class):
-            with open(file_path_Class, 'rb') as f:
+            with open(file_path_Class, 'r') as f:
                 status = f.read()
-                if status == 'No Detected Crack':
-                    self.image = cv2.imread('temp_image_original.jpg')
+                if status.strip() == 'No Detected Crack':
+                    self.image = cv2.imread('bg.jpg')
                 else:
                     self.image = cv2.imread('threshold_image.jpg')
+        else:
+            print('Error: Predicted_Class_name.txt does not exist')
 
         self.update_image(self.image)
         self.horizontalLayout_9.addWidget(self.result_Img)
@@ -977,7 +979,6 @@ class Ui_Dialog(object):
         self.select_folder_dialog.exec()
 
     def save_result_image_to_db(self):
-
         file_path_Class = 'Predicted_Class_name.txt'
         if os.path.isfile(file_path_Class):
             with open(file_path_Class, 'r') as f:
@@ -1000,6 +1001,12 @@ class Ui_Dialog(object):
 
         # Convert the QImage to a QPixmap
         qimage = QImage(self.image.data, self.image.shape[1], self.image.shape[0], QImage.Format_RGB888)
+
+        # Scale the image if it's larger than a certain size
+        max_size = 1000
+        if qimage.width() > max_size or qimage.height() > max_size:
+            qimage = qimage.scaled(max_size, max_size, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+
         pixmap = QPixmap.fromImage(qimage)
 
         # Convert the QPixmap to a bytes object
@@ -1013,19 +1020,14 @@ class Ui_Dialog(object):
         BASE_DIR = os.path.dirname(os.path.abspath(__file__))
         db_path = os.path.join(BASE_DIR, 'Projects.db')
 
-        # Create a connection to a SQLite database or create it if it doesn't exist
         conn = sqlite3.connect(db_path)
         c = conn.cursor()
-        # Check if the Save_Files table exists, and delete it if it does
-        # c.execute('''DROP TABLE IF EXISTS Save_Files''')
-        # Check if the Save_Files table exists, and create it if it doesn't
         c.execute('''SELECT count(name) FROM sqlite_master WHERE type='table' AND name='Save_Files' ''')
         if c.fetchone()[0] == 0:
             c.execute('''CREATE TABLE Save_Files (id INTEGER PRIMARY KEY, folder_name TEXT, image BLOB, width TEXT, 
             length TEXT, position TEXT, No_Crack TEXT, Crack TEXT, Status TEXT, selected_loc TEXT, selected_type 
             TEXT, selected_prog TEXT, remarks TEXT created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)''')
 
-        # Insert the data into the Save_Files table
         sql = """INSERT INTO Save_Files (folder_name, image, width, length, position, No_Crack, Crack, Status, 
         selected_loc , selected_type , selected_prog, remarks ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) """
         c.execute(sql, (

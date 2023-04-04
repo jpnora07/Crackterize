@@ -129,7 +129,7 @@ class CrackAnalyzer(QThread):
         with open('Input_Distance.txt', 'w') as f:
             f.write(str(known_distance_cm))
         avg_width = sum(crack_widths) / len(crack_widths)
-        avg_width_write = f"{avg_width:.2f} cm"
+        avg_width_write = f"{avg_width:.2f}"
         print(f"Crack width: {avg_width:.2f} mm")
         with open('Predicted_width.txt', 'w') as f:
             f.write(avg_width_write)
