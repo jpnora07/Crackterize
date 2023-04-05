@@ -6,9 +6,12 @@ from PyQt5.QtCore import Qt, QIODevice, QBuffer, QByteArray, QTimer
 from PyQt5.QtGui import QImage, QPixmap
 from PyQt5.QtWidgets import QVBoxLayout, QWidget, QScrollArea, QPushButton, QLabel, QHBoxLayout, QLayout, QMessageBox
 
+from add_details_of_cracks import add_details_dialog
+
 
 class Result_Dialog(object):
     def setupUi(self, Dialog):
+        self.Dialog = Dialog
         Dialog.setObjectName("Dialog")
         Dialog.resize(700, 600)
         Dialog.setMinimumSize(QtCore.QSize(700, 600))
@@ -19,19 +22,18 @@ class Result_Dialog(object):
         effect.setBlurRadius(15)
         effect.setColor(QtGui.QColor(144, 115, 87, 100))
         effect.setOffset(0, 0)
-
+        radius = 15
+        Dialog.setStyleSheet("""
+                                            background:#EFEEEE;
+                                            border-top-left-radius:{0}px;
+                                            border-bottom-left-radius:{0}px;
+                                            border-top-right-radius:{0}px;
+                                            border-bottom-right-radius:{0}px;
+                                            """.format(radius))
+        Dialog.setGraphicsEffect(effect)
         self.verticalLayout_6 = QtWidgets.QVBoxLayout(Dialog)
         self.verticalLayout_6.setObjectName("verticalLayout_6")
         self.widget = QtWidgets.QWidget(Dialog)
-        radius = 15
-        self.widget.setStyleSheet("""
-                                    background:#EFEEEE;
-                                    border-top-left-radius:{0}px;
-                                    border-bottom-left-radius:{0}px;
-                                    border-top-right-radius:{0}px;
-                                    border-bottom-right-radius:{0}px;
-                                    """.format(radius))
-        Dialog.setGraphicsEffect(effect)
         self.widget_16 = QtWidgets.QWidget(self.widget)
         self.widget_16.setLayoutDirection(QtCore.Qt.LeftToRight)
         self.widget_16.setObjectName("widget_16")
@@ -61,9 +63,9 @@ class Result_Dialog(object):
         self.verticalLayout.setContentsMargins(-1, 9, -1, 0)
         self.verticalLayout.setObjectName("verticalLayout")
         self.WithLogo = QtWidgets.QWidget(self.widget)
-        self.WithLogo.setMinimumSize(QtCore.QSize(564, 80))
+        self.WithLogo.setMinimumSize(QtCore.QSize(500, 80))
         self.WithLogo.setMaximumSize(QtCore.QSize(16777215, 80))
-        self.WithLogo.setStyleSheet("#WithLogo{border-image: url(images/Crackterize.png) 175 0 175 0 stretch;}")
+        self.WithLogo.setStyleSheet("#WithLogo{border-image: url(images/Crackterize.png) 400 0 400 0 stretch;}")
         self.WithLogo.setObjectName("WithLogo")
         self.horizontalLayout_3 = QtWidgets.QHBoxLayout(self.WithLogo)
         self.horizontalLayout_3.setContentsMargins(-1, 0, -1, -1)
@@ -88,7 +90,7 @@ class Result_Dialog(object):
         self.result_Img.setAlignment(QtCore.Qt.AlignCenter)
         self.result_Img.setMaximumSize(QtCore.QSize(16777215, 16777215))
         self.result_Img.setStyleSheet("#result_Img{\n"
-                                      "border-image: url(:/images/img.png) 10 10 10 10 stretch;\n"
+
                                       "opacity: 100;\n"
                                       "border: 1px solid grey;\n"
                                       "}")
@@ -286,10 +288,11 @@ class Result_Dialog(object):
         self.horizontalLayout = QtWidgets.QHBoxLayout(self.widget_17)
         self.horizontalLayout.setObjectName("horizontalLayout")
         self.adddetails = QtWidgets.QPushButton(self.widget_17)
+
         self.adddetails.setMinimumSize(QtCore.QSize(0, 35))
         self.adddetails.setMaximumSize(QtCore.QSize(16777215, 35))
         self.adddetails.setStyleSheet("#adddetails{\n"
-                                      "background: #6F4B27;\n"
+                                      "background: #2E74A9;\n"
                                       "font-weight:bold;\n"
                                       "color: white;\n"
                                       "border-radius: 7px;\n"
@@ -298,19 +301,32 @@ class Result_Dialog(object):
                                       "\n"
                                       "\n"
                                       "#adddetails:hover{\n"
-                                      "color: #6F4B27;\n"
-                                      "border : 3px solid rgb(144,115,87);\n"
+                                      "color: #2E74A9;\n"
+                                      "border : 3px solid  #2E74A9;\n"
                                       "background-color: white;\n"
                                       "}\n"
                                       "")
+
         self.adddetails.setObjectName("adddetails")
+        try:
+            file_path_Class = 'Predicted_Class_name.txt'
+            if os.path.isfile(file_path_Class):
+                with open(file_path_Class, 'r') as f:
+                    status = f.read()
+                    if status == 'No Detected Crack':
+                        self.adddetails.hide()
+                    else:
+                        self.adddetails.show()
+        except Exception as e:
+            print(e)
         self.adddetails.clicked.connect(self.add_details_function)
         self.horizontalLayout.addWidget(self.adddetails)
         self.print1 = QtWidgets.QPushButton(self.widget_17)
         self.print1.setMinimumSize(QtCore.QSize(0, 35))
         self.print1.setMaximumSize(QtCore.QSize(16777215, 35))
         self.print1.setStyleSheet("#print1{\n"
-                                  "background: #2E74A9;\n"
+
+                                  "background: #6F4B27;\n"
                                   "font-weight:bold;\n"
                                   "color: white;\n"
                                   "border-radius: 7px;\n"
@@ -319,8 +335,9 @@ class Result_Dialog(object):
                                   "\n"
                                   "\n"
                                   "#print1::hover{\n"
-                                  "color: #2E74A9;\n"
-                                  "border : 3px solid  #2E74A9;\n"
+
+                                  "color: #6F4B27;\n"
+                                  "border : 3px solid rgb(144,115,87);\n"
                                   "background-color: white;\n"
                                   "}\n"
                                   "")
@@ -384,11 +401,16 @@ class Result_Dialog(object):
 
     def add_details_function(self):
         try:
-            file_path_Class = 'Predicted_Class_name.txt'
-            if os.path.isfile(file_path_Class):
-                with open(file_path_Class, 'r') as f:
-                    status = f.read()
-                    print(status)
+            result_dialog = QtWidgets.QDialog(self.Dialog)
+            x = (self.Dialog.width() - self.Dialog.width()) // 2
+            y = (self.Dialog.height() - self.Dialog.height()) // 2
+            ui = add_details_dialog()
+
+            ui.setupUi(result_dialog)
+            result_dialog.move(x, y)
+            result_dialog.show()
+            result_dialog.exec_()
+
         except Exception as e:
             print(e)
 
@@ -675,7 +697,6 @@ class Result_Dialog(object):
         NewProjectDialog.setMinimumSize(QtCore.QSize(500, 300))
         NewProjectDialog.setMaximumSize(QtCore.QSize(500, 300))
         # set corner radius of dialog box
-        NewProjectDialog.setAttribute(Qt.WA_TranslucentBackground)
         # NewProjectDialog.setWindowOpacity(0.6)
         radius = 20
         NewProjectDialog.setStyleSheet("""
@@ -982,66 +1003,121 @@ class Result_Dialog(object):
         self.select_folder_dialog.exec()
 
     def save_result_image_to_db(self):
-        with open('Selected_location_crack.txt', 'r') as f:
-            selected_loc1 = f.read()
-        with open('Selected_type_crack.txt', 'r') as f:
-            selected_type1 = f.read()
-        with open('Selected_progression_crack.txt', 'r') as f:
-            selected_prog1 = f.read()
-        with open('Remarks_written.txt', 'r') as f:
-            remarks1 = f.read()
+        try:
+            with open('Selected_location_crack.txt', 'r') as f:
+                selected_loc1 = f.read()
+            with open('Selected_type_crack.txt', 'r') as f:
+                selected_type1 = f.read()
+            with open('Selected_progression_crack.txt', 'r') as f:
+                selected_prog1 = f.read()
+            with open('Remarks_written.txt', 'r') as f:
+                remarks1 = f.read()
 
-        print(selected_loc1, selected_type1, selected_prog1, remarks1)
-        file_path_Class = 'Predicted_Class_name.txt'
-        if os.path.isfile(file_path_Class):
-            with open(file_path_Class, 'r') as f:
-                status = f.read()
-                if status == 'No Detected Crack':
-                    selected_loc = 'No Detected Crack'
-                    selected_type = 'No Detected Crack'
-                    selected_prog = 'No Detected Crack'
-                    remarks = 'No Detected Crack'
-                else:
-                    selected_loc = selected_loc1
-                    selected_type = selected_type1
-                    selected_prog = selected_prog1
-                    remarks = remarks1
+            print(selected_loc1, selected_type1, selected_prog1, remarks1)
+            file_path_Class = 'Predicted_Class_name.txt'
+            if os.path.isfile(file_path_Class):
+                with open(file_path_Class, 'r') as f:
+                    status = f.read()
+                    if status == 'No Detected Crack':
+                        selected_loc = 'No Detected Crack'
+                        selected_type = 'No Detected Crack'
+                        selected_prog = 'No Detected Crack'
+                        remarks = 'No Detected Crack'
+                    else:
+                        selected_loc = selected_loc1
+                        selected_type = selected_type1
+                        selected_prog = selected_prog1
+                        remarks = remarks1
+        except Exception as e:
+            print(e)
+        try:
+            # Convert the QImage to a QPixmap
+            qimage = QImage(self.image.data, self.image.shape[1], self.image.shape[0], QImage.Format_RGB888)
 
-        # Convert the QImage to a QPixmap
-        qimage = QImage(self.image.data, self.image.shape[1], self.image.shape[0], QImage.Format_RGB888)
+            # Scale the image if it's larger than a certain size
+            max_size = 1000
+            if qimage.width() > max_size or qimage.height() > max_size:
+                qimage = qimage.scaled(max_size, max_size, Qt.KeepAspectRatio, Qt.SmoothTransformation)
 
-        # Scale the image if it's larger than a certain size
-        max_size = 1000
-        if qimage.width() > max_size or qimage.height() > max_size:
-            qimage = qimage.scaled(max_size, max_size, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+            pixmap = QPixmap.fromImage(qimage)
 
-        pixmap = QPixmap.fromImage(qimage)
-
-        # Convert the QPixmap to a bytes object
-        byte_array = QByteArray()
-        buffer = QBuffer(byte_array)
-        buffer.open(QIODevice.WriteOnly)
-        pixmap.save(buffer, "PNG")
-        image_data = bytes(byte_array)
-
+            # Convert the QPixmap to a bytes object
+            byte_array = QByteArray()
+            buffer = QBuffer(byte_array)
+            buffer.open(QIODevice.WriteOnly)
+            pixmap.save(buffer, "PNG")
+            image_data = bytes(byte_array)
+        except Exception as e:
+            print(e)
         self.folder_name = self.select_folder_dialog.sender().text()
         BASE_DIR = os.path.dirname(os.path.abspath(__file__))
         db_path = os.path.join(BASE_DIR, 'Projects.db')
 
         conn = sqlite3.connect(db_path)
         c = conn.cursor()
-        c.execute('''SELECT count(name) FROM sqlite_master WHERE type='table' AND name='Save_Files' ''')
-        if c.fetchone()[0] == 0:
-            c.execute('''CREATE TABLE Save_Files (id INTEGER PRIMARY KEY, folder_name TEXT, image BLOB, width TEXT, 
-            length TEXT, position TEXT, No_Crack TEXT, Crack TEXT, Status TEXT, selected_loc TEXT, selected_type 
-            TEXT, selected_prog TEXT, remarks TEXT, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)''')
+        # c.execute("DROP TABLE IF EXISTS Save_Files")
+        try:
+            c.execute('''SELECT count(name) FROM sqlite_master WHERE type='table' AND name='Save_Files' ''')
+            if c.fetchone()[0] == 0:
+                c.execute('''CREATE TABLE Save_Files (
+                                id INTEGER PRIMARY KEY, 
+                                folder_name TEXT, 
+                                image BLOB, 
+                                width TEXT, 
+                                length TEXT, 
+                                position TEXT, 
+                                No_Crack TEXT, 
+                                Crack TEXT, 
+                                Status TEXT, 
+                                selected_loc TEXT, 
+                                selected_type TEXT, 
+                                selected_prog TEXT, 
+                                remarks TEXT, 
+                                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                            )''')
 
-        sql = """INSERT INTO Save_Files (folder_name, image, width, length, position, No_Crack, Crack, Status, 
-                selected_loc , selected_type , selected_prog, remarks, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) """
+            sql = """INSERT INTO Save_Files (
+                        folder_name, 
+                        image, 
+                        width, 
+                        length, 
+                        position, 
+                        No_Crack, 
+                        Crack, 
+                        Status, 
+                        selected_loc, 
+                        selected_type, 
+                        selected_prog, 
+                        remarks, 
+                        created_at
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) """
 
-        c.execute(sql, (
-            self.folder_name, image_data, self.width, self.length, "horizontal", self.Neg_score, self.Pos_score,
-            self.status, selected_loc, selected_type, selected_prog, remarks))
+            # Check for null values
+            self.Neg_score = self.Neg_score if self.Neg_score else None
+            self.Pos_score = self.Pos_score if self.Pos_score else None
+            selected_loc = selected_loc if selected_loc else None
+            selected_type = selected_type if selected_type else None
+            selected_prog = selected_prog if selected_prog else None
+            remarks = remarks if remarks else None
+
+            c.execute(sql, (
+                self.folder_name,
+                image_data,
+                self.width,
+                self.length,
+                "horizontal",
+                self.Neg_score,
+                self.Pos_score,
+                self.status,
+                selected_loc,
+                selected_type,
+                selected_prog,
+                remarks,
+                None
+            ))
+
+        except Exception as e:
+            print(e)
         conn.commit()
         conn.close()
         self.show_dialog_success_save()
@@ -1054,8 +1130,6 @@ class Result_Dialog(object):
         NewFolderDialog.resize(500, 300)
         NewFolderDialog.setMinimumSize(QtCore.QSize(500, 300))
         NewFolderDialog.setMaximumSize(QtCore.QSize(500, 300))
-        # set corner radius of dialog box
-        NewFolderDialog.setAttribute(Qt.WA_TranslucentBackground)
         # NewFolderDialog.setWindowOpacity(0.6)
         radius = 20
         NewFolderDialog.setStyleSheet("""
@@ -1212,8 +1286,6 @@ class Result_Dialog(object):
         Dialog.resize(400, 300)
         Dialog.setMinimumSize(QtCore.QSize(400, 300))
         Dialog.setMaximumSize(QtCore.QSize(400, 300))
-        # set corner radius of dialog box
-        Dialog.setAttribute(Qt.WA_TranslucentBackground)
         timer = QTimer()
         timer.timeout.connect(Dialog.close)
         timer.start(1000)
@@ -1291,3 +1363,5 @@ class Result_Dialog(object):
         # Set the image on the label
         pixmap = QPixmap(q_image)
         self.result_Img.setPixmap(pixmap.scaled(label_size, Qt.KeepAspectRatio, Qt.SmoothTransformation))
+
+

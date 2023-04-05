@@ -156,7 +156,7 @@ class Ui_DialogSegment(object):
 
         Dialog.setWindowFlags(Qt.FramelessWindowHint)
         Dialog.setStyleSheet("#Dialog{\n"
-                             "background-color: qlineargradient(spread:pad, x1:0.045, y1:0.261, x2:0.988636, y2:0.955, stop:0 rgba(235, 209, 196, 255), stop:1 rgba(255, 255, 255, 255));\n"
+                             "background-color: rgb(255,255,255);"
                              "width: fit-content;\n"
                              "heigth: fit-content;\n"
                              "block-size: fit-content;\n"
@@ -568,4 +568,3 @@ class Ui_DialogSegment(object):
 
     def update_slider_value_label(self, value):
         self.thresholderNum.setText(str(value))
-

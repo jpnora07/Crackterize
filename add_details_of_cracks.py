@@ -3,11 +3,13 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QMessageBox
 
 
-class Ui_Dialog(object):
+class add_details_dialog(object):
     def setupUi(self, Dialog):
+        self.Dialog = Dialog
         Dialog.setObjectName("Dialog")
-        Dialog.resize(618, 548)
+        Dialog.setFixedSize(700, 600)
         Dialog.setWindowFlags(Qt.FramelessWindowHint)
+        Dialog.setStyleSheet("background-color:rgb(255,255,255);")
         self.verticalLayout_4 = QtWidgets.QVBoxLayout(Dialog)
         self.verticalLayout_4.setObjectName("verticalLayout_4")
         self.widget_16 = QtWidgets.QWidget(Dialog)
@@ -41,9 +43,9 @@ class Ui_Dialog(object):
         self.horizontalLayout_2 = QtWidgets.QHBoxLayout(self.widget_2)
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
         self.WithLogo = QtWidgets.QWidget(self.widget_2)
-        self.WithLogo.setMinimumSize(QtCore.QSize(564, 80))
+        self.WithLogo.setMinimumSize(QtCore.QSize(500, 80))
         self.WithLogo.setMaximumSize(QtCore.QSize(564, 80))
-        self.WithLogo.setStyleSheet("#WithLogo{border-image: url(images/Crackterize.png) 175 0 175 0 stretch;}")
+        self.WithLogo.setStyleSheet("#WithLogo{border-image: url(images/Crackterize.png) 400 0 400 0 stretch;}")
         self.WithLogo.setObjectName("WithLogo")
         self.horizontalLayout_3 = QtWidgets.QHBoxLayout(self.WithLogo)
         self.horizontalLayout_3.setObjectName("horizontalLayout_3")
@@ -367,37 +369,28 @@ class Ui_Dialog(object):
             with open('Selected_location_crack.txt', 'w') as f:
                 f.write(self.selected_loc)
         except AttributeError:
-            QMessageBox.critical(Dialog, "Error", "Please select location of crack.")
+            QMessageBox.critical(self.Dialog, "Error", "Please select location of crack.")
             error = True
         try:
             with open('Selected_type_crack.txt', 'w') as f:
                 f.write(self.selected_type)
         except AttributeError:
-            QMessageBox.critical(Dialog, "Error", "Please select type of crack.")
+            QMessageBox.critical(self.Dialog, "Error", "Please select type of crack.")
             error = True
         try:
             with open('Selected_progression_crack.txt', 'w') as f:
                 f.write(self.selected_prog)
         except AttributeError:
-            QMessageBox.critical(Dialog, "Error", "Please select progression of crack.")
+            QMessageBox.critical(self.Dialog, "Error", "Please select progression of crack.")
             error = True
         try:
             with open('Remarks_written.txt', 'w') as f:
                 f.write(self.notes.toPlainText())
         except Exception as e:
-            QMessageBox.critical(Dialog, "Error", str(e))
+            QMessageBox.critical(self.Dialog, "Error", str(e))
             error = True
 
         if not error:
-            Dialog.close()
+            self.Dialog.close()
 
 
-if __name__ == "__main__":
-    import sys
-
-    app = QtWidgets.QApplication(sys.argv)
-    Dialog = QtWidgets.QDialog()
-    ui = Ui_Dialog()
-    ui.setupUi(Dialog)
-    Dialog.show()
-    sys.exit(app.exec_())
