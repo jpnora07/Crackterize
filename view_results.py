@@ -1,37 +1,39 @@
 import os
 import sqlite3
 
+import tensorflow as tf
+from tensorflow import keras
+import cv2
+import numpy as np
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import QSize, Qt, QTimer, pyqtSignal, QObject
-from PyQt5.QtGui import QIcon
-from PyQt5.QtWidgets import QPushButton, QHBoxLayout, QVBoxLayout, QSizePolicy, QScrollArea, QWidget, QLabel
+from PyQt5.QtCore import QSize, Qt, QTimer, pyqtSignal, QObject, QByteArray
+from PyQt5.QtGui import QIcon, QPixmap
+from PyQt5.QtWidgets import QPushButton, QHBoxLayout, QVBoxLayout, QSizePolicy, QScrollArea, QWidget, QLabel, \
+    QFileDialog
 
-class Ui_MainWindow(object):
+from Segment_Image import Ui_DialogSegment
+from result import Result_Dialog
 
-    def setupUi(self, MainWindow):
+
+class view_result_dialog(object):
+
+    def setupUi(self, view_folder_dialog):
         # self.data_added.connect(self.refreshWidget)
-        MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(600, 489)
-        MainWindow.setMaximumSize(600, 489)
-        MainWindow.setWindowFlags(Qt.FramelessWindowHint)
-        MainWindow.setMinimumSize(600, 489)
-        MainWindow.setAttribute(Qt.WA_TranslucentBackground)
-        self.centralwidget = QtWidgets.QWidget(MainWindow)
-        radius = 30
-        self.centralwidget.setStyleSheet(
+        view_folder_dialog.setObjectName("MainWindow")
+        view_folder_dialog.resize(600, 489)
+        view_folder_dialog.setMaximumSize(600, 489)
+        view_folder_dialog.setWindowFlags(Qt.FramelessWindowHint)
+        view_folder_dialog.setMinimumSize(600, 489)
+        view_folder_dialog.setStyleSheet(
             """
             background:rgb(255, 255, 255);
-            border-top-left-radius:{0}px;
-            border-bottom-left-radius:{0}px;
-            border-top-right-radius:{0}px;
-            border-bottom-right-radius:{0}px;
-            """.format(radius)
+            """
         )
 
-        self.centralwidget.setObjectName("centralwidget")
-        self.verticalLayout = QtWidgets.QVBoxLayout(self.centralwidget)
+        view_folder_dialog.setObjectName("view_folder_dialog")
+        self.verticalLayout = QtWidgets.QVBoxLayout(view_folder_dialog)
         self.verticalLayout.setObjectName("verticalLayout")
-        self.widget = QtWidgets.QWidget(self.centralwidget)
+        self.widget = QtWidgets.QWidget(view_folder_dialog)
         self.widget.setObjectName("widget")
         self.horizontalLayout_2 = QtWidgets.QHBoxLayout(self.widget)
         self.horizontalLayout_2.setContentsMargins(20, -1, -1, -1)
@@ -75,15 +77,17 @@ class Ui_MainWindow(object):
                                           "}"
                                           )
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap("images/add_folder.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap("images/add.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.addfolder_icon.setIcon(icon)
-        self.addfolder_icon.setIconSize(QtCore.QSize(20, 20))
-        self.addfolder_icon.clicked.connect(self.creating_new_Location)
+        self.addfolder_icon.setIconSize(QtCore.QSize(10, 10))
+        self.addfolder_icon.setFixedSize(250,33)
+        #self.addfolder_icon.clicked.connect(self.creating_new_Location)
+        self.addfolder_icon.clicked.connect(self.add_new_image)
         self.addfolder_icon.setObjectName("addfolder_icon")
         self.horizontalLayout_2.addWidget(self.addfolder_icon)
 
         self.verticalLayout.addWidget(self.widget)
-        self.widget_3 = QtWidgets.QWidget(self.centralwidget)
+        self.widget_3 = QtWidgets.QWidget(view_folder_dialog)
         self.widget_3.setObjectName("widget_3")
         self.widget_3.setContentsMargins(10, 10, 10, 10)
         # buttons
@@ -91,14 +95,50 @@ class Ui_MainWindow(object):
         self.max_per_row = 4
 
         layout = QHBoxLayout()
-        button = QPushButton(self.widget_3)  # magaadd ng buttons
-        button.setIcon(QIcon("images/add_folder.png"))
-        button.setStyleSheet("QPushButton { border: none;padding-bottom: 58px;}")
-        button.setText('')
-        button.setIconSize(QSize(100, 70))
-        button.move(100, 105)
-        button.setFixedSize(120, 140)
+
+        widget = QtWidgets.QWidget(view_folder_dialog)
+        widget.setFixedSize(120,140)
+        widget.setObjectName("widget")
+        verticalLayout = QtWidgets.QVBoxLayout(widget)
+        verticalLayout.setContentsMargins(0, 0, 0, 0)
+        verticalLayout.setObjectName("verticalLayout")
+        button = QtWidgets.QPushButton(widget)
+        button.setMinimumSize(QtCore.QSize(90, 100))
+        button.setText("")
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap("images/add-image.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        button.setIcon(icon)
+        button.setIconSize(QtCore.QSize(90, 100))
+        button.setFlat(True)
+        button.setObjectName("pushButton")
         button.clicked.connect(self.creating_new_Location)
+        button.setStyleSheet(
+            "#pushButton{\n"
+            "color: rgb(255, 255, 255);\n"
+            "border : none;\n"
+            "background-color: white;\n"
+            "}\n"
+            "#pushButton:hover{\n"
+            "color: rgb(255, 255, 255);\n"
+            "border : none;\n"
+            "background-color: white;\n"
+            "}\n"
+            "")
+        verticalLayout.addWidget(button)
+        label = QtWidgets.QLabel('Upload Image', widget)
+        label.setStyleSheet("\n"
+                            "                font: 700 9pt \\\"Franklin Gothic Medium\\\";\n"
+                            "                font-family: \\\'Franklin Gothic Medium\\\';\n"
+                            "               font-style: normal;\n"
+                            "                font-weight: 200;\n"
+                            "                font-size: 13px;\n"
+                            "                line-height: 42px;\n"
+                            "                color: #664323;\n"
+                            "                padding-bottom: 5px;")
+        label.setAlignment(QtCore.Qt.AlignCenter)
+        label.setObjectName("label")
+        verticalLayout.addWidget(label)
+
         self.buttons.append(button)
 
         # create scroll area
@@ -139,28 +179,10 @@ class Ui_MainWindow(object):
                     }
                 """)
 
-        layout.addWidget(button)
+        layout.addWidget(widget)
         layout.setAlignment(Qt.AlignTop | Qt.AlignLeft)
         vbox = QVBoxLayout(self.scroll_widget)
         vbox.addLayout(layout)  # Enable wrapping
-
-        # create label for add button
-        self.add_label = QLabel(button)
-        self.add_label.setText('Add Image ')
-        self.add_label.setWordWrap(True)
-        self.add_label.move(0, 77)
-        self.add_label.resize(120, 77)
-        self.add_label.setStyleSheet(
-            "font: 700 9pt \"Franklin Gothic Medium\";\n"
-            "font-family: \'Franklin Gothic Medium\';\n"
-            "font-style: normal;\n"
-            "font-weight: 200;\n"
-            "font-size: 13px;\n"
-            "line-height: 42px;\n"
-            "text-align: center;\n"
-            "color: #664323;\n"
-            "padding-bottom: 10px;")
-        self.add_label.setAlignment(Qt.AlignTop | Qt.AlignCenter)
 
         main_layout = QVBoxLayout(self.widget_3)
         main_layout.addWidget(self.scroll)
@@ -168,7 +190,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout = QtWidgets.QHBoxLayout(self.widget_3)
         self.horizontalLayout.setObjectName("horizontalLayout")
         self.verticalLayout.addWidget(self.widget_3)
-        self.widget_2 = QtWidgets.QWidget(self.centralwidget)
+        self.widget_2 = QtWidgets.QWidget(view_folder_dialog)
         self.widget_2.setObjectName("widget_2")
         self.horizontalLayout_2 = QtWidgets.QHBoxLayout(self.widget_2)
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
@@ -208,16 +230,96 @@ class Ui_MainWindow(object):
                                 "}\n"
                                 "")
         self.back.setFlat(False)
-        self.back.clicked.connect(MainWindow.close)
+        self.back.clicked.connect(view_folder_dialog.close)
         self.back.setObjectName("back")
         self.horizontalLayout_3.addWidget(self.back)
         self.horizontalLayout_2.addWidget(self.frame)
         self.verticalLayout.addWidget(self.widget_2)
-        MainWindow.setCentralWidget(self.centralwidget)
-        QtCore.QMetaObject.connectSlotsByName(MainWindow)
+        QtCore.QMetaObject.connectSlotsByName(view_folder_dialog)
 
         # Calling a function that fetch the folders of project
         self.fetch_folders_of_projects()
+
+    def add_new_image(self):
+        image_path = self.open_file_dialog()
+        image = cv2.imread(image_path)
+        # Save the image to a temporary file
+        temp_file_path = 'temp_image_original.jpg'
+        cv2.imwrite(temp_file_path, image)
+        # Check if the image is valid
+        if image is not None:
+            self.imageCnn = cv2.resize(image, (224, 224))
+            self.imageCnn = np.expand_dims(self.imageCnn, axis=0)
+
+            self.modelCnn = keras.models.load_model('resnet_model_cnn.h5')
+            predictions = self.modelCnn.predict(self.imageCnn)
+            score = tf.nn.softmax(predictions)
+            class_names = ['No Detected Crack', 'Contains Crack']
+
+            # Get the index of the predicted class
+            predicted_class_index = np.argmax(score, axis=1)[0]
+
+            # Get the name and score of the predicted class
+            predicted_class_name = class_names[predicted_class_index]
+            predicted_class_score = 100 * score[0][predicted_class_index]
+
+            # Print the results
+            print(f"The image is classified as {predicted_class_name} with a score of {predicted_class_score:.2f}.")
+
+            if predicted_class_index == 0:
+                predicted_Negative_score = predicted_class_score
+                predicted_Positive_score = 100 - predicted_Negative_score
+            else:
+                predicted_Positive_score = predicted_class_score
+                predicted_Negative_score = 100 - predicted_Positive_score
+
+            print(f"Positive crack probability: {predicted_Positive_score:.2f}%")
+            print(f"Negative crack probability: {predicted_Negative_score:.2f}%")
+
+            Negative_score = f"{predicted_Negative_score:.2f}%"
+            Positive_score = f"{predicted_Positive_score:.2f}%"
+            with open('Negative_score.txt', 'w') as f:
+                f.write(Negative_score)
+            with open('Positive_score.txt', 'w') as f:
+                f.write(Positive_score)
+            with open('Predicted_Class_name.txt', 'w') as f:
+                f.write(predicted_class_name)
+            if np.argmax(score) == 0:
+                try:
+                    with open('Predicted_width.txt', 'w') as f:
+                        f.write("0 mm")
+                    with open('Predicted_height.txt', 'w') as f:
+                        f.write("0 cm")
+                except FileNotFoundError:
+                    print("The file does not exist.")
+                result_dialog = QtWidgets.QDialog(self.Mainwindow)
+                ui = Result_Dialog()
+                ui.setupUi(result_dialog)
+                x = (self.Mainwindow.width() - result_dialog.width()) // 2
+                y = (self.Mainwindow.height() - result_dialog.height()) // 2
+                result_dialog.move(x, y)
+                result_dialog.exec_()
+
+            else:
+
+                segment_dialog = QtWidgets.QDialog(self.Mainwindow)
+                ui = Ui_DialogSegment()
+                ui.setupUi(segment_dialog)
+                x = (self.Mainwindow.width() - segment_dialog.width()) // 2
+                y = (self.Mainwindow.height() - segment_dialog.height()) // 2
+                segment_dialog.move(x, y)
+                segment_dialog.exec_()
+
+        else:
+            print("Invalid image format")
+
+    def open_file_dialog(self):
+        file_dialog = QFileDialog()
+        file_dialog.setNameFilter('Images (*.png *.jpg *.bmp)')
+        file_dialog.setFileMode(QFileDialog.ExistingFile)
+        if file_dialog.exec_():
+            selected_files = file_dialog.selectedFiles()
+            return selected_files[0]
 
     def creating_new_Location(self):
         # Create dialog box
@@ -384,42 +486,72 @@ class Ui_MainWindow(object):
 
     def add_button_folder(self, data):
         for row in data:
-            # Create a new button for each row in the fetched data
-            self.btn = QPushButton(self.scroll_widget)
-            self.btn.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
-            self.btn.setIcon(QIcon("images/folder.png"))
-            self.btn.setStyleSheet(
-                "QPushButton {border: none; font-size: 16px; text-align: center;padding-bottom: 58px;}")
+            button_name = str(row[8])
+            image = row[2]
+            # Convert the image data to QPixmap
+            byte_array = QByteArray(image)
+            pixmap = QPixmap()
+            pixmap.loadFromData(byte_array)
+            print(image)
+            widget = QtWidgets.QWidget(self.scroll_widget)
+            widget.setFixedSize(120,140)
+            widget.setObjectName("widget")
+            verticalLayout = QtWidgets.QVBoxLayout(widget)
+            verticalLayout.setContentsMargins(0, 0, 0, 0)
+            verticalLayout.setObjectName("verticalLayout")
+            btn = QtWidgets.QPushButton(widget)
+            btn.setMinimumSize(QtCore.QSize(90, 100))
+            #btn.setText(button_name)
+            icon = QtGui.QIcon()
+            icon.addPixmap(QtGui.QPixmap(pixmap), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+            btn.setIcon(icon)
+            btn.setIconSize(QtCore.QSize(90, 100))
+            btn.setFlat(True)
+            btn.setObjectName("pushButton")
+            btn.clicked.connect(lambda checked, button=btn: self.view_folder(button))
+            btn.setStyleSheet(
 
-            self.btn.setIconSize(QSize(90, 100))
-            self.btn.setFixedSize(120, 140)
-            self.buttons.append(self.btn)
+                "#pushButton{\n"
+                "color: rgb(255, 255, 255);\n"
+                "border : none;\n"
+                "background-color: white;\n"
+                "}\n"
+                "#pushButton:hover{\n"
+                "color: rgb(255, 255, 255);\n"
+                "border : none;\n"
+                "background-color: white;\n"
+                "}\n"
+                "")
+            verticalLayout.addWidget(btn)
+            btn_label = QtWidgets.QLabel(button_name, widget)
+            btn_label.setWordWrap(True)
+            btn_label.setStyleSheet("\n"
+                                    "                font: 700 9pt \\\"Franklin Gothic Medium\\\";\n"
+                                    "                font-family: \\\'Franklin Gothic Medium\\\';\n"
+                                    "               font-style: normal;\n"
+                                    "                font-weight: 200;\n"
+                                    "                font-size: 13px;\n"
+                                    "                line-height: 42px;\n"
+                                    "                color: #664323;\n"
+                                    "                padding-bottom: 5px;")
+            btn_label.setAlignment(QtCore.Qt.AlignCenter)
+            btn_label.setObjectName("label")
+            verticalLayout.addWidget(btn_label)
+            self.buttons.append(btn)
 
             # add to layout
             if len(self.buttons) % self.max_per_row == 1:
-                self.hbox = QHBoxLayout()
-                self.scroll_widget.layout().insertLayout(0, self.hbox)
+                hbox = QHBoxLayout()
+                self.scroll_widget.layout().insertLayout(0, hbox)
             else:
-                self.hbox = self.scroll_widget.layout().itemAt(0).layout()
+                hbox = self.scroll_widget.layout().itemAt(0).layout()
 
-            self.hbox.insertWidget(0, self.btn)
-            self.hbox.setAlignment(Qt.AlignTop | Qt.AlignLeft)
+            hbox.insertWidget(0, widget)
+            hbox.setAlignment(Qt.AlignTop | Qt.AlignLeft)
 
-            # Set the label text of the button
-            btn_label = QLabel(str(row[2]), self.btn)
-            btn_label.setAlignment(Qt.AlignTop | Qt.AlignCenter)
-            btn_label.move(0, 75)
-            btn_label.resize(120, 77)
-            btn_label.setWordWrap(True)
-            btn_label.setStyleSheet(
-                "font: 700 9pt \"Franklin Gothic Medium\";\n"
-                "font-family: \'Franklin Gothic Medium\';\n"
-                "font-style: normal;\n"
-                "font-weight: 200;\n"
-                "font-size: 13px;\n"
-                "line-height: 42px;\n"
-                "color: #664323;\n"
-                "padding-bottom: 5px;")
+    def view_folder(self, button):
+        folder_name = button.text()
+        print(folder_name)
 
     def show_dialog_empty_text_error(self):
         # Create dialog box
@@ -496,33 +628,31 @@ class Ui_MainWindow(object):
         Dialog.exec()
 
     def fetch_folders_of_projects(self):
+        with open('selected_folder_vrFile.txt', 'r') as f:
+            folder_name = f.read()
         BASE_DIR = os.path.dirname(os.path.abspath(__file__))
         db_path = os.path.join(BASE_DIR, 'Projects.db')
         # Create a connection to a SQLite database or create it if it doesn't exist
         self.conn = sqlite3.connect(db_path)
         self.c = self.conn.cursor()
         # create a table if it doesn't exist
-        self.c.execute('''CREATE TABLE IF NOT EXISTS Location_Folder
-                                             (id INTEGER PRIMARY KEY, project_name TEXT, folder_name TEXT, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)''')
-
+        self.c.execute('''SELECT count(name) FROM sqlite_master WHERE type='table' AND name='Save_Files' ''')
+        if self.c.fetchone()[0] == 0:
+            self.c.execute('''CREATE TABLE Save_Files (id INTEGER PRIMARY KEY, folder_name TEXT, image BLOB, width TEXT, 
+            length TEXT, position TEXT, No_Crack TEXT, Crack TEXT, Status TEXT, selected_loc TEXT, selected_type 
+            TEXT, selected_prog TEXT, remarks TEXT created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)''')
         # fetch data from the database
-        self.c.execute("SELECT * FROM Location_Folder WHERE project_name = ?", (self.selected_item,))
+        self.c.execute("SELECT * FROM Save_Files WHERE folder_name = ?", (folder_name,))
         data = self.c.fetchall()
+        print(data)
         self.add_button_folder(data)
-
-
-    def fetch_location_folder_by_id(self, folder_id):
-        self.c.execute("SELECT * FROM Location_Folder WHERE id=?", (folder_id,))
-        row = self.c.fetchone()
-        return row
-
 
 if __name__ == "__main__":
     import sys
 
     app = QtWidgets.QApplication(sys.argv)
-    MainWindow = QtWidgets.QMainWindow()
-    ui = Ui_MainWindow()
-    ui.setupUi(MainWindow)
-    MainWindow.show()
+    Dialog = QtWidgets.QDialog()
+    ui = view_result_dialog()
+    ui.setupUi(Dialog)
+    Dialog.show()
     sys.exit(app.exec_())

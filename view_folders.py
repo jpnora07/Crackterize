@@ -6,11 +6,14 @@ from PyQt5.QtCore import QSize, Qt, QTimer, pyqtSignal, QObject
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QPushButton, QHBoxLayout, QVBoxLayout, QSizePolicy, QScrollArea, QWidget, QLabel
 
+from view_results import view_result_dialog
+
 
 class view_folder_dialog(object):
 
     def setupUi(self, view_folder_dialog):
         # self.data_added.connect(self.refreshWidget)
+        self.view_folder_dialog = view_folder_dialog
         view_folder_dialog.setObjectName("MainWindow")
         view_folder_dialog.resize(600, 489)
         view_folder_dialog.setMaximumSize(600, 489)
@@ -85,14 +88,6 @@ class view_folder_dialog(object):
         self.max_per_row = 4
 
         layout = QHBoxLayout()
-        button = QPushButton(self.widget_3)  # magaadd ng buttons
-        button.setIcon(QIcon("images/add_folder.png"))
-        button.setStyleSheet("QPushButton { border: none;padding-bottom: 58px;}")
-        button.setText('')
-        button.setIconSize(QSize(100, 70))
-        button.move(100, 105)
-        button.setFixedSize(120, 140)
-        button.clicked.connect(self.creating_new_Location)
 
         widget = QtWidgets.QWidget(Dialog)
         widget.setGeometry(QtCore.QRect(100, 50, 140, 140))
@@ -110,9 +105,20 @@ class view_folder_dialog(object):
         button.setFlat(True)
         button.setObjectName("pushButton")
         button.clicked.connect(self.creating_new_Location)
-        button.setStyleSheet('''''')
+        button.setStyleSheet(
+            "#pushButton{\n"
+            "color: rgb(255, 255, 255);\n"
+            "border : none;\n"
+            "background-color: white;\n"
+            "}\n"
+            "#pushButton:hover{\n"
+            "color: rgb(255, 255, 255);\n"
+            "border : none;\n"
+            "background-color: white;\n"
+            "}\n"
+            "")
         verticalLayout.addWidget(button)
-        label = QtWidgets.QLabel('Create New Folder ',widget)
+        label = QtWidgets.QLabel('Create New Folder ', widget)
         label.setStyleSheet("\n"
                             "                font: 700 9pt \\\"Franklin Gothic Medium\\\";\n"
                             "                font-family: \\\'Franklin Gothic Medium\\\';\n"
@@ -170,7 +176,6 @@ class view_folder_dialog(object):
         layout.setAlignment(Qt.AlignTop | Qt.AlignLeft)
         vbox = QVBoxLayout(self.scroll_widget)
         vbox.addLayout(layout)  # Enable wrapping
-
 
         main_layout = QVBoxLayout(self.widget_3)
         main_layout.addWidget(self.scroll)
@@ -393,7 +398,7 @@ class view_folder_dialog(object):
 
     def add_button_folder(self, data):
         for row in data:
-
+            button_name = str(row[2])
             widget = QtWidgets.QWidget(self.scroll_widget)
             widget.setGeometry(QtCore.QRect(100, 50, 140, 140))
             widget.setObjectName("widget")
@@ -402,15 +407,28 @@ class view_folder_dialog(object):
             verticalLayout.setObjectName("verticalLayout")
             btn = QtWidgets.QPushButton(widget)
             btn.setMinimumSize(QtCore.QSize(90, 100))
-            btn.setText("")
+            btn.setText(button_name)
             icon = QtGui.QIcon()
             icon.addPixmap(QtGui.QPixmap("images/folder.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
             btn.setIcon(icon)
             btn.setIconSize(QtCore.QSize(90, 100))
             btn.setFlat(True)
             btn.setObjectName("pushButton")
+            btn.clicked.connect(lambda checked, button=btn: self.view_folder(button))
+            btn.setStyleSheet(
+
+                "#pushButton{\n"
+                "color: rgb(255, 255, 255);\n"
+                "border : none;\n"
+                "background-color: white;\n"
+                "}\n"
+                "#pushButton:hover{\n"
+                "color: rgb(255, 255, 255);\n"
+                "border : none;\n"
+                "background-color: white;\n"
+                "}\n"
+                "")
             verticalLayout.addWidget(btn)
-            button_name = str(row[2])
             btn_label = QtWidgets.QLabel(button_name, widget)
             btn_label.setStyleSheet("\n"
                                     "                font: 700 9pt \\\"Franklin Gothic Medium\\\";\n"
@@ -436,9 +454,24 @@ class view_folder_dialog(object):
             hbox.insertWidget(0, widget)
             hbox.setAlignment(Qt.AlignTop | Qt.AlignLeft)
 
-    def save_result_image_to_db(self, button):
+    def view_folder(self, button):
         folder_name = button.text()
-        print(folder_name)
+        with open('selected_folder_vrFile.txt', 'w') as f:
+                f.write(folder_name)
+        try:
+            result_dialog = QtWidgets.QDialog(self.view_folder_dialog)
+            x = (self.view_folder_dialog.width() - self.view_folder_dialog.width()) // 2
+            y = (self.view_folder_dialog.height() - self.view_folder_dialog.height()) // 2
+            ui = view_result_dialog()
+
+            ui.setupUi(result_dialog)
+            result_dialog.move(x, y)
+            result_dialog.show()
+            result_dialog.exec_()
+            print(folder_name)
+
+        except Exception as e:
+            print(e)
 
     def show_dialog_empty_text_error(self):
         # Create dialog box
