@@ -111,7 +111,7 @@ if __name__ == '__main__':
         }
 
         QFrame {
-            background-color: #fce8d0;
+            background-color: #f3e9e2;
             color: rgb(222,193,179);
         }
 

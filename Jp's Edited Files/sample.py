@@ -1,139 +1,202 @@
-import sys
-import time
-from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QProgressBar, QLabel, QFrame, QHBoxLayout, QVBoxLayout
-from PyQt5.QtCore import Qt, QTimer
+from math import ceil
+
+from PyQt5.QtCore import QTimer, QRect, Qt, pyqtSlot
+from PyQt5.QtGui import QPainter, QColor
+from PyQt5.QtWidgets import QApplication, QDialog, QWidget
+
+"""from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *"""
 
 
-class SplashScreen(QWidget):
-    def __init__(self):
-        super().__init__()
-        self.setWindowTitle('Spash Screen Example')
-        self.setFixedSize(1100, 500)
-        self.setWindowFlag(Qt.FramelessWindowHint)
-        self.setAttribute(Qt.WA_TranslucentBackground)
 
-        self.counter = 0
-        self.n = 300  # total instance
+class QtWaitingSpinner(QWidget):
+    mColor = QColor(Qt.gray)
+    mRoundness = 100.0
+    mMinimumTrailOpacity = 31.4159265358979323846
+    mTrailFadePercentage = 50.0
+    mRevolutionsPerSecond = 1.57079632679489661923
+    mNumberOfLines = 20
+    mLineLength = 10
+    mLineWidth = 2
+    mInnerRadius = 20
+    mCurrentCounter = 0
+    mIsSpinning = False
 
-        self.initUI()
+    def __init__(self, centerOnParent=True, disableParentWhenSpinning=True, *args, **kwargs):
+        QWidget.__init__(self, *args, **kwargs)
+        self.mCenterOnParent = centerOnParent
+        self.mDisableParentWhenSpinning = disableParentWhenSpinning
+        self.initialize()
 
-        self.timer = QTimer()
-        self.timer.timeout.connect(self.loading)
-        self.timer.start(30)
+    def initialize(self):
+        self.timer = QTimer(self)
+        self.timer.timeout.connect(self.rotate)
+        self.updateSize()
+        self.updateTimer()
+        self.hide()
 
-    def initUI(self):
-        layout = QVBoxLayout()
-        self.setLayout(layout)
+    @pyqtSlot()
+    def rotate(self):
+        self.mCurrentCounter += 1
+        if self.mCurrentCounter > self.numberOfLines():
+            self.mCurrentCounter = 0
+        self.update()
 
-        self.frame = QFrame()
-        layout.addWidget(self.frame)
+    def updateSize(self):
+        size = (self.mInnerRadius + self.mLineLength) * 2
+        self.setFixedSize(size, size)
 
-        self.labelTitle = QLabel(self.frame)
-        self.labelTitle.setObjectName('LabelTitle')
+    def updateTimer(self):
+        self.timer.setInterval(1000 / (self.mNumberOfLines * self.mRevolutionsPerSecond))
 
-        # center labels
-        self.labelTitle.resize(self.width() - 10, 150)
-        self.labelTitle.move(0, 40)  # x, y
-        self.labelTitle.setText('Splash Screen')
-        self.labelTitle.setAlignment(Qt.AlignCenter)
+    def updatePosition(self):
+        if self.parentWidget() and self.mCenterOnParent:
+            self.move(self.parentWidget().width() / 2 - self.width() / 2,
+                      self.parentWidget().height() / 2 - self.height() / 2)
 
-        self.labelDescription = QLabel(self.frame)
-        self.labelDescription.resize(self.width() - 10, 50)
-        self.labelDescription.move(0, self.labelTitle.height())
-        self.labelDescription.setObjectName('LabelDesc')
-        self.labelDescription.setText('<strong>Working on Task #1</strong>')
-        self.labelDescription.setAlignment(Qt.AlignCenter)
+    def lineCountDistanceFromPrimary(self, current, primary, totalNrOfLines):
+        distance = primary - current
+        if distance < 0:
+            distance += totalNrOfLines
+        return distance
 
-        self.progressBar = QProgressBar(self.frame)
-        self.progressBar.resize(self.width() - 200 - 10, 50)
-        self.progressBar.move(100, self.labelDescription.y() + 130)
-        self.progressBar.setAlignment(Qt.AlignCenter)
-        self.progressBar.setFormat('%p%')
-        self.progressBar.setTextVisible(True)
-        self.progressBar.setRange(0, self.n)
-        self.progressBar.setValue(20)
+    def currentLineColor(self, countDistance, totalNrOfLines, trailFadePerc, minOpacity, color):
+        if countDistance == 0:
+            return color
 
-        self.labelLoading = QLabel(self.frame)
-        self.labelLoading.resize(self.width() - 10, 50)
-        self.labelLoading.move(0, self.progressBar.y() + 70)
-        self.labelLoading.setObjectName('LabelLoading')
-        self.labelLoading.setAlignment(Qt.AlignCenter)
-        self.labelLoading.setText('loading...')
+        minAlphaF = minOpacity / 100.0
 
-    def loading(self):
-        self.progressBar.setValue(self.counter)
+        distanceThreshold = ceil((totalNrOfLines - 1) * trailFadePerc / 100.0)
+        if countDistance > distanceThreshold:
+            color.setAlphaF(minAlphaF)
 
-        if self.counter == int(self.n * 0.3):
-            self.labelDescription.setText('<strong>Working on Task #2</strong>')
-        elif self.counter == int(self.n * 0.6):
-            self.labelDescription.setText('<strong>Working on Task #3</strong>')
-        elif self.counter >= self.n:
+        else:
+            alphaDiff = self.mColor.alphaF() - minAlphaF
+            gradient = alphaDiff / distanceThreshold + 1.0
+            resultAlpha = color.alphaF() - gradient * countDistance
+            resultAlpha = min(1.0, max(0.0, resultAlpha))
+            color.setAlphaF(resultAlpha)
+        return color
+
+    def paintEvent(self, event):
+        self.updatePosition()
+        painter = QPainter(self)
+        painter.fillRect(self.rect(), Qt.transparent)
+        painter.setRenderHint(QPainter.Antialiasing, True)
+        if self.mCurrentCounter > self.mNumberOfLines:
+            self.mCurrentCounter = 0
+        painter.setPen(Qt.NoPen)
+
+        for i in range(self.mNumberOfLines):
+            painter.save()
+            painter.translate(self.mInnerRadius + self.mLineLength,
+                              self.mInnerRadius + self.mLineLength)
+            rotateAngle = 360.0 * i / self.mNumberOfLines
+            painter.rotate(rotateAngle)
+            painter.translate(self.mInnerRadius, 0)
+            distance = self.lineCountDistanceFromPrimary(i, self.mCurrentCounter,
+                                                         self.mNumberOfLines)
+            color = self.currentLineColor(distance, self.mNumberOfLines,
+                                          self.mTrailFadePercentage, self.mMinimumTrailOpacity, self.mColor)
+            painter.setBrush(color)
+            painter.drawRoundedRect(QRect(0, -self.mLineWidth // 2, self.mLineLength, self.mLineLength),
+                                    self.mRoundness, Qt.RelativeSize)
+            painter.restore()
+
+    def start(self):
+        self.updatePosition()
+        self.mIsSpinning = True
+        self.show()
+
+        if self.parentWidget() and self.mDisableParentWhenSpinning:
+            self.parentWidget().setEnabled(False)
+
+        if not self.timer.isActive():
+            self.timer.start()
+            self.mCurrentCounter = 0
+
+    def stop(self):
+        self.mIsSpinning = False
+        self.hide()
+
+        if self.parentWidget() and self.mDisableParentWhenSpinning:
+            self.parentWidget().setEnabled(True)
+
+        if self.timer.isActive():
             self.timer.stop()
-            self.close()
+            self.mCurrentCounter = 0
 
-            time.sleep(1)
+    def setNumberOfLines(self, lines):
+        self.mNumberOfLines = lines
+        self.updateTimer()
 
-            self.myApp = MyApp()
-            self.myApp.show()
+    def setLineLength(self, length):
+        self.mLineLength = length
+        self.updateSize()
 
-        self.counter += 1
+    def setLineWidth(self, width):
+        self.mLineWidth = width
+        self.updateSize()
 
+    def setInnerRadius(self, radius):
+        self.mInnerRadius = radius
+        self.updateSize()
 
-class MyApp(QWidget):
-    def __init__(self):
-        super().__init__()
-        self.window_width, self.window_height = 1200, 800
-        self.setMinimumSize(self.window_width, self.window_height)
+    def color(self):
+        return self.mColor
 
-        layout = QVBoxLayout()
-        self.setLayout(layout)
+    def roundness(self):
+        return self.mRoundness
+
+    def minimumTrailOpacity(self):
+        return self.mMinimumTrailOpacity
+
+    def trailFadePercentage(self):
+        return self.mTrailFadePercentage
+
+    def revolutionsPersSecond(self):
+        return self.mRevolutionsPerSecond
+
+    def numberOfLines(self):
+        return self.mNumberOfLines
+
+    def lineLength(self):
+        return self.mLineLength
+
+    def lineWidth(self):
+        return self.mLineWidth
+
+    def innerRadius(self):
+        return self.mInnerRadius
+
+    def isSpinning(self):
+        return self.mIsSpinning
+
+    def setRoundness(self, roundness):
+        self.mRoundness = min(0.0, max(100, roundness))
+
+    def setColor(self, color):
+        self.mColor = color
+
+    def setRevolutionsPerSecond(self, revolutionsPerSecond):
+        self.mRevolutionsPerSecond = revolutionsPerSecond
+        self.updateTimer()
+
+    def setTrailFadePercentage(self, trail):
+        self.mTrailFadePercentage = trail
+
+    def setMinimumTrailOpacity(self, minimumTrailOpacity):
+        self.mMinimumTrailOpacity = minimumTrailOpacity
 
 
 if __name__ == '__main__':
-    # don't auto scale when drag app to a different monitor.
-    # QApplication.setAttribute(Qt.HighDpiScaleFactorRoundingPolicy.PassThrough)
+    import sys
 
     app = QApplication(sys.argv)
-    app.setStyleSheet('''
-        #LabelTitle {
-            font-size: 60px;
-            color: #93deed;
-        }
-
-        #LabelDesc {
-            font-size: 30px;
-            color: #c2ced1;
-        }
-
-        #LabelLoading {
-            font-size: 30px;
-            color: #e8e8eb;
-        }
-
-        QFrame {
-            background-color: #2F4454;
-            color: rgb(220, 220, 220);
-        }
-
-        QProgressBar {
-            background-color: #DA7B93;
-            color: rgb(200, 200, 200);
-            border-style: none;
-            border-radius: 10px;
-            text-align: center;
-            font-size: 30px;
-        }
-
-        QProgressBar::chunk {
-            border-radius: 10px;
-            background-color: qlineargradient(spread:pad x1:0, x2:1, y1:0.511364, y2:0.523, stop:0 #1C3334, stop:1 #376E6F);
-        }
-    ''')
-
-    splash = SplashScreen()
-    splash.show()
-
-    try:
-        sys.exit(app.exec_())
-    except SystemExit:
-        print('Closing Window...')
+    dial = QDialog()
+    w = QtWaitingSpinner(dial)
+    dial.show()
+    w.start()
+    QTimer.singleShot(1000, w.stop)
+    sys.exit(app.exec_())

@@ -682,76 +682,80 @@ class Ui_MainWindow(object):
 
     def upload_image(self):
         image_path = self.open_file_dialog()
-        image = cv2.imread(image_path)
-        # Save the image to a temporary file
-        temp_file_path = 'temp_image_original.jpg'
-        cv2.imwrite(temp_file_path, image)
-        # Check if the image is valid
-        if image is not None:
-            self.imageCnn = cv2.resize(image, (224, 224))
-            self.imageCnn = np.expand_dims(self.imageCnn, axis=0)
+        try:
+            image = cv2.imread(image_path)
+            # Save the image to a temporary file
+            temp_file_path = 'temp_image_original.jpg'
+            cv2.imwrite(temp_file_path, image)
+            # Check if the image is valid
+            if image is not None:
+                self.imageCnn = cv2.resize(image, (224, 224))
+                self.imageCnn = np.expand_dims(self.imageCnn, axis=0)
 
-            self.modelCnn = keras.models.load_model('resnet_model_cnn.h5')
-            predictions = self.modelCnn.predict(self.imageCnn)
-            score = tf.nn.softmax(predictions)
-            class_names = ['No Detected Crack', 'Contains Crack']
+                self.modelCnn = keras.models.load_model('resnet_model_cnn.h5')
+                predictions = self.modelCnn.predict(self.imageCnn)
+                score = tf.nn.softmax(predictions)
+                class_names = ['No Detected Crack', 'Contains Crack']
 
-            # Get the index of the predicted class
-            predicted_class_index = np.argmax(score, axis=1)[0]
+                # Get the index of the predicted class
+                predicted_class_index = np.argmax(score, axis=1)[0]
 
-            # Get the name and score of the predicted class
-            predicted_class_name = class_names[predicted_class_index]
-            predicted_class_score = 100 * score[0][predicted_class_index]
+                # Get the name and score of the predicted class
+                predicted_class_name = class_names[predicted_class_index]
+                predicted_class_score = 100 * score[0][predicted_class_index]
 
-            # Print the results
-            print(f"The image is classified as {predicted_class_name} with a score of {predicted_class_score:.2f}.")
+                # Print the results
+                print(f"The image is classified as {predicted_class_name} with a score of {predicted_class_score:.2f}.")
 
-            if predicted_class_index == 0:
-                predicted_Negative_score = predicted_class_score
-                predicted_Positive_score = 100 - predicted_Negative_score
+                if predicted_class_index == 0:
+                    predicted_Negative_score = predicted_class_score
+                    predicted_Positive_score = 100 - predicted_Negative_score
+                else:
+                    predicted_Positive_score = predicted_class_score
+                    predicted_Negative_score = 100 - predicted_Positive_score
+
+                print(f"Positive crack probability: {predicted_Positive_score:.2f}%")
+                print(f"Negative crack probability: {predicted_Negative_score:.2f}%")
+
+                Negative_score = f"{predicted_Negative_score:.2f}%"
+                Positive_score = f"{predicted_Positive_score:.2f}%"
+                with open('Negative_score.txt', 'w') as f:
+                    f.write(Negative_score)
+                with open('Positive_score.txt', 'w') as f:
+                    f.write(Positive_score)
+                with open('Predicted_Class_name.txt', 'w') as f:
+                    f.write(predicted_class_name)
+                if np.argmax(score) == 0:
+                    try:
+                        with open('Predicted_width.txt', 'w') as f:
+                            f.write("0 mm")
+                        with open('Predicted_height.txt', 'w') as f:
+                            f.write("0 cm")
+                    except FileNotFoundError:
+                        print("The file does not exist.")
+                    result_dialog = QtWidgets.QDialog(self.Mainwindow)
+                    ui = Result_Dialog()
+                    ui.setupUi(result_dialog)
+                    x = (self.Mainwindow.width() - result_dialog.width()) // 2
+                    y = (self.Mainwindow.height() - result_dialog.height()) // 2
+                    result_dialog.move(x, y)
+                    result_dialog.exec_()
+
+                else:
+
+                    segment_dialog = QtWidgets.QDialog(self.Mainwindow)
+                    ui = Ui_DialogSegment()
+                    ui.setupUi(segment_dialog)
+                    x = (self.Mainwindow.width() - segment_dialog.width()) // 2
+                    y = (self.Mainwindow.height() - segment_dialog.height()) // 2
+                    segment_dialog.move(x, y)
+                    segment_dialog.exec_()
+
             else:
-                predicted_Positive_score = predicted_class_score
-                predicted_Negative_score = 100 - predicted_Positive_score
+                print("Invalid image format")
 
-            print(f"Positive crack probability: {predicted_Positive_score:.2f}%")
-            print(f"Negative crack probability: {predicted_Negative_score:.2f}%")
-
-            Negative_score = f"{predicted_Negative_score:.2f}%"
-            Positive_score = f"{predicted_Positive_score:.2f}%"
-            with open('Negative_score.txt', 'w') as f:
-                f.write(Negative_score)
-            with open('Positive_score.txt', 'w') as f:
-                f.write(Positive_score)
-            with open('Predicted_Class_name.txt', 'w') as f:
-                f.write(predicted_class_name)
-            if np.argmax(score) == 0:
-                try:
-                    with open('Predicted_width.txt', 'w') as f:
-                        f.write("0 mm")
-                    with open('Predicted_height.txt', 'w') as f:
-                        f.write("0 cm")
-                except FileNotFoundError:
-                    print("The file does not exist.")
-                result_dialog = QtWidgets.QDialog(self.Mainwindow)
-                ui = Result_Dialog()
-                ui.setupUi(result_dialog)
-                x = (self.Mainwindow.width() - result_dialog.width()) // 2
-                y = (self.Mainwindow.height() - result_dialog.height()) // 2
-                result_dialog.move(x, y)
-                result_dialog.exec_()
-
-            else:
-
-                segment_dialog = QtWidgets.QDialog(self.Mainwindow)
-                ui = Ui_DialogSegment()
-                ui.setupUi(segment_dialog)
-                x = (self.Mainwindow.width() - segment_dialog.width()) // 2
-                y = (self.Mainwindow.height() - segment_dialog.height()) // 2
-                segment_dialog.move(x, y)
-                segment_dialog.exec_()
-
-        else:
-            print("Invalid image format")
+        except Exception as e:
+            print(e)
 
     def open_file_dialog(self):
         file_dialog = QFileDialog()
