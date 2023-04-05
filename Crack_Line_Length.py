@@ -2,6 +2,7 @@ import math
 import sys
 import numpy as np
 import cv2
+from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtCore import Qt, QRectF, QPoint
 from PyQt5.QtGui import QImage, QPixmap, QPainter, QPen, QCursor
 from PyQt5.QtWidgets import QMainWindow, QWidget, QLabel, QGraphicsView, QGraphicsScene, QSlider, QGridLayout, \
@@ -83,12 +84,17 @@ class DrawingWidget(QLabel):
             self.update()  # Redraw the image
 
 
-class Line_length(QDialog):
-    def __init__(self, parent=None):
-        super().__init__(parent)
-        self.setWindowFlags(Qt.CustomizeWindowHint | Qt.FramelessWindowHint)
+class Line_length(object):
+    def setupUi(self, Dialog):
+        self.Dialog = Dialog
+        Dialog.setObjectName("Dialog")
+        Dialog.resize(700, 600)
+        Dialog.setMinimumSize(QtCore.QSize(700, 600))
+        Dialog.setMaximumSize(QtCore.QSize(700, 600))
+        Dialog.setWindowFlags(Qt.FramelessWindowHint)
+        Dialog.setStyleSheet("#Dialog{background:rgb(255, 255, 255)}")
         # Create a grid layout to hold the widgets
-        layout = QGridLayout()
+        layout = QGridLayout(Dialog)
 
         # self.slider = QSlider(Qt.Horizontal)
         # self.slider.setRange(0, 100)
@@ -203,11 +209,11 @@ class Line_length(QDialog):
         remove_last_line_button.setObjectName("remove_last_line_button")
         layout.addWidget(remove_last_line_button, 1, 1, Qt.AlignHCenter)
         layout.addWidget(button, 2, 1, Qt.AlignHCenter)
-        self.setLayout(layout)
+        Dialog.setLayout(layout)
         print(f"Image dimensions: {self.img.shape}")
 
     def done_view_length(self):
-        self.close()
+        self.Dialog.close()
     def remove_last_line(self):
         if self.edges_label.drawn:
             self.edges_label.drawn = False
@@ -227,18 +233,3 @@ class Line_length(QDialog):
         # Set the image on the label
         pixmap = QPixmap(q_image)
         self.edges_label.setPixmap(pixmap.scaled(label_size, Qt.KeepAspectRatio, Qt.SmoothTransformation))
-
-
-if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    main_window = Line_length()
-    main_window.show()
-    main_window.setGeometry(100, 100, 600, 500)
-
-    # Center the main window on the screen
-    screen_geometry = app.desktop().screenGeometry()
-    x = (screen_geometry.width() - main_window.width()) // 2
-    y = (screen_geometry.height() - main_window.height()) // 2
-    main_window.move(x, y)
-
-    sys.exit(app.exec_())

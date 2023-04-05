@@ -14,10 +14,25 @@ class Result_Dialog(object):
         Dialog.setMinimumSize(QtCore.QSize(700, 600))
         Dialog.setMaximumSize(QtCore.QSize(700, 600))
         Dialog.setWindowFlags(Qt.FramelessWindowHint)
-        Dialog.setStyleSheet("#Dialog{background:rgb(255, 255, 255)}")
+        Dialog.setAttribute(Qt.WA_TranslucentBackground)
+        effect = QtWidgets.QGraphicsDropShadowEffect()
+        effect.setBlurRadius(15)
+        effect.setColor(QtGui.QColor(144, 115, 87, 100))
+        effect.setOffset(0, 0)
+
         self.verticalLayout_6 = QtWidgets.QVBoxLayout(Dialog)
         self.verticalLayout_6.setObjectName("verticalLayout_6")
-        self.widget_16 = QtWidgets.QWidget(Dialog)
+        self.widget = QtWidgets.QWidget(Dialog)
+        radius = 15
+        self.widget.setStyleSheet("""
+                                    background:#EFEEEE;
+                                    border-top-left-radius:{0}px;
+                                    border-bottom-left-radius:{0}px;
+                                    border-top-right-radius:{0}px;
+                                    border-bottom-right-radius:{0}px;
+                                    """.format(radius))
+        Dialog.setGraphicsEffect(effect)
+        self.widget_16 = QtWidgets.QWidget(self.widget)
         self.widget_16.setLayoutDirection(QtCore.Qt.LeftToRight)
         self.widget_16.setObjectName("widget_16")
         self.verticalLayout_5 = QtWidgets.QVBoxLayout(self.widget_16)
@@ -39,11 +54,11 @@ class Result_Dialog(object):
 
         self.exit.setObjectName("exit")
         self.verticalLayout_5.addWidget(self.exit)
-        self.verticalLayout_6.addWidget(self.widget_16)
-        self.widget = QtWidgets.QWidget(Dialog)
+
         self.widget.setObjectName("widget")
         self.verticalLayout = QtWidgets.QVBoxLayout(self.widget)
-        self.verticalLayout.setContentsMargins(-1, 0, -1, 0)
+        self.verticalLayout.addWidget(self.widget_16)
+        self.verticalLayout.setContentsMargins(-1, 9, -1, 0)
         self.verticalLayout.setObjectName("verticalLayout")
         self.WithLogo = QtWidgets.QWidget(self.widget)
         self.WithLogo.setMinimumSize(QtCore.QSize(564, 80))
@@ -98,13 +113,14 @@ class Result_Dialog(object):
         self.widget_6.setObjectName("widget_6")
         self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.widget_6)
         self.verticalLayout_2.setContentsMargins(-1, 0, -1, -1)
+        self.verticalLayout_6.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout_2.setObjectName("verticalLayout_2")
         self.concretecracked_2 = QtWidgets.QLabel(self.widget_6)
         self.concretecracked_2.setStyleSheet("#concretecracked_2{\n"
                                              "    \n"
                                              "color: #2E74A9;\n"
                                              "font: bold;\n"
-                                             "border: 2px solid white;\n"
+                                             "border: 2px solid #EFEEEE;\n"
                                              "font-size: 20px;\n"
                                              "border-bottom-color: rgb(172, 172, 172);;\n"
                                              "}")
@@ -975,7 +991,7 @@ class Result_Dialog(object):
         with open('Remarks_written.txt', 'r') as f:
             remarks1 = f.read()
 
-        print(selected_loc1,selected_type1,selected_prog1,remarks1)
+        print(selected_loc1, selected_type1, selected_prog1, remarks1)
         file_path_Class = 'Predicted_Class_name.txt'
         if os.path.isfile(file_path_Class):
             with open(file_path_Class, 'r') as f:
@@ -1274,5 +1290,3 @@ class Result_Dialog(object):
         # Set the image on the label
         pixmap = QPixmap(q_image)
         self.result_Img.setPixmap(pixmap.scaled(label_size, Qt.KeepAspectRatio, Qt.SmoothTransformation))
-
-

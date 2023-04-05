@@ -16,6 +16,7 @@ from PyQt5.QtWidgets import QListView, QComboBox, QDialog, QVBoxLayout, QApplica
 
 from Segment_Image import Ui_DialogSegment
 from result import Result_Dialog
+from view_folders import view_folder_dialog
 
 
 class AlignDelegate(QStyledItemDelegate):
@@ -38,12 +39,13 @@ class Ui_MainWindow(object):
                 combo.showPopup()
 
     def setupUi(self, MainWindow):
-
+        self.Mainwindow = MainWindow
         MainWindow.setObjectName("MainWindow")
         MainWindow.setWindowModality(QtCore.Qt.NonModal)
         MainWindow.setEnabled(True)
+        MainWindow.setFixedSize(1000, 700)
         # MainWindow.resize(983, 573)
-        MainWindow.setMinimumSize(QtCore.QSize(1000, 700))
+        #MainWindow.setMinimumSize(QtCore.QSize(1000, 700))
         # MainWindow.setMaximumSize(QtCore.QSize(983, 573))
         MainWindow.setStyleSheet("#MainWindow{\n"
                                  "background-color: qlineargradient(spread:pad, x1:0.045, y1:0.261, x2:0.988636, y2:0.955, stop:0 rgba(235, 209, 196, 255), stop:1 rgba(255, 255, 255, 255));\n"
@@ -125,13 +127,16 @@ class Ui_MainWindow(object):
             self.myProjects.setEditText("My Projects")
             with open('selected_project.txt', 'w') as f:
                 f.write(text)
-            # Get the path to the directory where the executable is run from
-            app_path = getattr(sys, '_MEIPASS', None) or os.path.abspath('.')
-            # Create the path to the view_folders.py file
-            view_folders_path = os.path.join(app_path, 'view_folders.py')
-            # Execute the view_folders.py file using QProcess
-            process = QtCore.QProcess(self.myProjects)
-            process.start('python', [view_folders_path])
+            try:
+                folder_dialog = QtWidgets.QDialog(self.Mainwindow)
+                ui = view_folder_dialog()
+                ui.setupUi(folder_dialog)
+                x = (self.Mainwindow.width() - folder_dialog.width()) // 2
+                y = (self.Mainwindow.height() - folder_dialog.height()) // 2
+                folder_dialog.move(x, y)
+                folder_dialog.exec_()
+            except Exception as e:
+                print(e)
 
         self.myProjects.activated[str].connect(handleSelection)
 
@@ -727,18 +732,22 @@ class Ui_MainWindow(object):
                         f.write("0 cm")
                 except FileNotFoundError:
                     print("The file does not exist.")
-                result_dialog = QtWidgets.QDialog(MainWindow)
-                result_dialog.ui_result = Result_Dialog()
-                result_dialog.ui_result.setupUi(result_dialog)
-                result_dialog.show()
+                result_dialog = QtWidgets.QDialog(self.Mainwindow)
+                ui = Result_Dialog()
+                ui.setupUi(result_dialog)
+                x = (self.Mainwindow.width() - result_dialog.width()) // 2
+                y = (self.Mainwindow.height() - result_dialog.height()) // 2
+                result_dialog.move(x, y)
                 result_dialog.exec_()
 
             else:
 
-                segment_dialog = QtWidgets.QDialog(MainWindow)
-                segment_dialog.ui_result = Ui_DialogSegment()
-                segment_dialog.ui_result.setupUi(segment_dialog)
-                segment_dialog.show()
+                segment_dialog = QtWidgets.QDialog(self.Mainwindow)
+                ui = Ui_DialogSegment()
+                ui.setupUi(segment_dialog)
+                x = (self.Mainwindow.width() - segment_dialog.width()) // 2
+                y = (self.Mainwindow.height() - segment_dialog.height()) // 2
+                segment_dialog.move(x, y)
                 segment_dialog.exec_()
 
         else:

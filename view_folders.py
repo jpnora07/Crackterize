@@ -6,32 +6,25 @@ from PyQt5.QtCore import QSize, Qt, QTimer, pyqtSignal, QObject
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QPushButton, QHBoxLayout, QVBoxLayout, QSizePolicy, QScrollArea, QWidget, QLabel
 
-class Ui_MainWindow(object):
+class view_folder_dialog(object):
 
-    def setupUi(self, MainWindow):
+    def setupUi(self, view_folder_dialog):
         # self.data_added.connect(self.refreshWidget)
-        MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(600, 489)
-        MainWindow.setMaximumSize(600, 489)
-        MainWindow.setWindowFlags(Qt.FramelessWindowHint)
-        MainWindow.setMinimumSize(600, 489)
-        MainWindow.setAttribute(Qt.WA_TranslucentBackground)
-        self.centralwidget = QtWidgets.QWidget(MainWindow)
-        radius = 30
-        self.centralwidget.setStyleSheet(
+        view_folder_dialog.setObjectName("MainWindow")
+        view_folder_dialog.resize(600, 489)
+        view_folder_dialog.setMaximumSize(600, 489)
+        view_folder_dialog.setWindowFlags(Qt.FramelessWindowHint)
+        view_folder_dialog.setMinimumSize(600, 489)
+        view_folder_dialog.setStyleSheet(
             """
             background:rgb(255, 255, 255);
-            border-top-left-radius:{0}px;
-            border-bottom-left-radius:{0}px;
-            border-top-right-radius:{0}px;
-            border-bottom-right-radius:{0}px;
-            """.format(radius)
+            """
         )
 
-        self.centralwidget.setObjectName("centralwidget")
-        self.verticalLayout = QtWidgets.QVBoxLayout(self.centralwidget)
+        view_folder_dialog.setObjectName("view_folder_dialog")
+        self.verticalLayout = QtWidgets.QVBoxLayout(view_folder_dialog)
         self.verticalLayout.setObjectName("verticalLayout")
-        self.widget = QtWidgets.QWidget(self.centralwidget)
+        self.widget = QtWidgets.QWidget(view_folder_dialog)
         self.widget.setObjectName("widget")
         self.horizontalLayout_2 = QtWidgets.QHBoxLayout(self.widget)
         self.horizontalLayout_2.setContentsMargins(20, -1, -1, -1)
@@ -83,7 +76,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_2.addWidget(self.addfolder_icon)
 
         self.verticalLayout.addWidget(self.widget)
-        self.widget_3 = QtWidgets.QWidget(self.centralwidget)
+        self.widget_3 = QtWidgets.QWidget(view_folder_dialog)
         self.widget_3.setObjectName("widget_3")
         self.widget_3.setContentsMargins(10, 10, 10, 10)
         # buttons
@@ -168,7 +161,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout = QtWidgets.QHBoxLayout(self.widget_3)
         self.horizontalLayout.setObjectName("horizontalLayout")
         self.verticalLayout.addWidget(self.widget_3)
-        self.widget_2 = QtWidgets.QWidget(self.centralwidget)
+        self.widget_2 = QtWidgets.QWidget(view_folder_dialog)
         self.widget_2.setObjectName("widget_2")
         self.horizontalLayout_2 = QtWidgets.QHBoxLayout(self.widget_2)
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
@@ -208,13 +201,12 @@ class Ui_MainWindow(object):
                                 "}\n"
                                 "")
         self.back.setFlat(False)
-        self.back.clicked.connect(MainWindow.close)
+        self.back.clicked.connect(view_folder_dialog.close)
         self.back.setObjectName("back")
         self.horizontalLayout_3.addWidget(self.back)
         self.horizontalLayout_2.addWidget(self.frame)
         self.verticalLayout.addWidget(self.widget_2)
-        MainWindow.setCentralWidget(self.centralwidget)
-        QtCore.QMetaObject.connectSlotsByName(MainWindow)
+        QtCore.QMetaObject.connectSlotsByName(view_folder_dialog)
 
         # Calling a function that fetch the folders of project
         self.fetch_folders_of_projects()
@@ -385,28 +377,28 @@ class Ui_MainWindow(object):
     def add_button_folder(self, data):
         for row in data:
             # Create a new button for each row in the fetched data
-            self.btn = QPushButton(self.scroll_widget)
-            self.btn.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
-            self.btn.setIcon(QIcon("images/folder.png"))
-            self.btn.setStyleSheet(
+            btn = QPushButton(self.scroll_widget)
+            btn.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+            btn.setIcon(QIcon("images/folder.png"))
+            btn.setStyleSheet(
                 "QPushButton {border: none; font-size: 16px; text-align: center;padding-bottom: 58px;}")
 
-            self.btn.setIconSize(QSize(90, 100))
-            self.btn.setFixedSize(120, 140)
-            self.buttons.append(self.btn)
+            btn.setIconSize(QSize(90, 100))
+            btn.setFixedSize(120, 140)
 
             # add to layout
             if len(self.buttons) % self.max_per_row == 1:
-                self.hbox = QHBoxLayout()
-                self.scroll_widget.layout().insertLayout(0, self.hbox)
+                hbox = QHBoxLayout()
+                self.scroll_widget.layout().insertLayout(0, hbox)
             else:
-                self.hbox = self.scroll_widget.layout().itemAt(0).layout()
+                hbox = self.scroll_widget.layout().itemAt(0).layout()
 
-            self.hbox.insertWidget(0, self.btn)
-            self.hbox.setAlignment(Qt.AlignTop | Qt.AlignLeft)
+            hbox.insertWidget(0, btn)
+            hbox.setAlignment(Qt.AlignTop | Qt.AlignLeft)
 
             # Set the label text of the button
-            btn_label = QLabel(str(row[2]), self.btn)
+            button_name = str(row[2])
+            btn_label = QLabel(button_name, btn)
             btn_label.setAlignment(Qt.AlignTop | Qt.AlignCenter)
             btn_label.move(0, 75)
             btn_label.resize(120, 77)
@@ -420,6 +412,13 @@ class Ui_MainWindow(object):
                 "line-height: 42px;\n"
                 "color: #664323;\n"
                 "padding-bottom: 5px;")
+            btn.setText(button_name)
+            btn.clicked.connect(lambda checked, button=btn: self.save_result_image_to_db(button))
+            self.buttons.append(btn)
+
+    def save_result_image_to_db(self, button):
+        folder_name = button.text()
+        print(folder_name)
 
     def show_dialog_empty_text_error(self):
         # Create dialog box
@@ -516,13 +515,12 @@ class Ui_MainWindow(object):
         row = self.c.fetchone()
         return row
 
-
 if __name__ == "__main__":
     import sys
 
     app = QtWidgets.QApplication(sys.argv)
-    MainWindow = QtWidgets.QMainWindow()
-    ui = Ui_MainWindow()
-    ui.setupUi(MainWindow)
-    MainWindow.show()
+    Dialog = QtWidgets.QDialog()
+    ui = view_folder_dialog()
+    ui.setupUi(Dialog)
+    Dialog.show()
     sys.exit(app.exec_())

@@ -7,9 +7,10 @@ import numpy as np
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import QThread, pyqtSignal, Qt
 from PyQt5.QtGui import QImage, QPixmap, QMovie
-from PyQt5.QtWidgets import QMessageBox, QDialog, QLabel, QVBoxLayout
+from PyQt5.QtWidgets import QMessageBox, QDialog, QLabel, QVBoxLayout, QApplication
 
 from result import Result_Dialog
+from Crack_Line_Length import Line_length
 
 
 class CustomDialog(QDialog):
@@ -27,6 +28,7 @@ class CustomDialog(QDialog):
         # Create a layout and add the label to it
         layout = QVBoxLayout(self)
         layout.addWidget(gif_label)
+
 
 class NoiseRemovalThread(QThread):
     finished = pyqtSignal(np.ndarray)
@@ -49,6 +51,7 @@ class NoiseRemovalThread(QThread):
         result = np.where(mask, self.thresholded, 255)
         cv2.imwrite("threshold_image.jpg", result)
         self.finished.emit(result)
+
 
 class FindBlackBlocksThread(QThread):
     finished = pyqtSignal()
@@ -87,6 +90,7 @@ class FindBlackBlocksThread(QThread):
 
         self.result_signal.emit(self.blocks)
         self.finished.emit()
+
 
 class CrackAnalyzer(QThread):
 
@@ -136,8 +140,11 @@ class CrackAnalyzer(QThread):
         print(f"Crack width: {avg_width:.2f} mm")
         with open('Predicted_width.txt', 'w') as f:
             f.write(avg_width_write)
+
+
 def is_black(pixel):
     return pixel == 0
+
 
 class Ui_DialogSegment(object):
     def setupUi(self, Dialog):
@@ -146,6 +153,7 @@ class Ui_DialogSegment(object):
         Dialog.resize(700, 600)
         Dialog.setMinimumSize(QtCore.QSize(700, 600))
         Dialog.setMaximumSize(QtCore.QSize(700, 600))
+
         Dialog.setWindowFlags(Qt.FramelessWindowHint)
         Dialog.setStyleSheet("#Dialog{\n"
                              "background-color: qlineargradient(spread:pad, x1:0.045, y1:0.261, x2:0.988636, y2:0.955, stop:0 rgba(235, 209, 196, 255), stop:1 rgba(255, 255, 255, 255));\n"
@@ -155,8 +163,8 @@ class Ui_DialogSegment(object):
                              "} ")
 
         # Load image and convert to grayscale
-        #image_path = sys.argv[1]
-        #self.image = cv2.imread(image_path)
+        # image_path = sys.argv[1]
+        # self.image = cv2.imread(image_path)
         self.image = cv2.imread('temp_image_original.jpg')
         self.gray = cv2.cvtColor(self.image, cv2.COLOR_BGR2GRAY)
 
@@ -433,7 +441,6 @@ class Ui_DialogSegment(object):
                                    "}\n"
                                    "")
 
-        self.proceed.clicked.connect(Dialog.close)
         self.proceed.clicked.connect(self.Proceed_to_Result)
         self.proceed.setObjectName("proceed")
         self.verticalLayout_3.addWidget(self.proceed)
@@ -469,17 +476,16 @@ class Ui_DialogSegment(object):
                 selected_loc = f.read()
             if selected_loc.strip() != '':
                 try:
-                    # Get the path to the directory where the executable is run from
-                    app_path = getattr(sys, '_MEIPASS', None) or os.path.abspath('.')
+                    CrackLineLength = QtWidgets.QDialog(self.Dialog)
 
-                    # Create the path to the result.py file
-                    result_lenght = os.path.join(app_path, 'Crack_Line_Length.py')
-                    # Execute the result.py file using QProcess
-                    process = QtCore.QProcess()
-                    process.start('python', [result_lenght])
+                    x = (self.Dialog.width() - self.Dialog.width()) // 2
+                    y = (self.Dialog.height() - self.Dialog.height()) // 2
+                    ui = Line_length()
 
-                    if process.waitForFinished() == 0:
-                        print('Error: failed to execute Crack_Line_Length.py')
+                    ui.setupUi(CrackLineLength)
+                    CrackLineLength.move(x, y)
+                    CrackLineLength.show()
+                    CrackLineLength.exec_()
                 except Exception as e:
                     print(e)
             else:
@@ -488,16 +494,16 @@ class Ui_DialogSegment(object):
             print('Error: threshold_image.jpg does not exist')
 
     def Proceed_to_Result(self):
-        try:
-            result_dialog = QtWidgets.QDialog(self.Dialog)
-            result_dialog.ui_result = Result_Dialog()
-            result_dialog.ui_result.setupUi(result_dialog)
-            result_dialog.raise_()
-            result_dialog.show()
-            result_dialog.exec_()
-            print("done")
-        except Exception as e:
-            print(e)
+        result_dialog = QtWidgets.QDialog(self.Dialog)
+
+        x = (self.Dialog.width() - self.Dialog.width()) // 2
+        y = (self.Dialog.height() - self.Dialog.height()) // 2
+        ui = Result_Dialog()
+
+        ui.setupUi(result_dialog)
+        result_dialog.move(x, y)
+        result_dialog.show()
+        result_dialog.exec_()
 
     def remove_noise(self):
         try:
@@ -514,33 +520,45 @@ class Ui_DialogSegment(object):
             # Create the noise removal thread and start it
             self.noise_thread = NoiseRemovalThread(self.thresholded)
             self.noise_thread.start()
-
             self.noise_thread.finished.connect(self.on_noise_removal_finished)
         except AttributeError:
             QtWidgets.QMessageBox.critical(self.Dialog, "Error", "Thresholder value is empty.")
             return
+
     def on_noise_removal_finished(self, result):
         self.update_image(result)
         analyzer = CrackAnalyzer(float(self.NumOfDistance.toPlainText()), self.units.currentText(), 132.28)
         analyzer.get_Heigth_Width_Function(result)
+        print("Finish")
+        CrackLineLength = QtWidgets.QDialog(self.Dialog)
+
+        x = (self.Dialog.width() - self.Dialog.width()) // 2
+        y = (self.Dialog.height() - self.Dialog.height()) // 2
+        ui = Line_length()
+
+        ui.setupUi(CrackLineLength)
+        CrackLineLength.move(x, y)
+        CrackLineLength.show()
+        CrackLineLength.exec_()
+
 
     def update_image(self, image):
-            # Get the size of the label
-            label_size = self.imageLabel.size()
+        # Get the size of the label
+        label_size = self.imageLabel.size()
 
-            # Resize the image to fit within the label while maintaining aspect ratio
-            aspect_ratio = image.shape[1] / image.shape[0]
-            new_width = label_size.height() * aspect_ratio
-            new_height = label_size.height()
-            resized_image = cv2.resize(image, (int(new_width), int(new_height)))
+        # Resize the image to fit within the label while maintaining aspect ratio
+        aspect_ratio = image.shape[1] / image.shape[0]
+        new_width = label_size.height() * aspect_ratio
+        new_height = label_size.height()
+        resized_image = cv2.resize(image, (int(new_width), int(new_height)))
 
-            # Convert the image to a QImage
-            height, width = resized_image.shape
-            q_image = QImage(resized_image.data, width, height, width, QImage.Format_Grayscale8)
+        # Convert the image to a QImage
+        height, width = resized_image.shape
+        q_image = QImage(resized_image.data, width, height, width, QImage.Format_Grayscale8)
 
-            # Set the image on the label
-            pixmap = QPixmap(q_image)
-            self.imageLabel.setPixmap(pixmap)
+        # Set the image on the label
+        pixmap = QPixmap(q_image)
+        self.imageLabel.setPixmap(pixmap)
 
     def adjust_threshold(self, value):
         # Apply thresholding
