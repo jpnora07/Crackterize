@@ -15,10 +15,10 @@ class view_folder_dialog(object):
         # self.data_added.connect(self.refreshWidget)
         self.view_folder_dialog = view_folder_dialog
         view_folder_dialog.setObjectName("MainWindow")
-        view_folder_dialog.resize(600, 489)
-        view_folder_dialog.setMaximumSize(600, 489)
+        view_folder_dialog.resize(700, 600)
+        view_folder_dialog.setMaximumSize(700, 600)
         view_folder_dialog.setWindowFlags(Qt.FramelessWindowHint)
-        view_folder_dialog.setMinimumSize(600, 489)
+        view_folder_dialog.setMinimumSize(700, 600)
         view_folder_dialog.setStyleSheet(
             """
             background:rgb(255, 255, 255);
@@ -89,7 +89,7 @@ class view_folder_dialog(object):
 
         layout = QHBoxLayout()
 
-        widget = QtWidgets.QWidget(Dialog)
+        widget = QtWidgets.QWidget(view_folder_dialog)
         widget.setGeometry(QtCore.QRect(100, 50, 140, 140))
         widget.setObjectName("widget")
         verticalLayout = QtWidgets.QVBoxLayout(widget)
@@ -568,12 +568,3 @@ class view_folder_dialog(object):
         return row
 
 
-if __name__ == "__main__":
-    import sys
-
-    app = QtWidgets.QApplication(sys.argv)
-    Dialog = QtWidgets.QDialog()
-    ui = view_folder_dialog()
-    ui.setupUi(Dialog)
-    Dialog.show()
-    sys.exit(app.exec_())
