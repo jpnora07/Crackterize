@@ -1034,10 +1034,11 @@ class Result_Dialog(object):
         if c.fetchone()[0] == 0:
             c.execute('''CREATE TABLE Save_Files (id INTEGER PRIMARY KEY, folder_name TEXT, image BLOB, width TEXT, 
             length TEXT, position TEXT, No_Crack TEXT, Crack TEXT, Status TEXT, selected_loc TEXT, selected_type 
-            TEXT, selected_prog TEXT, remarks TEXT created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)''')
+            TEXT, selected_prog TEXT, remarks TEXT, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)''')
 
         sql = """INSERT INTO Save_Files (folder_name, image, width, length, position, No_Crack, Crack, Status, 
-        selected_loc , selected_type , selected_prog, remarks ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) """
+                selected_loc , selected_type , selected_prog, remarks, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) """
+
         c.execute(sql, (
             self.folder_name, image_data, self.width, self.length, "horizontal", self.Neg_score, self.Pos_score,
             self.status, selected_loc, selected_type, selected_prog, remarks))

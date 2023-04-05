@@ -920,15 +920,16 @@ class Ui_MainWindow(object):
                 rows = self.c.fetchall()
                 with open('selected_project.txt', 'w') as f:
                     f.write(new_projects)
-                # Get the path to the directory where the executable is run from
-                app_path = getattr(sys, '_MEIPASS', None) or os.path.abspath('.')
-                # Create the path to the view_folders.py file
-                view_folders_path = os.path.join(app_path, 'view_folders.py')
-                # Execute the view_folders.py file using QProcess
-                process = QtCore.QProcess()
-                process.start('python', [view_folders_path])
-                if process.waitForFinished() == 0:
-                    print('Error: failed to execute view_folders.py')
+                try:
+                    folder_dialog = QtWidgets.QDialog(self.Mainwindow)
+                    ui = view_folder_dialog()
+                    ui.setupUi(folder_dialog)
+                    x = (self.Mainwindow.width() - folder_dialog.width()) // 2
+                    y = (self.Mainwindow.height() - folder_dialog.height()) // 2
+                    folder_dialog.move(x, y)
+                    folder_dialog.exec_()
+                except Exception as e:
+                    print(e)
                 for row in rows:
                     self.myProjects.addItem(row[0])
             else:
