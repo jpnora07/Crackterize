@@ -677,3 +677,14 @@ class view_result_dialog(object):
         data = self.c.fetchall()
         print(data)
         self.add_button_folder(data)
+
+
+if __name__ == "__main__":
+    import sys
+
+    app = QtWidgets.QApplication(sys.argv)
+    Dialog = QtWidgets.QDialog()
+    ui = view_result_dialog()
+    ui.setupUi(Dialog)
+    Dialog.show()
+    sys.exit(app.exec_())

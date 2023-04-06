@@ -3,9 +3,13 @@ import sqlite3
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import Qt, QByteArray, QSizeF
-from PyQt5.QtGui import QPixmap, QImage, QTextDocument, QTextCursor, QPainter, QFont, QTextCharFormat
+from PyQt5.QtGui import QPixmap, QImage, QTextDocument, QTextCursor, QPainter, QFont, QTextCharFormat, QTextImageFormat, \
+    QTextFrameFormat
 from PyQt5.QtPrintSupport import QPrinter, QPrintPreviewDialog
 from PyQt5.QtWidgets import QDialog, QMessageBox
+from PIL.ImageQt import ImageQt
+from PIL import Image
+import io
 
 
 class result_with_details(object):
@@ -344,15 +348,22 @@ class result_with_details(object):
                 self.no_crack = data[0][6]
                 self.crack = data[0][7]
                 self.status = data[0][8]
+
+                self.loc = data[0][9]
+                self.type = data[0][10]
+                self.prog = data[0][11]
+                self.remarks = data[0][12]
+                self.date = data[0][13]
                 self.image = data[0][2]
                 # Convert the image data to QPixmap
                 byte_array = QByteArray(self.image)
-                pixmap = QPixmap()
-                pixmap.loadFromData(byte_array)
+                self.pixmap = QPixmap()
+                self.pixmap.loadFromData(byte_array)
 
                 self.label_image.setFixedSize(322, 447)
                 label_size = self.label_image.size()
-                scaled_pixmap = pixmap.scaled(label_size, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+                scaled_pixmap = self.pixmap.scaled(label_size, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+                scaled_pixmap.save('image_for_doc.png')
                 self.label_image.setPixmap(scaled_pixmap)
                 self.widthlbl.setText(self.width + " mm")
                 self.position_lbl.setText(self.position)
@@ -382,18 +393,56 @@ class result_with_details(object):
         printer.setOutputFileName("preview.pdf")
 
         doc = QTextDocument()
+        doc.setPageSize(QSizeF(792, 612))  # set page size to 11x8.5 inches (in points)
+        doc.setDocumentMargin(36)  # set margin to 0.5 inch (36 points)
         cursor = QTextCursor(doc)
+
+        # Load the image file
+        image_path = os.path.abspath("image_for_doc.png")
+        image = QImage(image_path)
+        if image.isNull():
+            print("Error: Could not load image")
+            return
+
+        # Insert the image into the document
+        pixmap = QPixmap.fromImage(image)
+        try:
+            if not pixmap.isNull():
+                image_format = QTextImageFormat()
+                image_format.setWidth(pixmap.width())
+                image_format.setHeight(pixmap.height())
+                image_format.setName(image_path)
+
+                # Create a QTextFrameFormat and set its properties
+                frame_format = QTextFrameFormat()
+                frame_format.setBorder(1)  # set border width to 1
+                frame_format.setBorderStyle(QTextFrameFormat.BorderStyle_Solid)  # set border style to solid
+                frame_format.setBorderBrush(Qt.black)  # set border color to black
+                frame_format.setPadding(5)   # set padding to 5
+                frame_format.setMargin(5)
+
+                # Insert the image into a QTextFrame and set its format
+                frame = cursor.insertFrame(frame_format)
+                frame_cursor = QTextCursor(frame)
+                frame_cursor.insertImage(image_format, QTextFrameFormat.FloatRight)
+        except Exception as e:
+            print(e)
 
         # Create a QTextCharFormat object with the desired font properties
         font_format = QTextCharFormat()
-        font_format.setFont(QFont("Arial", 52))
+        font_format.setFont(QFont("Arial", 15))
 
         # Add the data to the document
-        cursor.insertText(f"Loc: {self.width}\n", font_format)
-        cursor.insertText("Type: sdfsdf\n", font_format)
-        cursor.insertText("Prog:sfdfsdf\n", font_format)
-        cursor.insertText("Remarks: fsdfsd\n", font_format)
-        cursor.insertText("Date: sdfsdf\n", font_format)
+        cursor.insertText(f"The image classified as: {self.status}\n", font_format)
+        cursor.insertText(f"Length: {self.length} cm\n", font_format)
+        cursor.insertText(f"Width:{self.width} mm\n", font_format)
+        cursor.insertText(f"Orientation: {self.position}\n", font_format)
+        cursor.insertText(f"Positive Crack Probability: {self.crack}\n", font_format)
+        cursor.insertText(f"Negative Crack Probability: {self.no_crack}\n", font_format)
+        cursor.insertText(f"Location of Crack: {self.loc}\n", font_format)
+        cursor.insertText(f"Crack Type:{self.type}\n", font_format)
+        cursor.insertText(f"Crack Progression: {self.prog}\n", font_format)
+        cursor.insertText(f"Date Added: {self.date}\n", font_format)
 
         painter = QPainter()
         if painter.begin(printer):
@@ -479,7 +528,7 @@ class result_with_details(object):
         self.concretecracked_2.setText(_translate("Dialog", "Detected:"))
         self.label_2.setText(_translate("Dialog", "Length:"))
         self.label_3.setText(_translate("Dialog", "Width: "))
-        self.widgetPosition.setText(_translate("Dialog", "Position:"))
+        self.widgetPosition.setText(_translate("Dialog", "Orientation:"))
         self.view_details.setText(_translate("Dialog", "View Details"))
         self.update.setText(_translate("Dialog", "Update"))
 
