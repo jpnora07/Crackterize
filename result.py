@@ -100,7 +100,7 @@ class Result_Dialog(object):
             with open(file_path_Class, 'r') as f:
                 status = f.read()
                 if status.strip() == 'No Detected Crack':
-                    self.image = cv2.imread('bg.jpg')
+                    self.image = cv2.imread('temp_image_original.jpg')
                 else:
                     self.image = cv2.imread('threshold_image.jpg')
         else:
@@ -1363,5 +1363,4 @@ class Result_Dialog(object):
         # Set the image on the label
         pixmap = QPixmap(q_image)
         self.result_Img.setPixmap(pixmap.scaled(label_size, Qt.KeepAspectRatio, Qt.SmoothTransformation))
-
 

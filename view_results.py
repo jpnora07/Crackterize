@@ -1,5 +1,6 @@
 import os
 import sqlite3
+from functools import partial
 
 import tensorflow as tf
 from tensorflow import keras
@@ -13,6 +14,7 @@ from PyQt5.QtWidgets import QPushButton, QHBoxLayout, QVBoxLayout, QSizePolicy, 
 
 from Segment_Image import Ui_DialogSegment
 from result import Result_Dialog
+from view_result_with_details import result_with_details
 
 
 class view_result_dialog(object):
@@ -497,73 +499,90 @@ class view_result_dialog(object):
                 self.clear_layout(child.layout())
 
     def add_button_folder(self, data):
-        for row in data:
-            button_name = str(row[8])
-            image = row[2]
-            # Convert the image data to QPixmap
-            byte_array = QByteArray(image)
-            pixmap = QPixmap()
-            pixmap.loadFromData(byte_array)
-            print(image)
-            widget = QtWidgets.QWidget(self.scroll_widget)
-            widget.setFixedSize(120, 140)
-            widget.setObjectName("widget")
-            verticalLayout = QtWidgets.QVBoxLayout(widget)
-            verticalLayout.setContentsMargins(0, 0, 0, 0)
-            verticalLayout.setObjectName("verticalLayout")
-            btn = QtWidgets.QPushButton(widget)
-            btn.setMinimumSize(QtCore.QSize(90, 100))
-            # btn.setText(button_name)
-            icon = QtGui.QIcon()
-            icon.addPixmap(QtGui.QPixmap(pixmap), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-            btn.setIcon(icon)
-            btn.setIconSize(QtCore.QSize(90, 100))
-            btn.setFlat(True)
-            btn.setObjectName("pushButton")
-            btn.clicked.connect(lambda checked, button=btn: self.view_folder(button))
-            btn.setStyleSheet(
+        try:
+            for row in data:
+                button_name = str(row[8])
+                image_id = row[0]
+                image = row[2]
+                # Convert the image data to QPixmap
+                byte_array = QByteArray(image)
+                pixmap = QPixmap()
+                pixmap.loadFromData(byte_array)
+                print(image)
+                widget = QtWidgets.QWidget(self.scroll_widget)
+                widget.setFixedSize(120, 140)
+                widget.setObjectName("widget")
+                verticalLayout = QtWidgets.QVBoxLayout(widget)
+                verticalLayout.setContentsMargins(0, 0, 0, 0)
+                verticalLayout.setObjectName("verticalLayout")
+                btn = QtWidgets.QPushButton(widget)
+                btn.setMinimumSize(QtCore.QSize(90, 100))
+                # btn.setText(button_name)
+                icon = QtGui.QIcon()
+                icon.addPixmap(QtGui.QPixmap(pixmap), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+                btn.setIcon(icon)
+                btn.setIconSize(QtCore.QSize(90, 100))
+                btn.setFlat(True)
+                btn.setObjectName("pushButton")
+                btn.clicked.connect(partial(self.view_folder, image_id))
+                btn.setStyleSheet(
 
-                "#pushButton{\n"
-                "color: rgb(255, 255, 255);\n"
-                "border : none;\n"
-                "background-color: white;\n"
-                "}\n"
-                "#pushButton:hover{\n"
-                "color: rgb(255, 255, 255);\n"
-                "border : none;\n"
-                "background-color: white;\n"
-                "}\n"
-                "")
-            verticalLayout.addWidget(btn)
-            btn_label = QtWidgets.QLabel(button_name, widget)
-            btn_label.setWordWrap(True)
-            btn_label.setStyleSheet("\n"
-                                    "                font: 700 9pt \\\"Franklin Gothic Medium\\\";\n"
-                                    "                font-family: \\\'Franklin Gothic Medium\\\';\n"
-                                    "               font-style: normal;\n"
-                                    "                font-weight: 200;\n"
-                                    "                font-size: 13px;\n"
-                                    "                line-height: 42px;\n"
-                                    "                color: #664323;\n"
-                                    "                padding-bottom: 5px;")
-            btn_label.setAlignment(QtCore.Qt.AlignCenter)
-            btn_label.setObjectName("label")
-            verticalLayout.addWidget(btn_label)
-            self.buttons.append(btn)
+                    "#pushButton{\n"
+                    "color: rgb(255, 255, 255);\n"
+                    "border : none;\n"
+                    "background-color: white;\n"
+                    "}\n"
+                    "#pushButton:hover{\n"
+                    "color: rgb(255, 255, 255);\n"
+                    "border : none;\n"
+                    "background-color: white;\n"
+                    "}\n"
+                    "")
+                verticalLayout.addWidget(btn)
+                btn_label = QtWidgets.QLabel(button_name, widget)
+                btn_label.setWordWrap(True)
+                btn_label.setStyleSheet("\n"
+                                        "                font: 700 9pt \\\"Franklin Gothic Medium\\\";\n"
+                                        "                font-family: \\\'Franklin Gothic Medium\\\';\n"
+                                        "               font-style: normal;\n"
+                                        "                font-weight: 200;\n"
+                                        "                font-size: 13px;\n"
+                                        "                line-height: 42px;\n"
+                                        "                color: #664323;\n"
+                                        "                padding-bottom: 5px;")
+                btn_label.setAlignment(QtCore.Qt.AlignCenter)
+                btn_label.setObjectName("label")
+                verticalLayout.addWidget(btn_label)
+                self.buttons.append(btn)
 
-            # add to layout
-            if len(self.buttons) % self.max_per_row == 1:
-                hbox = QHBoxLayout()
-                self.scroll_widget.layout().insertLayout(0, hbox)
-            else:
-                hbox = self.scroll_widget.layout().itemAt(0).layout()
+                # add to layout
+                if len(self.buttons) % self.max_per_row == 1:
+                    hbox = QHBoxLayout()
+                    self.scroll_widget.layout().insertLayout(0, hbox)
+                else:
+                    hbox = self.scroll_widget.layout().itemAt(0).layout()
 
-            hbox.insertWidget(0, widget)
-            hbox.setAlignment(Qt.AlignTop | Qt.AlignLeft)
+                hbox.insertWidget(0, widget)
+                hbox.setAlignment(Qt.AlignTop | Qt.AlignLeft)
+        except Exception as e:
+            print(e)
+    def view_folder(self, image_id):
+        print("Image ID: ", image_id)
+        self.id = image_id
+        try:
+            with open('image_id.txt', 'w') as f:
+                f.write(str(self.id))
+            view_result_dialog = QtWidgets.QDialog(self.view_folder_dialog)
+            x = (self.view_folder_dialog.width() - self.view_folder_dialog.width()) // 2
+            y = (self.view_folder_dialog.height() - self.view_folder_dialog.height()) // 2
+            ui = result_with_details()
 
-    def view_folder(self, button):
-        folder_name = button.text()
-        print(folder_name)
+            ui.setupUi(view_result_dialog)
+            view_result_dialog.move(x, y)
+            view_result_dialog.show()
+            view_result_dialog.exec_()
+        except Exception as e:
+            print(e)
 
     def show_dialog_empty_text_error(self):
         # Create dialog box
@@ -658,5 +677,3 @@ class view_result_dialog(object):
         data = self.c.fetchall()
         print(data)
         self.add_button_folder(data)
-
-

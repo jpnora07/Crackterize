@@ -1,10 +1,12 @@
 <RCC>
   <qresource prefix="images">
+    <file>delete.png</file>
+    <file>editor.png</file>
     <file>slider_1.png</file>
     <file>slider.png</file>
     <file>exit.png</file>
-    <file>print_icon.png</file>
     <file>i.png</file>
+    <file>printer.png</file>
     <file>img.png</file>
     <file>add_folder.png</file>
     <file>folder.png</file>

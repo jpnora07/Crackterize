@@ -31,11 +31,8 @@
         <height>100</height>
        </size>
       </property>
-      <property name="styleSheet">
-       <string notr="true">font-size:1px</string>
-      </property>
       <property name="text">
-       <string>sdafsdfsdf</string>
+       <string/>
       </property>
       <property name="icon">
        <iconset resource="../images/images.qrc">
@@ -54,9 +51,6 @@
     </item>
     <item>
      <widget class="QLabel" name="label">
-      <property name="layoutDirection">
-       <enum>Qt::LeftToRight</enum>
-      </property>
       <property name="styleSheet">
        <string notr="true">
                 font: 700 9pt \&quot;Franklin Gothic Medium\&quot;;
@@ -69,16 +63,10 @@
                 padding-bottom: 5px;</string>
       </property>
       <property name="text">
-       <string>        TextLabel</string>
+       <string>TextLabel</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignJustify|Qt::AlignVCenter</set>
-      </property>
-      <property name="wordWrap">
-       <bool>false</bool>
-      </property>
-      <property name="indent">
-       <number>34</number>
+       <set>Qt::AlignCenter</set>
       </property>
      </widget>
     </item>
