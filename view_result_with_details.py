@@ -2,8 +2,9 @@ import os
 import sqlite3
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import Qt, QByteArray
-from PyQt5.QtGui import QPixmap, QImage
+from PyQt5.QtCore import Qt, QByteArray, QSizeF
+from PyQt5.QtGui import QPixmap, QImage, QTextDocument, QTextCursor, QPainter, QFont, QTextCharFormat
+from PyQt5.QtPrintSupport import QPrinter, QPrintPreviewDialog
 from PyQt5.QtWidgets import QDialog, QMessageBox
 
 
@@ -274,6 +275,7 @@ class result_with_details(object):
         self.print1.setIconSize(QtCore.QSize(16, 16))
         self.print1.setObjectName("print1")
         self.horizontalLayout.addWidget(self.print1)
+        self.print1.clicked.connect(self.printpreviewDialog)
         self.verticalLayout_2.addWidget(self.widget_17)
         self.widget_2 = QtWidgets.QWidget(self.widget_6)
         self.widget_2.setObjectName("widget_2")
@@ -336,15 +338,15 @@ class result_with_details(object):
 
         if data:
             try:
-                width = data[0][3]
-                length = data[0][4]
-                position = data[0][5]
-                no_crack = data[0][6]
-                crack = data[0][7]
-                status = data[0][8]
-                image = data[0][2]
+                self.width = data[0][3]
+                self.length = data[0][4]
+                self.position = data[0][5]
+                self.no_crack = data[0][6]
+                self.crack = data[0][7]
+                self.status = data[0][8]
+                self.image = data[0][2]
                 # Convert the image data to QPixmap
-                byte_array = QByteArray(image)
+                byte_array = QByteArray(self.image)
                 pixmap = QPixmap()
                 pixmap.loadFromData(byte_array)
 
@@ -352,12 +354,12 @@ class result_with_details(object):
                 label_size = self.label_image.size()
                 scaled_pixmap = pixmap.scaled(label_size, Qt.KeepAspectRatio, Qt.SmoothTransformation)
                 self.label_image.setPixmap(scaled_pixmap)
-                self.widthlbl.setText(width + " mm")
-                self.position_lbl.setText(position)
-                self.lengthlbl.setText(length + " cm")
-                self.concretecracked.setText("The image classified " + status + ".")
-                self.widgetPos_2.setText("Positive Crack Probability is " + crack + ".")
-                self.widgetNeg.setText("Negative Crack Probability is " + no_crack + ".")
+                self.widthlbl.setText(self.width + " mm")
+                self.position_lbl.setText(self.position)
+                self.lengthlbl.setText(self.length + " cm")
+                self.concretecracked.setText("The image classified " + self.status + ".")
+                self.widgetPos_2.setText("Positive Crack Probability is " + self.crack + ".")
+                self.widgetNeg.setText("Negative Crack Probability is " + self.no_crack + ".")
             except Exception as e:
                 print(e)
         else:
@@ -371,6 +373,37 @@ class result_with_details(object):
         new_remark = 'New_Remark.txt'
         if os.path.isfile(new_remark):
             os.remove(new_remark)
+
+    def printpreviewDialog(self):
+        printer = QPrinter()
+        printer.setPageSize(QPrinter.Letter)
+        printer.setOrientation(QPrinter.Portrait)
+        printer.setOutputFormat(QPrinter.PdfFormat)
+        printer.setOutputFileName("preview.pdf")
+
+        doc = QTextDocument()
+        cursor = QTextCursor(doc)
+
+        # Create a QTextCharFormat object with the desired font properties
+        font_format = QTextCharFormat()
+        font_format.setFont(QFont("Arial", 52))
+
+        # Add the data to the document
+        cursor.insertText(f"Loc: {self.width}\n", font_format)
+        cursor.insertText("Type: sdfsdf\n", font_format)
+        cursor.insertText("Prog:sfdfsdf\n", font_format)
+        cursor.insertText("Remarks: fsdfsd\n", font_format)
+        cursor.insertText("Date: sdfsdf\n", font_format)
+
+        painter = QPainter()
+        if painter.begin(printer):
+            doc.setPageSize(QSizeF(printer.pageRect().size()))
+            doc.drawContents(painter)
+            painter.end()
+
+        preview = QPrintPreviewDialog(printer)
+        preview.paintRequested.connect(doc.print_)
+        preview.exec_()
 
     def delete_result(self):
         try:
@@ -723,3 +756,12 @@ class result_with_details(object):
         self.details_dialog.close()
 
 
+if __name__ == "__main__":
+    import sys
+
+    app = QtWidgets.QApplication(sys.argv)
+    Dialog = QtWidgets.QDialog()
+    ui = result_with_details()
+    ui.setupUi(Dialog)
+    Dialog.show()
+    sys.exit(app.exec_())
