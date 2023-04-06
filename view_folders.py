@@ -556,12 +556,3 @@ class view_folder_dialog(object):
         self.c.execute("SELECT * FROM Location_Folder WHERE id=?", (folder_id,))
         row = self.c.fetchone()
         return row
-if __name__ == "__main__":
-    import sys
-
-    app = QtWidgets.QApplication(sys.argv)
-    Dialog = QtWidgets.QDialog()
-    ui = view_folder_dialog()
-    ui.setupUi(Dialog)
-    Dialog.show()
-    sys.exit(app.exec_())

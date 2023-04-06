@@ -1,5 +1,7 @@
 import os
 import sqlite3
+from datetime import datetime
+
 import cv2
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import Qt, QIODevice, QBuffer, QByteArray, QTimer
@@ -1046,7 +1048,27 @@ class Result_Dialog(object):
             buffer = QBuffer(byte_array)
             buffer.open(QIODevice.WriteOnly)
             pixmap.save(buffer, "PNG")
-            image_data = bytes(byte_array)
+            self.image_data_result = bytes(byte_array)
+
+
+            img_bytes = cv2.imread('temp_image_original.jpg')
+            # Convert the QImage to a QPixmap
+            qimageOrig = QImage(img_bytes.data, img_bytes.shape[1], img_bytes.shape[0], QImage.Format_RGB888)
+
+            # Scale the image if it's larger than a certain size
+            max_size = 1000
+            if qimageOrig.width() > max_size or qimageOrig.height() > max_size:
+                qimageOrig = qimageOrig.scaled(max_size, max_size, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+
+            pixmap_orig = QPixmap.fromImage(qimageOrig)
+
+            # Convert the QPixmap to a bytes object
+            byte_array = QByteArray()
+            buffer = QBuffer(byte_array)
+            buffer.open(QIODevice.WriteOnly)
+            pixmap_orig.save(buffer, "PNG")
+            self.image_data_original = bytes(byte_array)
+
         except Exception as e:
             print(e)
         self.folder_name = self.select_folder_dialog.sender().text()
@@ -1055,14 +1077,15 @@ class Result_Dialog(object):
 
         conn = sqlite3.connect(db_path)
         c = conn.cursor()
-        # c.execute("DROP TABLE IF EXISTS Save_Files")
+        #c.execute("DROP TABLE IF EXISTS Save_Files")
         try:
             c.execute('''SELECT count(name) FROM sqlite_master WHERE type='table' AND name='Save_Files' ''')
             if c.fetchone()[0] == 0:
                 c.execute('''CREATE TABLE Save_Files (
                                 id INTEGER PRIMARY KEY, 
                                 folder_name TEXT, 
-                                image BLOB, 
+                                image_result BLOB, 
+                                image_original BLOB, 
                                 width TEXT, 
                                 length TEXT, 
                                 position TEXT, 
@@ -1073,12 +1096,13 @@ class Result_Dialog(object):
                                 selected_type TEXT, 
                                 selected_prog TEXT, 
                                 remarks TEXT, 
-                                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                                created_at TEXT
                             )''')
 
             sql = """INSERT INTO Save_Files (
                         folder_name, 
-                        image, 
+                        image_result,
+                        image_original, 
                         width, 
                         length, 
                         position, 
@@ -1090,7 +1114,7 @@ class Result_Dialog(object):
                         selected_prog, 
                         remarks, 
                         created_at
-                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) """
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) """
 
             # Check for null values
             self.Neg_score = self.Neg_score if self.Neg_score else None
@@ -1099,10 +1123,13 @@ class Result_Dialog(object):
             selected_type = selected_type if selected_type else None
             selected_prog = selected_prog if selected_prog else None
             remarks = remarks if remarks else None
+            timestamp = datetime.now()
+            timestamp_str = timestamp.strftime('%Y-%m-%d %H:%M:%S')
 
             c.execute(sql, (
                 self.folder_name,
-                image_data,
+                self.image_data_result,
+                self.image_data_original,
                 self.width,
                 self.length,
                 "horizontal",
@@ -1113,7 +1140,7 @@ class Result_Dialog(object):
                 selected_type,
                 selected_prog,
                 remarks,
-                None
+                timestamp_str
             ))
 
         except Exception as e:

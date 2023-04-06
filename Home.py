@@ -287,8 +287,8 @@ class Ui_MainWindow(object):
             rows = c.fetchall()
             print(rows)
             for row in rows:
-                status = str(row[8])
-                recent = str(row[9])
+                status = str(row[9])
+                recent = str(row[14])
                 self.history.addItem(status + " - " + recent)
         except Exception as e:
             print("Empty History! Users not yet add results: ", e)

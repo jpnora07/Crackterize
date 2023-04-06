@@ -7,9 +7,6 @@ from PyQt5.QtGui import QPixmap, QImage, QTextDocument, QTextCursor, QPainter, Q
     QTextFrameFormat
 from PyQt5.QtPrintSupport import QPrinter, QPrintPreviewDialog
 from PyQt5.QtWidgets import QDialog, QMessageBox
-from PIL.ImageQt import ImageQt
-from PIL import Image
-import io
 
 
 class result_with_details(object):
@@ -342,28 +339,35 @@ class result_with_details(object):
 
         if data:
             try:
-                self.width = data[0][3]
-                self.length = data[0][4]
-                self.position = data[0][5]
-                self.no_crack = data[0][6]
-                self.crack = data[0][7]
-                self.status = data[0][8]
+                self.width = data[0][4]
+                self.length = data[0][5]
+                self.position = data[0][6]
+                self.no_crack = data[0][7]
+                self.crack = data[0][8]
+                self.status = data[0][9]
 
-                self.loc = data[0][9]
-                self.type = data[0][10]
-                self.prog = data[0][11]
-                self.remarks = data[0][12]
-                self.date = data[0][13]
+                self.loc = data[0][10]
+                self.type = data[0][11]
+                self.prog = data[0][12]
+                self.remarks = data[0][13]
+                self.date = data[0][14]
                 self.image = data[0][2]
+                self.image_orig = data[0][3]
                 # Convert the image data to QPixmap
                 byte_array = QByteArray(self.image)
                 self.pixmap = QPixmap()
                 self.pixmap.loadFromData(byte_array)
 
+                byte_array_orig = QByteArray(self.image_orig)
+                self.pixmap_orig = QPixmap()
+                self.pixmap_orig.loadFromData(byte_array_orig)
+
                 self.label_image.setFixedSize(322, 447)
                 label_size = self.label_image.size()
                 scaled_pixmap = self.pixmap.scaled(label_size, Qt.KeepAspectRatio, Qt.SmoothTransformation)
-                scaled_pixmap.save('image_for_doc.png')
+
+                scaled_pixmap_orig = self.pixmap_orig.scaled(label_size, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+                scaled_pixmap_orig.save('image_for_doc.png')
                 self.label_image.setPixmap(scaled_pixmap)
                 self.widthlbl.setText(self.width + " mm")
                 self.position_lbl.setText(self.position)
@@ -543,7 +547,8 @@ class result_with_details(object):
         # create a table if it doesn't exist
         self.c.execute('''SELECT count(name) FROM sqlite_master WHERE type='table' AND name='Save_Files' ''')
         if self.c.fetchone()[0] == 0:
-            self.c.execute('''CREATE TABLE Save_Files (id INTEGER PRIMARY KEY, folder_name TEXT, image BLOB, width TEXT, 
+            self.c.execute('''CREATE TABLE Save_Files (id INTEGER PRIMARY KEY, folder_name TEXT, 
+                                image_result BLOB, image_original BLOB,  width TEXT, 
             length TEXT, position TEXT, No_Crack TEXT, Crack TEXT, Status TEXT, selected_loc TEXT, selected_type 
             TEXT, selected_prog TEXT, remarks TEXT created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)''')
         # fetch data from the database
@@ -767,11 +772,11 @@ class result_with_details(object):
         data = self.fetch_save_files_of_projects()
         if data:
             try:
-                loc = data[0][9]
-                type = data[0][10]
-                prog = data[0][11]
-                remarks = data[0][12]
-                date = data[0][13]
+                loc = data[0][10]
+                type = data[0][11]
+                prog = data[0][12]
+                remarks = data[0][13]
+                date = data[0][14]
 
                 self.location_label.setText(loc)
                 self.type_label.setText(type)
@@ -804,13 +809,3 @@ class result_with_details(object):
             print(e)
         self.details_dialog.close()
 
-
-if __name__ == "__main__":
-    import sys
-
-    app = QtWidgets.QApplication(sys.argv)
-    Dialog = QtWidgets.QDialog()
-    ui = result_with_details()
-    ui.setupUi(Dialog)
-    Dialog.show()
-    sys.exit(app.exec_())
