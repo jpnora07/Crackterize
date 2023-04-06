@@ -1147,6 +1147,7 @@ class Result_Dialog(object):
             print(e)
         conn.commit()
         conn.close()
+        self.delete_usedtext_file()
         self.show_dialog_success_save()
 
     def creating_new_folder(self):
@@ -1390,6 +1391,44 @@ class Result_Dialog(object):
         # Set the image on the label
         pixmap = QPixmap(q_image)
         self.result_Img.setPixmap(pixmap.scaled(label_size, Qt.KeepAspectRatio, Qt.SmoothTransformation))
+
+    def delete_usedtext_file(self):
+        angle_write = "angle_write.txt"
+        Input_Distance = "Input_Distance.txt"
+        Negative_score = "Negative_score.txt"
+        Orientation = "Orientation.txt"
+        Positive_score = "Positive_score.txt"
+        Predicted_Class_name = "Predicted_Class_name.txt"
+        Predicted_height = "Predicted_height.txt"
+        Predicted_Score = "Predicted_Score.txt"
+        Predicted_width = "Predicted_width.txt"
+        Remarks_written = "Remarks_written.txt"
+        selected_folder_vrFile = "selected_folder_vrFile.txt"
+        Selected_location_crack = "Selected_location_crack.txt"
+        Selected_progression_crack = "Selected_progression_crack.txt"
+        Selected_type_crack = "Selected_type_crack.txt"
+        selected_project = "selected_project.txt"
+
+        try:
+            os.remove(angle_write)
+            os.remove(Input_Distance)
+            os.remove(Negative_score)
+            os.remove(Orientation)
+            os.remove(Positive_score)
+            os.remove(Predicted_Class_name)
+            os.remove(Predicted_height)
+            os.remove(Predicted_Score)
+            os.remove(Predicted_width)
+            os.remove(Remarks_written)
+            os.remove(selected_folder_vrFile)
+            os.remove(Selected_location_crack)
+            os.remove(Selected_progression_crack)
+            os.remove(Selected_type_crack)
+            os.remove(selected_project)
+
+        except OSError as e:
+            print(f"Error:{e.strerror}")
+
 
 if __name__ == "__main__":
     import sys

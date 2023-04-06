@@ -172,6 +172,12 @@ class Ui_DialogSegment(object):
         self.verticalLayout.setContentsMargins(-1, 0, -1, -1)
         self.verticalLayout.setObjectName("verticalLayout")
         self.widget_2 = QtWidgets.QWidget(Dialog)
+        self.widget_2.setStyleSheet("#widget_2{\n"
+                             "background-color: rgb(255,255,255);"
+                             "width: fit-content;\n"
+                             "heigth: fit-content;\n"
+                             "block-size: fit-content;\n"
+                             "} ")
         self.widget_2.setMinimumSize(QtCore.QSize(0, 50))
         self.widget_2.setMaximumSize(QtCore.QSize(16777215, 50))
         self.widget_2.setObjectName("widget_2")
@@ -192,6 +198,12 @@ class Ui_DialogSegment(object):
         self.label_5.setObjectName("label_5")
         self.horizontalLayout_5.addWidget(self.label_5)
         self.widget_7 = QtWidgets.QWidget(self.widget_2)
+        self.widget_7.setStyleSheet("#widget_7{\n"
+                                    "background-color: rgb(255,255,255);"
+                                    "width: fit-content;\n"
+                                    "heigth: fit-content;\n"
+                                    "block-size: fit-content;\n"
+                                    "} ")
         self.widget_7.setMinimumSize(QtCore.QSize(0, 40))
         self.widget_7.setMaximumSize(QtCore.QSize(16777215, 40))
         self.widget_7.setStyleSheet("")
