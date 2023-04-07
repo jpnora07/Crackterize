@@ -15,6 +15,7 @@ from PyQt5.QtWidgets import QListView, QComboBox, QDialog, QVBoxLayout, QApplica
     QStyledItemDelegate, QMessageBox, QScrollBar, QAbstractItemView, QLineEdit
 
 from Segment_Image import Ui_DialogSegment
+from loading_progress import LoadingDialog
 from result import Result_Dialog
 from view_folders import view_folder_dialog
 
@@ -27,6 +28,66 @@ class AlignDelegate(QStyledItemDelegate):
     def paint(self, painter, option, index):
         super().paint(painter, option, index)
 
+from PyQt5.QtCore import QThread, pyqtSignal
+
+class ImageProcessingThread(QThread):
+    finished = pyqtSignal(object)
+    error = pyqtSignal(str)
+
+    def __init__(self, image_path):
+        super().__init__()
+        self.image_path = image_path
+
+    def run(self):
+        try:
+            # Load and process the image here
+            image = cv2.imread(self.image_path)
+            # Save the image to a temporary file
+            temp_file_path = 'temp_image_original.jpg'
+            cv2.imwrite(temp_file_path, image)
+            # Check if the image is valid
+            if image is not None:
+                self.imageCnn = cv2.resize(image, (224, 224))
+                self.imageCnn = np.expand_dims(self.imageCnn, axis=0)
+
+                self.modelCnn = keras.models.load_model('resnet_model_cnn.h5')
+                predictions = self.modelCnn.predict(self.imageCnn)
+                score = tf.nn.softmax(predictions)
+                print(score)
+                class_names = ['No Detected Crack', 'Contains Crack']
+
+                # Get the index of the predicted class
+                predicted_class_index = np.argmax(score, axis=1)[0]
+
+                # Get the name and score of the predicted class
+                predicted_class_name = class_names[predicted_class_index]
+
+                predicted_class_score = 100 * score[0][predicted_class_index]
+                if predicted_class_index == 0:
+                    predicted_Negative_score = predicted_class_score
+                    predicted_Positive_score = 100 - predicted_Negative_score
+                else:
+                    predicted_Positive_score = predicted_class_score
+                    predicted_Negative_score = 100 - predicted_Positive_score
+
+                print(f"Positive crack probability: {predicted_Positive_score:.2f}%")
+                print(f"Negative crack probability: {predicted_Negative_score:.2f}%")
+                Negative_score = f"{predicted_Negative_score:.2f}%"
+                Positive_score = f"{predicted_Positive_score:.2f}%"
+                with open('Negative_score.txt', 'w') as f:
+                    f.write(Negative_score)
+                with open('Positive_score.txt', 'w') as f:
+                    f.write(Positive_score)
+                with open('Predicted_Class_name.txt', 'w') as f:
+                    f.write(predicted_class_name)
+                self.finished.emit(score)
+
+            else:
+                self.error.emit("Invalid image format")
+
+        except Exception as e:
+            print(e)
+            self.error.emit(str(e))
 
 class Ui_MainWindow(object):
     class QTComboBoxButton(QLineEdit):
@@ -683,80 +744,45 @@ class Ui_MainWindow(object):
     def upload_image(self):
         image_path = self.open_file_dialog()
         try:
-            image = cv2.imread(image_path)
-            # Save the image to a temporary file
-            temp_file_path = 'temp_image_original.jpg'
-            cv2.imwrite(temp_file_path, image)
-            # Check if the image is valid
-            if image is not None:
-                self.imageCnn = cv2.resize(image, (224, 224))
-                self.imageCnn = np.expand_dims(self.imageCnn, axis=0)
+            self.load_dialog = LoadingDialog()
+            self.load_dialog.show()
 
-                self.modelCnn = keras.models.load_model('resnet_model_cnn.h5')
-                predictions = self.modelCnn.predict(self.imageCnn)
-                score = tf.nn.softmax(predictions)
-                class_names = ['No Detected Crack', 'Contains Crack']
+            # Create a new thread for the image processing task
+            self.thread = ImageProcessingThread(image_path)
+            self.thread.start()
+            self.thread.finished.connect(lambda score: self.on_processing_finished(score))
 
-                # Get the index of the predicted class
-                predicted_class_index = np.argmax(score, axis=1)[0]
-
-                # Get the name and score of the predicted class
-                predicted_class_name = class_names[predicted_class_index]
-                predicted_class_score = 100 * score[0][predicted_class_index]
-
-                # Print the results
-                print(f"The image is classified as {predicted_class_name} with a score of {predicted_class_score:.2f}.")
-
-                if predicted_class_index == 0:
-                    predicted_Negative_score = predicted_class_score
-                    predicted_Positive_score = 100 - predicted_Negative_score
-                else:
-                    predicted_Positive_score = predicted_class_score
-                    predicted_Negative_score = 100 - predicted_Positive_score
-
-                print(f"Positive crack probability: {predicted_Positive_score:.2f}%")
-                print(f"Negative crack probability: {predicted_Negative_score:.2f}%")
-
-                Negative_score = f"{predicted_Negative_score:.2f}%"
-                Positive_score = f"{predicted_Positive_score:.2f}%"
-                with open('Negative_score.txt', 'w') as f:
-                    f.write(Negative_score)
-                with open('Positive_score.txt', 'w') as f:
-                    f.write(Positive_score)
-                with open('Predicted_Class_name.txt', 'w') as f:
-                    f.write(predicted_class_name)
-                if np.argmax(score) == 0:
-                    try:
-                        with open('Predicted_width.txt', 'w') as f:
-                            f.write("0 mm")
-                        with open('Predicted_height.txt', 'w') as f:
-                            f.write("0 cm")
-                    except FileNotFoundError:
-                        print("The file does not exist.")
-                    result_dialog = QtWidgets.QDialog(self.Mainwindow)
-                    ui = Result_Dialog()
-                    ui.setupUi(result_dialog)
-                    x = (self.Mainwindow.width() - result_dialog.width()) // 2
-                    y = (self.Mainwindow.height() - result_dialog.height()) // 2
-                    result_dialog.move(x, y)
-                    result_dialog.exec_()
-
-                else:
-
-                    segment_dialog = QtWidgets.QDialog(self.Mainwindow)
-                    ui = Ui_DialogSegment()
-                    ui.setupUi(segment_dialog)
-                    x = (self.Mainwindow.width() - segment_dialog.width()) // 2
-                    y = (self.Mainwindow.height() - segment_dialog.height()) // 2
-                    segment_dialog.move(x, y)
-                    segment_dialog.exec_()
-
-            else:
-                print("Invalid image format")
 
         except Exception as e:
             print(e)
+    def on_processing_finished(self, score):
+        # Update the GUI with the results of the image processing task
+        self.load_dialog.close()
+        if np.argmax(score) == 0:
+            try:
+                with open('Predicted_width.txt', 'w') as f:
+                    f.write("0 mm")
+                with open('Predicted_height.txt', 'w') as f:
+                    f.write("0 cm")
+            except FileNotFoundError:
+                print("The file does not exist.")
+            result_dialog = QtWidgets.QDialog(self.Mainwindow)
+            ui = Result_Dialog()
+            ui.setupUi(result_dialog)
+            x = (self.Mainwindow.width() - result_dialog.width()) // 2
+            y = (self.Mainwindow.height() - result_dialog.height()) // 2
+            result_dialog.move(x, y)
+            result_dialog.exec_()
 
+        else:
+
+            segment_dialog = QtWidgets.QDialog(self.Mainwindow)
+            ui = Ui_DialogSegment()
+            ui.setupUi(segment_dialog)
+            x = (self.Mainwindow.width() - segment_dialog.width()) // 2
+            y = (self.Mainwindow.height() - segment_dialog.height()) // 2
+            segment_dialog.move(x, y)
+            segment_dialog.exec_()
     def open_file_dialog(self):
         file_dialog = QFileDialog()
         file_dialog.setNameFilter('Images (*.png *.jpg *.bmp)')

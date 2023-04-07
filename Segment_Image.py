@@ -528,7 +528,10 @@ class Ui_DialogSegment(object):
 
             self.Dialog.close()
         else:
-            event.ignore()
+            try:
+                event.ignore()
+            except Exception as e:
+                print(e)
 
     def view_height(self):
         try:
