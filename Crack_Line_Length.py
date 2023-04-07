@@ -158,7 +158,6 @@ class Line_length(object):
         self.show_image(self.img)
         layout.addWidget(self.edges_label, 0, 1)
 
-
         # Create a button and add it to the layout
         button = QPushButton("Done")
         button.setFixedSize(150, 35)

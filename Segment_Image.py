@@ -173,11 +173,11 @@ class Ui_DialogSegment(object):
         self.verticalLayout.setObjectName("verticalLayout")
         self.widget_2 = QtWidgets.QWidget(Dialog)
         self.widget_2.setStyleSheet("#widget_2{\n"
-                             "background-color: rgb(255,255,255);"
-                             "width: fit-content;\n"
-                             "heigth: fit-content;\n"
-                             "block-size: fit-content;\n"
-                             "} ")
+                                    "background-color: rgb(255,255,255);"
+                                    "width: fit-content;\n"
+                                    "heigth: fit-content;\n"
+                                    "block-size: fit-content;\n"
+                                    "} ")
         self.widget_2.setMinimumSize(QtCore.QSize(0, 50))
         self.widget_2.setMaximumSize(QtCore.QSize(16777215, 50))
         self.widget_2.setObjectName("widget_2")
@@ -222,7 +222,7 @@ class Ui_DialogSegment(object):
         self.exit = QtWidgets.QPushButton(self.widget_7)
         self.exit.setMinimumSize(QtCore.QSize(30, 30))
         self.exit.setMaximumSize(QtCore.QSize(30, 30))
-        self.exit.clicked.connect(Dialog.close)
+        self.exit.clicked.connect(self.closeEvent)
         self.exit.setText("")
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap("images/exit.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
@@ -472,6 +472,64 @@ class Ui_DialogSegment(object):
         self.height.setText(_translate("Dialog", "View Height"))
         self.proceed.setText(_translate("Dialog", "Proceed"))
 
+    def closeEvent(self, event):
+        Negative_score = "Negative_score.txt"
+        Input_Distance = "Input_Distance.txt"
+        Positive_score = "Positive_score.txt"
+        Predicted_Class_name = "Predicted_Class_name.txt"
+        self.Predicted_width = "Predicted_width.txt"
+        self.Predicted_height = "Predicted_height.txt"
+        self.Orientation = "Orientation.txt"
+        Predicted_Score = "Predicted_Score.txt"
+
+        reply = QtWidgets.QMessageBox.question(self.Dialog, 'Message', "Are you sure you want to exit?",
+                                               QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No,
+                                               QtWidgets.QMessageBox.No)
+        if reply == QtWidgets.QMessageBox.Yes:
+            try:
+                os.remove(Input_Distance)
+            except FileNotFoundError:
+                print(f"{Input_Distance} already removed or does not exist")
+
+            try:
+                os.remove(Negative_score)
+            except FileNotFoundError:
+                print(f"{Negative_score} already removed or does not exist")
+
+            try:
+                os.remove(self.Orientation)
+            except FileNotFoundError:
+                print(f"{self.Orientation} already removed or does not exist")
+
+            try:
+                os.remove(Positive_score)
+            except FileNotFoundError:
+                print(f"{Positive_score} already removed or does not exist")
+
+            try:
+                os.remove(Predicted_Class_name)
+            except FileNotFoundError:
+                print(f"{Predicted_Class_name} already removed or does not exist")
+
+            try:
+                os.remove(self.Predicted_height)
+            except FileNotFoundError:
+                print(f"{self.Predicted_height} already removed or does not exist")
+
+            try:
+                os.remove(Predicted_Score)
+            except FileNotFoundError:
+                print(f"{Predicted_Score} already removed or does not exist")
+
+            try:
+                os.remove(self.Predicted_width)
+            except FileNotFoundError:
+                print(f"{self.Predicted_width} already removed or does not exist")
+
+            self.Dialog.close()
+        else:
+            event.ignore()
+
     def view_height(self):
         try:
             distance = float(self.NumOfDistance.toPlainText())
@@ -506,6 +564,23 @@ class Ui_DialogSegment(object):
             print('Error: threshold_image.jpg does not exist')
 
     def Proceed_to_Result(self):
+
+        Predicted_width = "Predicted_width.txt"
+        Predicted_height = "Predicted_height.txt"
+        try:
+            # Check that the files exist and are not empty
+            if not os.path.isfile(Predicted_width) or os.path.getsize(Predicted_width) == 0:
+                QtWidgets.QMessageBox.critical(self.Dialog, "Error", "The image is not completely get the width of crack "
+                                                                     "detected.")
+                return
+
+            if not os.path.isfile(Predicted_height) or os.path.getsize(Predicted_height) == 0:
+                QtWidgets.QMessageBox.critical(self.Dialog, "Error", "The image is not completely get the height of crack "
+                                                                     "detected.")
+                return
+        except Exception as e:
+            print(e)
+        # Create and show the Result_Dialog
         result_dialog = QtWidgets.QDialog(self.Dialog)
 
         x = (self.Dialog.width() - self.Dialog.width()) // 2
@@ -552,7 +627,6 @@ class Ui_DialogSegment(object):
         CrackLineLength.move(x, y)
         CrackLineLength.show()
         CrackLineLength.exec_()
-
 
     def update_image(self, image):
         # Get the size of the label

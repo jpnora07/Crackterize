@@ -4,8 +4,10 @@ from datetime import datetime
 
 import cv2
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import Qt, QIODevice, QBuffer, QByteArray, QTimer
-from PyQt5.QtGui import QImage, QPixmap
+from PyQt5.QtCore import Qt, QIODevice, QBuffer, QByteArray, QTimer, QSizeF
+from PyQt5.QtGui import QImage, QPixmap, QTextCursor, QTextFrameFormat, QTextImageFormat, QTextCharFormat, QFont, \
+    QTextDocument, QPainter
+from PyQt5.QtPrintSupport import QPrinter, QPrintPreviewDialog
 from PyQt5.QtWidgets import QVBoxLayout, QWidget, QScrollArea, QPushButton, QLabel, QHBoxLayout, QLayout, QMessageBox
 
 from add_details_of_cracks import add_details_dialog
@@ -326,28 +328,27 @@ class Result_Dialog(object):
         self.print1 = QtWidgets.QPushButton(self.widget_17)
         self.print1.setMinimumSize(QtCore.QSize(0, 35))
         self.print1.setMaximumSize(QtCore.QSize(16777215, 35))
-        self.print1.setStyleSheet("#print1{\n"
-
-                                  "background: #6F4B27;\n"
-                                  "font-weight:bold;\n"
-                                  "color: white;\n"
+        self.print1.setStyleSheet("\n"
+                                  "#print1{\n"
+                                  "color: #2E74A9;\n"
+                                  "border : 3px solid   #2E74A9;\n"
+                                  "background-color: :#2E74A9;\n"
                                   "border-radius: 7px;\n"
+                                  "}\n"
+                                  "\n"
+                                  "#print1::hover{\n"
+                                  "background: #E3E9ED;\n"
                                   "font-family: Inter;\n"
                                   "}\n"
                                   "\n"
-                                  "\n"
-                                  "#print1::hover{\n"
-
-                                  "color: #6F4B27;\n"
-                                  "border : 3px solid rgb(144,115,87);\n"
-                                  "background-color: white;\n"
-                                  "}\n"
                                   "")
-        icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(":/images/print_icon.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.print1.setIcon(icon)
-        self.print1.setIconSize(QtCore.QSize(30, 30))
+        self.print1.setText("")
+        icon2 = QtGui.QIcon()
+        icon2.addPixmap(QtGui.QPixmap("images/printer.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.print1.setIcon(icon2)
+        self.print1.setIconSize(QtCore.QSize(16, 16))
         self.print1.setObjectName("print1")
+        self.print1.clicked.connect(self.printpreviewDialog)
         self.horizontalLayout.addWidget(self.print1)
         self.verticalLayout_2.addWidget(self.widget_17)
         self.widget_2 = QtWidgets.QWidget(self.widget_6)
@@ -400,7 +401,83 @@ class Result_Dialog(object):
         self.adddetails.setText(_translate("Dialog", "Add Details"))
         self.print1.setText(_translate("Dialog", "Print"))
         self.savebtn.setText(_translate("Dialog", "Save"))
+    def printpreviewDialog(self):
+        file_path_orient = 'Orientation.txt'
+        if os.path.isfile(file_path_orient):
+            with open(file_path_orient, 'r') as f:
+                self.orient = f.read()
+            if not self.orient:  # check if orient is an empty string
+                self.orient = None  # set orient to None
+        else:
+            self.orient = None  # set orient to None if the file does not exist
+        printer = QPrinter()
+        printer.setPageSize(QPrinter.Letter)
+        printer.setOrientation(QPrinter.Portrait)
+        printer.setOutputFormat(QPrinter.PdfFormat)
+        printer.setOutputFileName("preview.pdf")
 
+        doc = QTextDocument()
+        doc.setPageSize(QSizeF(792, 612))  # set page size to 11x8.5 inches (in points)
+        doc.setDocumentMargin(36)  # set margin to 0.5 inch (36 points)
+        cursor = QTextCursor(doc)
+
+        try:
+            # Load the image file
+            image_path = os.path.abspath("temp_image_original.jpg")
+            image = QImage(image_path)
+            if image.isNull():
+                print("Error: Could not load image")
+                return
+
+            # Insert the image into the document
+            pixmap = QPixmap.fromImage(image)
+
+            if not pixmap.isNull():
+                image_format = QTextImageFormat()
+                image_format.setWidth(pixmap.width())
+                image_format.setHeight(pixmap.height())
+                image_format.setName(image_path)
+
+                # Create a QTextFrameFormat and set its properties
+                frame_format = QTextFrameFormat()
+                frame_format.setBorder(1)  # set border width to 1
+                frame_format.setBorderStyle(QTextFrameFormat.BorderStyle_Solid)  # set border style to solid
+                frame_format.setBorderBrush(Qt.black)  # set border color to black
+                frame_format.setPadding(5)   # set padding to 5
+                frame_format.setMargin(5)
+
+                # Insert the image into a QTextFrame and set its format
+                frame = cursor.insertFrame(frame_format)
+                frame_cursor = QTextCursor(frame)
+                frame_cursor.insertImage(image_format, QTextFrameFormat.FloatRight)
+        except Exception as e:
+            print(e)
+
+        # Create a QTextCharFormat object with the desired font properties
+        font_format = QTextCharFormat()
+        font_format.setFont(QFont("Arial", 15))
+
+        # Add the data to the document
+        cursor.insertText(f"The image classified as: {self.status}\n", font_format)
+        cursor.insertText(f"Length: {self.length} cm\n", font_format)
+        cursor.insertText(f"Width:{self.width} mm\n", font_format)
+        cursor.insertText(f"Orientation: {self.orient}\n", font_format)
+        cursor.insertText(f"Positive Crack Probability: {self.Pos_score}\n", font_format)
+        cursor.insertText(f"Negative Crack Probability: {self.Neg_score}\n", font_format)
+        #cursor.insertText(f"Location of Crack: {self.loc}\n", font_format)
+        #cursor.insertText(f"Crack Type:{self.type}\n", font_format)
+        #cursor.insertText(f"Crack Progression: {self.prog}\n", font_format)
+        #cursor.insertText(f"Date Added: {self.date}\n", font_format)
+
+        painter = QPainter()
+        if painter.begin(printer):
+            doc.setPageSize(QSizeF(printer.pageRect().size()))
+            doc.drawContents(painter)
+            painter.end()
+
+        preview = QPrintPreviewDialog(printer)
+        preview.paintRequested.connect(doc.print_)
+        preview.exec_()
     def add_details_function(self):
         try:
             result_dialog = QtWidgets.QDialog(self.Dialog)
@@ -1008,12 +1085,23 @@ class Result_Dialog(object):
         try:
             with open('Selected_location_crack.txt', 'r') as f:
                 selected_loc1 = f.read()
+            if not selected_loc1:
+                selected_loc1 = None
+
             with open('Selected_type_crack.txt', 'r') as f:
                 selected_type1 = f.read()
+            if not selected_type1:
+                selected_type1 = None
+
             with open('Selected_progression_crack.txt', 'r') as f:
                 selected_prog1 = f.read()
+            if not selected_prog1:
+                selected_prog1 = None
+
             with open('Remarks_written.txt', 'r') as f:
                 remarks1 = f.read()
+            if not remarks1:
+                remarks1 = None
 
             print(selected_loc1, selected_type1, selected_prog1, remarks1)
             file_path_Class = 'Predicted_Class_name.txt'
@@ -1031,7 +1119,7 @@ class Result_Dialog(object):
                         selected_prog = selected_prog1
                         remarks = remarks1
         except Exception as e:
-            print(e)
+            print(f"Error at getting files {e}")
         try:
             # Convert the QImage to a QPixmap
             qimage = QImage(self.image.data, self.image.shape[1], self.image.shape[0], QImage.Format_RGB888)
@@ -1070,7 +1158,7 @@ class Result_Dialog(object):
             self.image_data_original = bytes(byte_array)
 
         except Exception as e:
-            print(e)
+            print(f"Error at database {e}")
         self.folder_name = self.select_folder_dialog.sender().text()
         BASE_DIR = os.path.dirname(os.path.abspath(__file__))
         db_path = os.path.join(BASE_DIR, 'Projects.db')
@@ -1122,6 +1210,7 @@ class Result_Dialog(object):
             selected_loc = selected_loc if selected_loc else None
             selected_type = selected_type if selected_type else None
             selected_prog = selected_prog if selected_prog else None
+            self.orient = self.orient if self.orient else None
             remarks = remarks if remarks else None
             timestamp = datetime.now()
             timestamp_str = timestamp.strftime('%Y-%m-%d %H:%M:%S')
@@ -1132,7 +1221,7 @@ class Result_Dialog(object):
                 self.image_data_original,
                 self.width,
                 self.length,
-                "horizontal",
+                self.orient,
                 self.Neg_score,
                 self.Pos_score,
                 self.status,
@@ -1144,7 +1233,7 @@ class Result_Dialog(object):
             ))
 
         except Exception as e:
-            print(e)
+            print(f"Error at parameters {e}")
         conn.commit()
         conn.close()
         self.delete_usedtext_file()
@@ -1410,21 +1499,81 @@ class Result_Dialog(object):
         selected_project = "selected_project.txt"
 
         try:
-            os.remove(angle_write)
-            os.remove(Input_Distance)
-            os.remove(Negative_score)
-            os.remove(Orientation)
-            os.remove(Positive_score)
-            os.remove(Predicted_Class_name)
-            os.remove(Predicted_height)
-            os.remove(Predicted_Score)
-            os.remove(Predicted_width)
-            os.remove(Remarks_written)
-            os.remove(selected_folder_vrFile)
-            os.remove(Selected_location_crack)
-            os.remove(Selected_progression_crack)
-            os.remove(Selected_type_crack)
-            os.remove(selected_project)
+            try:
+                os.remove(angle_write)
+            except FileNotFoundError:
+                print(f"{angle_write} already removed or does not exist")
+
+            try:
+                os.remove(Input_Distance)
+            except FileNotFoundError:
+                print(f"{Input_Distance} already removed or does not exist")
+
+            try:
+                os.remove(Negative_score)
+            except FileNotFoundError:
+                print(f"{Negative_score} already removed or does not exist")
+
+            try:
+                os.remove(Orientation)
+            except FileNotFoundError:
+                print(f"{Orientation} already removed or does not exist")
+
+            try:
+                os.remove(Positive_score)
+            except FileNotFoundError:
+                print(f"{Positive_score} already removed or does not exist")
+
+            try:
+                os.remove(Predicted_Class_name)
+            except FileNotFoundError:
+                print(f"{Predicted_Class_name} already removed or does not exist")
+
+            try:
+                os.remove(Predicted_height)
+            except FileNotFoundError:
+                print(f"{Predicted_height} already removed or does not exist")
+
+            try:
+                os.remove(Predicted_Score)
+            except FileNotFoundError:
+                print(f"{Predicted_Score} already removed or does not exist")
+
+            try:
+                os.remove(Predicted_width)
+            except FileNotFoundError:
+                print(f"{Predicted_width} already removed or does not exist")
+
+            try:
+                os.remove(Remarks_written)
+            except FileNotFoundError:
+                print(f"{Remarks_written} already removed or does not exist")
+
+            try:
+                os.remove(selected_folder_vrFile)
+            except FileNotFoundError:
+                print(f"{selected_folder_vrFile} already removed or does not exist")
+
+            try:
+                os.remove(Selected_location_crack)
+            except FileNotFoundError:
+                print(f"{Selected_location_crack} already removed or does not exist")
+
+            try:
+                os.remove(Selected_progression_crack)
+            except FileNotFoundError:
+                print(f"{Selected_progression_crack} already removed or does not exist")
+
+            try:
+                os.remove(Selected_type_crack)
+            except FileNotFoundError:
+                print(f"{Selected_type_crack} already removed or does not exist")
+
+            try:
+                os.remove(selected_project)
+            except FileNotFoundError:
+                print(f"{selected_project} already removed or does not exist")
+
 
         except OSError as e:
             print(f"Error:{e.strerror}")
