@@ -594,7 +594,7 @@ class Ui_DialogSegment(object):
 
         x = (self.Dialog.width() - self.Dialog.width()) // 2
         y = (self.Dialog.height() - self.Dialog.height()) // 2
-        ui = Result_Dialog()
+        ui = Result_Dialog(self.Dialog, self.background_widget)
 
         ui.setupUi(result_dialog)
         result_dialog.move(x, y)

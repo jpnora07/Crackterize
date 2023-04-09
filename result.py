@@ -8,12 +8,18 @@ from PyQt5.QtCore import Qt, QIODevice, QBuffer, QByteArray, QTimer, QSizeF
 from PyQt5.QtGui import QImage, QPixmap, QTextCursor, QTextFrameFormat, QTextImageFormat, QTextCharFormat, QFont, \
     QTextDocument, QPainter
 from PyQt5.QtPrintSupport import QPrinter, QPrintPreviewDialog
-from PyQt5.QtWidgets import QVBoxLayout, QWidget, QScrollArea, QPushButton, QLabel, QHBoxLayout, QLayout, QMessageBox
+from PyQt5.QtWidgets import QVBoxLayout, QWidget, QScrollArea, QPushButton, QLabel, QHBoxLayout, QLayout, QMessageBox, \
+    QDialog
 
 from add_details_of_cracks import add_details_dialog
 
 
 class Result_Dialog(object):
+
+    def __init__(self, Dialog, background_widget):
+        self.close_segment_dialog = Dialog
+        self.background_widget = background_widget
+
     def setupUi(self, Dialog):
         self.Dialog = Dialog
         Dialog.setObjectName("Dialog")
@@ -48,7 +54,7 @@ class Result_Dialog(object):
         self.verticalLayout_5.setObjectName("verticalLayout_5")
         self.exit = QtWidgets.QPushButton(self.widget_16)
         self.exit.setMinimumSize(QtCore.QSize(0, 25))
-        self.exit.clicked.connect(Dialog.close)
+        self.exit.clicked.connect(self.closeEvent)
         self.exit.setMaximumSize(QtCore.QSize(25, 25))
         self.exit.setLayoutDirection(QtCore.Qt.RightToLeft)
         self.exit.setDefault(False)
@@ -402,6 +408,69 @@ class Result_Dialog(object):
         self.adddetails.setText(_translate("Dialog", "Add Details"))
         self.print1.setText(_translate("Dialog", "Print"))
         self.savebtn.setText(_translate("Dialog", "Save"))
+
+    def closeEvent(self, event):
+        Negative_score = "Negative_score.txt"
+        Input_Distance = "Input_Distance.txt"
+        Positive_score = "Positive_score.txt"
+        Predicted_Class_name = "Predicted_Class_name.txt"
+        self.Predicted_width = "Predicted_width.txt"
+        self.Predicted_height = "Predicted_height.txt"
+        self.Orientation = "Orientation.txt"
+        Predicted_Score = "Predicted_Score.txt"
+
+        reply = QtWidgets.QMessageBox.question(self.Dialog, 'Message', "Are you sure you want to exit?",
+                                               QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No,
+                                               QtWidgets.QMessageBox.No)
+        if reply == QtWidgets.QMessageBox.Yes:
+            self.close_segment_dialog.close()
+            self.background_widget.hide()
+            try:
+                os.remove(Input_Distance)
+            except FileNotFoundError:
+                print(f"{Input_Distance} already removed or does not exist")
+
+            try:
+                os.remove(Negative_score)
+            except FileNotFoundError:
+                print(f"{Negative_score} already removed or does not exist")
+
+            try:
+                os.remove(self.Orientation)
+            except FileNotFoundError:
+                print(f"{self.Orientation} already removed or does not exist")
+
+            try:
+                os.remove(Positive_score)
+            except FileNotFoundError:
+                print(f"{Positive_score} already removed or does not exist")
+
+            try:
+                os.remove(Predicted_Class_name)
+            except FileNotFoundError:
+                print(f"{Predicted_Class_name} already removed or does not exist")
+
+            try:
+                os.remove(self.Predicted_height)
+            except FileNotFoundError:
+                print(f"{self.Predicted_height} already removed or does not exist")
+
+            try:
+                os.remove(Predicted_Score)
+            except FileNotFoundError:
+                print(f"{Predicted_Score} already removed or does not exist")
+
+            try:
+                os.remove(self.Predicted_width)
+            except FileNotFoundError:
+                print(f"{self.Predicted_width} already removed or does not exist")
+
+            self.Dialog.close()
+        else:
+            try:
+                event.ignore()
+            except Exception as e:
+                print(e)
     def printpreviewDialog(self):
         file_path_orient = 'Orientation.txt'
         if os.path.isfile(file_path_orient):
@@ -500,7 +569,7 @@ class Result_Dialog(object):
         Dialog.resize(310, 210)
         Dialog.setMaximumSize(QtCore.QSize(310, 210))
         Dialog.setStyleSheet(
-            '''#Dialog{background-color: qlineargradient(spread:pad, x1:0.045, y1:0.261, x2:0.988636, y2:0.955, stop:0 rgba(235, 209, 196, 255), stop:1 rgba(255, 255, 255, 255));width: fit-content; heigth: fit-content; block-size: fit-content;} ''')
+            '''#Dialog{background-color: #f3e9e2; border: 1px solid grey;} ''')
         Dialog.setWindowFlags(Qt.FramelessWindowHint)
         self.horizontalLayout = QtWidgets.QHBoxLayout(Dialog)
         self.horizontalLayout.setObjectName("horizontalLayout")
@@ -607,8 +676,7 @@ class Result_Dialog(object):
         self.existing_folder_dialog.setObjectName("Dialog")
         self.existing_folder_dialog.setFixedSize(346, 334)
         self.existing_folder_dialog.setStyleSheet(
-            '''#Dialog{background-color: qlineargradient(spread:pad, x1:0.045, y1:0.261, x2:0.988636, y2:0.955, stop:0 rgba(235, 209, 196, 255), stop:1 rgba(255, 255, 255, 255));width: fit-content; heigth: fit-content; block-size: fit-content;
-            } ''')
+            '''#Dialog{background-color: #f3e9e2; border: 1px solid grey;} ''')
         self.existing_folder_dialog.setWindowFlags(Qt.FramelessWindowHint)
         self.existing_folder_dialog.resize(419, 365)
         # Create the main layout
@@ -680,7 +748,7 @@ class Result_Dialog(object):
         scroll_area.setMaximumSize(QtCore.QSize(323, 210))
         scroll_area.setObjectName("scroll_area")
         scroll_area.setStyleSheet(
-            "#scroll_area {border: none;background-color: qlineargradient(spread:pad, x1:0.045, y1:0.261, x2:0.988636, y2:0.955, stop:0 rgba(235, 209, 196, 255), stop:1 rgba(255, 255, 255, 255));} "
+            "#scroll_area {border: none;background-color:#f3e9e2;} "
             "#scroll_area QScrollBar:vertical {background-color: #c3c3c3; width: 15px;margin: 15px 3px 15px 3px;border: 1px transparent #2A2929;border-radius: 4px;} "
             "#scroll_area QScrollBar::handle:vertical {background-color: #8c8c8c;min-height: 5px;border-radius: 4px;}"
             "QScrollBar::sub-line:vertical{margin: 3px 0px 3px 0px;border-image: url(:/images/up_arrow_disabled.png);height: 10px;width: 10px;subcontrol-position: top;subcontrol-origin: margin;}"
@@ -692,8 +760,7 @@ class Result_Dialog(object):
         # Create a widget to contain the layout
         widget = QWidget()
         widget.setStyleSheet('''
-            background-color: qlineargradient(spread:pad, x1:0.045, y1:0.261, x2:0.988636, y2:0.955, stop:0 rgba(235, 209, 196, 255), stop:1 rgba(255, 255, 255, 255));
-            width: fit-content;
+            background-color: #f3e9e2; width: fit-content;
             height: fit-content;
             block-size: fit-content;
             margin-left: 10px;
@@ -778,7 +845,7 @@ class Result_Dialog(object):
         NewProjectDialog.setMaximumSize(QtCore.QSize(500, 300))
         # set corner radius of dialog box
         # NewProjectDialog.setWindowOpacity(0.6)
-        radius = 20
+        radius = 15
         NewProjectDialog.setStyleSheet("""
                     background:#EFEEEE;
                     border-top-left-radius:{0}px;
@@ -930,8 +997,7 @@ class Result_Dialog(object):
         self.select_folder_dialog.setObjectName("Dialog")
         self.select_folder_dialog.setFixedSize(346, 334)
         self.select_folder_dialog.setStyleSheet(
-            '''#Dialog{background-color: qlineargradient(spread:pad, x1:0.045, y1:0.261, x2:0.988636, y2:0.955, stop:0 rgba(235, 209, 196, 255), stop:1 rgba(255, 255, 255, 255));width: fit-content; heigth: fit-content; block-size: fit-content;
-            } ''')
+            '''#Dialog{background-color: #f3e9e2; border: 1px solid grey;} ''')
         self.select_folder_dialog.setWindowFlags(Qt.FramelessWindowHint)
         self.select_folder_dialog.resize(419, 365)
         # Create the main layout
@@ -994,7 +1060,7 @@ class Result_Dialog(object):
         scroll_area.setMaximumSize(QtCore.QSize(323, 210))
         scroll_area.setObjectName("scroll_area")
         scroll_area.setStyleSheet(
-            "#scroll_area {border: none;background-color: qlineargradient(spread:pad, x1:0.045, y1:0.261, x2:0.988636, y2:0.955, stop:0 rgba(235, 209, 196, 255), stop:1 rgba(255, 255, 255, 255));} "
+            "#scroll_area {border: none;background-color: #f3e9e2;} "
             "#scroll_area QScrollBar:vertical {background-color: #c3c3c3; width: 15px;margin: 15px 3px 15px 3px;border: 1px transparent #2A2929;border-radius: 4px;} "
             "#scroll_area QScrollBar::handle:vertical {background-color: #8c8c8c;min-height: 5px;border-radius: 4px;}"
             "QScrollBar::sub-line:vertical{margin: 3px 0px 3px 0px;border-image: url(:/images/up_arrow_disabled.png);height: 10px;width: 10px;subcontrol-position: top;subcontrol-origin: margin;}"
@@ -1006,7 +1072,7 @@ class Result_Dialog(object):
         # Create a widget to contain the layout
         widget = QWidget()
         widget.setStyleSheet('''
-            background-color: qlineargradient(spread:pad, x1:0.045, y1:0.261, x2:0.988636, y2:0.955, stop:0 rgba(235, 209, 196, 255), stop:1 rgba(255, 255, 255, 255));
+            background-color: #f3e9e2;
             width: fit-content;
             height: fit-content;
             block-size: fit-content;
@@ -1239,24 +1305,20 @@ class Result_Dialog(object):
         conn.close()
         self.delete_usedtext_file()
         self.show_dialog_success_save()
+        self.close_segment_dialog.close()
+        self.background_widget.hide()
 
     def creating_new_folder(self):
         # Create dialog box
-        NewFolderDialog = QtWidgets.QDialog()
+        NewFolderDialog = QDialog()
         NewFolderDialog.setObjectName("NewFolderDialog")
         NewFolderDialog.setWindowFlags(Qt.FramelessWindowHint)
         NewFolderDialog.resize(500, 300)
         NewFolderDialog.setMinimumSize(QtCore.QSize(500, 300))
         NewFolderDialog.setMaximumSize(QtCore.QSize(500, 300))
         # NewFolderDialog.setWindowOpacity(0.6)
-        radius = 20
-        NewFolderDialog.setStyleSheet("""
-                    background:#EFEEEE;
-                    border-top-left-radius:{0}px;
-                    border-bottom-left-radius:{0}px;
-                    border-top-right-radius:{0}px;
-                    border-bottom-right-radius:{0}px;
-                    """.format(radius))
+        NewFolderDialog.setStyleSheet(
+            '''#NewFolderDialog{background-color: #f3e9e2; border: 1px solid grey;} ''')
 
         horizontalLayout_2 = QtWidgets.QHBoxLayout(NewFolderDialog)
         horizontalLayout_2.setObjectName("horizontalLayout_2")
@@ -1408,7 +1470,7 @@ class Result_Dialog(object):
         timer.timeout.connect(Dialog.close)
         timer.start(1000)
         # Dialog.setWindowOpacity(0.6)
-        radius = 20
+        radius = 15
         Dialog.setStyleSheet("""
                             background:#EFEEEE;
                             border-top-left-radius:{0}px;
