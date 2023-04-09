@@ -7,32 +7,14 @@ import numpy as np
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import QThread, pyqtSignal, Qt
 from PyQt5.QtGui import QImage, QPixmap, QMovie
-from PyQt5.QtWidgets import QMessageBox, QDialog, QLabel, QVBoxLayout, QApplication
+from PyQt5.QtWidgets import QMessageBox, QDialog, QLabel, QVBoxLayout, QApplication, QFrame
 
 from result import Result_Dialog
 from Crack_Line_Length import Line_length
 
 
-class CustomDialog(QDialog):
-    def __init__(self, parent=None):
-        super().__init__(parent)
-        self.setWindowTitle("Custom Dialog")
-        self.setModal(True)
-
-        # Create a label to display the GIF
-        gif_label = QLabel(self)
-        movie = QMovie("images/giphy.gif")
-        gif_label.setMovie(movie)
-        movie.start()
-
-        # Create a layout and add the label to it
-        layout = QVBoxLayout(self)
-        layout.addWidget(gif_label)
-
-
 class NoiseRemovalThread(QThread):
     finished = pyqtSignal(np.ndarray)
-    progress_signal = pyqtSignal(int)
 
     def __init__(self, thresholded):
         super().__init__()
@@ -57,7 +39,6 @@ class FindBlackBlocksThread(QThread):
     finished = pyqtSignal()
     progress_signal = pyqtSignal(int)
     result_signal = pyqtSignal(list)
-
     def __init__(self, image, nBlock):
         super().__init__()
         self.image = image
@@ -91,55 +72,60 @@ class FindBlackBlocksThread(QThread):
         self.result_signal.emit(self.blocks)
         self.finished.emit()
 
-
 class CrackAnalyzer(QThread):
-
-    def __init__(self, distance, unit, focal_length):
+    finished = pyqtSignal()
+    def __init__(self, distance, unit, focal_length, result_image):
         super().__init__()
         self.distance = distance
         self.unit = unit
         self.focal_length = focal_length
+        self.result = result_image
 
-    def get_Heigth_Width_Function(self, result):
-        # Convert the known distance to centimeters
-        if self.unit == "Millimeter (mm)":
-            known_distance_cm = self.distance / 10
-        elif self.unit == "Centimeter (cm)":
-            known_distance_cm = self.distance
-        elif self.unit == "Inch (in)":
-            known_distance_cm = self.distance * 2.54
-        elif self.unit == "Foot (ft)":
-            known_distance_cm = self.distance * 30.48
-        elif self.unit == "Yard (yd)":
-            known_distance_cm = self.distance * 91.44
-        elif self.unit == "Meter (m)":
-            known_distance_cm = self.distance * 100
-        else:
-            print("Invalid unit selected")
-            return
+    def run(self):
+        try:
+            # Convert the known distance to centimeters
+            if self.unit == "Millimeter (mm)":
+                known_distance_cm = self.distance / 10
+            elif self.unit == "Centimeter (cm)":
+                known_distance_cm = self.distance
+            elif self.unit == "Inch (in)":
+                known_distance_cm = self.distance * 2.54
+            elif self.unit == "Foot (ft)":
+                known_distance_cm = self.distance * 30.48
+            elif self.unit == "Yard (yd)":
+                known_distance_cm = self.distance * 91.44
+            elif self.unit == "Meter (m)":
+                known_distance_cm = self.distance * 100
+            else:
+                print("Invalid unit selected")
+                return
 
-        # Measure the width of the crack
-        crack_widths = []
-        for y in range(result.shape[0]):
-            left_edge, right_edge = None, None
-            for x in range(result.shape[1]):
-                if result[y, x] == 0:
-                    if left_edge is None:
-                        left_edge = x
-                    right_edge = x
-            if left_edge is not None and right_edge is not None:
-                width = right_edge - left_edge
-                # Convert pixel width to mm
-                width_mm = width * known_distance_cm / self.focal_length
-                crack_widths.append(width_mm)
+            # Measure the width of the crack
+            crack_widths = []
+            for y in range(self.result.shape[0]):
+                left_edge, right_edge = None, None
+                for x in range(self.result.shape[1]):
+                    if self.result[y, x] == 0:
+                        if left_edge is None:
+                            left_edge = x
+                        right_edge = x
+                if left_edge is not None and right_edge is not None:
+                    width = right_edge - left_edge
+                    # Convert pixel width to mm
+                    width_mm = width * known_distance_cm / self.focal_length
+                    crack_widths.append(width_mm)
 
-        with open('Input_Distance.txt', 'w') as f:
-            f.write(str(known_distance_cm))
-        avg_width = sum(crack_widths) / len(crack_widths)
-        avg_width_write = f"{avg_width:.2f}"
-        print(f"Crack width: {avg_width:.2f} mm")
-        with open('Predicted_width.txt', 'w') as f:
-            f.write(avg_width_write)
+            with open('Input_Distance.txt', 'w') as f:
+                f.write(str(known_distance_cm))
+            avg_width = sum(crack_widths) / len(crack_widths)
+            avg_width_write = f"{avg_width:.2f}"
+            print(f"Crack width: {avg_width:.2f} mm")
+            with open('Predicted_width.txt', 'w') as f:
+                f.write(avg_width_write)
+
+            self.finished.emit()
+        except Exception as e:
+            print(e)
 
 
 def is_black(pixel):
@@ -147,13 +133,17 @@ def is_black(pixel):
 
 
 class Ui_DialogSegment(object):
+    def __init__(self, background_widget):
+        self.background_widget = background_widget
+
     def setupUi(self, Dialog):
+
         self.Dialog = Dialog
         Dialog.setObjectName("Dialog")
         Dialog.resize(700, 600)
         Dialog.setMinimumSize(QtCore.QSize(700, 600))
         Dialog.setMaximumSize(QtCore.QSize(700, 600))
-
+        Dialog.setAttribute(Qt.WA_TranslucentBackground)
         Dialog.setWindowFlags(Qt.FramelessWindowHint)
         Dialog.setStyleSheet("#Dialog{\n"
                              "background-color: rgb(255,255,255);"
@@ -169,15 +159,17 @@ class Ui_DialogSegment(object):
         self.gray = cv2.cvtColor(self.image, cv2.COLOR_BGR2GRAY)
 
         self.verticalLayout = QtWidgets.QVBoxLayout(Dialog)
-        self.verticalLayout.setContentsMargins(-1, 0, -1, -1)
+        self.verticalLayout.setContentsMargins(0, 0, 0, 0)
+
+        self.verticalLayout.setSpacing(0)
         self.verticalLayout.setObjectName("verticalLayout")
         self.widget_2 = QtWidgets.QWidget(Dialog)
-        self.widget_2.setStyleSheet("#widget_2{\n"
-                                    "background-color: rgb(255,255,255);"
-                                    "width: fit-content;\n"
-                                    "heigth: fit-content;\n"
-                                    "block-size: fit-content;\n"
-                                    "} ")
+        radius = 15
+        self.widget_2.setStyleSheet("""
+                                                    background:#EFEEEE;
+                                                    border-top-left-radius:{0}px;
+                                                    border-top-right-radius:{0}px;
+                                                    """.format(radius))
         self.widget_2.setMinimumSize(QtCore.QSize(0, 50))
         self.widget_2.setMaximumSize(QtCore.QSize(16777215, 50))
         self.widget_2.setObjectName("widget_2")
@@ -209,7 +201,7 @@ class Ui_DialogSegment(object):
         self.widget_7.setStyleSheet("")
         self.widget_7.setObjectName("widget_7")
         self.horizontalLayout_6 = QtWidgets.QHBoxLayout(self.widget_7)
-        self.horizontalLayout_6.setContentsMargins(9, 0, 0, 0)
+        self.horizontalLayout_6.setContentsMargins(9, 5, 5, 5)
         self.horizontalLayout_6.setSpacing(9)
         self.horizontalLayout_6.setObjectName("horizontalLayout_6")
         self.label = QtWidgets.QLabel(self.widget_7)
@@ -233,6 +225,13 @@ class Ui_DialogSegment(object):
         self.horizontalLayout_5.addWidget(self.widget_7)
         self.verticalLayout.addWidget(self.widget_2)
         self.widget = QtWidgets.QWidget(Dialog)
+
+        radius = 15
+        self.widget.setStyleSheet("""
+                                                    background:#EFEEEE;
+                                                    border-bottom-left-radius:{0}px;
+                                                    border-bottom-right-radius:{0}px;
+                                                    """.format(radius))
         self.widget.setObjectName("widget")
         self.horizontalLayout_4 = QtWidgets.QHBoxLayout(self.widget)
         self.horizontalLayout_4.setContentsMargins(-1, 0, -1, -1)
@@ -460,6 +459,12 @@ class Ui_DialogSegment(object):
         self.horizontalLayout_4.addWidget(self.widget_3)
         self.verticalLayout.addWidget(self.widget)
 
+        # Add transparent white background widget
+        self.background_widget_segment = QFrame(self.Dialog)
+        self.background_widget_segment.setStyleSheet("background-color: rgba(0, 0, 0, 0.25);")
+        self.background_widget_segment.resize(self.Dialog.width(), self.Dialog.height())
+        self.background_widget_segment.hide()
+
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
@@ -486,6 +491,7 @@ class Ui_DialogSegment(object):
                                                QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No,
                                                QtWidgets.QMessageBox.No)
         if reply == QtWidgets.QMessageBox.Yes:
+            self.background_widget.hide()
             try:
                 os.remove(Input_Distance)
             except FileNotFoundError:
@@ -607,30 +613,50 @@ class Ui_DialogSegment(object):
             return
 
         try:
+
+
+            self.load_dialog = self.loading_remove_noise()
+            self.load_dialog.show()
+            self.background_widget_segment.show()
             # Create the noise removal thread and start it
             self.noise_thread = NoiseRemovalThread(self.thresholded)
             self.noise_thread.start()
-            self.noise_thread.finished.connect(self.on_noise_removal_finished)
+            self.noise_thread.finished.connect(self.calculate_measures)
         except AttributeError:
             QtWidgets.QMessageBox.critical(self.Dialog, "Error", "Thresholder value is empty.")
             return
 
-    def on_noise_removal_finished(self, result):
+    def calculate_measures(self, result):
         self.update_image(result)
-        analyzer = CrackAnalyzer(float(self.NumOfDistance.toPlainText()), self.units.currentText(), 132.28)
-        analyzer.get_Heigth_Width_Function(result)
-        print("Finish")
-        CrackLineLength = QtWidgets.QDialog(self.Dialog)
+        self.load_dialog.close()
+        self.background_widget_segment.hide()
+        try:
+            self.load_dialog_measure = self.loading_measuring()
+            self.load_dialog_measure.show()
+            self.background_widget_segment.show()
+            self.compute_thread = CrackAnalyzer(float(self.NumOfDistance.toPlainText()), self.units.currentText(), 132.28, result)
+            self.compute_thread.start()
+            self.compute_thread.finished.connect(self.open_CrackLineLength)
+            print("Finish")
+        except Exception as e:
+            print(e)
 
-        x = (self.Dialog.width() - self.Dialog.width()) // 2
-        y = (self.Dialog.height() - self.Dialog.height()) // 2
-        ui = Line_length()
+    def open_CrackLineLength(self):
+        try:
+            self.load_dialog_measure.close()
+            self.background_widget_segment.hide()
+            CrackLineLength = QtWidgets.QDialog(self.Dialog)
 
-        ui.setupUi(CrackLineLength)
-        CrackLineLength.move(x, y)
-        CrackLineLength.show()
-        CrackLineLength.exec_()
+            x = (self.Dialog.width() - self.Dialog.width()) // 2
+            y = (self.Dialog.height() - self.Dialog.height()) // 2
+            ui = Line_length()
 
+            ui.setupUi(CrackLineLength)
+            CrackLineLength.move(x, y)
+            CrackLineLength.show()
+            CrackLineLength.exec_()
+        except Exception as e:
+            print(e)
     def update_image(self, image):
         # Get the size of the label
         label_size = self.imageLabel.size()
@@ -657,3 +683,105 @@ class Ui_DialogSegment(object):
 
     def update_slider_value_label(self, value):
         self.thresholderNum.setText(str(value))
+
+    def loading_remove_noise(self):
+        Dialog = QDialog()
+        Dialog.setWindowFlags(Qt.FramelessWindowHint)
+        Dialog.setObjectName("Dialog")
+        Dialog.resize(368, 235)
+        Dialog.setAttribute(Qt.WA_TranslucentBackground)
+        Dialog.setStyleSheet("background-color:#ffffff;")
+        radius = 15
+        Dialog.setStyleSheet("""
+                                                            background:#EFEEEE;
+                                                            border-top-left-radius:{0}px;
+                                                            border-bottom-left-radius:{0}px;
+                                                            border-top-right-radius:{0}px;
+                                                            border-bottom-right-radius:{0}px;
+                                                            """.format(radius))
+        self.horizontalLayout = QtWidgets.QHBoxLayout(Dialog)
+        self.horizontalLayout.setObjectName("horizontalLayout")
+        self.widget = QtWidgets.QWidget(Dialog)
+        self.widget.setStyleSheet("background-color:#ffffff;")
+        self.widget.setObjectName("widget")
+        self.verticalLayout = QtWidgets.QVBoxLayout(self.widget)
+        self.verticalLayout.setObjectName("verticalLayout")
+        self.label_process = QtWidgets.QLabel("Removing Noise...", self.widget)
+        self.label_process.setStyleSheet("background-color:#ffffff;\n"
+                                         "font-size:25px;\n"
+                                         "color: #6c757d;\n"
+                                         "font-style: Inter;")
+        self.label_process.setScaledContents(True)
+        self.label_process.setAlignment(QtCore.Qt.AlignBottom | QtCore.Qt.AlignHCenter)
+        self.label_process.setWordWrap(True)
+        self.label_process.setObjectName("label_2")
+        self.verticalLayout.addWidget(self.label_process)
+        self.widget_2 = QtWidgets.QWidget(self.widget)
+        self.widget_2.setStyleSheet("background-color:#ffffff;")
+        self.widget_2.setObjectName("widget_2")
+        self.horizontalLayout_2 = QtWidgets.QHBoxLayout(self.widget_2)
+        self.horizontalLayout_2.setObjectName("horizontalLayout_2")
+        self.label = QtWidgets.QLabel(self.widget_2)
+        self.label.setMaximumSize(QtCore.QSize(100, 100))
+        self.movie = QMovie("images/spin_loading.gif")
+        self.label.setMovie(self.movie)
+        self.movie.start()
+        self.label.setScaledContents(True)
+        self.label.setAlignment(QtCore.Qt.AlignCenter)
+        self.label.setObjectName("label")
+        self.horizontalLayout_2.addWidget(self.label)
+        self.verticalLayout.addWidget(self.widget_2)
+        self.horizontalLayout.addWidget(self.widget)
+        Dialog.show()
+        return Dialog
+
+    def loading_measuring(self):
+        Dialog = QDialog()
+        Dialog.setWindowFlags(Qt.FramelessWindowHint)
+        Dialog.setObjectName("Dialog")
+        Dialog.resize(368, 235)
+        Dialog.setAttribute(Qt.WA_TranslucentBackground)
+        Dialog.setStyleSheet("background-color:#ffffff;")
+        radius = 15
+        Dialog.setStyleSheet("""
+                                                            background:#EFEEEE;
+                                                            border-top-left-radius:{0}px;
+                                                            border-bottom-left-radius:{0}px;
+                                                            border-top-right-radius:{0}px;
+                                                            border-bottom-right-radius:{0}px;
+                                                            """.format(radius))
+        self.horizontalLayout = QtWidgets.QHBoxLayout(Dialog)
+        self.horizontalLayout.setObjectName("horizontalLayout")
+        self.widget = QtWidgets.QWidget(Dialog)
+        self.widget.setStyleSheet("background-color:#ffffff;")
+        self.widget.setObjectName("widget")
+        self.verticalLayout = QtWidgets.QVBoxLayout(self.widget)
+        self.verticalLayout.setObjectName("verticalLayout")
+        self.label_process = QtWidgets.QLabel("Calculating the Width and Length...", self.widget)
+        self.label_process.setStyleSheet("background-color:#ffffff;\n"
+                                         "font-size:20px;\n"
+                                         "color: #6c757d;\n"
+                                         "font-style: Inter;")
+        self.label_process.setScaledContents(True)
+        self.label_process.setAlignment(QtCore.Qt.AlignBottom | QtCore.Qt.AlignHCenter)
+        self.label_process.setWordWrap(True)
+        self.label_process.setObjectName("label_2")
+        self.verticalLayout.addWidget(self.label_process)
+        self.widget_2 = QtWidgets.QWidget(self.widget)
+        self.widget_2.setStyleSheet("background-color:#ffffff;")
+        self.widget_2.setObjectName("widget_2")
+        self.horizontalLayout_2 = QtWidgets.QHBoxLayout(self.widget_2)
+        self.horizontalLayout_2.setObjectName("horizontalLayout_2")
+        self.label = QtWidgets.QLabel(self.widget_2)
+        self.label.setMaximumSize(QtCore.QSize(100, 100))
+        self.movie = QMovie("images/spin_loading.gif")
+        self.label.setMovie(self.movie)
+        self.movie.start()
+        self.label.setScaledContents(True)
+        self.label.setAlignment(QtCore.Qt.AlignCenter)
+        self.label.setObjectName("label")
+        self.horizontalLayout_2.addWidget(self.label)
+        self.verticalLayout.addWidget(self.widget_2)
+        self.horizontalLayout.addWidget(self.widget)
+        Dialog.show()
+        return Dialog

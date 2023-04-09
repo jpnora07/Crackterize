@@ -2,7 +2,7 @@ import math
 import sys
 import numpy as np
 import cv2
-from PyQt5 import QtCore, QtWidgets
+from PyQt5 import QtCore, QtWidgets, QtGui
 from PyQt5.QtCore import Qt, QRectF, QPoint
 from PyQt5.QtGui import QImage, QPixmap, QPainter, QPen, QCursor
 from PyQt5.QtWidgets import QMainWindow, QWidget, QLabel, QGraphicsView, QGraphicsScene, QSlider, QGridLayout, \
@@ -92,7 +92,22 @@ class Line_length(object):
         Dialog.setMinimumSize(QtCore.QSize(700, 600))
         Dialog.setMaximumSize(QtCore.QSize(700, 600))
         Dialog.setWindowFlags(Qt.FramelessWindowHint)
-        Dialog.setStyleSheet("#Dialog{background:rgb(255, 255, 255)}")
+
+        Dialog.setAttribute(Qt.WA_TranslucentBackground)
+        effect = QtWidgets.QGraphicsDropShadowEffect()
+        effect.setBlurRadius(15)
+        effect.setColor(QtGui.QColor(144, 115, 87, 100))
+        effect.setOffset(0, 0)
+        radius = 15
+        Dialog.setStyleSheet("""
+                                                    background:#EFEEEE;
+                                                    border-top-left-radius:{0}px;
+                                                    border-bottom-left-radius:{0}px;
+                                                    border-top-right-radius:{0}px;
+                                                    border-bottom-right-radius:{0}px;
+                                                    """.format(radius))
+        Dialog.setGraphicsEffect(effect)
+
         # Create a grid layout to hold the widgets
         layout = QGridLayout(Dialog)
 

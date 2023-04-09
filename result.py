@@ -21,6 +21,7 @@ class Result_Dialog(object):
         Dialog.setMinimumSize(QtCore.QSize(700, 600))
         Dialog.setMaximumSize(QtCore.QSize(700, 600))
         Dialog.setWindowFlags(Qt.FramelessWindowHint)
+
         Dialog.setAttribute(Qt.WA_TranslucentBackground)
         effect = QtWidgets.QGraphicsDropShadowEffect()
         effect.setBlurRadius(15)

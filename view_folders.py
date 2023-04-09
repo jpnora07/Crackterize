@@ -10,6 +10,8 @@ from view_results import view_result_dialog
 
 
 class view_folder_dialog(object):
+    def __init__(self, background_widget):
+        self.background_widget = background_widget
 
     def setupUi(self, view_folder_dialog):
         # self.data_added.connect(self.refreshWidget)
@@ -219,7 +221,7 @@ class view_folder_dialog(object):
                                 "}\n"
                                 "")
         self.back.setFlat(False)
-        self.back.clicked.connect(view_folder_dialog.close)
+        self.back.clicked.connect(self.closeEvent)
         self.back.setObjectName("back")
         self.horizontalLayout_3.addWidget(self.back)
         self.horizontalLayout_2.addWidget(self.frame)
@@ -229,6 +231,9 @@ class view_folder_dialog(object):
         # Calling a function that fetch the folders of project
         self.fetch_folders_of_projects()
 
+    def closeEvent(self):
+        self.view_folder_dialog.close()
+        self.background_widget.hide()
     def creating_new_Location(self):
         # Create dialog box
         AddLocationDialog = QtWidgets.QDialog()

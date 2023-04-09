@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="images">
+    <file>spin_loading.gif</file>
     <file>delete.png</file>
     <file>editor.png</file>
     <file>slider_1.png</file>
