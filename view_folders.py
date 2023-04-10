@@ -457,12 +457,13 @@ class view_folder_dialog(object):
             result_dialog = QtWidgets.QDialog(self.view_folder_dialog)
             x = (self.view_folder_dialog.width() - self.view_folder_dialog.width()) // 2
             y = (self.view_folder_dialog.height() - self.view_folder_dialog.height()) // 2
-            ui = view_result_dialog()
+            ui = view_result_dialog(self.background_widget)
 
             ui.setupUi(result_dialog)
             result_dialog.move(x, y)
             result_dialog.show()
             result_dialog.exec_()
+            self.view_folder_dialog.close()
             print(folder_name)
 
         except Exception as e:

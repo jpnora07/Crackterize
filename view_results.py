@@ -7,18 +7,76 @@ from tensorflow import keras
 import cv2
 import numpy as np
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import QSize, Qt, QTimer, pyqtSignal, QObject, QByteArray
-from PyQt5.QtGui import QIcon, QPixmap
-from PyQt5.QtWidgets import QPushButton, QHBoxLayout, QVBoxLayout, QSizePolicy, QScrollArea, QWidget, QLabel, \
-    QFileDialog
+from PyQt5.QtCore import Qt, QTimer, pyqtSignal, QByteArray, QThread
+from PyQt5.QtGui import QPixmap, QMovie
+from PyQt5.QtWidgets import QHBoxLayout, QVBoxLayout, QScrollArea, QWidget, QFileDialog, QDialog, QFrame
 
 from Segment_Image import Ui_DialogSegment
 from result import Result_Dialog
-from view_result_with_details import result_with_details
+from images.view_result_with_details import result_with_details
 
+class ImageProcessingThread(QThread):
+    finished = pyqtSignal(object)
+    error = pyqtSignal(str)
+
+    def __init__(self, image_path):
+        super().__init__()
+        self.image_path = image_path
+
+    def run(self):
+        try:
+            # Load and process the image here
+            image = cv2.imread(self.image_path)
+            # Save the image to a temporary file
+            temp_file_path = 'temp_image_original.jpg'
+            cv2.imwrite(temp_file_path, image)
+            # Check if the image is valid
+            if image is not None:
+                self.imageCnn = cv2.resize(image, (224, 224))
+                self.imageCnn = np.expand_dims(self.imageCnn, axis=0)
+
+                self.modelCnn = keras.models.load_model('resnet_model_cnn.h5')
+                predictions = self.modelCnn.predict(self.imageCnn)
+                score = tf.nn.softmax(predictions)
+                print(score)
+                class_names = ['No Detected Crack', 'Contains Crack']
+
+                # Get the index of the predicted class
+                predicted_class_index = np.argmax(score, axis=1)[0]
+
+                # Get the name and score of the predicted class
+                predicted_class_name = class_names[predicted_class_index]
+
+                predicted_class_score = 100 * score[0][predicted_class_index]
+                if predicted_class_index == 0:
+                    predicted_Negative_score = predicted_class_score
+                    predicted_Positive_score = 100 - predicted_Negative_score
+                else:
+                    predicted_Positive_score = predicted_class_score
+                    predicted_Negative_score = 100 - predicted_Positive_score
+
+                print(f"Positive crack probability: {predicted_Positive_score:.2f}%")
+                print(f"Negative crack probability: {predicted_Negative_score:.2f}%")
+                Negative_score = f"{predicted_Negative_score:.2f}%"
+                Positive_score = f"{predicted_Positive_score:.2f}%"
+                with open('Negative_score.txt', 'w') as f:
+                    f.write(Negative_score)
+                with open('Positive_score.txt', 'w') as f:
+                    f.write(Positive_score)
+                with open('Predicted_Class_name.txt', 'w') as f:
+                    f.write(predicted_class_name)
+                self.finished.emit(score)
+
+            else:
+                self.error.emit("Invalid image format")
+
+        except Exception as e:
+            print(e)
+            self.error.emit(str(e))
 
 class view_result_dialog(object):
-
+    def __init__(self, background_widget):
+        self.background_widget = background_widget
     def setupUi(self, view_folder_dialog):
         # self.data_added.connect(self.refreshWidget)
         self.view_folder_dialog = view_folder_dialog
@@ -235,105 +293,88 @@ class view_result_dialog(object):
                                 "}\n"
                                 "")
         self.back.setFlat(False)
-        self.back.clicked.connect(view_folder_dialog.close)
+        self.back.clicked.connect(self.closeEvent)
         self.back.setObjectName("back")
         self.horizontalLayout_3.addWidget(self.back)
         self.horizontalLayout_2.addWidget(self.frame)
         self.verticalLayout.addWidget(self.widget_2)
+
+        # Add transparent white background widget
+        self.background_widget_results = QFrame(view_folder_dialog)
+        self.background_widget_results.setStyleSheet("background-color: rgba(0, 0, 0, 0.25);")
+        self.background_widget_results.resize(view_folder_dialog.width(), view_folder_dialog.height())
+        self.background_widget_results.hide()
+
         QtCore.QMetaObject.connectSlotsByName(view_folder_dialog)
 
         # Calling a function that fetch the folders of project
         self.fetch_folders_of_projects()
 
+    def closeEvent(self):
+        self.view_folder_dialog.close()
+        self.background_widget.hide()
+
+
     def add_new_image(self):
         image_path = self.open_file_dialog()
-        try:
-            image = cv2.imread(image_path)
-            # Save the image to a temporary file
-            temp_file_path = 'temp_image_original.jpg'
-            cv2.imwrite(temp_file_path, image)
-            # Check if the image is valid
-            if image is not None:
-                self.imageCnn = cv2.resize(image, (224, 224))
-                self.imageCnn = np.expand_dims(self.imageCnn, axis=0)
+        if image_path is not None:
+            try:
+                self.load_dialog = self.loading()
+                self.load_dialog.show()
+                self.background_widget_results.show()
 
-                self.modelCnn = keras.models.load_model('resnet_model_cnn.h5')
-                predictions = self.modelCnn.predict(self.imageCnn)
-                score = tf.nn.softmax(predictions)
-                class_names = ['No Detected Crack', 'Contains Crack']
+                # Create a new thread for the image processing task
+                self.thread = ImageProcessingThread(image_path)
+                self.thread.start()
+                self.thread.finished.connect(lambda score: self.on_processing_finished(score))
 
-                # Get the index of the predicted class
-                predicted_class_index = np.argmax(score, axis=1)[0]
 
-                # Get the name and score of the predicted class
-                predicted_class_name = class_names[predicted_class_index]
-                predicted_class_score = 100 * score[0][predicted_class_index]
+            except Exception as e:
+                print(e)
+        else:
+            print("No file selected.")
 
-                # Print the results
-                print(f"The image is classified as {predicted_class_name} with a score of {predicted_class_score:.2f}.")
+    def on_processing_finished(self, score):
+        # Update the GUI with the results of the image processing task
+        self.load_dialog.close()
+        if np.argmax(score) == 0:
+            try:
+                with open('Predicted_width.txt', 'w') as f:
+                    f.write("0 mm")
+                with open('Predicted_height.txt', 'w') as f:
+                    f.write("0 cm")
+            except FileNotFoundError:
+                print("The file does not exist.")
+            result_dialog = QtWidgets.QDialog(self.view_folder_dialog)
+            x = (self.view_folder_dialog.width() - self.view_folder_dialog.width()) // 2
+            y = (self.view_folder_dialog.height() - self.view_folder_dialog.height()) // 2
+            ui = Result_Dialog(self.view_folder_dialog, self.background_widget)
 
-                if predicted_class_index == 0:
-                    predicted_Negative_score = predicted_class_score
-                    predicted_Positive_score = 100 - predicted_Negative_score
-                else:
-                    predicted_Positive_score = predicted_class_score
-                    predicted_Negative_score = 100 - predicted_Positive_score
+            ui.setupUi(result_dialog)
+            result_dialog.move(x, y)
+            result_dialog.show()
+            result_dialog.exec_()
 
-                print(f"Positive crack probability: {predicted_Positive_score:.2f}%")
-                print(f"Negative crack probability: {predicted_Negative_score:.2f}%")
-
-                Negative_score = f"{predicted_Negative_score:.2f}%"
-                Positive_score = f"{predicted_Positive_score:.2f}%"
-                with open('Negative_score.txt', 'w') as f:
-                    f.write(Negative_score)
-                with open('Positive_score.txt', 'w') as f:
-                    f.write(Positive_score)
-                with open('Predicted_Class_name.txt', 'w') as f:
-                    f.write(predicted_class_name)
-                if np.argmax(score) == 0:
-                    try:
-                        with open('Predicted_width.txt', 'w') as f:
-                            f.write("0 mm")
-                        with open('Predicted_height.txt', 'w') as f:
-                            f.write("0 cm")
-                    except FileNotFoundError:
-                        print("The file does not exist.")
-                    try:
-                        result_dialog = QtWidgets.QDialog(self.view_folder_dialog)
-                        x = (self.view_folder_dialog.width() - self.view_folder_dialog.width()) // 2
-                        y = (self.view_folder_dialog.height() - self.view_folder_dialog.height()) // 2
-                        ui = Result_Dialog()
-
-                        ui.setupUi(result_dialog)
-                        result_dialog.move(x, y)
-                        result_dialog.show()
-                        result_dialog.exec_()
-
-                    except Exception as e:
-                        print(e)
-
-                else:
-
-                    segment_dialog = QtWidgets.QDialog(self.view_folder_dialog)
-                    ui = Ui_DialogSegment()
-                    ui.setupUi(segment_dialog)
-                    x = (self.view_folder_dialog.width() - segment_dialog.width()) // 2
-                    y = (self.view_folder_dialog.height() - segment_dialog.height()) // 2
-                    segment_dialog.move(x, y)
-                    segment_dialog.exec_()
-
-            else:
-                print("Invalid image format")
-        except Exception as e:
-            print(e)
+        else:
+            segment_dialog = QtWidgets.QDialog(self.view_folder_dialog)
+            ui = Ui_DialogSegment(self.background_widget)
+            ui.setupUi(segment_dialog)
+            x = (self.view_folder_dialog.width() - segment_dialog.width()) // 2
+            y = (self.view_folder_dialog.height() - segment_dialog.height()) // 2
+            segment_dialog.move(x, y)
+            segment_dialog.exec_()
+            self.view_folder_dialog.close()
 
     def open_file_dialog(self):
         file_dialog = QFileDialog()
         file_dialog.setNameFilter('Images (*.png *.jpg *.bmp)')
         file_dialog.setFileMode(QFileDialog.ExistingFile)
-        if file_dialog.exec_():
+        if file_dialog.exec_() == QDialog.Accepted:
             selected_files = file_dialog.selectedFiles()
             return selected_files[0]
+        else:
+            print("File dialog closed without selecting a file.")
+            return None
 
     def creating_new_Location(self):
         # Create dialog box
@@ -501,9 +542,9 @@ class view_result_dialog(object):
     def add_button_folder(self, data):
         try:
             for row in data:
-                button_name = str(row[8])
+                button_name = str(row[9])
                 image_id = row[0]
-                image = row[2]
+                image = row[3]
                 # Convert the image data to QPixmap
                 byte_array = QByteArray(image)
                 pixmap = QPixmap()
@@ -677,5 +718,56 @@ class view_result_dialog(object):
         data = self.c.fetchall()
         print(data)
         self.add_button_folder(data)
+
+    def loading(self):
+        Dialog = QDialog()
+        Dialog.setWindowFlags(Qt.FramelessWindowHint)
+        Dialog.setObjectName("Dialog")
+        Dialog.resize(368, 235)
+        Dialog.setAttribute(Qt.WA_TranslucentBackground)
+        Dialog.setStyleSheet("background-color:#ffffff;")
+        radius = 15
+        Dialog.setStyleSheet("""
+                                                            background:#EFEEEE;
+                                                            border-top-left-radius:{0}px;
+                                                            border-bottom-left-radius:{0}px;
+                                                            border-top-right-radius:{0}px;
+                                                            border-bottom-right-radius:{0}px;
+                                                            """.format(radius))
+        self.horizontalLayout = QtWidgets.QHBoxLayout(Dialog)
+        self.horizontalLayout.setObjectName("horizontalLayout")
+        self.widget = QtWidgets.QWidget(Dialog)
+        self.widget.setStyleSheet("background-color:#ffffff;")
+        self.widget.setObjectName("widget")
+        self.verticalLayout = QtWidgets.QVBoxLayout(self.widget)
+        self.verticalLayout.setObjectName("verticalLayout")
+        self.label_process = QtWidgets.QLabel("Uploading...", self.widget)
+        self.label_process.setStyleSheet("background-color:#ffffff;\n"
+                                         "font-size:30px;\n"
+                                         "color: #6c757d;\n"
+                                         "font-style: Inter;")
+        self.label_process.setScaledContents(True)
+        self.label_process.setAlignment(QtCore.Qt.AlignBottom | QtCore.Qt.AlignHCenter)
+        self.label_process.setWordWrap(True)
+        self.label_process.setObjectName("label_2")
+        self.verticalLayout.addWidget(self.label_process)
+        self.widget_2 = QtWidgets.QWidget(self.widget)
+        self.widget_2.setStyleSheet("background-color:#ffffff;")
+        self.widget_2.setObjectName("widget_2")
+        self.horizontalLayout_2 = QtWidgets.QHBoxLayout(self.widget_2)
+        self.horizontalLayout_2.setObjectName("horizontalLayout_2")
+        self.label = QtWidgets.QLabel(self.widget_2)
+        self.label.setMaximumSize(QtCore.QSize(100, 100))
+        self.movie = QMovie("images/spin_loading.gif")
+        self.label.setMovie(self.movie)
+        self.movie.start()
+        self.label.setScaledContents(True)
+        self.label.setAlignment(QtCore.Qt.AlignCenter)
+        self.label.setObjectName("label")
+        self.horizontalLayout_2.addWidget(self.label)
+        self.verticalLayout.addWidget(self.widget_2)
+        self.horizontalLayout.addWidget(self.widget)
+        Dialog.show()
+        return Dialog
 
 

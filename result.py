@@ -4,7 +4,7 @@ from datetime import datetime
 
 import cv2
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import Qt, QIODevice, QBuffer, QByteArray, QTimer, QSizeF
+from PyQt5.QtCore import Qt, QIODevice, QBuffer, QByteArray, QTimer, QSizeF, QSize
 from PyQt5.QtGui import QImage, QPixmap, QTextCursor, QTextFrameFormat, QTextImageFormat, QTextCharFormat, QFont, \
     QTextDocument, QPainter
 from PyQt5.QtPrintSupport import QPrinter, QPrintPreviewDialog
@@ -215,6 +215,11 @@ class Result_Dialog(object):
                                         "    font-size: 15px;\n"
                                         "}")
         self.position_lbl.setObjectName("position_lbl")
+        file_path_orient = 'Orientation.txt'
+        if os.path.isfile(file_path_orient):
+            with open(file_path_orient, 'r') as f:
+                self.orient = f.read()
+                self.position_lbl.setText(self.orient)
         self.horizontalLayout_13.addWidget(self.position_lbl)
         self.verticalLayout_2.addWidget(self.widget_11)
         self.widget_15 = QtWidgets.QWidget(self.widget_6)
@@ -404,7 +409,6 @@ class Result_Dialog(object):
         self.label_2.setText(_translate("Dialog", "Length:"))
         self.label_3.setText(_translate("Dialog", "Width: "))
         self.widgetPosition.setText(_translate("Dialog", "Position:"))
-        self.position_lbl.setText(_translate("Dialog", "Horizontal"))
         self.adddetails.setText(_translate("Dialog", "Add Details"))
         self.print1.setText(_translate("Dialog", "Print"))
         self.savebtn.setText(_translate("Dialog", "Save"))
@@ -423,8 +427,6 @@ class Result_Dialog(object):
                                                QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No,
                                                QtWidgets.QMessageBox.No)
         if reply == QtWidgets.QMessageBox.Yes:
-            self.close_segment_dialog.close()
-            self.background_widget.hide()
             try:
                 os.remove(Input_Distance)
             except FileNotFoundError:
@@ -464,8 +466,16 @@ class Result_Dialog(object):
                 os.remove(self.Predicted_width)
             except FileNotFoundError:
                 print(f"{self.Predicted_width} already removed or does not exist")
-
-            self.Dialog.close()
+            try:
+                self.Dialog.close()
+                self.background_widget.hide()
+            except Exception as e:
+                print(e)
+            try:
+                self.close_segment_dialog.close()
+                self.background_widget.hide()
+            except Exception as e:
+                print(e)
         else:
             try:
                 event.ignore()
@@ -476,6 +486,7 @@ class Result_Dialog(object):
         if os.path.isfile(file_path_orient):
             with open(file_path_orient, 'r') as f:
                 self.orient = f.read()
+
             if not self.orient:  # check if orient is an empty string
                 self.orient = None  # set orient to None
         else:
@@ -499,13 +510,16 @@ class Result_Dialog(object):
                 print("Error: Could not load image")
                 return
 
+            # Set a fixed size for the image format
+            max_size = QSize(500, 500)
+
             # Insert the image into the document
             pixmap = QPixmap.fromImage(image)
 
             if not pixmap.isNull():
                 image_format = QTextImageFormat()
-                image_format.setWidth(pixmap.width())
-                image_format.setHeight(pixmap.height())
+                image_format.setWidth(max_size.width())
+                image_format.setHeight(max_size.height())
                 image_format.setName(image_path)
 
                 # Create a QTextFrameFormat and set its properties
@@ -513,7 +527,7 @@ class Result_Dialog(object):
                 frame_format.setBorder(1)  # set border width to 1
                 frame_format.setBorderStyle(QTextFrameFormat.BorderStyle_Solid)  # set border style to solid
                 frame_format.setBorderBrush(Qt.black)  # set border color to black
-                frame_format.setPadding(5)   # set padding to 5
+                frame_format.setPadding(5)  # set padding to 5
                 frame_format.setMargin(5)
 
                 # Insert the image into a QTextFrame and set its format
@@ -548,6 +562,7 @@ class Result_Dialog(object):
         preview = QPrintPreviewDialog(printer)
         preview.paintRequested.connect(doc.print_)
         preview.exec_()
+
     def add_details_function(self):
         try:
             result_dialog = QtWidgets.QDialog(self.Dialog)
@@ -1555,11 +1570,11 @@ class Result_Dialog(object):
         Predicted_Score = "Predicted_Score.txt"
         Predicted_width = "Predicted_width.txt"
         Remarks_written = "Remarks_written.txt"
-        selected_folder_vrFile = "selected_folder_vrFile.txt"
+        #selected_folder_vrFile = "selected_folder_vrFile.txt"
         Selected_location_crack = "Selected_location_crack.txt"
         Selected_progression_crack = "Selected_progression_crack.txt"
         Selected_type_crack = "Selected_type_crack.txt"
-        selected_project = "selected_project.txt"
+        #selected_project = "selected_project.txt"
 
         try:
             try:
@@ -1613,11 +1628,6 @@ class Result_Dialog(object):
                 print(f"{Remarks_written} already removed or does not exist")
 
             try:
-                os.remove(selected_folder_vrFile)
-            except FileNotFoundError:
-                print(f"{selected_folder_vrFile} already removed or does not exist")
-
-            try:
                 os.remove(Selected_location_crack)
             except FileNotFoundError:
                 print(f"{Selected_location_crack} already removed or does not exist")
@@ -1632,22 +1642,7 @@ class Result_Dialog(object):
             except FileNotFoundError:
                 print(f"{Selected_type_crack} already removed or does not exist")
 
-            try:
-                os.remove(selected_project)
-            except FileNotFoundError:
-                print(f"{selected_project} already removed or does not exist")
-
 
         except OSError as e:
             print(f"Error:{e.strerror}")
 
-
-if __name__ == "__main__":
-    import sys
-
-    app = QtWidgets.QApplication(sys.argv)
-    Dialog = QtWidgets.QDialog()
-    ui = Result_Dialog()
-    ui.setupUi(Dialog)
-    Dialog.show()
-    sys.exit(app.exec_())

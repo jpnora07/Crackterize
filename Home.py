@@ -748,32 +748,35 @@ class Ui_MainWindow(object):
 
     def upload_image(self):
         image_path = self.open_file_dialog()
-        try:
-            self.load_dialog = self.loading()
-            self.load_dialog.show()
-            self.background_widget.show()
+        if image_path is not None:
+            try:
+                self.load_dialog = self.loading()
+                self.load_dialog.show()
+                self.background_widget.show()
 
-            # Create a new thread for the image processing task
-            self.thread = ImageProcessingThread(image_path)
-            self.thread.start()
-            self.thread.finished.connect(lambda score: self.on_processing_finished(score))
+                # Create a new thread for the image processing task
+                self.thread = ImageProcessingThread(image_path)
+                self.thread.start()
+                self.thread.finished.connect(lambda score: self.on_processing_finished(score))
 
+            except Exception as e:
+                print(e)
+        else:
+            print("No file selected.")
 
-        except Exception as e:
-            print(e)
     def on_processing_finished(self, score):
         # Update the GUI with the results of the image processing task
         self.load_dialog.close()
         if np.argmax(score) == 0:
             try:
                 with open('Predicted_width.txt', 'w') as f:
-                    f.write("0 mm")
+                    f.write("0")
                 with open('Predicted_height.txt', 'w') as f:
-                    f.write("0 cm")
+                    f.write("0")
             except FileNotFoundError:
                 print("The file does not exist.")
             result_dialog = QtWidgets.QDialog(self.Mainwindow)
-            ui = Result_Dialog()
+            ui = Result_Dialog(None, self.background_widget)
             ui.setupUi(result_dialog)
             x = (self.Mainwindow.width() - result_dialog.width()) // 2
             y = (self.Mainwindow.height() - result_dialog.height()) // 2
@@ -788,13 +791,17 @@ class Ui_MainWindow(object):
             y = (self.Mainwindow.height() - segment_dialog.height()) // 2
             segment_dialog.move(x, y)
             segment_dialog.exec_()
+
     def open_file_dialog(self):
         file_dialog = QFileDialog()
         file_dialog.setNameFilter('Images (*.png *.jpg *.bmp)')
         file_dialog.setFileMode(QFileDialog.ExistingFile)
-        if file_dialog.exec_():
+        if file_dialog.exec_() == QDialog.Accepted:
             selected_files = file_dialog.selectedFiles()
             return selected_files[0]
+        else:
+            print("File dialog closed without selecting a file.")
+            return None
 
     # Dialog Box for creating new project
     def creating_new_project(self):
