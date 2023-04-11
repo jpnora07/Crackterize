@@ -287,7 +287,7 @@ class Ui_Dialog(object):
             app_path = getattr(sys, '_MEIPASS', None) or os.path.abspath('..')
 
             # Create the path to the result.py file
-            Crack_Line_Length = os.path.join(app_path, '../scientific calculator.py')
+            Crack_Line_Length = os.path.join(app_path, '../scientific_calculator.py')
             # Execute the result.py file using QProcess
             process = QtCore.QProcess()
             process.start('python', [Crack_Line_Length])

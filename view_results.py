@@ -13,7 +13,7 @@ from PyQt5.QtWidgets import QHBoxLayout, QVBoxLayout, QScrollArea, QWidget, QFil
 
 from Segment_Image import Ui_DialogSegment
 from result import Result_Dialog
-from images.view_result_with_details import result_with_details
+from view_result_with_details import result_with_details
 
 class ImageProcessingThread(QThread):
     finished = pyqtSignal(object)
@@ -616,7 +616,7 @@ class view_result_dialog(object):
             view_result_dialog = QtWidgets.QDialog(self.view_folder_dialog)
             x = (self.view_folder_dialog.width() - self.view_folder_dialog.width()) // 2
             y = (self.view_folder_dialog.height() - self.view_folder_dialog.height()) // 2
-            ui = result_with_details()
+            ui = result_with_details(self.background_widget)
 
             ui.setupUi(view_result_dialog)
             view_result_dialog.move(x, y)

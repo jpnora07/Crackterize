@@ -1,14 +1,30 @@
 import os
+import sys
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import Qt
 
+from Circular_Slab_or_Tube import circular
+from Curb_Gutter_Barrier import curb
+from Hole_Column_RoundFootings import hole
+from concretevolumecalc import concrete_cal
+from scientific_calculator import sci_Calculator
+from stairs import stairs
 
-class Ui_Dialog(object):
+
+class cal_dialog(object):
+    def __init__(self, background_widget):
+        self.background_widget = background_widget
     def setupUi(self, Dialog):
+        self.Dialog = Dialog
         Dialog.setObjectName("Dialog")
-        Dialog.resize(406, 430)
+        Dialog.resize(600, 600)
         Dialog.setWindowFlags(Qt.FramelessWindowHint)
+        Dialog.setStyleSheet(
+            """
+            background:rgb(255, 255, 255);
+            """
+        )
         self.verticalLayout = QtWidgets.QVBoxLayout(Dialog)
         self.verticalLayout.setObjectName("verticalLayout")
         self.widget_4 = QtWidgets.QWidget(Dialog)
@@ -31,7 +47,7 @@ class Ui_Dialog(object):
         self.exit.setIcon(icon)
         self.exit.setFlat(True)
         self.exit.setObjectName("exit")
-        self.exit.clicked.connect(Dialog.close)
+        self.exit.clicked.connect(self.exit_function)
         self.horizontalLayout.addWidget(self.exit)
         self.verticalLayout.addWidget(self.widget_4)
         self.widget = QtWidgets.QWidget(Dialog)
@@ -160,6 +176,7 @@ class Ui_Dialog(object):
         self.curbgutter.setObjectName("curbgutter")
         self.verticalLayout_6.addWidget(self.curbgutter)
         self.verticalLayout_2.addWidget(self.widget_6)
+
         self.widget_7 = QtWidgets.QWidget(self.widget)
         self.widget_7.setObjectName("widget_7")
         self.verticalLayout_7 = QtWidgets.QVBoxLayout(self.widget_7)
@@ -195,6 +212,45 @@ class Ui_Dialog(object):
         self.slabssquare.setObjectName("slabssquare")
         self.verticalLayout_7.addWidget(self.slabssquare)
         self.verticalLayout_2.addWidget(self.widget_7)
+
+        #
+        self.widget_new = QtWidgets.QWidget(self.widget)
+        self.widget_new.setObjectName("widget_7")
+        self.verticalLayout_new = QtWidgets.QVBoxLayout(self.widget_new)
+        self.verticalLayout_new.setSizeConstraint(QtWidgets.QLayout.SetMaximumSize)
+        self.verticalLayout_new.setContentsMargins(9, 4, 9, 4)
+        self.verticalLayout_new.setSpacing(4)
+        self.verticalLayout_new.setObjectName("verticalLayout_7")
+        self.concrete_cal = QtWidgets.QPushButton("Concrete Calculator", self.widget_new)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.concrete_cal.sizePolicy().hasHeightForWidth())
+        self.concrete_cal.setSizePolicy(sizePolicy)
+        self.concrete_cal.clicked.connect(self.concrete_function)
+        self.concrete_cal.setStyleSheet("#concrete_cal{\n"
+                                       "font-weight:bold;\n"
+                                       "color: white;\n"
+                                       "background-color: #6F4B27;\n"
+                                       "border-top-left-radius: 7px;\n"
+                                       "border-top-right-radius: 7px;\n"
+                                       "border-bottom-left-radius: 7px;\n"
+                                       "border-bottom-right-radius: 7px;\n"
+                                       "font-family: Inter;\n"
+                                       "font-size: 15px;\n"
+                                       "text-align: center;\n"
+                                       "}\n"
+                                       "#concrete_cal:hover{\n"
+                                       "color: rgb(144,115,87);\n"
+                                       "border : 3px solid rgb(144,115,87);\n"
+                                       "background-color: white;\n"
+                                       "}\n"
+                                       "")
+        self.concrete_cal.setObjectName("concrete_cal")
+        self.verticalLayout_new.addWidget(self.concrete_cal)
+        self.verticalLayout_2.addWidget(self.widget_new)
+        #
+
         self.widget_8 = QtWidgets.QWidget(self.widget)
         self.widget_8.setObjectName("widget_8")
         self.verticalLayout_8 = QtWidgets.QVBoxLayout(self.widget_8)
@@ -232,6 +288,7 @@ class Ui_Dialog(object):
         self.verticalLayout_2.addWidget(self.widget_8)
         self.widget_9 = QtWidgets.QWidget(self.widget)
         self.widget_9.setObjectName("widget_9")
+
         self.verticalLayout_9 = QtWidgets.QVBoxLayout(self.widget_9)
         self.verticalLayout_9.setSizeConstraint(QtWidgets.QLayout.SetMaximumSize)
         self.verticalLayout_9.setContentsMargins(9, 4, 9, 4)
@@ -281,124 +338,106 @@ class Ui_Dialog(object):
         self.holecolumn.setText(_translate("Dialog", "Hole / Round Footings Calculator"))
         self.circularslab.setText(_translate("Dialog", "Circular Slab or Tube Calculator"))
 
+    def exit_function(self):
+        self.Dialog.close()
+        self.background_widget.hide()
     def scifi_function(self):
         try:
-            # Get the path to the directory where the executable is run from
-            app_path = getattr(sys, '_MEIPASS', None) or os.path.abspath('.')
 
-            # Create the path to the result.py file
-            Crack_Line_Length = os.path.join(app_path, 'scientific calculator.py')
-            # Execute the result.py file using QProcess
-            process = QtCore.QProcess()
-            process.start('python', [Crack_Line_Length])
+            ui = sci_Calculator() #class name of file dialog
+            ui.move(
+                QtWidgets.QApplication.desktop().screen().rect().center() - ui.rect().center()
+            )
+            ui.show()
+            ui.exec_()
 
-            if process.waitForFinished() == 0:
-                print('Error: failed to execute result.py')
         except Exception as e:
             print(e)
 
     def concrete_function(self):
         try:
-            # Get the path to the directory where the executable is run from
-            app_path = getattr(sys, '_MEIPASS', None) or os.path.abspath('.')
+            concrete_call = QtWidgets.QDialog(self.Dialog)
+            x = (self.Dialog.width() - self.Dialog.width()) // 2
+            y = (self.Dialog.height() - self.Dialog.height()) // 2
+            ui = concrete_cal()
 
-            # Create the path to the result.py file
-            Crack_Line_Length = os.path.join(app_path, 'concretevolumecalc.py')
-            # Execute the result.py file using QProcess
-            process = QtCore.QProcess()
-            process.start('python', [Crack_Line_Length])
-
-            if process.waitForFinished() == 0:
-                print('Error: failed to execute result.py')
+            ui.setupUi(concrete_call)
+            concrete_call.move(x, y)
+            concrete_call.show()
+            concrete_call.exec_()
         except Exception as e:
             print(e)
 
     def stairs_function(self):
         try:
-            # Get the path to the directory where the executable is run from
-            app_path = getattr(sys, '_MEIPASS', None) or os.path.abspath('.')
 
-            # Create the path to the result.py file
-            Crack_Line_Length = os.path.join(app_path, 'stairs.py')
-            # Execute the result.py file using QProcess
-            process = QtCore.QProcess()
-            process.start('python', [Crack_Line_Length])
+            qstairs = QtWidgets.QDialog(self.Dialog)
+            x = (self.Dialog.width() - self.Dialog.width()) // 2
+            y = (self.Dialog.height() - self.Dialog.height()) // 2
+            ui = stairs()
 
-            if process.waitForFinished() == 0:
-                print('Error: failed to execute result.py')
+            ui.setupUi(qstairs)
+            qstairs.move(x, y)
+            qstairs.show()
+            qstairs.exec_()
         except Exception as e:
             print(e)
 
     def curbgutter_function(self):
         try:
-            # Get the path to the directory where the executable is run from
-            app_path = getattr(sys, '_MEIPASS', None) or os.path.abspath('.')
 
-            # Create the path to the result.py file
-            Crack_Line_Length = os.path.join(app_path, 'Curb_Gutter_Barrier.py')
-            # Execute the result.py file using QProcess
-            process = QtCore.QProcess()
-            process.start('python', [Crack_Line_Length])
+            curbgutterCalc = QtWidgets.QDialog(self.Dialog)
+            x = (self.Dialog.width() - self.Dialog.width()) // 2
+            y = (self.Dialog.height() - self.Dialog.height()) // 2
+            ui = curb()
 
-            if process.waitForFinished() == 0:
-                print('Error: failed to execute result.py')
+            ui.setupUi(curbgutterCalc)
+            curbgutterCalc.move(x, y)
+            curbgutterCalc.show()
+            curbgutterCalc.exec_()
         except Exception as e:
             print(e)
 
     def slabssquare_function(self):
         try:
-            # Get the path to the directory where the executable is run from
-            app_path = getattr(sys, '_MEIPASS', None) or os.path.abspath('.')
 
-            # Create the path to the result.py file
-            Crack_Line_Length = os.path.join(app_path, 'Slabs_Walls_SquareFootings.py')
-            # Execute the result.py file using QProcess
-            process = QtCore.QProcess()
-            process.start('python', [Crack_Line_Length])
+            slabs_wallsfootings = QtWidgets.QDialog(self.Dialog)
+            x = (self.Dialog.width() - self.Dialog.width()) // 2
+            y = (self.Dialog.height() - self.Dialog.height()) // 2
+            ui = curb()
 
-            if process.waitForFinished() == 0:
-                print('Error: failed to execute result.py')
+            ui.setupUi(slabs_wallsfootings)
+            slabs_wallsfootings.move(x, y)
+            slabs_wallsfootings.show()
+            slabs_wallsfootings.exec_()
         except Exception as e:
             print(e)
 
     def holecolumn_function(self):
         try:
-            # Get the path to the directory where the executable is run from
-            app_path = getattr(sys, '_MEIPASS', None) or os.path.abspath('.')
+            holecolumn = QtWidgets.QDialog(self.Dialog)
+            x = (self.Dialog.width() - self.Dialog.width()) // 2
+            y = (self.Dialog.height() - self.Dialog.height()) // 2
+            ui = hole()
 
-            # Create the path to the result.py file
-            Crack_Line_Length = os.path.join(app_path, 'Hole_Column_RoundFootings.py')
-            # Execute the result.py file using QProcess
-            process = QtCore.QProcess()
-            process.start('python', [Crack_Line_Length])
-
-            if process.waitForFinished() == 0:
-                print('Error: failed to execute result.py')
+            ui.setupUi(holecolumn)
+            holecolumn.move(x, y)
+            holecolumn.show()
+            holecolumn.exec_()
         except Exception as e:
             print(e)
 
     def circularslab_function(self):
         try:
-            # Get the path to the directory where the executable is run from
-            app_path = getattr(sys, '_MEIPASS', None) or os.path.abspath('.')
+            circularslabcalc = QtWidgets.QDialog(self.Dialog)
+            x = (self.Dialog.width() - self.Dialog.width()) // 2
+            y = (self.Dialog.height() - self.Dialog.height()) // 2
+            ui = circular()
 
-            # Create the path to the result.py file
-            Crack_Line_Length = os.path.join(app_path, 'Circular_Slab_or_Tube.py')
-            # Execute the result.py file using QProcess
-            process = QtCore.QProcess()
-            process.start('python', [Crack_Line_Length])
-
-            if process.waitForFinished() == 0:
-                print('Error: failed to execute result.py')
+            ui.setupUi(circularslabcalc)
+            circularslabcalc.move(x, y)
+            circularslabcalc.show()
+            circularslabcalc.exec_()
         except Exception as e:
             print(e)
 
-if __name__ == "__main__":
-    import sys
-
-    app = QtWidgets.QApplication(sys.argv)
-    Dialog = QtWidgets.QDialog()
-    ui = Ui_Dialog()
-    ui.setupUi(Dialog)
-    Dialog.show()
-    sys.exit(app.exec_())

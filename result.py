@@ -1316,12 +1316,16 @@ class Result_Dialog(object):
 
         except Exception as e:
             print(f"Error at parameters {e}")
-        conn.commit()
-        conn.close()
-        self.delete_usedtext_file()
-        self.show_dialog_success_save()
-        self.close_segment_dialog.close()
-        self.background_widget.hide()
+        try:
+            conn.commit()
+            conn.close()
+            self.delete_usedtext_file()
+            self.show_dialog_success_save()
+            self.close_segment_dialog.close()
+            self.background_widget.hide()
+            self.Dialog.close()
+        except Exception as e:
+            print(f"Error at closing {e}")
 
     def creating_new_folder(self):
         # Create dialog box

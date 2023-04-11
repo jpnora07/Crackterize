@@ -13,8 +13,11 @@ from PyQt5.QtWidgets import QListView, QComboBox, QDialog, QFileDialog, QStyledI
     QAbstractItemView, QLineEdit, QFrame
 
 from Segment_Image import Ui_DialogSegment
+from calculatorButtons import cal_dialog
+from view_result_with_details import result_with_details
 from result import Result_Dialog
 from view_folders import view_folder_dialog
+from view_results import view_result_dialog
 
 
 class AlignDelegate(QStyledItemDelegate):
@@ -25,7 +28,9 @@ class AlignDelegate(QStyledItemDelegate):
     def paint(self, painter, option, index):
         super().paint(painter, option, index)
 
+
 from PyQt5.QtCore import QThread, pyqtSignal
+
 
 class ImageProcessingThread(QThread):
     finished = pyqtSignal(object)
@@ -86,6 +91,7 @@ class ImageProcessingThread(QThread):
             print(e)
             self.error.emit(str(e))
 
+
 class Ui_MainWindow(object):
     class QTComboBoxButton(QLineEdit):
         def __init__(self, combo):
@@ -101,11 +107,11 @@ class Ui_MainWindow(object):
         MainWindow.setObjectName("MainWindow")
         MainWindow.setWindowModality(QtCore.Qt.NonModal)
         MainWindow.setEnabled(True)
-        MainWindow.setFixedSize(1000, 700)
+        # MainWindow.setFixedSize(1000, 700)
 
-        # MainWindow.resize(983, 573)
-        #MainWindow.setMinimumSize(QtCore.QSize(1000, 700))
-        # MainWindow.setMaximumSize(QtCore.QSize(983, 573))
+        # MainWindow.resize(1000, 700)
+        MainWindow.setMinimumSize(QtCore.QSize(1000, 700))
+        MainWindow.setMaximumSize(QtCore.QSize(16777215, 16777215))
         MainWindow.setStyleSheet("#MainWindow{\n"
                                  "background-color: qlineargradient(spread:pad, x1:0.045, y1:0.261, x2:0.988636, y2:0.955, stop:0 rgba(235, 209, 196, 255), stop:1 rgba(255, 255, 255, 255));\n"
                                  "width: fit-content;\n"
@@ -148,8 +154,8 @@ class Ui_MainWindow(object):
         effect.setColor(QtGui.QColor(144, 115, 87, 100))
         effect.setOffset(QtCore.QPointF(0, 4))
         self.threeBtn.setGraphicsEffect(effect)
-        self.threeBtn.setMinimumSize(QtCore.QSize(0, 0))
-        self.threeBtn.setMaximumSize(QtCore.QSize(650, 58))
+        self.threeBtn.setMinimumSize(QtCore.QSize(800, 0))
+        self.threeBtn.setMaximumSize(QtCore.QSize(800, 60))
         self.threeBtn.setStyleSheet("#threeBtn{\n"
                                     "background-color: rgb(255, 255, 255);\n"
                                     "border-radius:28px;\n"
@@ -349,7 +355,8 @@ class Ui_MainWindow(object):
             for row in rows:
                 status = str(row[9])
                 recent = str(row[14])
-                self.history.addItem(status + " - " + recent)
+                id = str(row[0])
+                self.history.addItem(status + " - " + recent, id)  # add id as user data
         except Exception as e:
             print("Empty History! Users not yet add results: ", e)
         self.history.setEditText("History")
@@ -357,7 +364,25 @@ class Ui_MainWindow(object):
         def handleSelection(text):
             # change back to default title after item is selected
             self.history.setEditText("History")
+            # get the id of the selected item
+            index = self.history.currentIndex()
+            id = self.history.itemData(index)
+            print("Selected id:", id)
+            with open('image_id.txt', 'w') as f:
+                f.write(id)
+            try:
+                self.background_widget.show()
+                folder_dialog = QtWidgets.QDialog(self.Mainwindow)
+                ui = result_with_details(self.background_widget)
+                ui.setupUi(folder_dialog)
+                x = (self.Mainwindow.width() - folder_dialog.width()) // 2
+                y = (self.Mainwindow.height() - folder_dialog.height()) // 2
+                folder_dialog.move(x, y)
+                folder_dialog.exec_()
+            except Exception as e:
+                print(e)
 
+        # connect the activated signal with handleSelection
         self.history.activated[str].connect(handleSelection)
         # Disable showing the selected item in the title
         # change the background of list in combo box and its corner
@@ -610,24 +635,39 @@ class Ui_MainWindow(object):
         self.verticalLayout_2 = QtWidgets.QHBoxLayout(self.widget_3)
         self.verticalLayout_2.setObjectName("verticalLayout_2")
         self.widget_6 = QtWidgets.QWidget(self.widget_3)
-        self.widget_6.setMaximumSize(QtCore.QSize(929, 150))
+        self.widget_6.setMaximumSize(QtCore.QSize(820, 250))
         self.widget_6.setStyleSheet("border-image:url(images/Crackterize.png) 400 0 400 0 stretch;")
         self.widget_6.setObjectName("widget_6")
         self.verticalLayout_2.addWidget(self.widget_6)
         self.verticalLayout.addWidget(self.widget_3)
+
         self.widget_4 = QtWidgets.QWidget(self.widget)
         self.widget_4.setObjectName("widget_4")
-        self.verticalLayout_4 = QtWidgets.QHBoxLayout(self.widget_4)
-        self.verticalLayout_4.setContentsMargins(100, 20, 100, 20)
-        self.verticalLayout_4.setObjectName("verticalLayout_4")
-        self.widgetUpload = QtWidgets.QWidget(self.widget_4)
-        self.widgetUpload.setMaximumSize(QtCore.QSize(347, 128))
+
+        # new
+        self.horizontalLayout_3 = QtWidgets.QHBoxLayout(self.widget_4)
+        self.horizontalLayout_3.setContentsMargins(100, 20, 100, 20)
+        self.horizontalLayout_3.setObjectName("horizontalLayout_3")
+
+        self.widget_5 = QtWidgets.QWidget(self.widget_4)
+
         effect = QtWidgets.QGraphicsDropShadowEffect()
         effect.setBlurRadius(5)
         effect.setColor(QtGui.QColor(144, 115, 87, 100))
         effect.setOffset(QtCore.QPointF(0, 4))
-        self.widgetUpload.setGraphicsEffect(effect)
-
+        self.widget_5.setGraphicsEffect(effect)
+        self.widget_5.setMaximumSize(QtCore.QSize(800, 170))
+        self.widget_5.setStyleSheet("#widget_5{\n"
+                                    "background-color: #cfcec9;\n"
+                                    "border-radius:28px;\n"
+                                    "}")
+        self.widget_5.setObjectName("widget_5")
+        self.horizontalLayout_4 = QtWidgets.QHBoxLayout(self.widget_5)
+        self.horizontalLayout_4.setContentsMargins(0, 0, 0, 0)
+        self.horizontalLayout_4.setObjectName("horizontalLayout_4")
+        self.widgetUpload = QtWidgets.QWidget(self.widget_5)
+        self.widgetUpload.setMinimumSize(QtCore.QSize(550, 0))
+        self.widgetUpload.setMaximumSize(QtCore.QSize(550, 170))
         self.widgetUpload.setStyleSheet("#widgetUpload{\n"
                                         "background-color: rgb(255, 255, 255);\n"
                                         "border-radius:28px;\n"
@@ -636,17 +676,16 @@ class Ui_MainWindow(object):
                                         "")
         self.widgetUpload.setObjectName("widgetUpload")
         self.verticalLayout_5 = QtWidgets.QVBoxLayout(self.widgetUpload)
-        self.verticalLayout_5.setContentsMargins(50, -1, 50, -1)
+        self.verticalLayout_5.setContentsMargins(50, 30, 50, 30)
         self.verticalLayout_5.setSpacing(0)
         self.verticalLayout_5.setObjectName("verticalLayout_5")
         self.uploadImg = QtWidgets.QPushButton("  Upload Image", self.widgetUpload)
         self.uploadImg.clicked.connect(self.upload_image)
         self.uploadImg.setIcon(QIcon('images/uploadIcon.png'))
-        self.uploadImg.setIconSize(QtCore.QSize(20, 20))
         self.uploadImg.setStyleSheet("#uploadImg{\n"
                                      "height:40px;\n"
                                      "font-weight:bold;\n"
-                                     "font-size:15px;\n"
+                                     "font-size:18px;\n"
                                      "color:white;\n"
                                      "background-color: rgb(144, 115, 87);\n"
                                      "border-top-left-radius :20px;\n"
@@ -665,6 +704,7 @@ class Ui_MainWindow(object):
         self.create = QtWidgets.QPushButton("or create a new project", self.widgetUpload)
         self.create.clicked.connect(self.creating_new_project)
         self.create.setStyleSheet("#create{\n"
+                                
                                   "font-weight:bold;\n"
                                   " color:#363131;\n"
                                   "background-color: rgb(255, 255, 255);\n"
@@ -675,16 +715,9 @@ class Ui_MainWindow(object):
                                   "")
         self.create.setObjectName("create")
         self.verticalLayout_5.addWidget(self.create)
-        self.verticalLayout_4.addWidget(self.widgetUpload)
-        # new
-        self.widgetUpload_2 = QtWidgets.QWidget(self.widget_4)
-        self.widgetUpload_2.setMaximumSize(QtCore.QSize(347, 128))
-        effect = QtWidgets.QGraphicsDropShadowEffect()
-        effect.setBlurRadius(5)
-        effect.setColor(QtGui.QColor(144, 115, 87, 100))
-        effect.setOffset(QtCore.QPointF(0, 4))
-        self.widgetUpload_2.setGraphicsEffect(effect)
-        self.widgetUpload_2.setStyleSheet("#widgetUpload_2{\n"
+        self.horizontalLayout_4.addWidget(self.widgetUpload)
+        self.widgetUpload_2 = QtWidgets.QWidget(self.widget_5)
+        self.widgetUpload_2.setStyleSheet("#widgetUpload{\n"
                                           "background-color: rgb(255, 255, 255);\n"
                                           "border-radius:28px;\n"
                                           "}\n"
@@ -692,18 +725,18 @@ class Ui_MainWindow(object):
                                           "")
         self.widgetUpload_2.setObjectName("widgetUpload_2")
         self.verticalLayout_6 = QtWidgets.QVBoxLayout(self.widgetUpload_2)
-        self.verticalLayout_6.setContentsMargins(50, -1, 50, -1)
+        self.verticalLayout_6.setContentsMargins(30, 30, 30, 30)
         self.verticalLayout_6.setSpacing(0)
         self.verticalLayout_6.setObjectName("verticalLayout_6")
         self.calLbl = QtWidgets.QPushButton("Calculate Measurements", self.widgetUpload_2)
         self.calLbl.setStyleSheet("#calLbl{\n"
                                   "font-weight:bold;\n"
-                                  " color:#363131;\n"
-                                  "background-color: rgb(255, 255, 255);\n"
-                                  "border :3px solid rgb(255, 255, 255);\n"
+                                    " color:#363131;\n"
+                                    "background-color: #cfcec9;\n"
+                                    "border :3px solid #cfcec9;\n"
                                   " }\n"
                                   "#calLbl:hover{\n"
-                                  "background-color:rgb(255, 255, 255);}\n"
+                                  "background-color:#cfcec9;}\n"
                                   "")
         self.calLbl.setObjectName("calLbl")
         self.verticalLayout_6.addWidget(self.calLbl)
@@ -713,15 +746,15 @@ class Ui_MainWindow(object):
                                      "font-weight:bold;\n"
                                      "font-size:18px;\n"
                                      "color:white;\n"
-                                     "background-color: rgb(144, 115, 87);\n"
+                                     "background-color: #818181;\n"
                                      "border-top-left-radius :20px;\n"
                                      "border-top-right-radius : 20px; \n"
                                      "border-bottom-left-radius : 20px; \n"
                                      "border-bottom-right-radius : 20px;\n"
                                      "}\n"
                                      "#ButtonCal:hover{\n"
-                                     "color:rgb(144, 115, 87);\n"
-                                     "border :2px solid rgb(144, 115, 87);\n"
+                                     "color:#818181;\n"
+                                     "border :2px solid #818181;\n"
                                      "background-color: rgb(255, 255, 255);\n"
                                      "}\n"
                                      "")
@@ -729,7 +762,11 @@ class Ui_MainWindow(object):
 
         self.ButtonCal.clicked.connect(self.ButtonCal_function)
         self.verticalLayout_6.addWidget(self.ButtonCal)
-        self.verticalLayout_4.addWidget(self.widgetUpload_2)
+        self.horizontalLayout_4.addWidget(self.widgetUpload_2)
+
+        self.horizontalLayout_3.addWidget(self.widget_5)
+        # new
+
         self.verticalLayout.addWidget(self.widget_4)
         self.horizontalLayout_2.addWidget(self.widget)
         MainWindow.setCentralWidget(self.centralwidget)
@@ -740,8 +777,11 @@ class Ui_MainWindow(object):
         # Add transparent white background widget
         self.background_widget = QFrame(MainWindow)
         self.background_widget.setStyleSheet("background-color: rgba(0, 0, 0, 0.25);")
-        self.background_widget.resize(MainWindow.width(), MainWindow.height())
+        self.background_widget.setMinimumSize(QtCore.QSize(1000, 700))
+        self.background_widget.setMaximumSize(QtCore.QSize(16777215, 16777215))
         self.background_widget.hide()
+
+        self.Mainwindow.resizeEvent = lambda event: self.background_widget.resize(self.Mainwindow.size())
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -865,6 +905,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_3.addWidget(self.ET_newproject)
         self.verticalLayout_2.addWidget(self.widget_2)
         self.verticalLayout.addWidget(self.widget_3)
+
         self.widget_4 = QtWidgets.QWidget(self.widget_1)
         self.widget_4.setObjectName("widget_4")
         self.verticalLayout_4 = QtWidgets.QVBoxLayout(self.widget_4)
@@ -1216,6 +1257,15 @@ class Ui_MainWindow(object):
 
             if process.waitForFinished() == 0:
                 print('Error: failed to execute result.py')
+
+            self.background_widget.show()
+            calculatorButtons = QtWidgets.QDialog(self.Mainwindow)
+            ui = cal_dialog(self.background_widget)
+            ui.setupUi(calculatorButtons)
+            x = (self.Mainwindow.width() - calculatorButtons.width()) // 2
+            y = (self.Mainwindow.height() - calculatorButtons.height()) // 2
+            calculatorButtons.move(x, y)
+            calculatorButtons.exec_()
         except Exception as e:
             print(e)
 
@@ -1328,10 +1378,19 @@ class Ui_MainWindow(object):
 
 if __name__ == "__main__":
     import sys
+    from PyQt5.QtWidgets import QApplication, QMainWindow, QDesktopWidget
 
-    app = QtWidgets.QApplication(sys.argv)
-    MainWindow = QtWidgets.QMainWindow()
+    app = QApplication(sys.argv)
+    MainWindow = QMainWindow()
     ui = Ui_MainWindow()
     ui.setupUi(MainWindow)
     MainWindow.show()
+
+    # Center the main window on the desktop screen
+    desktop = QDesktopWidget().screenGeometry()
+    screen_width, screen_height = desktop.width(), desktop.height()
+    window_width, window_height = MainWindow.width(), MainWindow.height()
+    x, y = (screen_width - window_width) // 2, (screen_height - window_height) // 2
+    MainWindow.move(x, y)
+
     sys.exit(app.exec_())

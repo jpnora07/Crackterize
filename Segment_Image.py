@@ -143,7 +143,6 @@ class Ui_DialogSegment(object):
         Dialog.resize(700, 600)
         Dialog.setMinimumSize(QtCore.QSize(700, 600))
         Dialog.setMaximumSize(QtCore.QSize(700, 600))
-        Dialog.setAttribute(Qt.WA_TranslucentBackground)
         Dialog.setWindowFlags(Qt.FramelessWindowHint)
         Dialog.setStyleSheet("#Dialog{\n"
                              "background-color: rgb(255,255,255);"
@@ -164,13 +163,13 @@ class Ui_DialogSegment(object):
         self.verticalLayout.setSpacing(0)
         self.verticalLayout.setObjectName("verticalLayout")
         self.widget_2 = QtWidgets.QWidget(Dialog)
-        radius = 15
-        self.widget_2.setStyleSheet("""
-                                                    background:#EFEEEE;
-                                                    border-top-left-radius:{0}px;
-                                                    border-top-right-radius:{0}px;
-                                                    """.format(radius))
         self.widget_2.setMinimumSize(QtCore.QSize(0, 50))
+        self.widget_2.setStyleSheet("#widget_2{\n"
+                             "background-color: rgb(255,255,255);"
+                             "width: fit-content;\n"
+                             "heigth: fit-content;\n"
+                             "block-size: fit-content;\n"
+                             "} ")
         self.widget_2.setMaximumSize(QtCore.QSize(16777215, 50))
         self.widget_2.setObjectName("widget_2")
         self.horizontalLayout_5 = QtWidgets.QHBoxLayout(self.widget_2)
@@ -226,12 +225,6 @@ class Ui_DialogSegment(object):
         self.verticalLayout.addWidget(self.widget_2)
         self.widget = QtWidgets.QWidget(Dialog)
 
-        radius = 15
-        self.widget.setStyleSheet("""
-                                                    background:#EFEEEE;
-                                                    border-bottom-left-radius:{0}px;
-                                                    border-bottom-right-radius:{0}px;
-                                                    """.format(radius))
         self.widget.setObjectName("widget")
         self.horizontalLayout_4 = QtWidgets.QHBoxLayout(self.widget)
         self.horizontalLayout_4.setContentsMargins(-1, 0, -1, -1)
@@ -331,11 +324,17 @@ class Ui_DialogSegment(object):
         self.NumOfDistance.setAcceptDrops(True)
         self.NumOfDistance.setLayoutDirection(QtCore.Qt.LeftToRight)
         self.NumOfDistance.setAutoFillBackground(False)
-        self.NumOfDistance.setStyleSheet("#distanceNum{\n"
-                                         "font-size:18px;\n"
-                                         "text-allign:center;\n"
-                                         "border:1px solid grey;\n"
-                                         "}")
+        self.NumOfDistance.setAlignment(QtCore.Qt.AlignCenter | QtCore.Qt.AlignVCenter)
+        self.NumOfDistance.setStyleSheet("""
+    #NumOfDistance {
+        color: black;
+        background-color: white;
+        border: 1px solid gray;
+        padding: 5px;
+        text-align: center;
+    
+    }
+""")
         self.NumOfDistance.setLineWidth(0)
         self.NumOfDistance.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
         self.NumOfDistance.setSizeAdjustPolicy(QtWidgets.QAbstractScrollArea.AdjustIgnored)
@@ -344,10 +343,16 @@ class Ui_DialogSegment(object):
         self.NumOfDistance.setObjectName("NumOfDistance")
         self.horizontalLayout_2.addWidget(self.NumOfDistance)
         self.units = QtWidgets.QComboBox(self.widget_10)
-        self.units.setMinimumSize(QtCore.QSize(0, 40))
+        self.units.setMinimumSize(QtCore.QSize(100, 40))
         self.units.setMaximumSize(QtCore.QSize(16777215, 40))
         self.units.setObjectName("units")
         self.units.addItems(["Millimeter (mm)", "Centimeter (cm)", "Inch (in)", "Foot (ft)", "Yard (yd)", "Meter (m)"])
+        self.units.setStyleSheet("#NumOfDistance{\n"
+                                         "background-color:white;"
+                                         "font-size:18px;\n"
+                                         "text-allign:center;\n"
+                                         "border:1px solid grey;\n"
+                                         "}")
         self.horizontalLayout_2.addWidget(self.units)
         self.verticalLayout_7.addWidget(self.widget_10)
         self.widget_4 = QtWidgets.QWidget(self.widget_3)
@@ -414,6 +419,7 @@ class Ui_DialogSegment(object):
                                   "")
         self.height.setObjectName("height")
         self.height.clicked.connect(self.view_height)
+        self.height.hide()
         self.verticalLayout_2.addWidget(self.height)
         self.verticalLayout_7.addWidget(self.widget_4)
         self.widget_11 = QtWidgets.QWidget(self.widget_3)
