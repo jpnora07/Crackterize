@@ -178,10 +178,10 @@ class Ui_MainWindow(object):
             db_path = os.path.join(BASE_DIR, 'Projects.db')
             conn = sqlite3.connect(db_path)
             c = conn.cursor()
-            c.execute("SELECT project_name FROM Projects ORDER BY created_at DESC")
+            c.execute("SELECT * FROM Projects ORDER BY created_at DESC")
             rows = c.fetchall()
             for row in rows:
-                self.myProjects.addItem(row[0])
+                self.myProjects.addItem(str(row[1]))
         except Exception as e:
             print("Empty Projects! Users not yet add projects: ", e)
         self.myProjects.setEditText("My Projects")
@@ -336,6 +336,7 @@ class Ui_MainWindow(object):
 
         self.myProjects.setObjectName("myProjects")
         self.horizontalLayout.addWidget(self.myProjects)
+
         self.history = QtWidgets.QComboBox(self.threeBtn)
         self.history.view().parentWidget().setStyleSheet('border: none;')
         self.history.setGeometry(200, 150, 150, 30)
@@ -1246,18 +1247,6 @@ class Ui_MainWindow(object):
 
     def ButtonCal_function(self):
         try:
-            # Get the path to the directory where the executable is run from
-            app_path = getattr(sys, '_MEIPASS', None) or os.path.abspath('.')
-
-            # Create the path to the result.py file
-            calculatorButtons = os.path.join(app_path, 'calculatorButtons.py')
-            # Execute the result.py file using QProcess
-            process = QtCore.QProcess()
-            process.start('python', [calculatorButtons])
-
-            if process.waitForFinished() == 0:
-                print('Error: failed to execute result.py')
-
             self.background_widget.show()
             calculatorButtons = QtWidgets.QDialog(self.Mainwindow)
             ui = cal_dialog(self.background_widget)
