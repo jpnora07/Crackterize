@@ -1245,7 +1245,7 @@ class Result_Dialog(object):
         try:
             c.execute('''SELECT count(name) FROM sqlite_master WHERE type='table' AND name='Save_Files' ''')
             if c.fetchone()[0] == 0:
-                self.myHistory.clear()
+
                 c.execute('''CREATE TABLE Save_Files (
                                 id INTEGER PRIMARY KEY, 
                                 folder_name TEXT, 
@@ -1308,13 +1308,11 @@ class Result_Dialog(object):
                 remarks,
                 timestamp_str
             ))
-            self.c.execute("SELECT * FROM Save_Files ORDER BY created_at DESC")
-            rows = self.c.fetchall()
+            self.myHistory.clear()
+            c.execute("SELECT * FROM Save_Files ORDER BY created_at DESC")
+            rows = c.fetchall()
             for row in rows:
-                status = str(row[9])
-                recent = str(row[14])
-                id = str(row[0])
-                self.myHistory.addItem(status + " - " + recent, id)
+                self.myHistory.addItem(row[0])
         except Exception as e:
             print(f"Error at parameters {e}")
         try:
