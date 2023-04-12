@@ -97,11 +97,11 @@ class Line_length(object):
         # Create a grid layout to hold the widgets
         layout = QGridLayout(Dialog)
 
-        self.slider = QSlider(Qt.Horizontal)
-        self.slider.setRange(0, 100)
-        self.slider.setValue(50)
+        #self.slider = QSlider(Qt.Horizontal)
+        #self.slider.setRange(0, 100)
+        #self.slider.setValue(50)
 
-        layout.addWidget(self.slider, 1, 1)
+        #layout.addWidget(self.slider, 1, 1)
 
         self.img = cv2.imread('threshold_image.jpg')
         desired_size = (2500, 2500)
