@@ -7,7 +7,7 @@ import numpy as np
 import tensorflow as tf
 from tensorflow import keras
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import Qt, QTimer
+from PyQt5.QtCore import Qt, QTimer, QThread, pyqtSignal
 from PyQt5.QtGui import QIcon, QMouseEvent, QMovie
 from PyQt5.QtWidgets import QListView, QComboBox, QDialog, QFileDialog, QStyledItemDelegate, QScrollBar, \
     QAbstractItemView, QLineEdit, QFrame
@@ -27,9 +27,6 @@ class AlignDelegate(QStyledItemDelegate):
 
     def paint(self, painter, option, index):
         super().paint(painter, option, index)
-
-
-from PyQt5.QtCore import QThread, pyqtSignal
 
 
 class ImageProcessingThread(QThread):

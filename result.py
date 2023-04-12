@@ -28,20 +28,7 @@ class Result_Dialog(object):
         Dialog.setMaximumSize(QtCore.QSize(700, 600))
         Dialog.setWindowFlags(Qt.FramelessWindowHint)
 
-        Dialog.setAttribute(Qt.WA_TranslucentBackground)
-        effect = QtWidgets.QGraphicsDropShadowEffect()
-        effect.setBlurRadius(15)
-        effect.setColor(QtGui.QColor(144, 115, 87, 100))
-        effect.setOffset(0, 0)
-        radius = 15
-        Dialog.setStyleSheet("""
-                                            background:#EFEEEE;
-                                            border-top-left-radius:{0}px;
-                                            border-bottom-left-radius:{0}px;
-                                            border-top-right-radius:{0}px;
-                                            border-bottom-right-radius:{0}px;
-                                            """.format(radius))
-        Dialog.setGraphicsEffect(effect)
+
         self.verticalLayout_6 = QtWidgets.QVBoxLayout(Dialog)
         self.verticalLayout_6.setObjectName("verticalLayout_6")
         self.widget = QtWidgets.QWidget(Dialog)
@@ -408,7 +395,7 @@ class Result_Dialog(object):
         self.concretecracked_2.setText(_translate("Dialog", "Detected:"))
         self.label_2.setText(_translate("Dialog", "Length:"))
         self.label_3.setText(_translate("Dialog", "Width: "))
-        self.widgetPosition.setText(_translate("Dialog", "Position:"))
+        self.widgetPosition.setText(_translate("Dialog", "Orientation:"))
         self.adddetails.setText(_translate("Dialog", "Add Details"))
         self.print1.setText(_translate("Dialog", "Print"))
         self.savebtn.setText(_translate("Dialog", "Save"))

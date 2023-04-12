@@ -1,13 +1,12 @@
 import os
 from collections import deque
-import sys
 
 import cv2
 import numpy as np
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import QThread, pyqtSignal, Qt
 from PyQt5.QtGui import QImage, QPixmap, QMovie
-from PyQt5.QtWidgets import QMessageBox, QDialog, QLabel, QVBoxLayout, QApplication, QFrame
+from PyQt5.QtWidgets import QMessageBox, QDialog, QFrame
 
 from result import Result_Dialog
 from Crack_Line_Length import Line_length

@@ -93,30 +93,16 @@ class Line_length(object):
         Dialog.setMaximumSize(QtCore.QSize(700, 600))
         Dialog.setWindowFlags(Qt.FramelessWindowHint)
 
-        Dialog.setAttribute(Qt.WA_TranslucentBackground)
-        effect = QtWidgets.QGraphicsDropShadowEffect()
-        effect.setBlurRadius(15)
-        effect.setColor(QtGui.QColor(144, 115, 87, 100))
-        effect.setOffset(0, 0)
-        radius = 15
-        Dialog.setStyleSheet("""
-                                                    background:#EFEEEE;
-                                                    border-top-left-radius:{0}px;
-                                                    border-bottom-left-radius:{0}px;
-                                                    border-top-right-radius:{0}px;
-                                                    border-bottom-right-radius:{0}px;
-                                                    """.format(radius))
-        Dialog.setGraphicsEffect(effect)
 
         # Create a grid layout to hold the widgets
         layout = QGridLayout(Dialog)
 
-        # self.slider = QSlider(Qt.Horizontal)
-        # self.slider.setRange(0, 100)
-        # self.slider.setValue(50)
-        # layout.addWidget(self.slider, 1, 1)
+        self.slider = QSlider(Qt.Horizontal)
+        self.slider.setRange(0, 100)
+        self.slider.setValue(50)
 
-        # Load the input image and display i
+        layout.addWidget(self.slider, 1, 1)
+
         self.img = cv2.imread('threshold_image.jpg')
         desired_size = (2500, 2500)
         self.img = cv2.resize(self.img, desired_size)
@@ -126,7 +112,7 @@ class Line_length(object):
         edges = cv2.erode(edges, None, iterations=1)
         contours, _ = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         boxes = []
-        self.box_lengths = []  # Keep track of the total length within each bounding box
+        self.box_lengths = []
         self.widths = []
         for contour in contours:
             area = cv2.contourArea(contour)
@@ -160,18 +146,17 @@ class Line_length(object):
                     self.box_lengths[-1] += length_cm
                 else:
                     self.box_lengths.append(
-                        length_cm)  # Add the length of this crack to the total length in the current box
+                        length_cm)
                 self.widths.append(h)
 
         total_length = sum(self.box_lengths)
         total_length_write = f"{total_length:.2f}"
-        print(total_length_write + " cm")
-        with open('Predicted_height.txt', 'w') as f:
-            f.write(str(total_length_write))
-        # Create the DrawingWidget and pass the image to it
         self.edges_label = DrawingWidget(self.img)
         self.show_image(self.img)
         layout.addWidget(self.edges_label, 0, 1)
+        print(total_length_write + " cm")
+        with open('Predicted_height.txt', 'w') as f:
+            f.write(str(total_length_write))
 
         # Create a button and add it to the layout
         button = QPushButton("Done")
@@ -247,3 +232,12 @@ class Line_length(object):
         # Set the image on the label
         pixmap = QPixmap(q_image)
         self.edges_label.setPixmap(pixmap.scaled(label_size, Qt.KeepAspectRatio, Qt.SmoothTransformation))
+if __name__ == "__main__":
+    import sys
+
+    app = QtWidgets.QApplication(sys.argv)
+    Dialog = QtWidgets.QDialog()
+    ui = Line_length()
+    ui.setupUi(Dialog)
+    Dialog.show()
+    sys.exit(app.exec_())
