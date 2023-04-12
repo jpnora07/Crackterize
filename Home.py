@@ -101,7 +101,10 @@ class Ui_MainWindow(object):
 
     def setupUi(self, MainWindow):
         self.Mainwindow = MainWindow
-        MainWindow.setObjectName("MainWindow")
+        MainWindow.setObjectName("Crackterize")
+        # Set the logo using an QIcon object
+        logo = QIcon('images/icon_head.jpg')
+        MainWindow.setWindowIcon(logo)
         MainWindow.setWindowModality(QtCore.Qt.NonModal)
         MainWindow.setEnabled(True)
         # MainWindow.setFixedSize(1000, 700)
@@ -109,7 +112,7 @@ class Ui_MainWindow(object):
         # MainWindow.resize(1000, 700)
         MainWindow.setMinimumSize(QtCore.QSize(1000, 700))
         MainWindow.setMaximumSize(QtCore.QSize(16777215, 16777215))
-        MainWindow.setStyleSheet("#MainWindow{\n"
+        MainWindow.setStyleSheet("#Crackterize{\n"
                                  "background-color: qlineargradient(spread:pad, x1:0.045, y1:0.261, x2:0.988636, y2:0.955, stop:0 rgba(235, 209, 196, 255), stop:1 rgba(255, 255, 255, 255));\n"
                                  "width: fit-content;\n"
                                  "heigth: fit-content;\n"
@@ -814,7 +817,7 @@ class Ui_MainWindow(object):
             except FileNotFoundError:
                 print("The file does not exist.")
             result_dialog = QtWidgets.QDialog(self.Mainwindow)
-            ui = Result_Dialog(None, self.background_widget)
+            ui = Result_Dialog(None, self.background_widget, self.history)
             ui.setupUi(result_dialog)
             x = (self.Mainwindow.width() - result_dialog.width()) // 2
             y = (self.Mainwindow.height() - result_dialog.height()) // 2
@@ -1003,7 +1006,7 @@ class Ui_MainWindow(object):
                     f.write(new_projects)
                 try:
                     folder_dialog = QtWidgets.QDialog(self.Mainwindow)
-                    ui = view_folder_dialog()
+                    ui = view_folder_dialog(self.background_widget)
                     ui.setupUi(folder_dialog)
                     x = (self.Mainwindow.width() - folder_dialog.width()) // 2
                     y = (self.Mainwindow.height() - folder_dialog.height()) // 2
@@ -1257,7 +1260,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        MainWindow.setWindowTitle(_translate("Crackterize", "Crackterize"))
 
     def loading(self):
         Dialog = QDialog()
@@ -1281,60 +1284,9 @@ class Ui_MainWindow(object):
         self.widget.setObjectName("widget")
         self.verticalLayout = QtWidgets.QVBoxLayout(self.widget)
         self.verticalLayout.setObjectName("verticalLayout")
-        self.label_process = QtWidgets.QLabel("Uploading...", self.widget)
+        self.label_process = QtWidgets.QLabel("Processing image for crack detection...", self.widget)
         self.label_process.setStyleSheet("background-color:#ffffff;\n"
-                                         "font-size:30px;\n"
-                                         "color: #6c757d;\n"
-                                         "font-style: Inter;")
-        self.label_process.setScaledContents(True)
-        self.label_process.setAlignment(QtCore.Qt.AlignBottom | QtCore.Qt.AlignHCenter)
-        self.label_process.setWordWrap(True)
-        self.label_process.setObjectName("label_2")
-        self.verticalLayout.addWidget(self.label_process)
-        self.widget_2 = QtWidgets.QWidget(self.widget)
-        self.widget_2.setStyleSheet("background-color:#ffffff;")
-        self.widget_2.setObjectName("widget_2")
-        self.horizontalLayout_2 = QtWidgets.QHBoxLayout(self.widget_2)
-        self.horizontalLayout_2.setObjectName("horizontalLayout_2")
-        self.label = QtWidgets.QLabel(self.widget_2)
-        self.label.setMaximumSize(QtCore.QSize(100, 100))
-        self.movie = QMovie("images/spin_loading.gif")
-        self.label.setMovie(self.movie)
-        self.movie.start()
-        self.label.setScaledContents(True)
-        self.label.setAlignment(QtCore.Qt.AlignCenter)
-        self.label.setObjectName("label")
-        self.horizontalLayout_2.addWidget(self.label)
-        self.verticalLayout.addWidget(self.widget_2)
-        self.horizontalLayout.addWidget(self.widget)
-        Dialog.show()
-        return Dialog
-
-    def loading_getweight(self):
-        Dialog = QDialog()
-        Dialog.setWindowFlags(Qt.FramelessWindowHint)
-        Dialog.setObjectName("Dialog")
-        Dialog.resize(368, 235)
-        Dialog.setAttribute(Qt.WA_TranslucentBackground)
-        Dialog.setStyleSheet("background-color:#ffffff;")
-        radius = 15
-        Dialog.setStyleSheet("""
-                                                            background:#EFEEEE;
-                                                            border-top-left-radius:{0}px;
-                                                            border-bottom-left-radius:{0}px;
-                                                            border-top-right-radius:{0}px;
-                                                            border-bottom-right-radius:{0}px;
-                                                            """.format(radius))
-        self.horizontalLayout = QtWidgets.QHBoxLayout(Dialog)
-        self.horizontalLayout.setObjectName("horizontalLayout")
-        self.widget = QtWidgets.QWidget(Dialog)
-        self.widget.setStyleSheet("background-color:#ffffff;")
-        self.widget.setObjectName("widget")
-        self.verticalLayout = QtWidgets.QVBoxLayout(self.widget)
-        self.verticalLayout.setObjectName("verticalLayout")
-        self.label_process = QtWidgets.QLabel("Calculating the Width and Length...", self.widget)
-        self.label_process.setStyleSheet("background-color:#ffffff;\n"
-                                         "font-size:30px;\n"
+                                         "font-size:20px;\n"
                                          "color: #6c757d;\n"
                                          "font-style: Inter;")
         self.label_process.setScaledContents(True)

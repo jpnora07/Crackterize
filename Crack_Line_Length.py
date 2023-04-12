@@ -97,17 +97,17 @@ class Line_length(object):
         # Create a grid layout to hold the widgets
         layout = QGridLayout(Dialog)
 
-        #self.slider = QSlider(Qt.Horizontal)
-        #self.slider.setRange(0, 100)
-        #self.slider.setValue(50)
-
-        #layout.addWidget(self.slider, 1, 1)
+        self.slider = QSlider(Qt.Horizontal)
+        self.slider.setRange(-100, 100)
+        self.slider.setValue(0)
+        self.slider.valueChanged.connect(self.update_bbox)
+        layout.addWidget(self.slider, 1, 1)
 
         self.img = cv2.imread('threshold_image.jpg')
         desired_size = (2500, 2500)
         self.img = cv2.resize(self.img, desired_size)
         self.gray = cv2.cvtColor(self.img, cv2.COLOR_BGR2GRAY)
-        edges = cv2.Canny(self.gray, 50, 150, apertureSize=3)
+        edges = cv2.Canny(self.gray, 50, 255, apertureSize=3)
         edges = cv2.dilate(edges, None, iterations=1)
         edges = cv2.erode(edges, None, iterations=1)
         contours, _ = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
@@ -211,6 +211,19 @@ class Line_length(object):
         Dialog.setLayout(layout)
         print(f"Image dimensions: {self.img.shape}")
 
+    def update_bbox(self, value):
+        # Calculate the new position and size of the bounding box based on the slider value
+        x = 100 + value
+        y = 100 + value
+        w = 200 - value
+        h = 200 - value
+
+        # Draw the new bounding box on the image
+        img_copy = self.img.copy()
+        cv2.rectangle(img_copy, (x, y), (x + w, y + h), (0, 255, 0), 2)
+
+        # Update the label with the new image
+        self.show_image(img_copy)
     def done_view_length(self):
         self.Dialog.close()
     def remove_last_line(self):

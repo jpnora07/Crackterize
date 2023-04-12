@@ -391,15 +391,15 @@ class Ui_DialogSegment(object):
         self.removeNoise.setObjectName("removeNoise")
         self.removeNoise.clicked.connect(self.remove_noise)
         self.verticalLayout_2.addWidget(self.removeNoise)
-        self.height = QtWidgets.QPushButton(self.widget_4)
+        self.calculate = QtWidgets.QPushButton("Measure The Crack",self.widget_4)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.height.sizePolicy().hasHeightForWidth())
-        self.height.setSizePolicy(sizePolicy)
-        self.height.setMinimumSize(QtCore.QSize(68, 35))
-        self.height.setMaximumSize(QtCore.QSize(16777215, 35))
-        self.height.setStyleSheet("#height{\n"
+        sizePolicy.setHeightForWidth(self.calculate.sizePolicy().hasHeightForWidth())
+        self.calculate.setSizePolicy(sizePolicy)
+        self.calculate.setMinimumSize(QtCore.QSize(68, 35))
+        self.calculate.setMaximumSize(QtCore.QSize(16777215, 35))
+        self.calculate.setStyleSheet("#height{\n"
                                   "font-weight:bold;\n"
                                   "color: white;\n"
                                   "background-color: #6F4B27;\n"
@@ -416,10 +416,10 @@ class Ui_DialogSegment(object):
                                   "background-color: white;\n"
                                   "}\n"
                                   "")
-        self.height.setObjectName("height")
-        self.height.clicked.connect(self.view_height)
-        self.height.hide()
-        self.verticalLayout_2.addWidget(self.height)
+        self.calculate.setObjectName("height")
+        self.calculate.clicked.connect(self.calculate_measures)
+        #self.calculate.hide()
+        self.verticalLayout_2.addWidget(self.calculate)
         self.verticalLayout_7.addWidget(self.widget_4)
         self.widget_11 = QtWidgets.QWidget(self.widget_3)
         self.widget_11.setObjectName("widget_11")
@@ -478,8 +478,7 @@ class Ui_DialogSegment(object):
         Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
         self.label.setText(_translate("Dialog", "Adjust Threshold"))
         self.label_2.setText(_translate("Dialog", "Distance between Crack and Camera"))
-        self.removeNoise.setText(_translate("Dialog", "Remove Noise"))
-        self.height.setText(_translate("Dialog", "View Height"))
+        self.removeNoise.setText(_translate("Dialog", "Denoise Image"))
         self.proceed.setText(_translate("Dialog", "Proceed"))
 
     def closeEvent(self, event):
@@ -491,12 +490,17 @@ class Ui_DialogSegment(object):
         self.Predicted_height = "Predicted_height.txt"
         self.Orientation = "Orientation.txt"
         Predicted_Score = "Predicted_Score.txt"
+        threshold = "threshold_image.jpg"
 
         reply = QtWidgets.QMessageBox.question(self.Dialog, 'Message', "Are you sure you want to exit?",
                                                QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No,
                                                QtWidgets.QMessageBox.No)
         if reply == QtWidgets.QMessageBox.Yes:
             self.background_widget.hide()
+            try:
+                os.remove(threshold)
+            except FileNotFoundError:
+                print(f"{threshold} already removed or does not exist")
             try:
                 os.remove(Input_Distance)
             except FileNotFoundError:
@@ -584,12 +588,12 @@ class Ui_DialogSegment(object):
         try:
             # Check that the files exist and are not empty
             if not os.path.isfile(Predicted_width) or os.path.getsize(Predicted_width) == 0:
-                QtWidgets.QMessageBox.critical(self.Dialog, "Error", "The image is not completely get the width of crack "
+                QtWidgets.QMessageBox.critical(self.Dialog, "Error", "The image is not completely get the width and length of crack "
                                                                      "detected.")
                 return
 
             if not os.path.isfile(Predicted_height) or os.path.getsize(Predicted_height) == 0:
-                QtWidgets.QMessageBox.critical(self.Dialog, "Error", "The image is not completely get the height of crack "
+                QtWidgets.QMessageBox.critical(self.Dialog, "Error", "The image is not completely get the lenght of crack "
                                                                      "detected.")
                 return
         except Exception as e:
@@ -599,7 +603,7 @@ class Ui_DialogSegment(object):
 
         x = (self.Dialog.width() - self.Dialog.width()) // 2
         y = (self.Dialog.height() - self.Dialog.height()) // 2
-        ui = Result_Dialog(self.Dialog, self.background_widget)
+        ui = Result_Dialog(self.Dialog, self.background_widget, None)
 
         ui.setupUi(result_dialog)
         result_dialog.move(x, y)
@@ -607,6 +611,32 @@ class Ui_DialogSegment(object):
         result_dialog.exec_()
 
     def remove_noise(self):
+        # Check if the thresholded image is not empty
+        if not hasattr(self, "thresholded") or self.thresholded is None:
+            QMessageBox.critical(self.Dialog, "Error", "Please apply a threshold to the image first.")
+            return
+
+        try:
+
+            self.load_dialog = self.loading_remove_noise()
+            self.load_dialog.show()
+            self.background_widget_segment.show()
+            # Create the noise removal thread and start it
+            self.noise_thread = NoiseRemovalThread(self.thresholded)
+            self.noise_thread.start()
+            self.noise_thread.finished.connect(self.show_result_noise)
+        except AttributeError:
+            QtWidgets.QMessageBox.critical(self.Dialog, "Error", "Thresholder value is empty.")
+            return
+
+    def show_result_noise(self, result):
+        self.result = result
+        self.update_image(result)
+        self.load_dialog.close()
+        self.background_widget_segment.hide()
+
+    def calculate_measures(self):
+
         try:
             distance = float(self.NumOfDistance.toPlainText())
         except ValueError:
@@ -617,31 +647,21 @@ class Ui_DialogSegment(object):
             QMessageBox.critical(self.Dialog, "Error", "Please enter a distance.")
             return
 
+
         try:
 
-
-            self.load_dialog = self.loading_remove_noise()
-            self.load_dialog.show()
-            self.background_widget_segment.show()
-            # Create the noise removal thread and start it
-            self.noise_thread = NoiseRemovalThread(self.thresholded)
-            self.noise_thread.start()
-            self.noise_thread.finished.connect(self.calculate_measures)
-        except AttributeError:
-            QtWidgets.QMessageBox.critical(self.Dialog, "Error", "Thresholder value is empty.")
-            return
-
-    def calculate_measures(self, result):
-        self.update_image(result)
-        self.load_dialog.close()
-        self.background_widget_segment.hide()
-        try:
+            # Check if the result from the previous thread is not empty or not done
+            if not hasattr(self, "noise_thread") or not self.noise_thread.isFinished():
+                QMessageBox.critical(self.Dialog, "Error", "Please denoise the image first.")
+                return
             self.load_dialog_measure = self.loading_measuring()
             self.load_dialog_measure.show()
             self.background_widget_segment.show()
-            self.compute_thread = CrackAnalyzer(float(self.NumOfDistance.toPlainText()), self.units.currentText(), 132.28, result)
+
+            self.compute_thread = CrackAnalyzer(float(self.NumOfDistance.toPlainText()), self.units.currentText(), 132.28, self.result)
             self.compute_thread.start()
             self.compute_thread.finished.connect(self.open_CrackLineLength)
+
             print("Finish")
         except Exception as e:
             print(e)
@@ -713,7 +733,7 @@ class Ui_DialogSegment(object):
         self.verticalLayout.setObjectName("verticalLayout")
         self.label_process = QtWidgets.QLabel("Removing Noise...", self.widget)
         self.label_process.setStyleSheet("background-color:#ffffff;\n"
-                                         "font-size:25px;\n"
+                                         "font-size:20px;\n"
                                          "color: #6c757d;\n"
                                          "font-style: Inter;")
         self.label_process.setScaledContents(True)
@@ -764,7 +784,7 @@ class Ui_DialogSegment(object):
         self.verticalLayout.setObjectName("verticalLayout")
         self.label_process = QtWidgets.QLabel("Calculating the Width and Length...", self.widget)
         self.label_process.setStyleSheet("background-color:#ffffff;\n"
-                                         "font-size:20px;\n"
+                                         "font-size:17px;\n"
                                          "color: #6c757d;\n"
                                          "font-style: Inter;")
         self.label_process.setScaledContents(True)

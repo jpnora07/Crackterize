@@ -16,8 +16,9 @@ from add_details_of_cracks import add_details_dialog
 
 class Result_Dialog(object):
 
-    def __init__(self, Dialog, background_widget):
+    def __init__(self, Dialog, background_widget,myHistory):
         self.close_segment_dialog = Dialog
+        self.myHistory = myHistory
         self.background_widget = background_widget
 
     def setupUi(self, Dialog):
@@ -27,6 +28,12 @@ class Result_Dialog(object):
         Dialog.setMinimumSize(QtCore.QSize(700, 600))
         Dialog.setMaximumSize(QtCore.QSize(700, 600))
         Dialog.setWindowFlags(Qt.FramelessWindowHint)
+        Dialog.setStyleSheet("#Dialog{\n"
+                             "background-color: rgb(255,255,255);"
+                             "width: fit-content;\n"
+                             "heigth: fit-content;\n"
+                             "block-size: fit-content;\n"
+                             "} ")
 
 
         self.verticalLayout_6 = QtWidgets.QVBoxLayout(Dialog)
@@ -1238,6 +1245,7 @@ class Result_Dialog(object):
         try:
             c.execute('''SELECT count(name) FROM sqlite_master WHERE type='table' AND name='Save_Files' ''')
             if c.fetchone()[0] == 0:
+                self.myHistory.clear()
                 c.execute('''CREATE TABLE Save_Files (
                                 id INTEGER PRIMARY KEY, 
                                 folder_name TEXT, 
@@ -1300,7 +1308,13 @@ class Result_Dialog(object):
                 remarks,
                 timestamp_str
             ))
-
+            self.c.execute("SELECT * FROM Save_Files ORDER BY created_at DESC")
+            rows = self.c.fetchall()
+            for row in rows:
+                status = str(row[9])
+                recent = str(row[14])
+                id = str(row[0])
+                self.myHistory.addItem(status + " - " + recent, id)
         except Exception as e:
             print(f"Error at parameters {e}")
         try:
@@ -1308,7 +1322,10 @@ class Result_Dialog(object):
             conn.close()
             self.delete_usedtext_file()
             self.show_dialog_success_save()
-            self.close_segment_dialog.close()
+            try:
+                self.close_segment_dialog.close()
+            except Exception as e:
+                print(f"Error at closing close_segment_dialog {e}")
             self.background_widget.hide()
             self.Dialog.close()
         except Exception as e:
@@ -1566,8 +1583,13 @@ class Result_Dialog(object):
         Selected_progression_crack = "Selected_progression_crack.txt"
         Selected_type_crack = "Selected_type_crack.txt"
         #selected_project = "selected_project.txt"
+        threshold = "threshold_image.jpg"
 
         try:
+            try:
+                os.remove(threshold)
+            except FileNotFoundError:
+                print(f"{threshold} already removed or does not exist")
             try:
                 os.remove(angle_write)
             except FileNotFoundError:
