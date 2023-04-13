@@ -1281,13 +1281,20 @@ class Result_Dialog(object):
                         created_at
                     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) """
 
+            orient = 'Orientation.txt'
+            if os.path.isfile(orient):
+                with open(orient, 'r') as f:
+                    _orient = f.read()
+                if not os.path.exists(orient):
+                    _orient = None
+            else:
+                _orient = None
             # Check for null values
             self.Neg_score = self.Neg_score if self.Neg_score else None
             self.Pos_score = self.Pos_score if self.Pos_score else None
             selected_loc = selected_loc if selected_loc else None
             selected_type = selected_type if selected_type else None
             selected_prog = selected_prog if selected_prog else None
-            self.orient = self.orient if self.orient else None
             remarks = remarks if remarks else None
             timestamp = datetime.now()
             timestamp_str = timestamp.strftime('%Y-%m-%d %H:%M:%S')
@@ -1298,7 +1305,7 @@ class Result_Dialog(object):
                 self.image_data_original,
                 self.width,
                 self.length,
-                self.orient,
+                _orient,
                 self.Neg_score,
                 self.Pos_score,
                 self.status,
