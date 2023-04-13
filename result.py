@@ -4,21 +4,21 @@ from datetime import datetime
 
 import cv2
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import Qt, QIODevice, QBuffer, QByteArray, QTimer, QSizeF, QSize
+from PyQt5.QtCore import Qt, QIODevice, QBuffer, QByteArray, QTimer, QSizeF, QSize, QVariant
 from PyQt5.QtGui import QImage, QPixmap, QTextCursor, QTextFrameFormat, QTextImageFormat, QTextCharFormat, QFont, \
     QTextDocument, QPainter
 from PyQt5.QtPrintSupport import QPrinter, QPrintPreviewDialog
 from PyQt5.QtWidgets import QVBoxLayout, QWidget, QScrollArea, QPushButton, QLabel, QHBoxLayout, QLayout, QMessageBox, \
-    QDialog
+    QDialog, QComboBox
 
 from add_details_of_cracks import add_details_dialog
 
 
 class Result_Dialog(object):
 
-    def __init__(self, Dialog, background_widget,myHistory):
+    def __init__(self, Dialog, background_widget, history):
         self.close_segment_dialog = Dialog
-        self.myHistory = myHistory
+        self.myHistory = history
         self.background_widget = background_widget
 
     def setupUi(self, Dialog):
@@ -1159,41 +1159,51 @@ class Result_Dialog(object):
 
     def save_result_image_to_db(self):
         try:
-            with open('Selected_location_crack.txt', 'r') as f:
-                selected_loc1 = f.read()
-            if not selected_loc1:
-                selected_loc1 = None
+            orient = 'Orientation.txt'
+            if os.path.isfile(orient):
+                with open(orient, 'r') as f:
+                    _orient = f.read()
+                if not os.path.exists(orient):
+                    _orient = None
+            else:
+                _orient = None
 
-            with open('Selected_type_crack.txt', 'r') as f:
-                selected_type1 = f.read()
-            if not selected_type1:
-                selected_type1 = None
+            selected_loc = 'Selected_location_crack.txt'
+            if os.path.isfile(selected_loc):
+                with open(selected_loc, 'r') as f:
+                    _selected_loc = f.read()
+                if not os.path.exists(selected_loc):
+                    _selected_loc = None
+            else:
+                _selected_loc = None
 
-            with open('Selected_progression_crack.txt', 'r') as f:
-                selected_prog1 = f.read()
-            if not selected_prog1:
-                selected_prog1 = None
+            selected_type = 'Selected_type_crack.txt'
+            if os.path.isfile(selected_type):
+                with open(selected_type, 'r') as f:
+                    _selected_type = f.read()
+                if not os.path.exists(selected_type):
+                    _selected_type = None
+            else:
+                _selected_type = None
 
-            with open('Remarks_written.txt', 'r') as f:
-                remarks1 = f.read()
-            if not remarks1:
-                remarks1 = None
+            selected_prog = 'Selected_progression_crack.txt'
+            if os.path.isfile(selected_prog):
+                with open(selected_prog, 'r') as f:
+                    _selected_prog = f.read()
+                if not os.path.exists(selected_prog):
+                    _selected_prog = None
+            else:
+                _selected_prog = None
 
-            print(selected_loc1, selected_type1, selected_prog1, remarks1)
-            file_path_Class = 'Predicted_Class_name.txt'
-            if os.path.isfile(file_path_Class):
-                with open(file_path_Class, 'r') as f:
-                    status = f.read()
-                    if status == 'No Detected Crack':
-                        selected_loc = 'No Detected Crack'
-                        selected_type = 'No Detected Crack'
-                        selected_prog = 'No Detected Crack'
-                        remarks = 'No Detected Crack'
-                    else:
-                        selected_loc = selected_loc1
-                        selected_type = selected_type1
-                        selected_prog = selected_prog1
-                        remarks = remarks1
+            remarks = 'Remarks_written.txt'
+            if os.path.isfile(remarks):
+                with open(remarks, 'r') as f:
+                    _remarks = f.read()
+                if not os.path.exists(remarks):
+                    _remarks = None
+            else:
+                _remarks = None
+
         except Exception as e:
             print(f"Error at getting files {e}")
         try:
@@ -1281,21 +1291,10 @@ class Result_Dialog(object):
                         created_at
                     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) """
 
-            orient = 'Orientation.txt'
-            if os.path.isfile(orient):
-                with open(orient, 'r') as f:
-                    _orient = f.read()
-                if not os.path.exists(orient):
-                    _orient = None
-            else:
-                _orient = None
+
             # Check for null values
             self.Neg_score = self.Neg_score if self.Neg_score else None
             self.Pos_score = self.Pos_score if self.Pos_score else None
-            selected_loc = selected_loc if selected_loc else None
-            selected_type = selected_type if selected_type else None
-            selected_prog = selected_prog if selected_prog else None
-            remarks = remarks if remarks else None
             timestamp = datetime.now()
             timestamp_str = timestamp.strftime('%Y-%m-%d %H:%M:%S')
 
@@ -1309,17 +1308,21 @@ class Result_Dialog(object):
                 self.Neg_score,
                 self.Pos_score,
                 self.status,
-                selected_loc,
-                selected_type,
-                selected_prog,
-                remarks,
+                _selected_loc,
+                _selected_type,
+                _selected_prog,
+                _remarks,
                 timestamp_str
             ))
-            self.myHistory.clear()
+            self.myHistory.clear()  # This should work now
             c.execute("SELECT * FROM Save_Files ORDER BY created_at DESC")
             rows = c.fetchall()
+            print(rows)
             for row in rows:
-                self.myHistory.addItem(row[0])
+                status = str(row[9])
+                recent = str(row[14])
+                id = str(row[0])
+                self.myHistory.addItem(status + " - " + recent, id)
         except Exception as e:
             print(f"Error at parameters {e}")
         try:
