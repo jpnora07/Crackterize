@@ -93,15 +93,14 @@ class Line_length(object):
         Dialog.setMaximumSize(QtCore.QSize(700, 600))
         Dialog.setWindowFlags(Qt.FramelessWindowHint)
 
-
         # Create a grid layout to hold the widgets
         layout = QGridLayout(Dialog)
 
-        #self.slider = QSlider(Qt.Horizontal)
-        #self.slider.setRange(-100, 100)
-        #self.slider.setValue(0)
-        #self.slider.valueChanged.connect(self.update_bbox)
-        layout.addWidget(self.slider, 1, 1)
+        # self.slider = QSlider(Qt.Horizontal)
+        # self.slider.setRange(-100, 100)
+        # self.slider.setValue(0)
+        # self.slider.valueChanged.connect(self.update_bbox)
+        # layout.addWidget(self.slider, 1, 1)
 
         self.img = cv2.imread('threshold_image.jpg')
         desired_size = (2500, 2500)
@@ -162,31 +161,6 @@ class Line_length(object):
         button = QPushButton("Done")
         button.setFixedSize(150, 35)
         button.setStyleSheet("#button{\n"
-                           "margin-right: 12px;"
-                           "font-weight:bold;\n"
-                           "color: white;\n"
-                           "background-color: #6F4B27;\n"
-                           "border-top-left-radius: 7px;\n"
-                           "border-top-right-radius: 7px;\n"
-                           "border-bottom-left-radius: 7px;\n"
-                           "border-bottom-right-radius: 7px;\n"
-                           "font-family: Inter;\n"
-                           "font-size: 11px;\n"
-                           "text-align: center;\n"
-                           "}\n"
-                           "#button:hover{\n"
-                           "color: rgb(144,115,87);\n"
-                           "border : 3px solid rgb(144,115,87);\n"
-                           "background-color: white;\n"
-                           "}\n"
-                           "")
-        button.setObjectName("button")
-        button.clicked.connect(self.done_view_length)
-
-        remove_last_line_button = QPushButton('Undo Line')
-        remove_last_line_button.clicked.connect(self.remove_last_line)
-        remove_last_line_button.setFixedSize(150, 35)
-        remove_last_line_button.setStyleSheet("#remove_last_line_button{\n"
                              "margin-right: 12px;"
                              "font-weight:bold;\n"
                              "color: white;\n"
@@ -199,12 +173,37 @@ class Line_length(object):
                              "font-size: 11px;\n"
                              "text-align: center;\n"
                              "}\n"
-                             "#remove_last_line_button:hover{\n"
+                             "#button:hover{\n"
                              "color: rgb(144,115,87);\n"
                              "border : 3px solid rgb(144,115,87);\n"
                              "background-color: white;\n"
                              "}\n"
                              "")
+        button.setObjectName("button")
+        button.clicked.connect(self.done_view_length)
+
+        remove_last_line_button = QPushButton('Undo Line')
+        remove_last_line_button.clicked.connect(self.remove_last_line)
+        remove_last_line_button.setFixedSize(150, 35)
+        remove_last_line_button.setStyleSheet("#remove_last_line_button{\n"
+                                              "margin-right: 12px;"
+                                              "font-weight:bold;\n"
+                                              "color: white;\n"
+                                              "background-color: #6F4B27;\n"
+                                              "border-top-left-radius: 7px;\n"
+                                              "border-top-right-radius: 7px;\n"
+                                              "border-bottom-left-radius: 7px;\n"
+                                              "border-bottom-right-radius: 7px;\n"
+                                              "font-family: Inter;\n"
+                                              "font-size: 11px;\n"
+                                              "text-align: center;\n"
+                                              "}\n"
+                                              "#remove_last_line_button:hover{\n"
+                                              "color: rgb(144,115,87);\n"
+                                              "border : 3px solid rgb(144,115,87);\n"
+                                              "background-color: white;\n"
+                                              "}\n"
+                                              "")
         remove_last_line_button.setObjectName("remove_last_line_button")
         layout.addWidget(remove_last_line_button, 1, 1, Qt.AlignHCenter)
         layout.addWidget(button, 2, 1, Qt.AlignHCenter)
@@ -224,12 +223,15 @@ class Line_length(object):
 
         # Update the label with the new image
         self.show_image(img_copy)
+
     def done_view_length(self):
         self.Dialog.close()
+
     def remove_last_line(self):
         if self.edges_label.drawn:
             self.edges_label.drawn = False
             self.edges_label.update()
+
     def show_image(self, image):
         # Create a DrawingWidget object and set its size
         self.edges_label.setFixedSize(500, 400)
@@ -245,6 +247,8 @@ class Line_length(object):
         # Set the image on the label
         pixmap = QPixmap(q_image)
         self.edges_label.setPixmap(pixmap.scaled(label_size, Qt.KeepAspectRatio, Qt.SmoothTransformation))
+
+
 if __name__ == "__main__":
     import sys
 

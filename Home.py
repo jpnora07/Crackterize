@@ -637,7 +637,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_2.setObjectName("verticalLayout_2")
         self.widget_6 = QtWidgets.QWidget(self.widget_3)
         self.widget_6.setMaximumSize(QtCore.QSize(820, 250))
-        self.widget_6.setStyleSheet("border-image:url(images/Crackterize.png) 400 0 400 0 stretch;")
+        self.widget_6.setStyleSheet("border-image:url(images/Crackterize.png) 400 0 300 0 stretch;")
         self.widget_6.setObjectName("widget_6")
         self.verticalLayout_2.addWidget(self.widget_6)
         self.verticalLayout.addWidget(self.widget_3)
