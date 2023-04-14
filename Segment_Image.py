@@ -277,7 +277,6 @@ class Ui_DialogSegment(object):
         self.exit.setMinimumSize(QtCore.QSize(30, 30))
         self.exit.setMaximumSize(QtCore.QSize(30, 30))
         self.exit.clicked.connect(self.closeEvent)
-        self.exit.setText("")
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap("images/exit.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.exit.setIcon(icon)
@@ -545,7 +544,145 @@ class Ui_DialogSegment(object):
         self.removeNoise.setText(_translate("Dialog", "Denoise Image"))
         self.proceed.setText(_translate("Dialog", "Proceed"))
 
-    def closeEvent(self, event):
+    def closeEvent(self):
+        closeDialog = QDialog()
+        self.closeDialog = closeDialog
+        closeDialog.setWindowFlags(Qt.FramelessWindowHint)
+        closeDialog.setObjectName("Dialog")
+        closeDialog.setStyleSheet("#Dialog{background-color: rgb(255,255,255); border: 1px solid rgb(144,115,87);}")
+        closeDialog.resize(356, 155)
+        closeDialog.setMinimumSize(QtCore.QSize(356, 155))
+        closeDialog.setMaximumSize(QtCore.QSize(356, 155))
+        self.horizontalLayout = QtWidgets.QHBoxLayout(closeDialog)
+        self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
+        self.horizontalLayout.setObjectName("horizontalLayout")
+        self.widget = QtWidgets.QWidget(closeDialog)
+        self.widget.setObjectName("widget")
+        self.verticalLayout = QtWidgets.QVBoxLayout(self.widget)
+        self.verticalLayout.setContentsMargins(0, 0, 0, 0)
+        self.verticalLayout.setSpacing(0)
+        self.verticalLayout.setObjectName("verticalLayout")
+        self.widget_5 = QtWidgets.QWidget(self.widget)
+        self.widget_5.setMinimumSize(QtCore.QSize(0, 40))
+        self.widget_5.setMaximumSize(QtCore.QSize(16777215, 40))
+        self.widget_5.setObjectName("widget_5")
+        self.horizontalLayout_5 = QtWidgets.QHBoxLayout(self.widget_5)
+        self.horizontalLayout_5.setContentsMargins(0, 0, 0, 0)
+        self.horizontalLayout_5.setSpacing(0)
+        self.horizontalLayout_5.setObjectName("horizontalLayout_5")
+        self.widget_6 = QtWidgets.QWidget(self.widget_5)
+        self.widget_6.setObjectName("widget_6")
+        self.horizontalLayout_5.addWidget(self.widget_6)
+        self.exit = QtWidgets.QPushButton(self.widget_5)
+        self.exit.setMinimumSize(QtCore.QSize(20, 20))
+        self.exit.setMaximumSize(QtCore.QSize(30, 30))
+        self.exit.setText("")
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap("images/exit.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.exit.setIcon(icon)
+        self.exit.setFlat(True)
+        self.exit.setObjectName("exit")
+        self.exit.clicked.connect(closeDialog.close)
+        self.horizontalLayout_5.addWidget(self.exit)
+        self.verticalLayout.addWidget(self.widget_5)
+        self.widget_2 = QtWidgets.QWidget(self.widget)
+        self.widget_2.setObjectName("widget_2")
+        self.horizontalLayout_2 = QtWidgets.QHBoxLayout(self.widget_2)
+        self.horizontalLayout_2.setContentsMargins(25, 0, 20, -1)
+        self.horizontalLayout_2.setObjectName("horizontalLayout_2")
+        self.icon = QtWidgets.QLabel(self.widget_2)
+        self.icon.setMinimumSize(QtCore.QSize(50, 50))
+        self.icon.setMaximumSize(QtCore.QSize(50, 50))
+        self.icon.setPixmap(QtGui.QPixmap("images/question.png"))
+        self.icon.setScaledContents(True)
+        self.icon.setAlignment(QtCore.Qt.AlignCenter)
+        self.icon.setWordWrap(True)
+        self.icon.setObjectName("icon")
+        self.horizontalLayout_2.addWidget(self.icon)
+        self.message = QtWidgets.QLabel(self.widget_2)
+        self.message.setStyleSheet("#message{\n"
+                                   "font-family: \"Inter\";\n"
+                                   "font-size: 13pt; \n"
+                                   "color: #000000;\n"
+                                   "font: bold;\n"
+                                   "font-size: 13px;\n"
+                                   "}")
+        self.message.setScaledContents(True)
+        self.message.setWordWrap(True)
+        self.message.setText("Are you sure you want to exit?")
+        self.message.setObjectName("message")
+        self.horizontalLayout_2.addWidget(self.message)
+        self.verticalLayout.addWidget(self.widget_2)
+        self.widget_4 = QtWidgets.QWidget(self.widget)
+        self.widget_4.setObjectName("widget_4")
+        self.horizontalLayout_3 = QtWidgets.QHBoxLayout(self.widget_4)
+        self.horizontalLayout_3.setContentsMargins(0, 12, 12, 12)
+        self.horizontalLayout_3.setObjectName("horizontalLayout_3")
+        self.widget_3 = QtWidgets.QWidget(self.widget_4)
+        self.widget_3.setObjectName("widget_3")
+        self.horizontalLayout_3.addWidget(self.widget_3)
+        self.Yes = QtWidgets.QPushButton("Yes", self.widget_4)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.Yes.sizePolicy().hasHeightForWidth())
+        self.Yes.setSizePolicy(sizePolicy)
+        self.Yes.setMinimumSize(QtCore.QSize(20, 32))
+        self.Yes.setMaximumSize(QtCore.QSize(100, 32))
+        self.Yes.clicked.connect(self.Delete_and_close)
+        self.Yes.setStyleSheet("#Yes{\n"
+                               "font-weight:bold;\n"
+                               "color:  #6F4B27;\n"
+                               "background-color: white;\n"
+                               "font-family: Inter;\n"
+                               "border-top-left-radius: 7px;\n"
+                               "border-top-right-radius:7px;\n"
+                               "border-bottom-left-radius: 7px;\n"
+                               "border-bottom-right-radius: 7px;\n"
+                               "text-align: center;\n"
+                               "border : 3px solid #6F4B27;\n"
+                               "}\n"
+                               "#Yes:hover{\n"
+                               "color: white;\n"
+                               "background-color: #6F4B27;\n"
+                               "}\n"
+                               "")
+        self.Yes.setObjectName("Yes")
+        self.horizontalLayout_3.addWidget(self.Yes)
+        self.No = QtWidgets.QPushButton("No", self.widget_4)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.No.sizePolicy().hasHeightForWidth())
+        self.No.setSizePolicy(sizePolicy)
+        self.No.clicked.connect(closeDialog.close)
+        self.No.setMinimumSize(QtCore.QSize(20, 32))
+        self.No.setMaximumSize(QtCore.QSize(100, 32))
+        self.No.setStyleSheet("#No{\n"
+                              "font-weight:bold;\n"
+                              "color: white;\n"
+                              "background-color: #6F4B27;\n"
+                              "font-family: Inter;\n"
+                              "border-top-left-radius: 7px;\n"
+                              "border-top-right-radius:7px;\n"
+                              "border-bottom-left-radius: 7px;\n"
+                              "border-bottom-right-radius: 7px;\n"
+                              "text-align: center;\n"
+                              "}\n"
+                              "#No:hover{\n"
+                              "color: #6F4B27;\n"
+                              "border : 3px solid #6F4B27;\n"
+                              "background-color: white;\n"
+                              "}\n"
+                              "")
+        self.No.setObjectName("No")
+        self.horizontalLayout_3.addWidget(self.No)
+        self.verticalLayout.addWidget(self.widget_4)
+        self.horizontalLayout.addWidget(self.widget)
+        closeDialog.exec()
+
+
+    def Delete_and_close(self):
         Negative_score = "Negative_score.txt"
         Input_Distance = "Input_Distance.txt"
         Positive_score = "Positive_score.txt"
@@ -556,96 +693,52 @@ class Ui_DialogSegment(object):
         Predicted_Score = "Predicted_Score.txt"
         threshold = "threshold_image.jpg"
 
-        reply = QtWidgets.QMessageBox.question(self.Dialog, 'Message', "Are you sure you want to exit?",
-                                               QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No,
-                                               QtWidgets.QMessageBox.No)
-        reply.setWindowFlags(QtCore.Qt.WindowTitleHint | QtCore.Qt.CustomizeWindowHint)
-        if reply == QtWidgets.QMessageBox.Yes:
-            self.background_widget.hide()
-            try:
-                os.remove(threshold)
-            except FileNotFoundError:
-                print(f"{threshold} already removed or does not exist")
-            try:
-                os.remove(Input_Distance)
-            except FileNotFoundError:
-                print(f"{Input_Distance} already removed or does not exist")
-
-            try:
-                os.remove(Negative_score)
-            except FileNotFoundError:
-                print(f"{Negative_score} already removed or does not exist")
-
-            try:
-                os.remove(self.Orientation)
-            except FileNotFoundError:
-                print(f"{self.Orientation} already removed or does not exist")
-
-            try:
-                os.remove(Positive_score)
-            except FileNotFoundError:
-                print(f"{Positive_score} already removed or does not exist")
-
-            try:
-                os.remove(Predicted_Class_name)
-            except FileNotFoundError:
-                print(f"{Predicted_Class_name} already removed or does not exist")
-
-            try:
-                os.remove(self.Predicted_height)
-            except FileNotFoundError:
-                print(f"{self.Predicted_height} already removed or does not exist")
-
-            try:
-                os.remove(Predicted_Score)
-            except FileNotFoundError:
-                print(f"{Predicted_Score} already removed or does not exist")
-
-            try:
-                os.remove(self.Predicted_width)
-            except FileNotFoundError:
-                print(f"{self.Predicted_width} already removed or does not exist")
-
-            self.Dialog.close()
-        else:
-            try:
-                event.ignore()
-            except Exception as e:
-                print(e)
-
-    def view_height(self):
+        self.background_widget.hide()
         try:
-            distance = float(self.NumOfDistance.toPlainText())
-        except ValueError:
-            QMessageBox.critical(self.Dialog, "Error", "Please enter a valid distance.")
-            return
+            os.remove(threshold)
+        except FileNotFoundError:
+            print(f"{threshold} already removed or does not exist")
+        try:
+            os.remove(Input_Distance)
+        except FileNotFoundError:
+            print(f"{Input_Distance} already removed or does not exist")
 
-        if not distance:
-            QMessageBox.critical(self.Dialog, "Error", "Please enter a distance.")
-            return
+        try:
+            os.remove(Negative_score)
+        except FileNotFoundError:
+            print(f"{Negative_score} already removed or does not exist")
 
-        if os.path.exists('threshold_image.jpg'):
-            with open('threshold_image.jpg', 'rb') as f:
-                selected_loc = f.read()
-            if selected_loc.strip() != '':
-                try:
-                    CrackLineLength = QtWidgets.QDialog(self.Dialog)
+        try:
+            os.remove(self.Orientation)
+        except FileNotFoundError:
+            print(f"{self.Orientation} already removed or does not exist")
 
-                    x = (self.Dialog.width() - self.Dialog.width()) // 2
-                    y = (self.Dialog.height() - self.Dialog.height()) // 2
-                    ui = Line_length()
+        try:
+            os.remove(Positive_score)
+        except FileNotFoundError:
+            print(f"{Positive_score} already removed or does not exist")
 
-                    ui.setupUi(CrackLineLength)
-                    CrackLineLength.move(x, y)
-                    CrackLineLength.show()
-                    CrackLineLength.exec_()
-                except Exception as e:
-                    print(e)
-            else:
-                print('Error: threshold_image.jpg is empty')
-        else:
-            print('Error: threshold_image.jpg does not exist')
+        try:
+            os.remove(Predicted_Class_name)
+        except FileNotFoundError:
+            print(f"{Predicted_Class_name} already removed or does not exist")
 
+        try:
+            os.remove(self.Predicted_height)
+        except FileNotFoundError:
+            print(f"{self.Predicted_height} already removed or does not exist")
+
+        try:
+            os.remove(Predicted_Score)
+        except FileNotFoundError:
+            print(f"{Predicted_Score} already removed or does not exist")
+
+        try:
+            os.remove(self.Predicted_width)
+        except FileNotFoundError:
+            print(f"{self.Predicted_width} already removed or does not exist")
+        self.closeDialog.close()
+        self.Dialog.close()
     def Proceed_to_Result(self):
 
         Predicted_width = "Predicted_width.txt"
@@ -653,15 +746,16 @@ class Ui_DialogSegment(object):
         try:
             # Check that the files exist and are not empty
             if not os.path.isfile(Predicted_width) or os.path.getsize(Predicted_width) == 0:
-                QtWidgets.QMessageBox.critical(self.Dialog, "Error",
-                                               "The image is not completely get the width and length of crack "
-                                               "detected.")
+                icon_image = "images/info.png"
+                message = "The image is not completely get the width and length of crack detected."
+                self.QMessage_Error_dialog(message, icon_image)
+
                 return
 
             if not os.path.isfile(Predicted_height) or os.path.getsize(Predicted_height) == 0:
-                QtWidgets.QMessageBox.critical(self.Dialog, "Error",
-                                               "The image is not completely get the lenght of crack "
-                                               "detected.")
+                icon_image = "images/info.png"
+                message = "The image is not completely get the length of crack detected."
+                self.QMessage_Error_dialog(message, icon_image)
                 return
         except Exception as e:
             print(e)
@@ -680,7 +774,9 @@ class Ui_DialogSegment(object):
     def remove_noise(self):
         # Check if the thresholded image is not empty
         if not hasattr(self, "thresholded") or self.thresholded is None:
-            QMessageBox.critical(self.Dialog, "Error", "Please apply a threshold to the image first.")
+            icon_image = "images/warning.png"
+            message = "Please apply a threshold to the image first."
+            self.QMessage_Error_dialog(message, icon_image)
             return
 
         try:
@@ -693,7 +789,9 @@ class Ui_DialogSegment(object):
             self.noise_thread.start()
             self.noise_thread.finished.connect(self.show_result_noise)
         except AttributeError:
-            QtWidgets.QMessageBox.critical(self.Dialog, "Error", "Thresholder value is empty.")
+            icon_image = "images/info.png"
+            message = "Thresholder value is empty."
+            self.QMessage_Error_dialog(message, icon_image)
             return
 
     def show_result_noise(self, result):
@@ -707,18 +805,27 @@ class Ui_DialogSegment(object):
         try:
             distance = float(self.NumOfDistance.toPlainText())
         except ValueError:
-            QMessageBox.critical(self.Dialog, "Error", "Please enter a valid distance.")
+
+            icon_image = "images/warning.png"
+            message = "Please enter a valid distance."
+            self.QMessage_Error_dialog(message, icon_image)
+
             return
 
         if not distance:
-            QMessageBox.critical(self.Dialog, "Error", "Please enter a distance.")
+            icon_image = "images/warning.png"
+            message = "Please enter a distance."
+            self.QMessage_Error_dialog(message, icon_image)
             return
 
         try:
 
             # Check if the result from the previous thread is not empty or not done
             if not hasattr(self, "noise_thread") or not self.noise_thread.isFinished():
-                QMessageBox.critical(self.Dialog, "Error", "Please denoise the image first.")
+                icon_image = "images/warning.png"
+                message = "Please denoise the image first."
+                self.QMessage_Error_dialog(message, icon_image)
+
                 return
             self.load_dialog_measure = self.loading_measuring()
             self.load_dialog_measure.show()
@@ -877,3 +984,111 @@ class Ui_DialogSegment(object):
         self.horizontalLayout.addWidget(self.widget)
         Dialog.show()
         return Dialog
+
+    def QMessage_Error_dialog(self, message, icon_image):
+        Dialog = QDialog()
+        Dialog.setObjectName("Dialog")
+        Dialog.resize(356, 155)
+        Dialog.setMinimumSize(QtCore.QSize(356, 155))
+        Dialog.setWindowFlags(Qt.FramelessWindowHint)
+        Dialog.setMaximumSize(QtCore.QSize(356, 155))
+        Dialog.setStyleSheet("#Dialog{background-color: rgb(255,255,255);border: 1px solid rgb(144,115,87);}")
+        self.horizontalLayout = QtWidgets.QHBoxLayout(Dialog)
+        self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
+        self.horizontalLayout.setObjectName("horizontalLayout")
+        self.widget = QtWidgets.QWidget(Dialog)
+        self.widget.setObjectName("widget")
+        self.verticalLayout = QtWidgets.QVBoxLayout(self.widget)
+        self.verticalLayout.setContentsMargins(0, 0, 0, 0)
+        self.verticalLayout.setSpacing(0)
+        self.verticalLayout.setObjectName("verticalLayout")
+        self.widget_5 = QtWidgets.QWidget(self.widget)
+        self.widget_5.setMinimumSize(QtCore.QSize(0, 40))
+        self.widget_5.setMaximumSize(QtCore.QSize(16777215, 40))
+        self.widget_5.setObjectName("widget_5")
+        self.horizontalLayout_5 = QtWidgets.QHBoxLayout(self.widget_5)
+        self.horizontalLayout_5.setContentsMargins(0, 0, 0, 0)
+        self.horizontalLayout_5.setSpacing(0)
+        self.horizontalLayout_5.setObjectName("horizontalLayout_5")
+        self.widget_6 = QtWidgets.QWidget(self.widget_5)
+        self.widget_6.setObjectName("widget_6")
+        self.horizontalLayout_5.addWidget(self.widget_6)
+        self.exit = QtWidgets.QPushButton(self.widget_5)
+        self.exit.setMinimumSize(QtCore.QSize(20, 20))
+        self.exit.setMaximumSize(QtCore.QSize(30, 30))
+        self.exit.setText("")
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap("images/exit.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.exit.setIcon(icon)
+        self.exit.setFlat(True)
+        self.exit.clicked.connect(Dialog.close)
+        self.exit.setObjectName("exit")
+        self.horizontalLayout_5.addWidget(self.exit)
+        self.verticalLayout.addWidget(self.widget_5)
+        self.widget_2 = QtWidgets.QWidget(self.widget)
+        self.widget_2.setObjectName("widget_2")
+        self.horizontalLayout_2 = QtWidgets.QHBoxLayout(self.widget_2)
+        self.horizontalLayout_2.setContentsMargins(25, 0, 20, -1)
+        self.horizontalLayout_2.setObjectName("horizontalLayout_2")
+        self.icon = QtWidgets.QLabel(self.widget_2)
+        self.icon.setMinimumSize(QtCore.QSize(50, 50))
+        self.icon.setMaximumSize(QtCore.QSize(50, 50))
+        self.icon.setPixmap(QtGui.QPixmap(icon_image))
+        self.icon.setScaledContents(True)
+        self.icon.setAlignment(QtCore.Qt.AlignCenter)
+        self.icon.setWordWrap(True)
+        self.icon.setObjectName("icon")
+        self.horizontalLayout_2.addWidget(self.icon)
+        self.message = QtWidgets.QLabel(self.widget_2)
+        self.message.setText(message)
+        self.message.setStyleSheet("#message{\n"
+                                   "font-family: \"Inter\";\n"
+                                   "font-size: 13pt; \n"
+                                   "color: #000000;\n"
+                                   "font: bold;\n"
+                                   "font-size: 13px;\n"
+                                   "}")
+        self.message.setScaledContents(True)
+        self.message.setWordWrap(True)
+        self.message.setObjectName("message")
+        self.horizontalLayout_2.addWidget(self.message)
+        self.verticalLayout.addWidget(self.widget_2)
+        self.widget_4 = QtWidgets.QWidget(self.widget)
+        self.widget_4.setObjectName("widget_4")
+        self.horizontalLayout_3 = QtWidgets.QHBoxLayout(self.widget_4)
+        self.horizontalLayout_3.setContentsMargins(0, 12, 12, 12)
+        self.horizontalLayout_3.setObjectName("horizontalLayout_3")
+        self.widget_3 = QtWidgets.QWidget(self.widget_4)
+        self.widget_3.setObjectName("widget_3")
+        self.horizontalLayout_3.addWidget(self.widget_3)
+        self.okBtn = QtWidgets.QPushButton("Okay", self.widget_4)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.okBtn.sizePolicy().hasHeightForWidth())
+        self.okBtn.setSizePolicy(sizePolicy)
+        self.okBtn.clicked.connect(Dialog.close)
+        self.okBtn.setMinimumSize(QtCore.QSize(20, 32))
+        self.okBtn.setMaximumSize(QtCore.QSize(100, 32))
+        self.okBtn.setStyleSheet("#okBtn{\n"
+                                 "font-weight:bold;\n"
+                                 "color: white;\n"
+                                 "background-color: #6F4B27;\n"
+                                 "font-family: Inter;\n"
+                                 "border-top-left-radius: 7px;\n"
+                                 "border-top-right-radius:7px;\n"
+                                 "border-bottom-left-radius: 7px;\n"
+                                 "border-bottom-right-radius: 7px;\n"
+                                 "text-align: center;\n"
+                                 "}\n"
+                                 "#okBtn:hover{\n"
+                                 "color: rgb(144,115,87);\n"
+                                 "border : 3px solid rgb(144,115,87);\n"
+                                 "background-color: white;\n"
+                                 "}\n"
+                                 "")
+        self.okBtn.setObjectName("okBtn")
+        self.horizontalLayout_3.addWidget(self.okBtn)
+        self.verticalLayout.addWidget(self.widget_4)
+        self.horizontalLayout.addWidget(self.widget)
+        Dialog.exec()

@@ -409,6 +409,143 @@ class Result_Dialog(object):
         self.savebtn.setText(_translate("Dialog", "Save"))
 
     def closeEvent(self, event):
+        closeDialog = QDialog()
+        self.closeDialog = closeDialog
+        closeDialog.setWindowFlags(Qt.FramelessWindowHint)
+        closeDialog.setObjectName("Dialog")
+        closeDialog.setStyleSheet("#Dialog{background-color: rgb(255,255,255); border: 1px solid rgb(144,115,87);}")
+        closeDialog.resize(356, 155)
+        closeDialog.setMinimumSize(QtCore.QSize(356, 155))
+        closeDialog.setMaximumSize(QtCore.QSize(356, 155))
+        self.horizontalLayout = QtWidgets.QHBoxLayout(closeDialog)
+        self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
+        self.horizontalLayout.setObjectName("horizontalLayout")
+        self.widget = QtWidgets.QWidget(closeDialog)
+        self.widget.setObjectName("widget")
+        self.verticalLayout = QtWidgets.QVBoxLayout(self.widget)
+        self.verticalLayout.setContentsMargins(0, 0, 0, 0)
+        self.verticalLayout.setSpacing(0)
+        self.verticalLayout.setObjectName("verticalLayout")
+        self.widget_5 = QtWidgets.QWidget(self.widget)
+        self.widget_5.setMinimumSize(QtCore.QSize(0, 40))
+        self.widget_5.setMaximumSize(QtCore.QSize(16777215, 40))
+        self.widget_5.setObjectName("widget_5")
+        self.horizontalLayout_5 = QtWidgets.QHBoxLayout(self.widget_5)
+        self.horizontalLayout_5.setContentsMargins(0, 0, 0, 0)
+        self.horizontalLayout_5.setSpacing(0)
+        self.horizontalLayout_5.setObjectName("horizontalLayout_5")
+        self.widget_6 = QtWidgets.QWidget(self.widget_5)
+        self.widget_6.setObjectName("widget_6")
+        self.horizontalLayout_5.addWidget(self.widget_6)
+        self.exit = QtWidgets.QPushButton(self.widget_5)
+        self.exit.setMinimumSize(QtCore.QSize(20, 20))
+        self.exit.setMaximumSize(QtCore.QSize(30, 30))
+        self.exit.setText("")
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap("images/exit.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.exit.setIcon(icon)
+        self.exit.setFlat(True)
+        self.exit.setObjectName("exit")
+        self.exit.clicked.connect(closeDialog.close)
+        self.horizontalLayout_5.addWidget(self.exit)
+        self.verticalLayout.addWidget(self.widget_5)
+        self.widget_2 = QtWidgets.QWidget(self.widget)
+        self.widget_2.setObjectName("widget_2")
+        self.horizontalLayout_2 = QtWidgets.QHBoxLayout(self.widget_2)
+        self.horizontalLayout_2.setContentsMargins(25, 0, 20, -1)
+        self.horizontalLayout_2.setObjectName("horizontalLayout_2")
+        self.icon = QtWidgets.QLabel(self.widget_2)
+        self.icon.setMinimumSize(QtCore.QSize(50, 50))
+        self.icon.setMaximumSize(QtCore.QSize(50, 50))
+        self.icon.setPixmap(QtGui.QPixmap("images/question.png"))
+        self.icon.setScaledContents(True)
+        self.icon.setAlignment(QtCore.Qt.AlignCenter)
+        self.icon.setWordWrap(True)
+        self.icon.setObjectName("icon")
+        self.horizontalLayout_2.addWidget(self.icon)
+        self.message = QtWidgets.QLabel(self.widget_2)
+        self.message.setStyleSheet("#message{\n"
+                                   "font-family: \"Inter\";\n"
+                                   "font-size: 13pt; \n"
+                                   "color: #000000;\n"
+                                   "font: bold;\n"
+                                   "font-size: 13px;\n"
+                                   "}")
+        self.message.setScaledContents(True)
+        self.message.setWordWrap(True)
+        self.message.setText("Are you sure you want to exit?")
+        self.message.setObjectName("message")
+        self.horizontalLayout_2.addWidget(self.message)
+        self.verticalLayout.addWidget(self.widget_2)
+        self.widget_4 = QtWidgets.QWidget(self.widget)
+        self.widget_4.setObjectName("widget_4")
+        self.horizontalLayout_3 = QtWidgets.QHBoxLayout(self.widget_4)
+        self.horizontalLayout_3.setContentsMargins(0, 12, 12, 12)
+        self.horizontalLayout_3.setObjectName("horizontalLayout_3")
+        self.widget_3 = QtWidgets.QWidget(self.widget_4)
+        self.widget_3.setObjectName("widget_3")
+        self.horizontalLayout_3.addWidget(self.widget_3)
+        self.Yes = QtWidgets.QPushButton("Yes", self.widget_4)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.Yes.sizePolicy().hasHeightForWidth())
+        self.Yes.setSizePolicy(sizePolicy)
+        self.Yes.setMinimumSize(QtCore.QSize(20, 32))
+        self.Yes.setMaximumSize(QtCore.QSize(100, 32))
+        self.Yes.clicked.connect(self.Delete_and_close)
+        self.Yes.setStyleSheet("#Yes{\n"
+                               "font-weight:bold;\n"
+                               "color:  #6F4B27;\n"
+                               "background-color: white;\n"
+                               "font-family: Inter;\n"
+                               "border-top-left-radius: 7px;\n"
+                               "border-top-right-radius:7px;\n"
+                               "border-bottom-left-radius: 7px;\n"
+                               "border-bottom-right-radius: 7px;\n"
+                               "text-align: center;\n"
+                               "border : 3px solid #6F4B27;\n"
+                               "}\n"
+                               "#Yes:hover{\n"
+                               "color: white;\n"
+                               "background-color: #6F4B27;\n"
+                               "}\n"
+                               "")
+        self.Yes.setObjectName("Yes")
+        self.horizontalLayout_3.addWidget(self.Yes)
+        self.No = QtWidgets.QPushButton("No", self.widget_4)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.No.sizePolicy().hasHeightForWidth())
+        self.No.setSizePolicy(sizePolicy)
+        self.No.clicked.connect(closeDialog.close)
+        self.No.setMinimumSize(QtCore.QSize(20, 32))
+        self.No.setMaximumSize(QtCore.QSize(100, 32))
+        self.No.setStyleSheet("#No{\n"
+                              "font-weight:bold;\n"
+                              "color: white;\n"
+                              "background-color: #6F4B27;\n"
+                              "font-family: Inter;\n"
+                              "border-top-left-radius: 7px;\n"
+                              "border-top-right-radius:7px;\n"
+                              "border-bottom-left-radius: 7px;\n"
+                              "border-bottom-right-radius: 7px;\n"
+                              "text-align: center;\n"
+                              "}\n"
+                              "#No:hover{\n"
+                              "color: #6F4B27;\n"
+                              "border : 3px solid #6F4B27;\n"
+                              "background-color: white;\n"
+                              "}\n"
+                              "")
+        self.No.setObjectName("No")
+        self.horizontalLayout_3.addWidget(self.No)
+        self.verticalLayout.addWidget(self.widget_4)
+        self.horizontalLayout.addWidget(self.widget)
+        closeDialog.exec()
+
+    def Delete_and_close(self):
         Negative_score = "Negative_score.txt"
         Input_Distance = "Input_Distance.txt"
         Positive_score = "Positive_score.txt"
@@ -417,65 +554,63 @@ class Result_Dialog(object):
         self.Predicted_height = "Predicted_height.txt"
         self.Orientation = "Orientation.txt"
         Predicted_Score = "Predicted_Score.txt"
+        threshold = "threshold_image.jpg"
 
-        reply = QtWidgets.QMessageBox.question(self.Dialog, 'Message', "Are you sure you want to exit?",
-                                               QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No,
-                                               QtWidgets.QMessageBox.No)
-        if reply == QtWidgets.QMessageBox.Yes:
-            try:
-                os.remove(Input_Distance)
-            except FileNotFoundError:
-                print(f"{Input_Distance} already removed or does not exist")
+        self.background_widget.hide()
+        try:
+            os.remove(threshold)
+        except FileNotFoundError:
+            print(f"{threshold} already removed or does not exist")
+        try:
+            os.remove(Input_Distance)
+        except FileNotFoundError:
+            print(f"{Input_Distance} already removed or does not exist")
 
-            try:
-                os.remove(Negative_score)
-            except FileNotFoundError:
-                print(f"{Negative_score} already removed or does not exist")
+        try:
+            os.remove(Negative_score)
+        except FileNotFoundError:
+            print(f"{Negative_score} already removed or does not exist")
 
-            try:
-                os.remove(self.Orientation)
-            except FileNotFoundError:
-                print(f"{self.Orientation} already removed or does not exist")
+        try:
+            os.remove(self.Orientation)
+        except FileNotFoundError:
+            print(f"{self.Orientation} already removed or does not exist")
 
-            try:
-                os.remove(Positive_score)
-            except FileNotFoundError:
-                print(f"{Positive_score} already removed or does not exist")
+        try:
+            os.remove(Positive_score)
+        except FileNotFoundError:
+            print(f"{Positive_score} already removed or does not exist")
 
-            try:
-                os.remove(Predicted_Class_name)
-            except FileNotFoundError:
-                print(f"{Predicted_Class_name} already removed or does not exist")
+        try:
+            os.remove(Predicted_Class_name)
+        except FileNotFoundError:
+            print(f"{Predicted_Class_name} already removed or does not exist")
 
-            try:
-                os.remove(self.Predicted_height)
-            except FileNotFoundError:
-                print(f"{self.Predicted_height} already removed or does not exist")
+        try:
+            os.remove(self.Predicted_height)
+        except FileNotFoundError:
+            print(f"{self.Predicted_height} already removed or does not exist")
 
-            try:
-                os.remove(Predicted_Score)
-            except FileNotFoundError:
-                print(f"{Predicted_Score} already removed or does not exist")
+        try:
+            os.remove(Predicted_Score)
+        except FileNotFoundError:
+            print(f"{Predicted_Score} already removed or does not exist")
 
-            try:
-                os.remove(self.Predicted_width)
-            except FileNotFoundError:
-                print(f"{self.Predicted_width} already removed or does not exist")
-            try:
-                self.Dialog.close()
-                self.background_widget.hide()
-            except Exception as e:
-                print(e)
-            try:
-                self.close_segment_dialog.close()
-                self.background_widget.hide()
-            except Exception as e:
-                print(e)
-        else:
-            try:
-                event.ignore()
-            except Exception as e:
-                print(e)
+        try:
+            os.remove(self.Predicted_width)
+        except FileNotFoundError:
+            print(f"{self.Predicted_width} already removed or does not exist")
+        try:
+            self.Dialog.close()
+            self.closeDialog.close()
+            self.background_widget.hide()
+        except Exception as e:
+            print(e)
+        try:
+            self.close_segment_dialog.close()
+            self.background_widget.hide()
+        except Exception as e:
+            print(e)
     def printpreviewDialog(self):
         self.selected_loc = 'Selected_location_crack.txt'
         if os.path.isfile(self.selected_loc):
