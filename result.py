@@ -897,10 +897,9 @@ class Result_Dialog(object):
         self.existing_folder_dialog.exec()
 
     def selected_project(self, button):
-        button_name = button.text()
+        self.selected_project_name = button.text()
         with open('selected_project_in_result.txt', 'w') as f:
-            f.write(button_name)
-        print(button_name)
+            f.write(self.selected_project_name)
 
     def creating_new_project(self):
         # Create dialog box
@@ -1266,6 +1265,42 @@ class Result_Dialog(object):
             else:
                 _orient = None
 
+            selected_loc = 'Selected_location_crack.txt'
+            if os.path.isfile(selected_loc):
+                with open(selected_loc, 'r') as f:
+                    _selected_loc = f.read()
+                if not os.path.exists(selected_loc):
+                    _selected_loc = None
+            else:
+                _selected_loc = None
+
+            selected_type = 'Selected_type_crack.txt'
+            if os.path.isfile(selected_type):
+                with open(selected_type, 'r') as f:
+                    _selected_type = f.read()
+                if not os.path.exists(selected_type):
+                    _selected_type = None
+            else:
+                _selected_type = None
+
+            selected_prog = 'Selected_progression_crack.txt'
+            if os.path.isfile(selected_prog):
+                with open(selected_prog, 'r') as f:
+                    _selected_prog = f.read()
+                if not os.path.exists(selected_prog):
+                    _selected_prog = None
+            else:
+                _selected_prog = None
+
+            remarks = 'Remarks_written.txt'
+            if os.path.isfile(remarks):
+                with open(remarks, 'r') as f:
+                    _remarks = f.read()
+                if not os.path.exists(remarks):
+                    _remarks = None
+            else:
+                _remarks = None
+
         except Exception as e:
             print(f"Error at getting files {e}")
         try:
@@ -1370,10 +1405,10 @@ class Result_Dialog(object):
                 self.Neg_score,
                 self.Pos_score,
                 self.status,
-                self._selected_loc,
-                self._selected_type,
-                self._selected_prog,
-                self._remarks,
+                _selected_loc,
+                _selected_type,
+                _selected_prog,
+                _remarks,
                 timestamp_str
             ))
             self.myHistory.clear()  # This should work now
@@ -1531,21 +1566,22 @@ class Result_Dialog(object):
         Dialog.setMaximumSize(QtCore.QSize(400, 300))
         timer = QTimer()
         timer.timeout.connect(Dialog.close)
-        timer.start(1000)
+        timer.start(2000)
         # Dialog.setWindowOpacity(0.6)
         radius = 15
-        Dialog.setStyleSheet("""
-                            background:#EFEEEE;
-                            border-top-left-radius:{0}px;
-                            border-bottom-left-radius:{0}px;
-                            border-top-right-radius:{0}px;
-                            border-bottom-right-radius:{0}px;
-                            """.format(radius))
+
 
         verticalLayout_2 = QtWidgets.QVBoxLayout(Dialog)
         verticalLayout_2.setObjectName("verticalLayout_2")
         widget = QtWidgets.QWidget(Dialog)
         widget.setObjectName("widget")
+        widget.setStyleSheet("""
+                                    background:#EFEEEE;
+                                    border-top-left-radius:{0}px;
+                                    border-bottom-left-radius:{0}px;
+                                    border-top-right-radius:{0}px;
+                                    border-bottom-right-radius:{0}px;
+                                    """.format(radius))
         horizontalLayout = QtWidgets.QHBoxLayout(widget)
         horizontalLayout.setObjectName("horizontalLayout")
         widget_2 = QtWidgets.QWidget(widget)
@@ -1558,11 +1594,11 @@ class Result_Dialog(object):
         verticalLayout_4.setContentsMargins(-1, 20, -1, 0)
         verticalLayout_4.setObjectName("verticalLayout_4")
         label = QtWidgets.QLabel(widget_5)
-        label.setText("Successfully Saved!")
+        label.setText(f"Successfully saved in {self.selected_project_name}/{self.folder_name}")
 
         font = QtGui.QFont()
         font.setFamily("Arial")
-        font.setPointSize(22)
+        font.setPointSize(15)
         font.setBold(True)
         font.setItalic(False)
         font.setUnderline(False)

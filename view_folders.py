@@ -11,11 +11,12 @@ from view_results import view_result_dialog
 
 class view_folder_dialog(object):
     def __init__(self, background_widget):
+        super(view_folder_dialog, self).__init__()
         self.background_widget = background_widget
 
     def setupUi(self, view_folder_dialog):
         # self.data_added.connect(self.refreshWidget)
-        self.view_folder_dialog = view_folder_dialog
+        self.view_folder_dialog_orig = view_folder_dialog
         view_folder_dialog.setObjectName("MainWindow")
         view_folder_dialog.resize(700, 600)
         view_folder_dialog.setMaximumSize(700, 600)
@@ -232,8 +233,10 @@ class view_folder_dialog(object):
         self.fetch_folders_of_projects()
 
     def closeEvent(self):
-        self.view_folder_dialog.close()
+        self.view_folder_dialog_orig.close()
         self.background_widget.hide()
+
+
     def creating_new_Location(self):
         # Create dialog box
         AddLocationDialog = QtWidgets.QDialog()
@@ -454,16 +457,15 @@ class view_folder_dialog(object):
         with open('selected_folder_vrFile.txt', 'w') as f:
             f.write(folder_name)
         try:
-            result_dialog = QtWidgets.QDialog(self.view_folder_dialog)
-            x = (self.view_folder_dialog.width() - self.view_folder_dialog.width()) // 2
-            y = (self.view_folder_dialog.height() - self.view_folder_dialog.height()) // 2
-            ui = view_result_dialog(self.background_widget)
+            result_dialog = QtWidgets.QDialog(self.view_folder_dialog_orig)
+            x = (self.view_folder_dialog_orig.width() - self.view_folder_dialog_orig.width()) // 2
+            y = (self.view_folder_dialog_orig.height() - self.view_folder_dialog_orig.height()) // 2
+            ui = view_result_dialog(self.background_widget,self.view_folder_dialog_orig)
 
             ui.setupUi(result_dialog)
             result_dialog.move(x, y)
             result_dialog.show()
             result_dialog.exec_()
-            self.view_folder_dialog.close()
             print(folder_name)
 
         except Exception as e:

@@ -705,7 +705,7 @@ class Ui_MainWindow(object):
         self.create = QtWidgets.QPushButton("or create a new project", self.widgetUpload)
         self.create.clicked.connect(self.creating_new_project)
         self.create.setStyleSheet("#create{\n"
-                                
+
                                   "font-weight:bold;\n"
                                   " color:#363131;\n"
                                   "background-color: rgb(255, 255, 255);\n"
@@ -732,9 +732,9 @@ class Ui_MainWindow(object):
         self.calLbl = QtWidgets.QPushButton("Calculate Measurements", self.widgetUpload_2)
         self.calLbl.setStyleSheet("#calLbl{\n"
                                   "font-weight:bold;\n"
-                                    " color:#363131;\n"
-                                    "background-color: #cfcec9;\n"
-                                    "border :3px solid #cfcec9;\n"
+                                  " color:#363131;\n"
+                                  "background-color: #cfcec9;\n"
+                                  "border :3px solid #cfcec9;\n"
                                   " }\n"
                                   "#calLbl:hover{\n"
                                   "background-color:#cfcec9;}\n"

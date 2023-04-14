@@ -75,8 +75,9 @@ class ImageProcessingThread(QThread):
             self.error.emit(str(e))
 
 class view_result_dialog(object):
-    def __init__(self, background_widget):
+    def __init__(self, background_widget, view_folder_dialog_orig):
         self.background_widget = background_widget
+        self.view_folder_dialog_orig = view_folder_dialog_orig
     def setupUi(self, view_folder_dialog):
         # self.data_added.connect(self.refreshWidget)
         self.view_folder_dialog = view_folder_dialog
@@ -336,13 +337,14 @@ class view_result_dialog(object):
 
     def on_processing_finished(self, score):
         # Update the GUI with the results of the image processing task
+        # Update the GUI with the results of the image processing task
         self.load_dialog.close()
         if np.argmax(score) == 0:
             try:
                 with open('Predicted_width.txt', 'w') as f:
-                    f.write("0 mm")
+                    f.write("0")
                 with open('Predicted_height.txt', 'w') as f:
-                    f.write("0 cm")
+                    f.write("0")
             except FileNotFoundError:
                 print("The file does not exist.")
             result_dialog = QtWidgets.QDialog(self.view_folder_dialog)
@@ -363,7 +365,7 @@ class view_result_dialog(object):
             y = (self.view_folder_dialog.height() - segment_dialog.height()) // 2
             segment_dialog.move(x, y)
             segment_dialog.exec_()
-            self.view_folder_dialog.close()
+            self.view_folder_dialog_orig.close()
 
     def open_file_dialog(self):
         file_dialog = QFileDialog()
