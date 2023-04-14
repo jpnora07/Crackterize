@@ -1,3 +1,5 @@
+import os
+
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QMessageBox
@@ -63,7 +65,7 @@ class add_details_dialog(object):
         self.loccrack.setMinimumSize(QtCore.QSize(200, 30))
         self.loccrack.setMaximumSize(QtCore.QSize(200, 30))
         self.loccrack.setStyleSheet("#loccrack {\n"
-                                             "  background-color: transparent;  \n"
+                                    "  background-color: transparent;  \n"
                                     "font-family: \'Franklin Gothic Medium\';\n"
                                     "font-size: 17px;\n"
                                     "color: \n"
@@ -121,10 +123,12 @@ class add_details_dialog(object):
                                    "color: white; \n"
                                    "background-color: #4A3B28}")
         self.loc_box.setObjectName("loc_box")
-        self.loc_box.addItems(["Vertical Crack/s on Wall","Horizontal Crack/s on Wall","Corner Crack/s", "Crack/s at the Beam Column Junction",
-                               "Crack/s on Column", "Crack/s on Slabs", "Crack/s on Slab Foundation", "Crack/s on Foundation",
+        self.loc_box.addItems(["Vertical Crack/s on Wall", "Horizontal Crack/s on Wall", "Corner Crack/s",
+                               "Crack/s at the Beam Column Junction",
+                               "Crack/s on Column", "Crack/s on Slabs", "Crack/s on Slab Foundation",
+                               "Crack/s on Foundation",
                                "Crack/s on Pavement"])
-        self.loc_box.currentIndexChanged.connect(self.location_function)
+        #self.loc_box.currentIndexChanged.connect(self.location_function)
         self.horizontalLayout_4.addWidget(self.loc_box)
         self.verticalLayout_2.addWidget(self.widget_6)
         self.widget_7 = QtWidgets.QWidget(self.widget_3)
@@ -135,8 +139,8 @@ class add_details_dialog(object):
         self.cracktype.setMinimumSize(QtCore.QSize(200, 30))
         self.cracktype.setMaximumSize(QtCore.QSize(200, 30))
         self.cracktype.setStyleSheet("#cracktype {\n"
-                                     
-                                             "  background-color: transparent;  \n"
+
+                                     "  background-color: transparent;  \n"
                                      "font-family: \'Franklin Gothic Medium\';\n"
                                      "font-size: 17px;\n"
                                      "color: \n"
@@ -193,10 +197,11 @@ class add_details_dialog(object):
                                     "color: white; \n"
                                     "background-color: #4A3B28}")
         self.type_box.setObjectName("type_box")
-        self.type_box.addItems(["Drying Shrinkage Crack/s","Thermal Crack/s", "Structural Crack/s", "Settlement Crack/s",
-                                "Corrosion Induced Crack/s", "Alkali-Silica Reaction", "Heaving Crack/s", "Overloading Crack/s",
-                                "Joint Crack/s"])
-        self.type_box.currentIndexChanged.connect(self.type_function)
+        self.type_box.addItems(
+            ["Drying Shrinkage Crack/s", "Thermal Crack/s", "Structural Crack/s", "Settlement Crack/s",
+             "Corrosion Induced Crack/s", "Alkali-Silica Reaction", "Heaving Crack/s", "Overloading Crack/s",
+             "Joint Crack/s"])
+        # self.type_box.currentIndexChanged.connect(self.type_function)
         self.horizontalLayout_5.addWidget(self.type_box)
         self.verticalLayout_2.addWidget(self.widget_7)
         self.widget_8 = QtWidgets.QWidget(self.widget_3)
@@ -207,7 +212,7 @@ class add_details_dialog(object):
         self.crackprogression.setMinimumSize(QtCore.QSize(200, 30))
         self.crackprogression.setMaximumSize(QtCore.QSize(200, 30))
         self.crackprogression.setStyleSheet("#crackprogression {\n"
-                                             "  background-color: transparent;  \n"
+                                            "  background-color: transparent;  \n"
                                             "font-family: \'Franklin Gothic Medium\';\n"
                                             "font-size: 17px;\n"
                                             "color: \n"
@@ -264,10 +269,12 @@ class add_details_dialog(object):
                                            "color: white; \n"
                                            "background-color: #4A3B28}")
         self.progression_box.addItems(["Fatigue Crack/s", "Environmental Crack/s", "Creep Crack Growth",
-                                       "Overload Crack Growth", "Thermal Fatigue Crack Growth", "Corrosion Fatigue Crack Growth",
-                                       "Stress Corrosion Cracking","Hydrogen Embrittlement", "Wear-Induced Crack Growth"])
+                                       "Overload Crack Growth", "Thermal Fatigue Crack Growth",
+                                       "Corrosion Fatigue Crack Growth",
+                                       "Stress Corrosion Cracking", "Hydrogen Embrittlement",
+                                       "Wear-Induced Crack Growth"])
         self.progression_box.setObjectName("progression_box")
-        self.progression_box.currentIndexChanged.connect(self.progression_function)
+        #self.progression_box.currentIndexChanged.connect(self.progression_function)
         self.horizontalLayout_6.addWidget(self.progression_box)
         self.verticalLayout_2.addWidget(self.widget_8)
         self.verticalLayout.addWidget(self.widget_3)
@@ -277,8 +284,8 @@ class add_details_dialog(object):
         self.verticalLayout_3.setObjectName("verticalLayout_3")
         self.remarks = QtWidgets.QLabel(self.widget_4)
         self.remarks.setStyleSheet("#remarks {\n"
-                                   
-                                             "  background-color: transparent;  \n"
+
+                                   "  background-color: transparent;  \n"
                                    "    font: 700 9pt \"Segoe UI\";\n"
                                    "    font: 700 9pt \"Segoe UI\";\n"
                                    "    font: 600 9pt \"Segoe UI\";\n"
@@ -312,6 +319,14 @@ class add_details_dialog(object):
                                  "        padding: 10px;\n"
                                  "    }")
         self.notes.setObjectName("notes")
+        try:
+            remark = 'Remarks_written.txt'
+            if os.path.isfile(remark):
+                with open(remark, 'r') as f:
+                    self.input_txt = f.read()
+                    self.notes.setText(self.input_txt)
+        except Exception as e:
+            print(e)
         self.verticalLayout_3.addWidget(self.notes)
         self.verticalLayout.addWidget(self.widget_4)
         self.widget_5 = QtWidgets.QWidget(self.widget)
@@ -342,6 +357,8 @@ class add_details_dialog(object):
         self.verticalLayout.addWidget(self.widget_5)
         self.verticalLayout_4.addWidget(self.widget)
 
+        self.reload_current_save()
+
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
@@ -357,46 +374,75 @@ class add_details_dialog(object):
         self.remarks.setText(_translate("Dialog", "Remarks:"))
         self.savebtn.setText(_translate("Dialog", "Save"))
 
-    def location_function(self, index):
-        self.selected_loc = self.loc_box.itemText(index)
-        print(self.selected_loc)
-
-    def type_function(self, index):
-        self.selected_type = self.type_box.itemText(index)
-        print(self.selected_type)
-
-    def progression_function(self, index):
-        self.selected_prog = self.progression_box.itemText(index)
-        print(self.selected_prog)
-
     def add_to_text_file(self):
-        error = False
-        try:
-            with open('Selected_location_crack.txt', 'w') as f:
-                f.write(self.selected_loc)
-        except AttributeError:
-            QMessageBox.critical(self.Dialog, "Error", "Please select location of crack.")
-            error = True
-        try:
-            with open('Selected_type_crack.txt', 'w') as f:
-                f.write(self.selected_type)
-        except AttributeError:
-            QMessageBox.critical(self.Dialog, "Error", "Please select type of crack.")
-            error = True
-        try:
-            with open('Selected_progression_crack.txt', 'w') as f:
-                f.write(self.selected_prog)
-        except AttributeError:
-            QMessageBox.critical(self.Dialog, "Error", "Please select progression of crack.")
-            error = True
-        try:
-            with open('Remarks_written.txt', 'w') as f:
-                f.write(self.notes.toPlainText())
-        except Exception as e:
-            QMessageBox.critical(self.Dialog, "Error", str(e))
-            error = True
 
-        if not error:
-            self.Dialog.close()
+        selected_loc = self.loc_box.currentIndex()
+        selected_type = self.type_box.currentIndex()
+        selected_prog = self.progression_box.currentIndex()
+        if selected_loc == -1:
+            self.loc_box.setCurrentIndex(0)
+            selected_loc = 0
+        selected_text_loc = self.loc_box.itemText(selected_loc)
+
+        if selected_type == -1:
+            self.type_box.setCurrentIndex(0)
+            selected_type = 0
+        selected_text_type = self.type_box.itemText(selected_type)
+
+        if selected_prog == -1:
+            self.progression_box.setCurrentIndex(0)
+            selected_prog = 0
+        selected_text_prog = self.progression_box.itemText(selected_prog)
+
+        with open('Selected_location_crack.txt', 'w') as f:
+            f.write(selected_text_loc)
+
+        with open('Selected_type_crack.txt', 'w') as f:
+            f.write(selected_text_type)
+
+        with open('Selected_progression_crack.txt', 'w') as f:
+            f.write(selected_text_prog)
+
+        with open('Remarks_written.txt', 'w') as f:
+            f.write(self.notes.toPlainText())
+
+        self.Dialog.close()
+
+    def reload_current_save(self):
+        try:
+            selected_loc = 'Selected_location_crack.txt'
+            if os.path.isfile(selected_loc):
+                with open(selected_loc, 'r') as f:
+                    selected_text1 = f.read().strip()
+                    for index1 in range(self.loc_box.count()):
+                        if self.loc_box.itemText(index1) == selected_text1:
+                            self.loc_box.setCurrentIndex(index1)
+                            break
+        except Exception as e:
+            print(e)
+
+        try:
+            selected_type = 'Selected_type_crack.txt'
+            if os.path.isfile(selected_type):
+                with open(selected_type, 'r') as f:
+                    selected_text2 = f.read().strip()
+                    for index2 in range(self.type_box.count()):
+                        if self.type_box.itemText(index2) == selected_text2:
+                            self.type_box.setCurrentIndex(index2)
+                            break
+        except Exception as e:
+            print(e)
+
+        try:
+            selected_prog = 'Selected_progression_crack.txt'
+            if os.path.isfile(selected_prog):
+                with open(selected_prog, 'r') as f:
+                    selected_text = f.read().strip()
+                    for index in range(self.progression_box.count()):
+                        if self.progression_box.itemText(index) == selected_text:
+                            self.progression_box.setCurrentIndex(index)
+                            break
+        except Exception as e:
+            print(e)
 
 

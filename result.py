@@ -16,7 +16,8 @@ from add_details_of_cracks import add_details_dialog
 
 class Result_Dialog(object):
 
-    def __init__(self, Dialog, background_widget, history):
+    def __init__(self, Dialog, background_widget, history, projects):
+        self.myProjects = projects
         self.close_segment_dialog = Dialog
         self.myHistory = history
         self.background_widget = background_widget
@@ -561,60 +562,7 @@ class Result_Dialog(object):
         closeDialog.exec()
 
     def Delete_and_close(self):
-        Negative_score = "Negative_score.txt"
-        Input_Distance = "Input_Distance.txt"
-        Positive_score = "Positive_score.txt"
-        Predicted_Class_name = "Predicted_Class_name.txt"
-        self.Predicted_width = "Predicted_width.txt"
-        self.Predicted_height = "Predicted_height.txt"
-        self.Orientation = "Orientation.txt"
-        Predicted_Score = "Predicted_Score.txt"
-        threshold = "threshold_image.jpg"
-
-        self.background_widget.hide()
-        try:
-            os.remove(threshold)
-        except FileNotFoundError:
-            print(f"{threshold} already removed or does not exist")
-        try:
-            os.remove(Input_Distance)
-        except FileNotFoundError:
-            print(f"{Input_Distance} already removed or does not exist")
-
-        try:
-            os.remove(Negative_score)
-        except FileNotFoundError:
-            print(f"{Negative_score} already removed or does not exist")
-
-        try:
-            os.remove(self.Orientation)
-        except FileNotFoundError:
-            print(f"{self.Orientation} already removed or does not exist")
-
-        try:
-            os.remove(Positive_score)
-        except FileNotFoundError:
-            print(f"{Positive_score} already removed or does not exist")
-
-        try:
-            os.remove(Predicted_Class_name)
-        except FileNotFoundError:
-            print(f"{Predicted_Class_name} already removed or does not exist")
-
-        try:
-            os.remove(self.Predicted_height)
-        except FileNotFoundError:
-            print(f"{self.Predicted_height} already removed or does not exist")
-
-        try:
-            os.remove(Predicted_Score)
-        except FileNotFoundError:
-            print(f"{Predicted_Score} already removed or does not exist")
-
-        try:
-            os.remove(self.Predicted_width)
-        except FileNotFoundError:
-            print(f"{self.Predicted_width} already removed or does not exist")
+        self.delete_usedtext_file()
         try:
             self.Dialog.close()
             self.closeDialog.close()
@@ -1194,7 +1142,6 @@ class Result_Dialog(object):
                     self.c.execute(
                         '''CREATE TABLE Projects (id INTEGER PRIMARY KEY, project_name TEXT, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)''')
                     self.conn.commit()
-
                 # Check if the project name already exists in the database
                 self.c.execute("SELECT COUNT(*) FROM Projects WHERE project_name = ? ORDER BY created_at DESC", (new_projects,))
                 result = self.c.fetchone()
@@ -1203,7 +1150,13 @@ class Result_Dialog(object):
                     # If the project name doesn't exist, insert it into the database
                     self.c.execute("INSERT INTO Projects (project_name) VALUES (?)", (new_projects,))
                     self.conn.commit()
-                    message = f"Successfully saved the {new_projects}."
+                    message = f"Successfully create the new project {new_projects}."
+                    self.myProjects.clear()
+                    self.c.execute("SELECT project_name FROM Projects ORDER BY created_at DESC")
+                    rows = self.c.fetchall()
+                    for row in rows:
+                        self.myProjects.addItem(row[0])
+
                     self.show_dialog_success_save(message)
                     self.Save_to_existing_Project()
                 else:
@@ -1404,7 +1357,7 @@ class Result_Dialog(object):
                 self.c.execute("INSERT INTO Location_Folder (project_name,folder_name) VALUES (?,?)",
                                (self.project_name, new_folder,))
                 self.conn.commit()
-                message = "Successfully saved"
+                message = "Successfully create a new folder"
                 self.show_dialog_success_save(message)
                 self.select_folder()
             else:

@@ -522,11 +522,7 @@ class result_with_details(object):
             with open(new_remark, 'r') as f:
                 self.input_txt = f.read()
         else:
-            msg_box = QMessageBox()
-            msg_box.setWindowTitle("No Changes")
-            msg_box.setText("You did not make any changes.")
-            msg_box.setIcon(QMessageBox.Information)
-            msg_box.exec_()
+            self.QMessage_Error_dialog()
         BASE_DIR = os.path.dirname(os.path.abspath(__file__))
         db_path = os.path.join(BASE_DIR, 'Projects.db')
         self.conn = sqlite3.connect(db_path)
@@ -536,17 +532,9 @@ class result_with_details(object):
             self.conn.commit()
             print("Record updated successfully")
             os.remove(new_remark)
-            msg_box = QMessageBox()
-            msg_box.setWindowTitle("Update Successfully!")
-            msg_box.setText("Record updated successfully.")
-            msg_box.setInformativeText("Are you sure you want to exit?")
-            msg_box.setIcon(QMessageBox.Information)
-            msg_box.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
-            msg_box.setDefaultButton(QMessageBox.No)
-            response = msg_box.exec_()
-            if response == QMessageBox.Yes:
-                self.Dialog.close()
-                self.background_widget.hide()
+            message = "Remark updated successfully!"
+            icon = "images/checked.png"
+            self.QMessage_success_dialog(message, icon)
         except Exception as e:
             print(f"Error updating record: {e}")
         finally:
@@ -757,10 +745,10 @@ class result_with_details(object):
         self.edit_remarks = QtWidgets.QPushButton(self.widget)
         self.edit_remarks.setMinimumSize(QtCore.QSize(23, 23))
         self.edit_remarks.setMaximumSize(QtCore.QSize(23, 23))
-        self.edit_remarks.setText("")
-        icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap("images/editor.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.edit_remarks.setIcon(icon)
+        self.edit_remarks.setText("Edit Remarks")
+        #icon = QtGui.QIcon()
+        #icon.addPixmap(QtGui.QPixmap("images/editor.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        #self.edit_remarks.setIcon(icon)
         self.edit_remarks.setIconSize(QtCore.QSize(20, 25))
         self.edit_remarks.setFlat(True)
         self.edit_remarks.setObjectName("edit_remarks")
@@ -850,3 +838,231 @@ class result_with_details(object):
         except Exception as e:
             print(e)
         self.details_dialog.close()
+
+    def QMessage_Error_dialog(self):
+        Dialog = QDialog()
+        Dialog.setObjectName("Dialog")
+        Dialog.resize(356, 155)
+        Dialog.setMinimumSize(QtCore.QSize(356, 155))
+        Dialog.setWindowFlags(Qt.FramelessWindowHint)
+        Dialog.setMaximumSize(QtCore.QSize(356, 155))
+        Dialog.setStyleSheet("#Dialog{background-color: rgb(255,255,255);border: 1px solid rgb(144,115,87);}")
+        self.horizontalLayout = QtWidgets.QHBoxLayout(Dialog)
+        self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
+        self.horizontalLayout.setObjectName("horizontalLayout")
+        self.widget = QtWidgets.QWidget(Dialog)
+        self.widget.setObjectName("widget")
+        self.verticalLayout = QtWidgets.QVBoxLayout(self.widget)
+        self.verticalLayout.setContentsMargins(0, 0, 0, 0)
+        self.verticalLayout.setSpacing(0)
+        self.verticalLayout.setObjectName("verticalLayout")
+        self.widget_5 = QtWidgets.QWidget(self.widget)
+        self.widget_5.setMinimumSize(QtCore.QSize(0, 40))
+        self.widget_5.setMaximumSize(QtCore.QSize(16777215, 40))
+        self.widget_5.setObjectName("widget_5")
+        self.horizontalLayout_5 = QtWidgets.QHBoxLayout(self.widget_5)
+        self.horizontalLayout_5.setContentsMargins(0, 0, 0, 0)
+        self.horizontalLayout_5.setSpacing(0)
+        self.horizontalLayout_5.setObjectName("horizontalLayout_5")
+        self.widget_6 = QtWidgets.QWidget(self.widget_5)
+        self.widget_6.setObjectName("widget_6")
+        self.horizontalLayout_5.addWidget(self.widget_6)
+        self.exit = QtWidgets.QPushButton(self.widget_5)
+        self.exit.setMinimumSize(QtCore.QSize(20, 20))
+        self.exit.setMaximumSize(QtCore.QSize(30, 30))
+        self.exit.setText("")
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap("images/exit.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.exit.setIcon(icon)
+        self.exit.setFlat(True)
+        self.exit.clicked.connect(Dialog.close)
+        self.exit.setObjectName("exit")
+        self.horizontalLayout_5.addWidget(self.exit)
+        self.verticalLayout.addWidget(self.widget_5)
+        self.widget_2 = QtWidgets.QWidget(self.widget)
+        self.widget_2.setObjectName("widget_2")
+        self.horizontalLayout_2 = QtWidgets.QHBoxLayout(self.widget_2)
+        self.horizontalLayout_2.setContentsMargins(25, 0, 20, -1)
+        self.horizontalLayout_2.setObjectName("horizontalLayout_2")
+        self.icon = QtWidgets.QLabel(self.widget_2)
+        self.icon.setMinimumSize(QtCore.QSize(50, 50))
+        self.icon.setMaximumSize(QtCore.QSize(50, 50))
+        self.icon.setPixmap(QtGui.QPixmap("images/failed.png"))
+        self.icon.setScaledContents(True)
+        self.icon.setStyleSheet(
+            "  background-color: transparent; ")
+        self.icon.setAlignment(QtCore.Qt.AlignCenter)
+        self.icon.setWordWrap(True)
+        self.icon.setObjectName("icon")
+        self.horizontalLayout_2.addWidget(self.icon)
+        self.message = QtWidgets.QLabel(self.widget_2)
+        self.message.setText("You did not make any changes.")
+        self.message.setStyleSheet("#message{\n"
+                                   "  background-color: transparent;  \n"
+                                   "font-family: \"Inter\";\n"
+                                   "font-size: 13pt; \n"
+                                   "color: #000000;\n"
+                                   "font: bold;\n"
+                                   "font-size: 13px;\n"
+                                   "}")
+        self.message.setScaledContents(True)
+        self.message.setWordWrap(True)
+        self.message.setObjectName("message")
+        self.horizontalLayout_2.addWidget(self.message)
+        self.verticalLayout.addWidget(self.widget_2)
+        self.widget_4 = QtWidgets.QWidget(self.widget)
+        self.widget_4.setObjectName("widget_4")
+        self.horizontalLayout_3 = QtWidgets.QHBoxLayout(self.widget_4)
+        self.horizontalLayout_3.setContentsMargins(0, 12, 12, 12)
+        self.horizontalLayout_3.setObjectName("horizontalLayout_3")
+        self.widget_3 = QtWidgets.QWidget(self.widget_4)
+        self.widget_3.setObjectName("widget_3")
+        self.horizontalLayout_3.addWidget(self.widget_3)
+        self.okBtn = QtWidgets.QPushButton("Okay", self.widget_4)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.okBtn.sizePolicy().hasHeightForWidth())
+        self.okBtn.setSizePolicy(sizePolicy)
+        self.okBtn.clicked.connect(Dialog.close)
+        self.okBtn.setMinimumSize(QtCore.QSize(20, 32))
+        self.okBtn.setMaximumSize(QtCore.QSize(100, 32))
+        self.okBtn.setStyleSheet("#okBtn{\n"
+                                 "font-weight:bold;\n"
+                                 "color: white;\n"
+                                 "background-color: #6F4B27;\n"
+                                 "font-family: Inter;\n"
+                                 "border-top-left-radius: 7px;\n"
+                                 "border-top-right-radius:7px;\n"
+                                 "border-bottom-left-radius: 7px;\n"
+                                 "border-bottom-right-radius: 7px;\n"
+                                 "text-align: center;\n"
+                                 "}\n"
+                                 "#okBtn:hover{\n"
+                                 "color: rgb(144,115,87);\n"
+                                 "border : 3px solid rgb(144,115,87);\n"
+                                 "background-color: white;\n"
+                                 "}\n"
+                                 "")
+        self.okBtn.setObjectName("okBtn")
+        self.horizontalLayout_3.addWidget(self.okBtn)
+        self.verticalLayout.addWidget(self.widget_4)
+        self.horizontalLayout.addWidget(self.widget)
+        Dialog.exec()
+
+    def QMessage_success_dialog(self, message, icon_image):
+        Dialog = QDialog()
+        self.QMessageDialog = Dialog
+        Dialog.setObjectName("Dialog")
+        Dialog.resize(356, 155)
+        Dialog.setMinimumSize(QtCore.QSize(356, 155))
+        Dialog.setWindowFlags(Qt.FramelessWindowHint)
+        Dialog.setMaximumSize(QtCore.QSize(356, 155))
+        Dialog.setStyleSheet("#Dialog{background-color: rgb(255,255,255);border: 1px solid rgb(144,115,87);}")
+        self.horizontalLayout = QtWidgets.QHBoxLayout(Dialog)
+        self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
+        self.horizontalLayout.setObjectName("horizontalLayout")
+        self.widget = QtWidgets.QWidget(Dialog)
+        self.widget.setObjectName("widget")
+        self.verticalLayout = QtWidgets.QVBoxLayout(self.widget)
+        self.verticalLayout.setContentsMargins(0, 0, 0, 0)
+        self.verticalLayout.setSpacing(0)
+        self.verticalLayout.setObjectName("verticalLayout")
+        self.widget_5 = QtWidgets.QWidget(self.widget)
+        self.widget_5.setMinimumSize(QtCore.QSize(0, 40))
+        self.widget_5.setMaximumSize(QtCore.QSize(16777215, 40))
+        self.widget_5.setObjectName("widget_5")
+        self.horizontalLayout_5 = QtWidgets.QHBoxLayout(self.widget_5)
+        self.horizontalLayout_5.setContentsMargins(0, 0, 0, 0)
+        self.horizontalLayout_5.setSpacing(0)
+        self.horizontalLayout_5.setObjectName("horizontalLayout_5")
+        self.widget_6 = QtWidgets.QWidget(self.widget_5)
+        self.widget_6.setObjectName("widget_6")
+        self.horizontalLayout_5.addWidget(self.widget_6)
+        self.exit = QtWidgets.QPushButton(self.widget_5)
+        self.exit.setMinimumSize(QtCore.QSize(20, 20))
+        self.exit.setMaximumSize(QtCore.QSize(30, 30))
+        self.exit.setText("")
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap("images/exit.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.exit.setIcon(icon)
+        self.exit.setFlat(True)
+        self.exit.clicked.connect(Dialog.close)
+        self.exit.setObjectName("exit")
+        self.horizontalLayout_5.addWidget(self.exit)
+        self.verticalLayout.addWidget(self.widget_5)
+        self.widget_2 = QtWidgets.QWidget(self.widget)
+        self.widget_2.setObjectName("widget_2")
+        self.horizontalLayout_2 = QtWidgets.QHBoxLayout(self.widget_2)
+        self.horizontalLayout_2.setContentsMargins(25, 0, 20, -1)
+        self.horizontalLayout_2.setObjectName("horizontalLayout_2")
+        self.icon = QtWidgets.QLabel(self.widget_2)
+        self.icon.setMinimumSize(QtCore.QSize(50, 50))
+        self.icon.setMaximumSize(QtCore.QSize(50, 50))
+        self.icon.setPixmap(QtGui.QPixmap(icon_image))
+        self.icon.setScaledContents(True)
+        self.icon.setStyleSheet(
+            "  background-color: transparent; ")
+        self.icon.setAlignment(QtCore.Qt.AlignCenter)
+        self.icon.setWordWrap(True)
+        self.icon.setObjectName("icon")
+        self.horizontalLayout_2.addWidget(self.icon)
+        self.message = QtWidgets.QLabel(self.widget_2)
+        self.message.setText(message)
+        self.message.setStyleSheet("#message{\n"
+                                   "  background-color: transparent;  \n"
+                                   "font-family: \"Inter\";\n"
+                                   "font-size: 13pt; \n"
+                                   "color: #000000;\n"
+                                   "font: bold;\n"
+                                   "font-size: 13px;\n"
+                                   "}")
+        self.message.setScaledContents(True)
+        self.message.setWordWrap(True)
+        self.message.setObjectName("message")
+        self.horizontalLayout_2.addWidget(self.message)
+        self.verticalLayout.addWidget(self.widget_2)
+        self.widget_4 = QtWidgets.QWidget(self.widget)
+        self.widget_4.setObjectName("widget_4")
+        self.horizontalLayout_3 = QtWidgets.QHBoxLayout(self.widget_4)
+        self.horizontalLayout_3.setContentsMargins(0, 12, 12, 12)
+        self.horizontalLayout_3.setObjectName("horizontalLayout_3")
+        self.widget_3 = QtWidgets.QWidget(self.widget_4)
+        self.widget_3.setObjectName("widget_3")
+        self.horizontalLayout_3.addWidget(self.widget_3)
+        self.okBtn = QtWidgets.QPushButton("Okay", self.widget_4)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.okBtn.sizePolicy().hasHeightForWidth())
+        self.okBtn.setSizePolicy(sizePolicy)
+        self.okBtn.clicked.connect(self.close_event)
+        self.okBtn.setMinimumSize(QtCore.QSize(20, 32))
+        self.okBtn.setMaximumSize(QtCore.QSize(100, 32))
+        self.okBtn.setStyleSheet("#okBtn{\n"
+                                 "font-weight:bold;\n"
+                                 "color: white;\n"
+                                 "background-color: #6F4B27;\n"
+                                 "font-family: Inter;\n"
+                                 "border-top-left-radius: 7px;\n"
+                                 "border-top-right-radius:7px;\n"
+                                 "border-bottom-left-radius: 7px;\n"
+                                 "border-bottom-right-radius: 7px;\n"
+                                 "text-align: center;\n"
+                                 "}\n"
+                                 "#okBtn:hover{\n"
+                                 "color: rgb(144,115,87);\n"
+                                 "border : 3px solid rgb(144,115,87);\n"
+                                 "background-color: white;\n"
+                                 "}\n"
+                                 "")
+        self.okBtn.setObjectName("okBtn")
+        self.horizontalLayout_3.addWidget(self.okBtn)
+        self.verticalLayout.addWidget(self.widget_4)
+        self.horizontalLayout.addWidget(self.widget)
+        Dialog.exec()
+
+    def close_event(self):
+        self.QMessageDialog.close()
+        self.Dialog.close()
+        self.background_widget.hide()

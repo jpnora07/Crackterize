@@ -195,7 +195,7 @@ class Ui_MainWindow(object):
             try:
                 self.background_widget.show()
                 folder_dialog = QtWidgets.QDialog(self.Mainwindow)
-                ui = view_folder_dialog(self.background_widget)
+                ui = view_folder_dialog(self.background_widget, self.history, self.myProjects)
                 ui.setupUi(folder_dialog)
                 x = (self.Mainwindow.width() - folder_dialog.width()) // 2
                 y = (self.Mainwindow.height() - folder_dialog.height()) // 2
@@ -817,7 +817,7 @@ class Ui_MainWindow(object):
             except FileNotFoundError:
                 print("The file does not exist.")
             result_dialog = QtWidgets.QDialog(self.Mainwindow)
-            ui = Result_Dialog(None, self.background_widget, self.history)
+            ui = Result_Dialog(None, self.background_widget, self.history, self.myProjects)
             ui.setupUi(result_dialog)
             x = (self.Mainwindow.width() - result_dialog.width()) // 2
             y = (self.Mainwindow.height() - result_dialog.height()) // 2
@@ -826,7 +826,7 @@ class Ui_MainWindow(object):
 
         else:
             segment_dialog = QtWidgets.QDialog(self.Mainwindow)
-            ui = Ui_DialogSegment(self.background_widget)
+            ui = Ui_DialogSegment(self.background_widget, self.history, self.myProjects)
             ui.setupUi(segment_dialog)
             x = (self.Mainwindow.width() - segment_dialog.width()) // 2
             y = (self.Mainwindow.height() - segment_dialog.height()) // 2
@@ -1006,7 +1006,7 @@ class Ui_MainWindow(object):
                     f.write(new_projects)
                 try:
                     folder_dialog = QtWidgets.QDialog(self.Mainwindow)
-                    ui = view_folder_dialog(self.background_widget)
+                    ui = view_folder_dialog(self.background_widget, self.myProjects)
                     ui.setupUi(folder_dialog)
                     x = (self.Mainwindow.width() - folder_dialog.width()) // 2
                     y = (self.Mainwindow.height() - folder_dialog.height()) // 2

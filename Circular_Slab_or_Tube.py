@@ -149,12 +149,9 @@ class circular(object):
         self.horizontalLayout.setContentsMargins(-1, 0, -1, 0)
         self.horizontalLayout.setObjectName("horizontalLayout")
         self.calculatebtn = QtWidgets.QPushButton(self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.calculatebtn.sizePolicy().hasHeightForWidth())
-        self.calculatebtn.setSizePolicy(sizePolicy)
-        self.calculatebtn.setMaximumSize(QtCore.QSize(150, 150))
+
+
+        self.calculatebtn.setMaximumSize(QtCore.QSize(100, 40))
         self.calculatebtn.setStyleSheet("#calculatebtn{\n"
                                         "font-weight:bold;\n"
                                         "color: white;\n"
@@ -176,7 +173,7 @@ class circular(object):
         self.calculatebtn.clicked.connect(self.calculate_volume)
         self.horizontalLayout.addWidget(self.calculatebtn)
         self.closebtn = QtWidgets.QPushButton(self.widget)
-        self.closebtn.setMaximumSize(QtCore.QSize(150, 150))
+        self.closebtn.setMaximumSize(QtCore.QSize(100, 40))
         self.closebtn.setStyleSheet("#closebtn{\n"
                                     "font-weight:bold;\n"
                                     "color: white;\n"

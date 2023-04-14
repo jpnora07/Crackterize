@@ -10,8 +10,10 @@ from view_results import view_result_dialog
 
 
 class view_folder_dialog(object):
-    def __init__(self, background_widget):
+    def __init__(self, background_widget, history, projects):
         super(view_folder_dialog, self).__init__()
+        self.history = history
+        self.myProjects = projects
         self.background_widget = background_widget
 
     def setupUi(self, view_folder_dialog):
@@ -361,8 +363,9 @@ class view_folder_dialog(object):
         # Get the text from the QTextEdit widget
         location_folder_name = self.ET_newlocation.toPlainText()
         if len(location_folder_name) == 0:
+            message = "Cannot be save if empty!"
             # If new_projects is empty, show an error message
-            self.show_dialog_empty_text_error()
+            self.show_dialog_empty_text_error(message)
             self.creating_new_Location()
         else:
             BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -387,8 +390,9 @@ class view_folder_dialog(object):
                 self.clear_layout(self.scroll_widget.layout())
                 self.fetch_folders_of_projects()
             else:
+                message = f"Project name already exists."
                 # If the project name already exists, show a dialog message to inform the user
-                self.show_dialog_empty_text_error()
+                self.show_dialog_empty_text_error(message)
                 self.creating_new_Location()
 
     def clear_layout(self, layout):
@@ -459,7 +463,7 @@ class view_folder_dialog(object):
             result_dialog = QtWidgets.QDialog(self.view_folder_dialog_orig)
             x = (self.view_folder_dialog_orig.width() - self.view_folder_dialog_orig.width()) // 2
             y = (self.view_folder_dialog_orig.height() - self.view_folder_dialog_orig.height()) // 2
-            ui = view_result_dialog(self.background_widget, self.view_folder_dialog_orig)
+            ui = view_result_dialog(self.background_widget, self.view_folder_dialog_orig, self.history, self.myProjects)
 
             ui.setupUi(result_dialog)
             result_dialog.move(x, y)
@@ -470,7 +474,7 @@ class view_folder_dialog(object):
         except Exception as e:
             print(e)
 
-    def show_dialog_empty_text_error(self):
+    def show_dialog_empty_text_error(self, message):
         # Create dialog box
         Dialog = QtWidgets.QDialog()
         Dialog.setObjectName("Dialog")
@@ -509,7 +513,7 @@ class view_folder_dialog(object):
         self.verticalLayout_4.setContentsMargins(-1, 20, -1, 0)
         self.verticalLayout_4.setObjectName("verticalLayout_4")
         self.label = QtWidgets.QLabel(self.widget_5)
-        self.label.setText("Project name cannot be empty")
+        self.label.setText(message)
         font = QtGui.QFont()
         font.setFamily("Arial")
         font.setPointSize(22)
@@ -534,7 +538,7 @@ class view_folder_dialog(object):
         self.widget_4 = QtWidgets.QWidget(self.widget_3)
         self.widget_4.setAutoFillBackground(False)
         self.widget_4.setStyleSheet("#widget_4{\n"
-                                    "background-image: url(images/ok3.png);\n"
+                                    "background-image: url(images/failed.png);\n"
                                     "background-repeat: no-repeat; \n"
                                     "background-position: center;}")
         self.widget_4.setObjectName("widget_4")

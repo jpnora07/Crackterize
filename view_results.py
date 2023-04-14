@@ -75,7 +75,9 @@ class ImageProcessingThread(QThread):
             self.error.emit(str(e))
 
 class view_result_dialog(object):
-    def __init__(self, background_widget, view_folder_dialog_orig):
+    def __init__(self, background_widget, view_folder_dialog_orig, history, projects):
+        self.history = history
+        self.myProjects = projects
         self.background_widget = background_widget
         self.view_folder_dialog_orig = view_folder_dialog_orig
     def setupUi(self, view_folder_dialog):
@@ -349,7 +351,7 @@ class view_result_dialog(object):
             result_dialog = QtWidgets.QDialog(self.view_folder_dialog)
             x = (self.view_folder_dialog.width() - self.view_folder_dialog.width()) // 2
             y = (self.view_folder_dialog.height() - self.view_folder_dialog.height()) // 2
-            ui = Result_Dialog(self.view_folder_dialog, self.background_widget, None)
+            ui = Result_Dialog(self.view_folder_dialog, self.background_widget, self.history, self.myProjects)
 
             ui.setupUi(result_dialog)
             result_dialog.move(x, y)
@@ -358,7 +360,7 @@ class view_result_dialog(object):
 
         else:
             segment_dialog = QtWidgets.QDialog(self.view_folder_dialog)
-            ui = Ui_DialogSegment(self.background_widget)
+            ui = Ui_DialogSegment(self.background_widget, self.history, self.myProjects)
             ui.setupUi(segment_dialog)
             x = (self.view_folder_dialog.width() - segment_dialog.width()) // 2
             y = (self.view_folder_dialog.height() - segment_dialog.height()) // 2

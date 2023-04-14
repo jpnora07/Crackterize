@@ -196,7 +196,9 @@ def is_black(pixel):
 
 
 class Ui_DialogSegment(object):
-    def __init__(self, background_widget):
+    def __init__(self, background_widget, history, projects):
+        self.myProjects = projects
+        self.history = history
         self.background_widget = background_widget
 
     def setupUi(self, Dialog):
@@ -773,7 +775,7 @@ class Ui_DialogSegment(object):
 
         x = (self.Dialog.width() - self.Dialog.width()) // 2
         y = (self.Dialog.height() - self.Dialog.height()) // 2
-        ui = Result_Dialog(self.Dialog, self.background_widget, None)
+        ui = Result_Dialog(self.Dialog, self.background_widget, self.history, self.myProjects)
 
         ui.setupUi(result_dialog)
         result_dialog.move(x, y)
