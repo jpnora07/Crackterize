@@ -1,5 +1,9 @@
 <RCC>
   <qresource prefix="images">
+    <file>checked.png</file>
+    <file>failed.png</file>
+    <file>info.png</file>
+    <file>question.png</file>
     <file>spin_loading.gif</file>
     <file>delete.png</file>
     <file>editor.png</file>

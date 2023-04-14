@@ -559,6 +559,7 @@ class Ui_DialogSegment(object):
         reply = QtWidgets.QMessageBox.question(self.Dialog, 'Message', "Are you sure you want to exit?",
                                                QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No,
                                                QtWidgets.QMessageBox.No)
+        reply.setWindowFlags(QtCore.Qt.WindowTitleHint | QtCore.Qt.CustomizeWindowHint)
         if reply == QtWidgets.QMessageBox.Yes:
             self.background_widget.hide()
             try:
