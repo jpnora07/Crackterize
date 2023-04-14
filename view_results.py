@@ -313,7 +313,6 @@ class view_result_dialog(object):
 
     def closeEvent(self):
         self.view_folder_dialog.close()
-        self.background_widget.hide()
 
 
     def add_new_image(self):
