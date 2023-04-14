@@ -38,6 +38,7 @@ class FindBlackBlocksThread(QThread):
     finished = pyqtSignal()
     progress_signal = pyqtSignal(int)
     result_signal = pyqtSignal(list)
+
     def __init__(self, image, nBlock):
         super().__init__()
         self.image = image
@@ -71,8 +72,10 @@ class FindBlackBlocksThread(QThread):
         self.result_signal.emit(self.blocks)
         self.finished.emit()
 
-class CrackAnalyzer(QThread):
+
+class getWidth_of_crack(QThread):
     finished = pyqtSignal()
+
     def __init__(self, distance, unit, focal_length, result_image):
         super().__init__()
         self.distance = distance
@@ -127,6 +130,67 @@ class CrackAnalyzer(QThread):
             print(e)
 
 
+class getLength_of_crack(QThread):
+    finished = pyqtSignal()
+
+    def run(self):
+        try:
+            self.img = cv2.imread('threshold_image.jpg')
+            desired_size = (2500, 2500)
+            self.img = cv2.resize(self.img, desired_size)
+            self.gray = cv2.cvtColor(self.img, cv2.COLOR_BGR2GRAY)
+            edges = cv2.Canny(self.gray, 50, 255, apertureSize=3)
+            edges = cv2.dilate(edges, None, iterations=1)
+            edges = cv2.erode(edges, None, iterations=1)
+            contours, _ = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+            boxes = []
+            self.box_lengths = []
+            self.widths = []
+            for contour in contours:
+                area = cv2.contourArea(contour)
+                if area < 50:
+                    continue
+                x, y, w, h = cv2.boundingRect(contour)
+                new_box = [x, y, x + w, y + h]
+                overlaps = False
+                for box in boxes:
+                    if box[2] > new_box[0] and new_box[2] > box[0] and box[3] > new_box[1] and new_box[3] > box[1]:
+                        overlaps = True
+                        break
+                if not overlaps:
+                    boxes.append(new_box)
+                    cv2.rectangle(self.img, (x, y), (x + w, y + h), (0, 255, 0), 2)
+                    roi_edges = edges[y:y + h, x:x + w]
+                    if np.sum(roi_edges[:int(h / 2), :int(w / 2)]) > np.sum(roi_edges[int(h / 2):, int(w / 2):]):
+                        cv2.line(self.img, (x, y), (x + w, y + h), (0, 255, 0), 2)
+                    else:
+                        cv2.line(self.img, (x + w, y), (x, y + h), (0, 255, 0), 2)
+
+                    with open('Input_Distance.txt', 'r') as f:
+                        dist = f.read()
+                    distance_cm = float(dist)
+                    angle_degrees = 47.8
+                    angle_radians = np.deg2rad(angle_degrees)
+                    length_pixels = np.sqrt(w ** 2 + h ** 2)
+                    length_cm = distance_cm * np.tan(angle_radians) * length_pixels / 2000.0
+                    if self.box_lengths:
+                        self.box_lengths[-1] += length_cm
+                    else:
+                        self.box_lengths.append(
+                            length_cm)
+                    self.widths.append(h)
+
+            total_length = sum(self.box_lengths)
+            total_length_write = f"{total_length:.2f}"
+            print(total_length_write + " cm")
+            with open('Predicted_height.txt', 'w') as f:
+                f.write(str(total_length_write))
+
+            self.finished.emit()
+        except Exception as e:
+            print(e)
+
+
 def is_black(pixel):
     return pixel == 0
 
@@ -164,11 +228,11 @@ class Ui_DialogSegment(object):
         self.widget_2 = QtWidgets.QWidget(Dialog)
         self.widget_2.setMinimumSize(QtCore.QSize(0, 50))
         self.widget_2.setStyleSheet("#widget_2{\n"
-                             "background-color: rgb(255,255,255);"
-                             "width: fit-content;\n"
-                             "heigth: fit-content;\n"
-                             "block-size: fit-content;\n"
-                             "} ")
+                                    "background-color: rgb(255,255,255);"
+                                    "width: fit-content;\n"
+                                    "heigth: fit-content;\n"
+                                    "block-size: fit-content;\n"
+                                    "} ")
         self.widget_2.setMaximumSize(QtCore.QSize(16777215, 50))
         self.widget_2.setObjectName("widget_2")
         self.horizontalLayout_5 = QtWidgets.QHBoxLayout(self.widget_2)
@@ -347,11 +411,11 @@ class Ui_DialogSegment(object):
         self.units.setObjectName("units")
         self.units.addItems(["Millimeter (mm)", "Centimeter (cm)", "Inch (in)", "Foot (ft)", "Yard (yd)", "Meter (m)"])
         self.units.setStyleSheet("#NumOfDistance{\n"
-                                         "background-color:white;"
-                                         "font-size:18px;\n"
-                                         "text-allign:center;\n"
-                                         "border:1px solid grey;\n"
-                                         "}")
+                                 "background-color:white;"
+                                 "font-size:18px;\n"
+                                 "text-allign:center;\n"
+                                 "border:1px solid grey;\n"
+                                 "}")
         self.horizontalLayout_2.addWidget(self.units)
         self.verticalLayout_7.addWidget(self.widget_10)
         self.widget_4 = QtWidgets.QWidget(self.widget_3)
@@ -391,7 +455,7 @@ class Ui_DialogSegment(object):
         self.removeNoise.setObjectName("removeNoise")
         self.removeNoise.clicked.connect(self.remove_noise)
         self.verticalLayout_2.addWidget(self.removeNoise)
-        self.calculate = QtWidgets.QPushButton("Measure The Crack",self.widget_4)
+        self.calculate = QtWidgets.QPushButton("Measure The Crack", self.widget_4)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -400,25 +464,25 @@ class Ui_DialogSegment(object):
         self.calculate.setMinimumSize(QtCore.QSize(68, 35))
         self.calculate.setMaximumSize(QtCore.QSize(16777215, 35))
         self.calculate.setStyleSheet("#height{\n"
-                                  "font-weight:bold;\n"
-                                  "color: white;\n"
-                                  "background-color: #6F4B27;\n"
-                                  "font-family: Inter;\n"
-                                  "border-top-left-radius: 7px;\n"
-                                  "border-top-right-radius:7px;\n"
-                                  "border-bottom-left-radius: 7px;\n"
-                                  "border-bottom-right-radius: 7px;\n"
-                                  "text-align: center;\n"
-                                  "}\n"
-                                  "#height:hover{\n"
-                                  "color: rgb(144,115,87);\n"
-                                  "border : 3px solid rgb(144,115,87);\n"
-                                  "background-color: white;\n"
-                                  "}\n"
-                                  "")
+                                     "font-weight:bold;\n"
+                                     "color: white;\n"
+                                     "background-color: #6F4B27;\n"
+                                     "font-family: Inter;\n"
+                                     "border-top-left-radius: 7px;\n"
+                                     "border-top-right-radius:7px;\n"
+                                     "border-bottom-left-radius: 7px;\n"
+                                     "border-bottom-right-radius: 7px;\n"
+                                     "text-align: center;\n"
+                                     "}\n"
+                                     "#height:hover{\n"
+                                     "color: rgb(144,115,87);\n"
+                                     "border : 3px solid rgb(144,115,87);\n"
+                                     "background-color: white;\n"
+                                     "}\n"
+                                     "")
         self.calculate.setObjectName("height")
-        self.calculate.clicked.connect(self.calculate_measures)
-        #self.calculate.hide()
+        self.calculate.clicked.connect(self.getWidth_of_crack_function)
+        # self.calculate.hide()
         self.verticalLayout_2.addWidget(self.calculate)
         self.verticalLayout_7.addWidget(self.widget_4)
         self.widget_11 = QtWidgets.QWidget(self.widget_3)
@@ -588,13 +652,15 @@ class Ui_DialogSegment(object):
         try:
             # Check that the files exist and are not empty
             if not os.path.isfile(Predicted_width) or os.path.getsize(Predicted_width) == 0:
-                QtWidgets.QMessageBox.critical(self.Dialog, "Error", "The image is not completely get the width and length of crack "
-                                                                     "detected.")
+                QtWidgets.QMessageBox.critical(self.Dialog, "Error",
+                                               "The image is not completely get the width and length of crack "
+                                               "detected.")
                 return
 
             if not os.path.isfile(Predicted_height) or os.path.getsize(Predicted_height) == 0:
-                QtWidgets.QMessageBox.critical(self.Dialog, "Error", "The image is not completely get the lenght of crack "
-                                                                     "detected.")
+                QtWidgets.QMessageBox.critical(self.Dialog, "Error",
+                                               "The image is not completely get the lenght of crack "
+                                               "detected.")
                 return
         except Exception as e:
             print(e)
@@ -635,7 +701,7 @@ class Ui_DialogSegment(object):
         self.load_dialog.close()
         self.background_widget_segment.hide()
 
-    def calculate_measures(self):
+    def getWidth_of_crack_function(self):
 
         try:
             distance = float(self.NumOfDistance.toPlainText())
@@ -647,7 +713,6 @@ class Ui_DialogSegment(object):
             QMessageBox.critical(self.Dialog, "Error", "Please enter a distance.")
             return
 
-
         try:
 
             # Check if the result from the previous thread is not empty or not done
@@ -658,30 +723,31 @@ class Ui_DialogSegment(object):
             self.load_dialog_measure.show()
             self.background_widget_segment.show()
 
-            self.compute_thread = CrackAnalyzer(float(self.NumOfDistance.toPlainText()), self.units.currentText(), 132.28, self.result)
-            self.compute_thread.start()
-            self.compute_thread.finished.connect(self.open_CrackLineLength)
+            self.compute_thread_width = getWidth_of_crack(float(self.NumOfDistance.toPlainText()),
+                                                          self.units.currentText(), 132.28, self.result)
+            self.compute_thread_width.start()
+            self.compute_thread_width.finished.connect(self.getLength_of_crack_function)
 
-            print("Finish")
+
         except Exception as e:
             print(e)
 
-    def open_CrackLineLength(self):
+    def getLength_of_crack_function(self):
+        print("Finish width")
         try:
-            self.load_dialog_measure.close()
-            self.background_widget_segment.hide()
-            CrackLineLength = QtWidgets.QDialog(self.Dialog)
 
-            x = (self.Dialog.width() - self.Dialog.width()) // 2
-            y = (self.Dialog.height() - self.Dialog.height()) // 2
-            ui = Line_length()
+            self.compute_thread_length = getLength_of_crack()
+            self.compute_thread_length.start()
+            self.compute_thread_length.finished.connect(self.getLength_of_crack_function_finish)
 
-            ui.setupUi(CrackLineLength)
-            CrackLineLength.move(x, y)
-            CrackLineLength.show()
-            CrackLineLength.exec_()
         except Exception as e:
             print(e)
+
+    def getLength_of_crack_function_finish(self):
+        self.load_dialog_measure.close()
+        self.background_widget_segment.hide()
+        print("Finish length")
+
     def update_image(self, image):
         # Get the size of the label
         label_size = self.imageLabel.size()

@@ -151,8 +151,8 @@ class Line_length(object):
         total_length = sum(self.box_lengths)
         total_length_write = f"{total_length:.2f}"
         self.edges_label = DrawingWidget(self.img)
-        self.show_image(self.img)
-        layout.addWidget(self.edges_label, 0, 1)
+        # self.show_image(self.img)
+        #layout.addWidget(self.edges_label, 0, 1)
         print(total_length_write + " cm")
         with open('Predicted_height.txt', 'w') as f:
             f.write(str(total_length_write))

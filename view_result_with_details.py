@@ -12,6 +12,7 @@ from PyQt5.QtWidgets import QDialog, QMessageBox
 class result_with_details(object):
     def __init__(self, background_widget):
         self.background_widget = background_widget
+
     def setupUi(self, Dialog):
         self.Dialog = Dialog
         data = self.fetch_save_files_of_projects()
@@ -149,6 +150,7 @@ class result_with_details(object):
         self.verticalLayout_2.addWidget(self.widget_13)
         self.widget_11 = QtWidgets.QWidget(self.widget_6)
         self.widget_11.setObjectName("widget_11")
+        self.widget_11.hide()
         self.horizontalLayout_13 = QtWidgets.QHBoxLayout(self.widget_11)
         self.horizontalLayout_13.setObjectName("horizontalLayout_13")
         self.widgetPosition = QtWidgets.QLabel(self.widget_11)
@@ -415,6 +417,12 @@ class result_with_details(object):
         pixmap = QPixmap.fromImage(image)
         try:
             if not pixmap.isNull():
+                # Add the title to the document
+                title_format = QTextCharFormat()
+                title_format.setFont(QFont("Arial", 20, QFont.Bold))
+                cursor.insertText("                              Crackterized Result", title_format)
+                cursor.insertBlock()
+
                 image_format = QTextImageFormat()
                 image_format.setWidth(pixmap.width())
                 image_format.setHeight(pixmap.height())
@@ -425,7 +433,7 @@ class result_with_details(object):
                 frame_format.setBorder(1)  # set border width to 1
                 frame_format.setBorderStyle(QTextFrameFormat.BorderStyle_Solid)  # set border style to solid
                 frame_format.setBorderBrush(Qt.black)  # set border color to black
-                frame_format.setPadding(5)   # set padding to 5
+                frame_format.setPadding(5)  # set padding to 5
                 frame_format.setMargin(5)
 
                 # Insert the image into a QTextFrame and set its format
@@ -440,14 +448,14 @@ class result_with_details(object):
         font_format.setFont(QFont("Arial", 15))
 
         # Add the data to the document
-        cursor.insertText(f"The image classified as: {self.status}\n", font_format)
-        cursor.insertText(f"Length: {self.length} cm\n", font_format)
-        cursor.insertText(f"Width:{self.width} mm\n", font_format)
-        cursor.insertText(f"Orientation: {self.position}\n", font_format)
+        cursor.insertText(f"The image characterized as: {self.status}\n", font_format)
+        cursor.insertText(f"Length: {self.length}\n", font_format)
+        cursor.insertText(f"Width: {self.width}\n", font_format)
+        # cursor.insertText(f"Orientation: {self.position}\n", font_format)
         cursor.insertText(f"Positive Crack Probability: {self.crack}\n", font_format)
         cursor.insertText(f"Negative Crack Probability: {self.no_crack}\n", font_format)
         cursor.insertText(f"Location of Crack: {self.loc}\n", font_format)
-        cursor.insertText(f"Crack Type:{self.type}\n", font_format)
+        cursor.insertText(f"Crack Type: {self.type}\n", font_format)
         cursor.insertText(f"Crack Progression: {self.prog}\n", font_format)
         cursor.insertText(f"Date Added: {self.date}\n", font_format)
 
@@ -641,6 +649,7 @@ class result_with_details(object):
         self.verticalLayout_2.addWidget(self.widget_13)
         self.widget_11 = QtWidgets.QWidget(self.widget_6)
         self.widget_11.setObjectName("widget_11")
+
         self.horizontalLayout_13 = QtWidgets.QHBoxLayout(self.widget_11)
         self.horizontalLayout_13.setObjectName("horizontalLayout_13")
         self.widgetPosition = QtWidgets.QLabel("Crack Progression:", self.widget_11)
@@ -812,4 +821,3 @@ class result_with_details(object):
         except Exception as e:
             print(e)
         self.details_dialog.close()
-

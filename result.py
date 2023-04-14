@@ -6,7 +6,7 @@ import cv2
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import Qt, QIODevice, QBuffer, QByteArray, QTimer, QSizeF, QSize, QVariant
 from PyQt5.QtGui import QImage, QPixmap, QTextCursor, QTextFrameFormat, QTextImageFormat, QTextCharFormat, QFont, \
-    QTextDocument, QPainter
+    QTextDocument, QPainter, QTextBlockFormat
 from PyQt5.QtPrintSupport import QPrinter, QPrintPreviewDialog
 from PyQt5.QtWidgets import QVBoxLayout, QWidget, QScrollArea, QPushButton, QLabel, QHBoxLayout, QLayout, QMessageBox, \
     QDialog, QComboBox
@@ -192,6 +192,7 @@ class Result_Dialog(object):
         self.verticalLayout_2.addWidget(self.widget_13)
         self.widget_11 = QtWidgets.QWidget(self.widget_6)
         self.widget_11.setObjectName("widget_11")
+        self.widget_11.hide()
         self.horizontalLayout_13 = QtWidgets.QHBoxLayout(self.widget_11)
         self.horizontalLayout_13.setObjectName("horizontalLayout_13")
         self.widgetPosition = QtWidgets.QLabel(self.widget_11)
@@ -476,6 +477,42 @@ class Result_Dialog(object):
             except Exception as e:
                 print(e)
     def printpreviewDialog(self):
+        self.selected_loc = 'Selected_location_crack.txt'
+        if os.path.isfile(self.selected_loc):
+            with open(self.selected_loc, 'r') as f:
+                self._selected_loc = f.read()
+            if not os.path.exists(self.selected_loc):
+                self._selected_loc = None
+        else:
+            self._selected_loc = None
+
+        self.selected_type = 'Selected_type_crack.txt'
+        if os.path.isfile(self.selected_type):
+            with open(self.selected_type, 'r') as f:
+                self._selected_type = f.read()
+            if not os.path.exists(self.selected_type):
+                self._selected_type = None
+        else:
+            self._selected_type = None
+
+        self.selected_prog = 'Selected_progression_crack.txt'
+        if os.path.isfile(self.selected_prog):
+            with open(self.selected_prog, 'r') as f:
+                self._selected_prog = f.read()
+            if not os.path.exists(self.selected_prog):
+                self._selected_prog = None
+        else:
+            self._selected_prog = None
+
+        self.remarks = 'Remarks_written.txt'
+        if os.path.isfile(self.remarks):
+            with open(self.remarks, 'r') as f:
+                self._remarks = f.read()
+            if not os.path.exists(self.remarks):
+                self._remarks = None
+        else:
+            self._remarks = None
+
         file_path_orient = 'Orientation.txt'
         if os.path.isfile(file_path_orient):
             with open(file_path_orient, 'r') as f:
@@ -485,6 +522,8 @@ class Result_Dialog(object):
                 self.orient = None  # set orient to None
         else:
             self.orient = None  # set orient to None if the file does not exist
+
+
         printer = QPrinter()
         printer.setPageSize(QPrinter.Letter)
         printer.setOrientation(QPrinter.Portrait)
@@ -505,12 +544,26 @@ class Result_Dialog(object):
                 return
 
             # Set a fixed size for the image format
-            max_size = QSize(500, 500)
+            max_size = QSize(300, 300)
 
             # Insert the image into the document
             pixmap = QPixmap.fromImage(image)
 
             if not pixmap.isNull():
+                # Add the title to the document
+                title_format = QTextCharFormat()
+                title_format.setFont(QFont("Arial", 20, QFont.Bold))
+                cursor.insertText("                              Crackterized Result", title_format)
+                cursor.insertBlock()
+
+                # Center the title
+                title_cursor = cursor.block().position()
+                title_block = cursor.document().findBlock(title_cursor)
+                title_block_format = QTextBlockFormat()
+                title_block_format.setAlignment(Qt.AlignCenter)
+                title_cursor = QTextCursor(title_block)
+                title_cursor.setBlockFormat(title_block_format)
+
                 image_format = QTextImageFormat()
                 image_format.setWidth(max_size.width())
                 image_format.setHeight(max_size.height())
@@ -536,15 +589,15 @@ class Result_Dialog(object):
         font_format.setFont(QFont("Arial", 15))
 
         # Add the data to the document
-        cursor.insertText(f"The image classified as: {self.status}\n", font_format)
-        cursor.insertText(f"Length: {self.length} cm\n", font_format)
-        cursor.insertText(f"Width:{self.width} mm\n", font_format)
-        cursor.insertText(f"Orientation: {self.orient}\n", font_format)
-        cursor.insertText(f"Positive Crack Probability: {self.Pos_score}\n", font_format)
-        cursor.insertText(f"Negative Crack Probability: {self.Neg_score}\n", font_format)
-        #cursor.insertText(f"Location of Crack: {self.loc}\n", font_format)
-        #cursor.insertText(f"Crack Type:{self.type}\n", font_format)
-        #cursor.insertText(f"Crack Progression: {self.prog}\n", font_format)
+        cursor.insertText(f"The image characterized as: {self.status}\n\n", font_format)
+        cursor.insertText(f"Length: {self.length}\n\n", font_format)
+        cursor.insertText(f"Width: {self.width}\n\n", font_format)
+        #cursor.insertText(f"Orientation: {self.orient}\n", font_format)
+        cursor.insertText(f"Positive Crack Probability: {self.Pos_score}\n\n", font_format)
+        cursor.insertText(f"Negative Crack Probability: {self.Neg_score}\n\n", font_format)
+        cursor.insertText(f"Location of Crack: {self._selected_loc}\n\n", font_format)
+        cursor.insertText(f"Crack Type: {self._selected_type}\n\n", font_format)
+        cursor.insertText(f"Crack Progression: { self._selected_prog}\n\n", font_format)
         #cursor.insertText(f"Date Added: {self.date}\n", font_format)
 
         painter = QPainter()
@@ -621,7 +674,7 @@ class Result_Dialog(object):
         self.widget_3.setObjectName("widget_3")
         self.horizontalLayout_3 = QtWidgets.QHBoxLayout(self.widget_3)
         self.horizontalLayout_3.setObjectName("horizontalLayout_3")
-        self.createnew = QtWidgets.QPushButton("Create New", self.widget_3)
+        self.createnew = QtWidgets.QPushButton("Create New Project", self.widget_3)
         self.createnew.setMinimumSize(QtCore.QSize(200, 35))
         self.createnew.setMaximumSize(QtCore.QSize(200, 35))
 
@@ -704,10 +757,8 @@ class Result_Dialog(object):
             c.execute(
                 '''CREATE TABLE Projects (id INTEGER PRIMARY KEY, project_name TEXT, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)''')
         # fetch data from the database
-        c.execute("SELECT * FROM Projects")
+        c.execute("SELECT * FROM Projects ORDER BY created_at DESC")
         data = c.fetchall()
-        print(data)
-        # Debugging line
 
         # Create a label above the scroll area
         label = QLabel("Choose an existing project")
@@ -724,6 +775,7 @@ class Result_Dialog(object):
         for item in data:
             project_name = str(item[1])
             project_button = QPushButton(project_name)
+            project_button.clicked.connect(lambda checked, button=project_button: self.selected_project(button))
             project_button.setMinimumSize(0, 35)
             project_button.setMaximumSize(500, 35)
             project_button.clicked.connect(self.existing_folder_dialog.close)
@@ -833,7 +885,7 @@ class Result_Dialog(object):
                            "")
         back.setObjectName("back")
         back.clicked.connect(self.existing_folder_dialog.close)
-        back.clicked.connect(self.Choose_where_to_save)
+        #back.clicked.connect(self.Choose_where_to_save)
         button_layout.addWidget(back)
 
         # Set the main layout for the dialog to the scroll area
@@ -843,6 +895,12 @@ class Result_Dialog(object):
         main_layout.addLayout(button_layout)
         self.existing_folder_dialog.setLayout(main_layout)
         self.existing_folder_dialog.exec()
+
+    def selected_project(self, button):
+        button_name = button.text()
+        with open('selected_project_in_result.txt', 'w') as f:
+            f.write(button_name)
+        print(button_name)
 
     def creating_new_project(self):
         # Create dialog box
@@ -987,7 +1045,7 @@ class Result_Dialog(object):
                 self.conn.commit()
 
             # Check if the project name already exists in the database
-            self.c.execute("SELECT COUNT(*) FROM Projects WHERE project_name = ?", (new_projects,))
+            self.c.execute("SELECT COUNT(*) FROM Projects WHERE project_name = ? ORDER BY created_at DESC", (new_projects,))
             result = self.c.fetchone()
 
             if result[0] == 0:
@@ -1001,7 +1059,9 @@ class Result_Dialog(object):
                 self.creating_new_project()
 
     def select_folder(self):
-        self.project_name = self.existing_folder_dialog.sender().text()
+        with open("selected_project_in_result.txt", 'r') as f:
+            self.project_name = f.read()
+        #self.project_name = self.existing_folder_dialog.sender().text()
         self.select_folder_dialog = QtWidgets.QDialog()
         self.select_folder_dialog.setObjectName("Dialog")
         self.select_folder_dialog.setFixedSize(346, 334)
@@ -1157,6 +1217,44 @@ class Result_Dialog(object):
         self.select_folder_dialog.setLayout(main_layout)
         self.select_folder_dialog.exec()
 
+    def add_new_folder_in_db(self):
+        # Get the text from the QTextEdit widget
+        new_folder = self.ET_newfolder.toPlainText()
+
+        if len(new_folder) == 0:
+            # If new_projects is empty, show an error message
+            self.creating_new_folder()
+        else:
+            BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+            db_path = os.path.join(BASE_DIR, 'Projects.db')
+            # Create a connection to a SQLite database or create it if it doesn't exist
+            self.conn = sqlite3.connect(db_path)
+            self.c = self.conn.cursor()
+
+            # Check if the Projects table already exists in the database
+            self.c.execute("SELECT count(name) FROM sqlite_master WHERE type='table' AND name='Projects'")
+            if self.c.fetchone()[0] == 0:
+                # If the Projects table does not exist, create it
+                self.c.execute(
+                    '''CREATE TABLE Location_Folder (id INTEGER PRIMARY KEY, project_name TEXT, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)''')
+                self.conn.commit()
+
+            # Check if the project name already exists in the database
+            self.c.execute("SELECT COUNT(*) FROM Location_Folder WHERE folder_name = ?", (new_folder,))
+            result = self.c.fetchone()
+
+            if result[0] == 0:
+
+                # If the project name doesn't exist, insert it into the database
+                self.c.execute("INSERT INTO Location_Folder (project_name,folder_name) VALUES (?,?)",
+                               (self.project_name, new_folder,))
+                self.conn.commit()
+                self.show_dialog_success_save()
+                self.select_folder()
+            else:
+                # If the project name already exists, show a dialog message to inform the user
+                self.creating_new_folder()
+
     def save_result_image_to_db(self):
         try:
             orient = 'Orientation.txt'
@@ -1167,42 +1265,6 @@ class Result_Dialog(object):
                     _orient = None
             else:
                 _orient = None
-
-            selected_loc = 'Selected_location_crack.txt'
-            if os.path.isfile(selected_loc):
-                with open(selected_loc, 'r') as f:
-                    _selected_loc = f.read()
-                if not os.path.exists(selected_loc):
-                    _selected_loc = None
-            else:
-                _selected_loc = None
-
-            selected_type = 'Selected_type_crack.txt'
-            if os.path.isfile(selected_type):
-                with open(selected_type, 'r') as f:
-                    _selected_type = f.read()
-                if not os.path.exists(selected_type):
-                    _selected_type = None
-            else:
-                _selected_type = None
-
-            selected_prog = 'Selected_progression_crack.txt'
-            if os.path.isfile(selected_prog):
-                with open(selected_prog, 'r') as f:
-                    _selected_prog = f.read()
-                if not os.path.exists(selected_prog):
-                    _selected_prog = None
-            else:
-                _selected_prog = None
-
-            remarks = 'Remarks_written.txt'
-            if os.path.isfile(remarks):
-                with open(remarks, 'r') as f:
-                    _remarks = f.read()
-                if not os.path.exists(remarks):
-                    _remarks = None
-            else:
-                _remarks = None
 
         except Exception as e:
             print(f"Error at getting files {e}")
@@ -1308,10 +1370,10 @@ class Result_Dialog(object):
                 self.Neg_score,
                 self.Pos_score,
                 self.status,
-                _selected_loc,
-                _selected_type,
-                _selected_prog,
-                _remarks,
+                self._selected_loc,
+                self._selected_type,
+                self._selected_prog,
+                self._remarks,
                 timestamp_str
             ))
             self.myHistory.clear()  # This should work now
@@ -1334,6 +1396,11 @@ class Result_Dialog(object):
                 self.close_segment_dialog.close()
             except Exception as e:
                 print(f"Error at closing close_segment_dialog {e}")
+            selected_project_in_result = "selected_project_in_result.txt"
+            try:
+                os.remove(selected_project_in_result)
+            except FileNotFoundError:
+                print(f"{selected_project_in_result} already removed or does not exist")
             self.background_widget.hide()
             self.Dialog.close()
         except Exception as e:
@@ -1452,42 +1519,7 @@ class Result_Dialog(object):
         horizontalLayout_2.addWidget(widget_1)
         NewFolderDialog.exec()
 
-    def add_new_folder_in_db(self):
-        # Get the text from the QTextEdit widget
-        new_folder = self.ET_newfolder.toPlainText()
 
-        if len(new_folder) == 0:
-            # If new_projects is empty, show an error message
-            self.creating_new_folder()
-        else:
-            BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-            db_path = os.path.join(BASE_DIR, 'Projects.db')
-            # Create a connection to a SQLite database or create it if it doesn't exist
-            self.conn = sqlite3.connect(db_path)
-            self.c = self.conn.cursor()
-
-            # Check if the Projects table already exists in the database
-            self.c.execute("SELECT count(name) FROM sqlite_master WHERE type='table' AND name='Projects'")
-            if self.c.fetchone()[0] == 0:
-                # If the Projects table does not exist, create it
-                self.c.execute(
-                    '''CREATE TABLE Location_Folder (id INTEGER PRIMARY KEY, project_name TEXT, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)''')
-                self.conn.commit()
-
-            # Check if the project name already exists in the database
-            self.c.execute("SELECT COUNT(*) FROM Location_Folder WHERE folder_name = ?", (new_folder,))
-            result = self.c.fetchone()
-
-            if result[0] == 0:
-                # If the project name doesn't exist, insert it into the database
-                self.c.execute("INSERT INTO Location_Folder (project_name,folder_name) VALUES (?,?)",
-                               (self.project_name, new_folder,))
-                self.conn.commit()
-                self.show_dialog_success_save()
-                self.select_folder()
-            else:
-                # If the project name already exists, show a dialog message to inform the user
-                self.creating_new_folder()
 
     def show_dialog_success_save(self):
         # Create dialog box
