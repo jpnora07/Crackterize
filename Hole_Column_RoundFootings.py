@@ -37,6 +37,7 @@ class hole(object):
         self.verticalLayout_3.setObjectName("verticalLayout_3")
         self.label = QtWidgets.QLabel(self.widget_2)
         self.label.setStyleSheet("#label{\n"
+                                 "  background-color: transparent;  \n"
                                  "font: 200 15pt Segoe UI Black;\n"
                                  "alignment: center;\n"
                                  "color: rgba(111, 75, 39, 0.77);\n"
@@ -45,6 +46,7 @@ class hole(object):
         self.verticalLayout_3.addWidget(self.label, 0, QtCore.Qt.AlignHCenter)
         self.label_2 = QtWidgets.QLabel(self.widget_2)
         self.label_2.setStyleSheet("#label_2{\n"
+                                   "  background-color: transparent;  \n"
                                    "font: 200 15pt Segoe UI Black;\n"
                                    "alignment: center;\n"
                                    "color: rgba(111, 75, 39, 0.77);\n"
@@ -58,6 +60,7 @@ class hole(object):
         self.horizontalLayout.setObjectName("horizontalLayout")
         self.label_3 = QtWidgets.QLabel(self.widget_6)
         self.label_3.setStyleSheet("#label_3{\n"
+                                   "  background-color: transparent;  \n"
                                    "font: 200 11pt Arial, Sans Serif;\n"
                                    "alignment: center;\n"
                                    "color: rgba(111, 75, 39, 0.77);\n"
@@ -80,6 +83,7 @@ class hole(object):
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
         self.label_4 = QtWidgets.QLabel(self.widget_3)
         self.label_4.setStyleSheet("#label_4{\n"
+                                   "  background-color: transparent;  \n"
                                    "font: 200 11pt Arial, Sans Serif;\n"
                                    "alignment: center;\n"
                                    "color: rgba(111, 75, 39, 0.77);\n"
@@ -105,6 +109,7 @@ class hole(object):
         self.horizontalLayout_3.setObjectName("horizontalLayout_3")
         self.label_5 = QtWidgets.QLabel(self.widget_7)
         self.label_5.setStyleSheet("#label_5{\n"
+                                   "  background-color: transparent;  \n"
                                    "font: 200 11pt Arial, Sans Serif;\n"
                                    "alignment: center;\n"
                                    "color: rgba(111, 75, 39, 0.77);\n"
@@ -199,6 +204,7 @@ class hole(object):
         self.result.setMinimumSize(QtCore.QSize(0, 0))
         self.result.setMaximumSize(QtCore.QSize(16777215, 16777215))
         self.result.setStyleSheet("#result{\n"
+                                  "  background-color: transparent;  \n"
                                   "font: 200 12pt Segoe UI Black;\n"
                                   "alignment: center;\n"
                                   "}")

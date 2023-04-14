@@ -41,6 +41,7 @@ class curb(object):
         sizePolicy.setHeightForWidth(self.label.sizePolicy().hasHeightForWidth())
         self.label.setSizePolicy(sizePolicy)
         self.label.setStyleSheet("#label{\n"
+                                             "  background-color: transparent;  \n"
                                  "font: 200 15pt Segoe UI Black;\n"
                                  "alignment: center;\n"
                                  "color: rgba(111, 75, 39, 0.77);\n"
@@ -54,6 +55,7 @@ class curb(object):
         self.horizontalLayout.setObjectName("horizontalLayout")
         self.CDepth = QtWidgets.QLabel(self.widget_11)
         self.CDepth.setStyleSheet("#CDepth{\n"
+                                             "  background-color: transparent;  \n"
                                   "font: 200 11pt Arial, Sans Serif;\n"
                                   "alignment: center;\n"
                                   "color: rgba(111, 75, 39, 0.77);\n"
@@ -76,6 +78,7 @@ class curb(object):
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
         self.GWidth = QtWidgets.QLabel(self.widget_7)
         self.GWidth.setStyleSheet("#GWidth{\n"
+                                             "  background-color: transparent;  \n"
                                   "font: 200 11pt Arial, Sans Serif;\n"
                                   "alignment: center;\n"
                                   "color: rgba(111, 75, 39, 0.77);\n"
@@ -92,6 +95,7 @@ class curb(object):
         self.horizontalLayout_3.setObjectName("horizontalLayout_3")
         self.CHeight = QtWidgets.QLabel(self.widget_3)
         self.CHeight.setStyleSheet("#CHeight{\n"
+                                             "  background-color: transparent;  \n"
                                    "font: 200 11pt Arial, Sans Serif;\n"
                                    "alignment: center;\n"
                                    "color: rgba(111, 75, 39, 0.77);\n"
@@ -108,6 +112,7 @@ class curb(object):
         self.horizontalLayout_4.setObjectName("horizontalLayout_4")
         self.FThickness = QtWidgets.QLabel(self.widget_8)
         self.FThickness.setStyleSheet("#FThickness{\n"
+                                             "  background-color: transparent;  \n"
                                       "font: 200 11pt Arial, Sans Serif;\n"
                                       "alignment: center;\n"
                                       "color: rgba(111, 75, 39, 0.77);\n"
@@ -124,6 +129,7 @@ class curb(object):
         self.horizontalLayout_5.setObjectName("horizontalLayout_5")
         self.length = QtWidgets.QLabel(self.widget_4)
         self.length.setStyleSheet("#length{\n"
+                                             "  background-color: transparent;  \n"
                                   "font: 200 11pt Arial, Sans Serif;\n"
                                   "alignment: center;\n"
                                   "color: rgba(111, 75, 39, 0.77);\n"
@@ -140,6 +146,7 @@ class curb(object):
         self.horizontalLayout_6.setObjectName("horizontalLayout_6")
         self.quantity = QtWidgets.QLabel(self.widget_5)
         self.quantity.setStyleSheet("#quantity{\n"
+                                             "  background-color: transparent;  \n"
                                     "font: 200 11pt Arial, Sans Serif;\n"
                                     "alignment: center;\n"
                                     "color: rgba(111, 75, 39, 0.77);\n"
@@ -156,6 +163,7 @@ class curb(object):
         self.horizontalLayout_7.setObjectName("horizontalLayout_7")
         self.unit = QtWidgets.QLabel(self.widget_9)
         self.unit.setStyleSheet("#unit{\n"
+                                             "  background-color: transparent;  \n"
                                 "font: 200 11pt Arial, Sans Serif;\n"
                                 "alignment: center;\n"
                                 "color: rgba(111, 75, 39, 0.77);\n"
@@ -248,6 +256,7 @@ class curb(object):
         self.verticalLayout_3.setObjectName("verticalLayout_3")
         self.result = QtWidgets.QLabel(self.widget_10)
         self.result.setStyleSheet("#result{\n"
+                                             "  background-color: transparent;  \n"
                                   "font: 200 12pt Segoe UI Black;\n"
                                   "alignment: center;\n"
                                   "}")

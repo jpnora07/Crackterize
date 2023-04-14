@@ -241,8 +241,8 @@ class Ui_DialogSegment(object):
         self.label_5 = QtWidgets.QLabel(self.widget_2)
         self.label_5.setMinimumSize(QtCore.QSize(30, 30))
         self.label_5.setMaximumSize(QtCore.QSize(30, 30))
-        self.label_5.setStyleSheet("")
-        self.label_5.setText("")
+        self.label_5.setStyleSheet(
+            "  background-color: transparent; ")
         self.label_5.setPixmap(QtGui.QPixmap("images/slider_1.png"))
         self.label_5.setScaledContents(True)
         self.label_5.setAlignment(QtCore.Qt.AlignBottom | QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft)
@@ -268,6 +268,7 @@ class Ui_DialogSegment(object):
         self.horizontalLayout_6.setObjectName("horizontalLayout_6")
         self.label = QtWidgets.QLabel(self.widget_7)
         self.label.setStyleSheet("#label{\n"
+                                 "  background-color: transparent;  \n"
                                  "    font: 200 17pt \"Segoe UI Black\";\n"
                                  "    color: rgba(111, 75, 39, 0.77);}")
         self.label.setAlignment(QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
@@ -317,6 +318,8 @@ class Ui_DialogSegment(object):
         self.imageLabel.setCursor(QtGui.QCursor(QtCore.Qt.CrossCursor))
         self.imageLabel.setAlignment(QtCore.Qt.AlignCenter)
         self.imageLabel.setObjectName("imageLabel")
+        self.imageLabel.setStyleSheet(
+            "  background-color: transparent; ")
         self.imageLabel.setMinimumSize(QtCore.QSize(400, 400))
         self.imageLabel.setMaximumSize(QtCore.QSize(16777215, 16777215))
 
@@ -346,6 +349,8 @@ class Ui_DialogSegment(object):
         self.thresholderNum = QtWidgets.QLabel("0", self.widget_9)
         self.thresholderNum.setAlignment(QtCore.Qt.AlignCenter)
         self.thresholderNum.setFixedSize(40, 30)
+        self.thresholderNum.setStyleSheet(
+            "  background-color: transparent; ")
         self.thresholderNum.setObjectName("thresholderNum")
         self.horizontalLayout_3.addWidget(self.thresholderNum)
         self.verticalLayout_6.addWidget(self.widget_9)
@@ -361,6 +366,7 @@ class Ui_DialogSegment(object):
         self.label_2 = QtWidgets.QLabel(self.widget_3)
         self.label_2.setMaximumSize(QtCore.QSize(16777215, 50))
         self.label_2.setStyleSheet("#label_2{\n"
+                                   "  background-color: transparent;  \n"
                                    "    \n"
                                    "color: #2E74A9;\n"
                                    "font: bold;\n"
@@ -598,9 +604,12 @@ class Ui_DialogSegment(object):
         self.icon.setAlignment(QtCore.Qt.AlignCenter)
         self.icon.setWordWrap(True)
         self.icon.setObjectName("icon")
+        self.icon.setStyleSheet(
+            "  background-color: transparent; ")
         self.horizontalLayout_2.addWidget(self.icon)
         self.message = QtWidgets.QLabel(self.widget_2)
         self.message.setStyleSheet("#message{\n"
+                                   "  background-color: transparent;  \n"
                                    "font-family: \"Inter\";\n"
                                    "font-size: 13pt; \n"
                                    "color: #000000;\n"
@@ -681,7 +690,6 @@ class Ui_DialogSegment(object):
         self.horizontalLayout.addWidget(self.widget)
         closeDialog.exec()
 
-
     def Delete_and_close(self):
         Negative_score = "Negative_score.txt"
         Input_Distance = "Input_Distance.txt"
@@ -739,6 +747,7 @@ class Ui_DialogSegment(object):
             print(f"{self.Predicted_width} already removed or does not exist")
         self.closeDialog.close()
         self.Dialog.close()
+
     def Proceed_to_Result(self):
 
         Predicted_width = "Predicted_width.txt"
@@ -906,10 +915,11 @@ class Ui_DialogSegment(object):
         self.verticalLayout = QtWidgets.QVBoxLayout(self.widget)
         self.verticalLayout.setObjectName("verticalLayout")
         self.label_process = QtWidgets.QLabel("Removing Noise...", self.widget)
-        self.label_process.setStyleSheet("background-color:#ffffff;\n"
-                                         "font-size:20px;\n"
-                                         "color: #6c757d;\n"
-                                         "font-style: Inter;")
+        self.label_process.setStyleSheet(
+            "  background-color: transparent;  \n"
+            "font-size:20px;\n"
+            "color: #6c757d;\n"
+            "font-style: Inter;")
         self.label_process.setScaledContents(True)
         self.label_process.setAlignment(QtCore.Qt.AlignBottom | QtCore.Qt.AlignHCenter)
         self.label_process.setWordWrap(True)
@@ -926,6 +936,8 @@ class Ui_DialogSegment(object):
         self.label.setMovie(self.movie)
         self.movie.start()
         self.label.setScaledContents(True)
+        self.label.setStyleSheet(
+            "  background-color: transparent;")
         self.label.setAlignment(QtCore.Qt.AlignCenter)
         self.label.setObjectName("label")
         self.horizontalLayout_2.addWidget(self.label)
@@ -957,10 +969,11 @@ class Ui_DialogSegment(object):
         self.verticalLayout = QtWidgets.QVBoxLayout(self.widget)
         self.verticalLayout.setObjectName("verticalLayout")
         self.label_process = QtWidgets.QLabel("Calculating the Width and Length...", self.widget)
-        self.label_process.setStyleSheet("background-color:#ffffff;\n"
-                                         "font-size:17px;\n"
-                                         "color: #6c757d;\n"
-                                         "font-style: Inter;")
+        self.label_process.setStyleSheet(
+            "  background-color: transparent;  \n"
+            "font-size:17px;\n"
+            "color: #6c757d;\n"
+            "font-style: Inter;")
         self.label_process.setScaledContents(True)
         self.label_process.setAlignment(QtCore.Qt.AlignBottom | QtCore.Qt.AlignHCenter)
         self.label_process.setWordWrap(True)
@@ -975,6 +988,8 @@ class Ui_DialogSegment(object):
         self.label.setMaximumSize(QtCore.QSize(100, 100))
         self.movie = QMovie("images/spin_loading.gif")
         self.label.setMovie(self.movie)
+        self.label.setStyleSheet(
+            "  background-color: transparent; ")
         self.movie.start()
         self.label.setScaledContents(True)
         self.label.setAlignment(QtCore.Qt.AlignCenter)
@@ -1035,6 +1050,8 @@ class Ui_DialogSegment(object):
         self.icon.setMaximumSize(QtCore.QSize(50, 50))
         self.icon.setPixmap(QtGui.QPixmap(icon_image))
         self.icon.setScaledContents(True)
+        self.icon.setStyleSheet(
+            "  background-color: transparent; ")
         self.icon.setAlignment(QtCore.Qt.AlignCenter)
         self.icon.setWordWrap(True)
         self.icon.setObjectName("icon")
@@ -1042,6 +1059,7 @@ class Ui_DialogSegment(object):
         self.message = QtWidgets.QLabel(self.widget_2)
         self.message.setText(message)
         self.message.setStyleSheet("#message{\n"
+                                   "  background-color: transparent;  \n"
                                    "font-family: \"Inter\";\n"
                                    "font-size: 13pt; \n"
                                    "color: #000000;\n"

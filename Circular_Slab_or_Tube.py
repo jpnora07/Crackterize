@@ -30,16 +30,18 @@ class circular(object):
         self.widget_1 = QtWidgets.QWidget(self.bg)
         self.widget_1.setObjectName("widget_1")
         self.widget_1.setStyleSheet("#bg{\n"
-                              "background-image: url(images/bg.jpg);\n"
-                              "border-top-left-radius: 10px;\n"
-                              "border-top-right-radius: 10px;\n"
-                              "border-bottom-left-radius: 10px;\n"
-                              "border-bottom-right-radius: 10px;\n"
-                              "}")
+                                    "background-image: url(images/bg.jpg);\n"
+                                    "border-top-left-radius: 10px;\n"
+                                    "border-top-right-radius: 10px;\n"
+                                    "border-bottom-left-radius: 10px;\n"
+                                    "border-bottom-right-radius: 10px;\n"
+                                    "}")
         self.verticalLayout_3 = QtWidgets.QVBoxLayout(self.widget_1)
         self.verticalLayout_3.setObjectName("verticalLayout_3")
         self.label = QtWidgets.QLabel(self.widget_1)
         self.label.setStyleSheet("#label{\n"
+
+                                 "  background-color: transparent;  \n"
                                  "font: 200 15pt Segoe UI Black;\n"
                                  "alignment: center;\n"
                                  "color: rgba(111, 75, 39, 0.77);\n"
@@ -54,6 +56,7 @@ class circular(object):
         self.verticalLayout_4.setObjectName("verticalLayout_4")
         self.label_2 = QtWidgets.QLabel(self.widget_7)
         self.label_2.setStyleSheet("#label_2{\n"
+                                   "  background-color: transparent;  \n"
                                    "font: 200 11pt Arial, Sans Serif;\n"
                                    "alignment: center;\n"
                                    "color: rgba(111, 75, 39, 0.77);\n"
@@ -70,6 +73,7 @@ class circular(object):
         self.verticalLayout_5.setObjectName("verticalLayout_5")
         self.label_3 = QtWidgets.QLabel(self.widget_2)
         self.label_3.setStyleSheet("#label_3{\n"
+                                   "  background-color: transparent;  \n"
                                    "font: 200 11pt Arial, Sans Serif;\n"
                                    "alignment: center;\n"
                                    "color: rgba(111, 75, 39, 0.77);\n"
@@ -86,6 +90,7 @@ class circular(object):
         self.verticalLayout_6.setObjectName("verticalLayout_6")
         self.label_4 = QtWidgets.QLabel(self.widget_8)
         self.label_4.setStyleSheet("#label_4{\n"
+                                   "  background-color: transparent;  \n"
                                    "font: 200 11pt Arial, Sans Serif;\n"
                                    "alignment: center;\n"
                                    "color: rgba(111, 75, 39, 0.77);\n"
@@ -102,6 +107,7 @@ class circular(object):
         self.verticalLayout_7.setObjectName("verticalLayout_7")
         self.label_5 = QtWidgets.QLabel(self.widget_5)
         self.label_5.setStyleSheet("#label_5{\n"
+                                   "  background-color: transparent;  \n"
                                    "font: 200 11pt Arial, Sans Serif;\n"
                                    "alignment: center;\n"
                                    "color: rgba(111, 75, 39, 0.77);\n"
@@ -118,6 +124,7 @@ class circular(object):
         self.verticalLayout_8.setObjectName("verticalLayout_8")
         self.label_6 = QtWidgets.QLabel(self.widget_3)
         self.label_6.setStyleSheet("#label_6{\n"
+                                   "  background-color: transparent;  \n"
                                    "font: 200 11pt Arial, Sans Serif;\n"
                                    "alignment: center;\n"
                                    "color: rgba(111, 75, 39, 0.77);\n"
@@ -198,6 +205,7 @@ class circular(object):
         self.verticalLayout_10.setObjectName("verticalLayout_10")
         self.label_8 = QtWidgets.QLabel(self.widget_6)
         self.label_8.setStyleSheet("#label_8{\n"
+                                   "  background-color: transparent;  \n"
                                    "font: 200 11pt Arial, Sans Serif, Bold;\n"
                                    "alignment: center;\n"
                                    "color: rgba(111, 75, 39, 0.77);\n"
@@ -206,6 +214,8 @@ class circular(object):
         self.verticalLayout_10.addWidget(self.label_8)
         self.result = QtWidgets.QLabel(self.widget_6)
         self.result.setText("")
+        self.result.setStyleSheet(
+            "  background-color: transparent; ")
         self.result.setObjectName("result")
         self.verticalLayout_10.addWidget(self.result)
         self.verticalLayout_2.addWidget(self.widget_6)
@@ -234,7 +244,6 @@ class circular(object):
             length = float(self.length_lineEdit.text())
             quantity = float(self.quantity_lineEdit.text())
             units = self.unit_comboBox.currentText()
-
 
             if units == "inches":
                 factor = 1.0
@@ -273,6 +282,7 @@ class circular(object):
 
         except Exception as e:
             print(e)
+
 
 if __name__ == "__main__":
     import sys

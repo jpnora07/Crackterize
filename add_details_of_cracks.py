@@ -63,6 +63,7 @@ class add_details_dialog(object):
         self.loccrack.setMinimumSize(QtCore.QSize(200, 30))
         self.loccrack.setMaximumSize(QtCore.QSize(200, 30))
         self.loccrack.setStyleSheet("#loccrack {\n"
+                                             "  background-color: transparent;  \n"
                                     "font-family: \'Franklin Gothic Medium\';\n"
                                     "font-size: 17px;\n"
                                     "color: \n"
@@ -134,6 +135,8 @@ class add_details_dialog(object):
         self.cracktype.setMinimumSize(QtCore.QSize(200, 30))
         self.cracktype.setMaximumSize(QtCore.QSize(200, 30))
         self.cracktype.setStyleSheet("#cracktype {\n"
+                                     
+                                             "  background-color: transparent;  \n"
                                      "font-family: \'Franklin Gothic Medium\';\n"
                                      "font-size: 17px;\n"
                                      "color: \n"
@@ -204,6 +207,7 @@ class add_details_dialog(object):
         self.crackprogression.setMinimumSize(QtCore.QSize(200, 30))
         self.crackprogression.setMaximumSize(QtCore.QSize(200, 30))
         self.crackprogression.setStyleSheet("#crackprogression {\n"
+                                             "  background-color: transparent;  \n"
                                             "font-family: \'Franklin Gothic Medium\';\n"
                                             "font-size: 17px;\n"
                                             "color: \n"
@@ -273,6 +277,8 @@ class add_details_dialog(object):
         self.verticalLayout_3.setObjectName("verticalLayout_3")
         self.remarks = QtWidgets.QLabel(self.widget_4)
         self.remarks.setStyleSheet("#remarks {\n"
+                                   
+                                             "  background-color: transparent;  \n"
                                    "    font: 700 9pt \"Segoe UI\";\n"
                                    "    font: 700 9pt \"Segoe UI\";\n"
                                    "    font: 600 9pt \"Segoe UI\";\n"

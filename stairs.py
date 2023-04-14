@@ -36,6 +36,7 @@ class stairs(object):
         sizePolicy.setHeightForWidth(self.label.sizePolicy().hasHeightForWidth())
         self.label.setSizePolicy(sizePolicy)
         self.label.setStyleSheet("#label{\n"
+                                 "  background-color: transparent;  \n"
                                  "font: 200 15pt Segoe UI Black;\n"
                                  "alignment: center;\n"
                                  "color: rgba(111, 75, 39, 0.77);\n"
@@ -49,6 +50,7 @@ class stairs(object):
         self.horizontalLayout.setObjectName("horizontalLayout")
         self.label_4 = QtWidgets.QLabel(self.widget_11)
         self.label_4.setStyleSheet("#label_4{\n"
+                                   "  background-color: transparent;  \n"
                                    "font: 200 11pt Arial, Sans Serif;\n"
                                    "alignment: center;\n"
                                    "color: rgba(111, 75, 39, 0.77);\n"
@@ -71,6 +73,7 @@ class stairs(object):
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
         self.label_5 = QtWidgets.QLabel(self.widget_7)
         self.label_5.setStyleSheet("#label_5{\n"
+                                   "  background-color: transparent;  \n"
                                    "font: 200 11pt Arial, Sans Serif;\n"
                                    "alignment: center;\n"
                                    "color: rgba(111, 75, 39, 0.77);\n"
@@ -87,6 +90,7 @@ class stairs(object):
         self.horizontalLayout_3.setObjectName("horizontalLayout_3")
         self.label_8 = QtWidgets.QLabel(self.widget_3)
         self.label_8.setStyleSheet("#label_8{\n"
+                                   "  background-color: transparent;  \n"
                                    "font: 200 11pt Arial, Sans Serif;\n"
                                    "alignment: center;\n"
                                    "color: rgba(111, 75, 39, 0.77);\n"
@@ -103,6 +107,7 @@ class stairs(object):
         self.horizontalLayout_4.setObjectName("horizontalLayout_4")
         self.label_6 = QtWidgets.QLabel(self.widget_8)
         self.label_6.setStyleSheet("#label_6{\n"
+                                   "  background-color: transparent;  \n"
                                    "font: 200 11pt Arial, Sans Serif;\n"
                                    "alignment: center;\n"
                                    "color: rgba(111, 75, 39, 0.77);\n"
@@ -124,6 +129,7 @@ class stairs(object):
         self.horizontalLayout_5.setObjectName("horizontalLayout_5")
         self.label_7 = QtWidgets.QLabel(self.widget_4)
         self.label_7.setStyleSheet("#label_7{\n"
+                                   "  background-color: transparent;  \n"
                                    "font: 200 11pt Arial, Sans Serif;\n"
                                    "alignment: center;\n"
                                    "color: rgba(111, 75, 39, 0.77);\n"
@@ -145,6 +151,7 @@ class stairs(object):
         self.horizontalLayout_6.setObjectName("horizontalLayout_6")
         self.label_2 = QtWidgets.QLabel(self.widget_5)
         self.label_2.setStyleSheet("#label_2{\n"
+                                   "  background-color: transparent;  \n"
                                    "font: 200 11pt Arial, Sans Serif;\n"
                                    "alignment: center;\n"
                                    "color: rgba(111, 75, 39, 0.77);\n"
@@ -238,6 +245,7 @@ class stairs(object):
         self.horizontalLayout_8.setObjectName("horizontalLayout_8")
         self.result = QtWidgets.QLabel(self.widget_6)
         self.result.setStyleSheet("#result{\n"
+                                  "  background-color: transparent;  \n"
                                   "font: 200 10pt Segoe UI Black;\n"
                                   "alignment: center;\n"
                                   "}")

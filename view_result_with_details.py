@@ -83,7 +83,7 @@ class result_with_details(object):
         self.horizontalLayout_9 = QtWidgets.QHBoxLayout(self.widget_12)
         self.horizontalLayout_9.setObjectName("horizontalLayout_9")
         self.label_image = QtWidgets.QLabel(self.widget_12)
-        self.label_image.setStyleSheet("border: 1px solid grey;")
+        self.label_image.setStyleSheet("border: 1px solid grey;background-color: transparent;")
         self.label_image.setObjectName("label")
         self.horizontalLayout_9.addWidget(self.label_image)
         self.horizontalLayout_2.addWidget(self.widget_12)
@@ -96,7 +96,8 @@ class result_with_details(object):
         self.verticalLayout_2.setObjectName("verticalLayout_2")
         self.concretecracked_2 = QtWidgets.QLabel(self.widget_6)
         self.concretecracked_2.setStyleSheet("#concretecracked_2{\n"
-                                             "    \n"
+                                             "  background-color: transparent;  \n"
+
                                              "color: #2E74A9;\n"
                                              "font: bold;\n"
                                              "border: 2px solid white;\n"
@@ -113,6 +114,7 @@ class result_with_details(object):
         self.horizontalLayout_10.setObjectName("horizontalLayout_10")
         self.label_2 = QtWidgets.QLabel(self.widget_10)
         self.label_2.setStyleSheet("#label_2{\n"
+                                   "  background-color: transparent;  \n"
                                    "color: rgba(111, 75, 39, 0.77);\n"
                                    "font-size: 13px;\n"
                                    "font-weight: bold;\n"
@@ -121,6 +123,7 @@ class result_with_details(object):
         self.horizontalLayout_10.addWidget(self.label_2)
         self.lengthlbl = QtWidgets.QLabel(self.widget_10)
         self.lengthlbl.setStyleSheet("#lengthlbl{\n"
+                                     "  background-color: transparent;  \n"
                                      "    color:  #555555;\n"
                                      "font: bold;\n"
                                      "    font-size: 15px}")
@@ -133,6 +136,7 @@ class result_with_details(object):
         self.horizontalLayout_11.setObjectName("horizontalLayout_11")
         self.label_3 = QtWidgets.QLabel(self.widget_13)
         self.label_3.setStyleSheet("#label_3{\n"
+                                   "  background-color: transparent;  \n"
                                    "color: rgba(111, 75, 39, 0.77);\n"
                                    "font-size: 13px;\n"
                                    "font-weight: bold;\n"
@@ -141,6 +145,7 @@ class result_with_details(object):
         self.horizontalLayout_11.addWidget(self.label_3)
         self.widthlbl = QtWidgets.QLabel(self.widget_13)
         self.widthlbl.setStyleSheet("#widthlbl{\n"
+                                    "  background-color: transparent;  \n"
                                     "    color:  #555555;\n"
                                     "font: bold;\n"
                                     "    font-size: 15px;\n"
@@ -155,6 +160,7 @@ class result_with_details(object):
         self.horizontalLayout_13.setObjectName("horizontalLayout_13")
         self.widgetPosition = QtWidgets.QLabel(self.widget_11)
         self.widgetPosition.setStyleSheet("#widgetPosition{\n"
+                                          "  background-color: transparent;  \n"
                                           "color: rgba(111, 75, 39, 0.77);\n"
                                           "font-size: 13px;\n"
                                           "font-weight: bold;\n"
@@ -163,6 +169,7 @@ class result_with_details(object):
         self.horizontalLayout_13.addWidget(self.widgetPosition)
         self.position_lbl = QtWidgets.QLabel(self.widget_11)
         self.position_lbl.setStyleSheet("#position_lbl{\n"
+                                        "  background-color: transparent;  \n"
                                         "    color:  #555555;\n"
                                         "font: bold;\n"
                                         "    font-size: 15px;\n"
@@ -178,6 +185,8 @@ class result_with_details(object):
         self.widgetPos_2.setMinimumSize(QtCore.QSize(180, 0))
         self.widgetPos_2.setMaximumSize(QtCore.QSize(16777215, 16777215))
         self.widgetPos_2.setStyleSheet("#widgetPos_2{\n"
+
+                                       "  background-color: transparent;  \n"
                                        "color: rgba(111, 75, 39, 0.77);\n"
                                        "font-size: 13px;\n"
                                        "font-weight: bold;\n"
@@ -195,6 +204,8 @@ class result_with_details(object):
         self.widgetNeg.setMinimumSize(QtCore.QSize(180, 0))
         self.widgetNeg.setMaximumSize(QtCore.QSize(16777215, 16777215))
         self.widgetNeg.setStyleSheet("#widgetNeg{\n"
+
+                                     "  background-color: transparent;  \n"
                                      "color: rgba(111, 75, 39, 0.77);\n"
                                      "font-size: 13px;\n"
                                      "font-weight: bold;\n"
@@ -213,6 +224,8 @@ class result_with_details(object):
         self.i.setMinimumSize(QtCore.QSize(30, 30))
         self.i.setMaximumSize(QtCore.QSize(30, 30))
         self.i.setStyleSheet("#i{\n"
+
+                             "  background-color: transparent;  \n"
                              "    border-image: url(images/i.png)  ;}")
         self.i.setText("")
         self.i.setAlignment(QtCore.Qt.AlignCenter)
@@ -221,6 +234,7 @@ class result_with_details(object):
         self.horizontalLayout_12.addWidget(self.i)
         self.concretecracked = QtWidgets.QLabel(self.widget_14)
         self.concretecracked.setStyleSheet("#concretecracked{\n"
+                                           "  background-color: transparent;  \n"
                                            "color: #2E74A9;\n"
                                            "font: bold;\n"
                                            "font-size: 15px;\n"
@@ -588,6 +602,7 @@ class result_with_details(object):
         self.concretecracked_2 = QtWidgets.QLabel("Details:", self.widget_6)
         self.concretecracked_2.setStyleSheet("#concretecracked_2{\n"
                                              "    \n"
+                                             "  background-color: transparent;  \n"
                                              "color: #2E74A9;\n"
                                              "font: bold;\n"
                                              "border: 2px solid white;\n"
@@ -604,6 +619,8 @@ class result_with_details(object):
         self.horizontalLayout_10.setObjectName("horizontalLayout_10")
         self.label_2 = QtWidgets.QLabel("Location of Crack:", self.widget_10)
         self.label_2.setStyleSheet("#label_2{\n"
+                                   "  background-color: transparent;  \n"
+
                                    "color: rgba(111, 75, 39, 0.77);\n"
                                    "font-size: 13px;\n"
                                    "font-weight: bold;\n"
@@ -614,6 +631,8 @@ class result_with_details(object):
         self.location_label.setMinimumSize(QtCore.QSize(134, 0))
         self.location_label.setMaximumSize(QtCore.QSize(134, 16777215))
         self.location_label.setStyleSheet("#location_label{\n"
+                                          "  background-color: transparent;  \n"
+
                                           "    color:  #555555;\n"
                                           "font: bold;\n"
                                           "    font-size: 15px}")
@@ -628,6 +647,7 @@ class result_with_details(object):
         self.horizontalLayout_11.setObjectName("horizontalLayout_11")
         self.label_3 = QtWidgets.QLabel("Crack Type:", self.widget_13)
         self.label_3.setStyleSheet("#label_3{\n"
+                                   "  background-color: transparent;  \n"
                                    "color: rgba(111, 75, 39, 0.77);\n"
                                    "font-size: 13px;\n"
                                    "font-weight: bold;\n"
@@ -638,6 +658,7 @@ class result_with_details(object):
         self.type_label.setMinimumSize(QtCore.QSize(134, 0))
         self.type_label.setMaximumSize(QtCore.QSize(134, 16777215))
         self.type_label.setStyleSheet("#type_label{\n"
+                                      "  background-color: transparent;  \n"
                                       "    color:  #555555;\n"
                                       "font: bold;\n"
                                       "    font-size: 15px;\n"
@@ -654,6 +675,7 @@ class result_with_details(object):
         self.horizontalLayout_13.setObjectName("horizontalLayout_13")
         self.widgetPosition = QtWidgets.QLabel("Crack Progression:", self.widget_11)
         self.widgetPosition.setStyleSheet("#widgetPosition{\n"
+                                          "  background-color: transparent;  \n"
                                           "color: rgba(111, 75, 39, 0.77);\n"
                                           "font-size: 13px;\n"
                                           "font-weight: bold;\n"
@@ -664,6 +686,7 @@ class result_with_details(object):
         self.prog_label.setMinimumSize(QtCore.QSize(134, 0))
         self.prog_label.setMaximumSize(QtCore.QSize(134, 16777215))
         self.prog_label.setStyleSheet("#prog_label{\n"
+                                      "  background-color: transparent;  \n"
                                       "    color:  #555555;\n"
                                       "font: bold;\n"
                                       "    font-size: 15px;\n"
@@ -679,6 +702,7 @@ class result_with_details(object):
         self.horizontalLayout_12.setObjectName("horizontalLayout_12")
         self.label_4 = QtWidgets.QLabel("Date Added:", self.widget_12)
         self.label_4.setStyleSheet("#label_4{\n"
+                                   "  background-color: transparent;  \n"
                                    "color: rgba(111, 75, 39, 0.77);\n"
                                    "font-size: 13px;\n"
                                    "font-weight: bold;\n"
@@ -689,6 +713,8 @@ class result_with_details(object):
         self.date_added.setMinimumSize(QtCore.QSize(134, 0))
         self.date_added.setMaximumSize(QtCore.QSize(134, 16777215))
         self.date_added.setStyleSheet("#date_added{\n"
+                                      "  background-color: transparent;  \n"
+
                                       "    color:  #555555;\n"
                                       "font: bold;\n"
                                       "    font-size: 15px}")
@@ -716,6 +742,7 @@ class result_with_details(object):
         self.widgetPos_2.setMinimumSize(QtCore.QSize(180, 0))
         self.widgetPos_2.setMaximumSize(QtCore.QSize(180, 16777215))
         self.widgetPos_2.setStyleSheet("#widgetPos_2{\n"
+                                       "  background-color: transparent;  \n"
                                        "color: rgba(111, 75, 39, 0.77);\n"
                                        "font-size: 13px;\n"
                                        "font-weight: bold;\n"
@@ -747,6 +774,8 @@ class result_with_details(object):
         self.remarks.setMinimumSize(QtCore.QSize(0, 50))
         self.remarks.setMaximumSize(QtCore.QSize(16777215, 50))
         self.remarks.setStyleSheet("#remarks{\n"
+
+                                   "  background-color: transparent;  \n"
                                    "    color:  #555555;\n"
                                    "font: bold;\n"
                                    "    font-size: 15px;\n"

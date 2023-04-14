@@ -62,6 +62,8 @@ class cal_dialog(object):
         self.verticalLayout_10.setObjectName("verticalLayout_10")
         self.label = QtWidgets.QLabel(self.widget_2)
         self.label.setStyleSheet("#label{\n"
+                                 
+                                             "  background-color: transparent;  \n"
                                  "    font: 900 34pt \"Segoe UI Black\";\n"
                                  "    alignment: center;\n"
                                  "    color: rgba(111, 75, 39, 0.77);\n"

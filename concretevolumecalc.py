@@ -38,6 +38,7 @@ class concrete_cal(object):
         self.verticalLayout_3.setObjectName("verticalLayout_3")
         self.label = QtWidgets.QLabel(self.widget_2)
         self.label.setStyleSheet("#label{\n"
+                                 "  background-color: transparent;  \n"
                                  "font: 200 15pt Segoe UI Black;\n"
                                  "alignment: center;\n"
                                  "color: rgba(111, 75, 39, 0.77);\n"
@@ -51,6 +52,7 @@ class concrete_cal(object):
         self.verticalLayout_4.setObjectName("verticalLayout_4")
         self.label_2 = QtWidgets.QLabel(self.widget_4)
         self.label_2.setStyleSheet("#label_2{\n"
+                                   "  background-color: transparent;  \n"
                                    "font: 200 11pt Arial, Sans Serif;\n"
                                    "alignment: center;\n"
                                    "color: rgba(111, 75, 39, 0.77);\n"
@@ -67,6 +69,7 @@ class concrete_cal(object):
         self.verticalLayout_5.setObjectName("verticalLayout_5")
         self.label_3 = QtWidgets.QLabel(self.widget_3)
         self.label_3.setStyleSheet("#label_3{\n"
+                                   "  background-color: transparent;  \n"
                                    "font: 200 11pt Arial;\n"
                                    "alignment: center;\n"
                                    "color: rgba(111, 75, 39, 0.77);\n"
@@ -88,6 +91,7 @@ class concrete_cal(object):
         self.verticalLayout_6.setObjectName("verticalLayout_6")
         self.label_4 = QtWidgets.QLabel(self.widget_6)
         self.label_4.setStyleSheet("#label_4{\n"
+                                   "  background-color: transparent;  \n"
                                    "font: 200 11pt Arial;\n"
                                    "alignment: center;\n"
                                    "color: rgba(111, 75, 39, 0.77);\n"
@@ -104,6 +108,7 @@ class concrete_cal(object):
         self.verticalLayout_10.setObjectName("verticalLayout_10")
         self.label_5 = QtWidgets.QLabel(self.widget_9)
         self.label_5.setStyleSheet("#label_5{\n"
+                                   "  background-color: transparent;  \n"
                                    "font: 200 11pt Arial;\n"
                                    "alignment: center;\n"
                                    "color: rgba(111, 75, 39, 0.77);\n"
@@ -207,6 +212,7 @@ class concrete_cal(object):
         self.verticalLayout_9.setObjectName("verticalLayout_9")
         self.result = QtWidgets.QLabel(self.widget_8)
         self.result.setStyleSheet("#result{\n"
+                                  "  background-color: transparent;  \n"
                                   "font: 200 12pt Segoe UI Black;\n"
                                   "alignment: center;\n"
                                   "}")

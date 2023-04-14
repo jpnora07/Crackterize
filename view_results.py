@@ -584,6 +584,7 @@ class view_result_dialog(object):
                 btn_label = QtWidgets.QLabel(button_name, widget)
                 btn_label.setWordWrap(True)
                 btn_label.setStyleSheet("\n"
+                                             "  background-color: transparent;  \n"
                                         "                font: 700 9pt \\\"Franklin Gothic Medium\\\";\n"
                                         "                font-family: \\\'Franklin Gothic Medium\\\';\n"
                                         "               font-style: normal;\n"
@@ -676,7 +677,7 @@ class view_result_dialog(object):
         font.setKerning(False)
         self.label.setFont(font)
         self.label.setStyleSheet(
-            "QLabel { font:\"Segoe UI\"; color: #4A3B28; font-family: Arial; Text-align: Center; font-size: 15pt;}")
+            "QLabel { font:\"Segoe UI\"; color: #4A3B28; font-family: Arial; Text-align: Center; font-size: 15pt;background-color: transparent;  \n}")
         self.label.setAlignment(QtCore.Qt.AlignCenter)
         self.label.setWordWrap(True)
         self.label.setObjectName("label")
@@ -743,7 +744,8 @@ class view_result_dialog(object):
         self.verticalLayout = QtWidgets.QVBoxLayout(self.widget)
         self.verticalLayout.setObjectName("verticalLayout")
         self.label_process = QtWidgets.QLabel("Uploading...", self.widget)
-        self.label_process.setStyleSheet("background-color:#ffffff;\n"
+        self.label_process.setStyleSheet(
+                                             "  background-color: transparent;  \n"
                                          "font-size:30px;\n"
                                          "color: #6c757d;\n"
                                          "font-style: Inter;")
@@ -765,6 +767,8 @@ class view_result_dialog(object):
         self.label.setScaledContents(True)
         self.label.setAlignment(QtCore.Qt.AlignCenter)
         self.label.setObjectName("label")
+        self.label.setStyleSheet(
+                                             "  background-color: transparent;")
         self.horizontalLayout_2.addWidget(self.label)
         self.verticalLayout.addWidget(self.widget_2)
         self.horizontalLayout.addWidget(self.widget)

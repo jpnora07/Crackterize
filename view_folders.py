@@ -112,23 +112,23 @@ class view_folder_dialog(object):
         button.clicked.connect(self.creating_new_Location)
         button.setStyleSheet(
 
-                "#pushButton{\n"
-                "border : none;\n"
-                "background-color: white;\n"
-                "                font: 700 9pt \\\"Franklin Gothic Medium\\\";\n"
-                "                font-family: \\\'Franklin Gothic Medium\\\';\n"
-                "               font-style: normal;\n"
-                "                font-weight: 200;\n"
-                "                font-size: 13px;\n"
-                "                line-height: 42px;\n"
-                "                color: #664323;\n"
-                "}\n"
-                "#pushButton:hover{\n"
-                "color: #664323;\n"
-                "border : none;\n"
-                "background-color: white;\n"
-                "}\n"
-                "")
+            "#pushButton{\n"
+            "border : none;\n"
+            "background-color: white;\n"
+            "                font: 700 9pt \\\"Franklin Gothic Medium\\\";\n"
+            "                font-family: \\\'Franklin Gothic Medium\\\';\n"
+            "               font-style: normal;\n"
+            "                font-weight: 200;\n"
+            "                font-size: 13px;\n"
+            "                line-height: 42px;\n"
+            "                color: #664323;\n"
+            "}\n"
+            "#pushButton:hover{\n"
+            "color: #664323;\n"
+            "border : none;\n"
+            "background-color: white;\n"
+            "}\n"
+            "")
         verticalLayout.addWidget(button)
 
         self.buttons.append(button)
@@ -235,7 +235,6 @@ class view_folder_dialog(object):
     def closeEvent(self):
         self.view_folder_dialog_orig.close()
         self.background_widget.hide()
-
 
     def creating_new_Location(self):
         # Create dialog box
@@ -460,7 +459,7 @@ class view_folder_dialog(object):
             result_dialog = QtWidgets.QDialog(self.view_folder_dialog_orig)
             x = (self.view_folder_dialog_orig.width() - self.view_folder_dialog_orig.width()) // 2
             y = (self.view_folder_dialog_orig.height() - self.view_folder_dialog_orig.height()) // 2
-            ui = view_result_dialog(self.background_widget,self.view_folder_dialog_orig)
+            ui = view_result_dialog(self.background_widget, self.view_folder_dialog_orig)
 
             ui.setupUi(result_dialog)
             result_dialog.move(x, y)
@@ -521,7 +520,7 @@ class view_folder_dialog(object):
         font.setKerning(False)
         self.label.setFont(font)
         self.label.setStyleSheet(
-            "QLabel { font:\"Segoe UI\"; color: #4A3B28; font-family: Arial; Text-align: Center; font-size: 15pt;}")
+            "QLabel { font:\"Segoe UI\"; color: #4A3B28; font-family: Arial; Text-align: Center; font-size: 15pt;background-color: transparent;}")
         self.label.setAlignment(QtCore.Qt.AlignCenter)
         self.label.setWordWrap(True)
         self.label.setObjectName("label")

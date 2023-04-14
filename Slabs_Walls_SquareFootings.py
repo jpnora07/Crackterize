@@ -46,6 +46,7 @@ class slabs(object):
         sizePolicy.setHeightForWidth(self.label.sizePolicy().hasHeightForWidth())
         self.label.setSizePolicy(sizePolicy)
         self.label.setStyleSheet("#label{\n"
+                                 "  background-color: transparent;  \n"
                                  "font: 200 13pt Segoe UI Black;\n"
                                  "alignment: center;\n"
                                  "color: rgba(111, 75, 39, 0.77);\n"
@@ -59,6 +60,7 @@ class slabs(object):
         self.horizontalLayout.setObjectName("horizontalLayout")
         self.label_4 = QtWidgets.QLabel(self.widget_11)
         self.label_4.setStyleSheet("#label_4{\n"
+                                   "  background-color: transparent;  \n"
                                    "font: 200 11pt Arial, Sans Serif;\n"
                                    "alignment: center;\n"
                                    "color: rgba(111, 75, 39, 0.77);\n"
@@ -81,6 +83,7 @@ class slabs(object):
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
         self.label_5 = QtWidgets.QLabel(self.widget_7)
         self.label_5.setStyleSheet("#label_5{\n"
+                                   "  background-color: transparent;  \n"
                                    "font: 200 11pt Arial, Sans Serif;\n"
                                    "alignment: center;\n"
                                    "color: rgba(111, 75, 39, 0.77);\n"
@@ -97,6 +100,7 @@ class slabs(object):
         self.horizontalLayout_3.setObjectName("horizontalLayout_3")
         self.CHeight = QtWidgets.QLabel(self.widget_3)
         self.CHeight.setStyleSheet("#CHeight{\n"
+                                   "  background-color: transparent;  \n"
                                    "font: 200 11pt Arial, Sans Serif;\n"
                                    "alignment: center;\n"
                                    "color: rgba(111, 75, 39, 0.77);\n"
@@ -113,6 +117,7 @@ class slabs(object):
         self.horizontalLayout_4.setObjectName("horizontalLayout_4")
         self.label_6 = QtWidgets.QLabel(self.widget_8)
         self.label_6.setStyleSheet("#label_6{\n"
+                                   "  background-color: transparent;  \n"
                                    "font: 200 11pt Arial, Sans Serif;\n"
                                    "alignment: center;\n"
                                    "color: rgba(111, 75, 39, 0.77);\n"
@@ -143,6 +148,7 @@ class slabs(object):
         self.horizontalLayout_5.setObjectName("horizontalLayout_5")
         self.label_7 = QtWidgets.QLabel(self.widget_4)
         self.label_7.setStyleSheet("#label_7{\n"
+                                   "  background-color: transparent;  \n"
                                    "font: 200 11pt Arial, Sans Serif;\n"
                                    "alignment: center;\n"
                                    "color: rgba(111, 75, 39, 0.77);\n"
@@ -237,6 +243,7 @@ class slabs(object):
         self.horizontalLayout_7.setObjectName("horizontalLayout_7")
         self.label_2 = QtWidgets.QLabel(self.widget_9)
         self.label_2.setStyleSheet("#label_2{\n"
+                                   "  background-color: transparent;  \n"
                                    "font: 500 12pt Arial, Sans Serif;\n"
                                    "alignment: center;\n"
                                    "color: rgba(111, 75, 39, 0.77);\n"
@@ -245,6 +252,7 @@ class slabs(object):
         self.horizontalLayout_7.addWidget(self.label_2, 0, QtCore.Qt.AlignRight)
         self.total_area = QtWidgets.QLabel(self.widget_9)
         self.total_area.setStyleSheet("#total_area{\n"
+                                      "  background-color: transparent;  \n"
                                       "font: 200 10pt Segoe UI Black;\n"
                                       "alignment: center;\n"
                                       "}")
@@ -262,6 +270,7 @@ class slabs(object):
         self.horizontalLayout_8.setObjectName("horizontalLayout_8")
         self.label_3 = QtWidgets.QLabel(self.widget_6)
         self.label_3.setStyleSheet("#label_3{\n"
+                                   "  background-color: transparent;  \n"
                                    "font: 500 12pt Arial, Sans Serif;\n"
                                    "alignment: center;\n"
                                    "color: rgba(111, 75, 39, 0.77);\n"
@@ -270,6 +279,7 @@ class slabs(object):
         self.horizontalLayout_8.addWidget(self.label_3, 0, QtCore.Qt.AlignRight)
         self.total_volume = QtWidgets.QLabel(self.widget_6)
         self.total_volume.setStyleSheet("#total_volume{\n"
+                                        "  background-color: transparent;  \n"
                                         "font: 200 10pt Segoe UI Black;\n"
                                         "alignment: center;\n"
                                         "}")
@@ -299,7 +309,6 @@ class slabs(object):
         self.closeBtn.setText(_translate("Dialog", "Close"))
         self.label_2.setText(_translate("Dialog", "Total Area: "))
         self.label_3.setText(_translate("Dialog", "Total Volume: "))
-
 
     def calculate(self):
         length = float(self.length_lineEdit.text())

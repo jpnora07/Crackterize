@@ -95,7 +95,7 @@ class Result_Dialog(object):
         self.result_Img.setAlignment(QtCore.Qt.AlignCenter)
         self.result_Img.setMaximumSize(QtCore.QSize(16777215, 16777215))
         self.result_Img.setStyleSheet("#result_Img{\n"
-
+                                      "background-color: transparent;"
                                       "opacity: 100;\n"
                                       "border: 1px solid grey;\n"
                                       "}")
@@ -126,6 +126,7 @@ class Result_Dialog(object):
         self.concretecracked_2.setStyleSheet("#concretecracked_2{\n"
                                              "    \n"
                                              "color: #2E74A9;\n"
+                                             "background-color: transparent;"
                                              "font: bold;\n"
                                              "border: 2px solid #EFEEEE;\n"
                                              "font-size: 20px;\n"
@@ -141,6 +142,7 @@ class Result_Dialog(object):
         self.horizontalLayout_10.setObjectName("horizontalLayout_10")
         self.label_2 = QtWidgets.QLabel(self.widget_10)
         self.label_2.setStyleSheet("#label_2{\n"
+                                   "background-color: transparent;"
                                    "color: rgba(111, 75, 39, 0.77);\n"
                                    "font-size: 13px;\n"
                                    "font-weight: bold;\n"
@@ -149,6 +151,7 @@ class Result_Dialog(object):
         self.horizontalLayout_10.addWidget(self.label_2)
         self.lengthlbl = QtWidgets.QLabel(self.widget_10)
         self.lengthlbl.setStyleSheet("#lengthlbl{\n"
+                                     "background-color: transparent;"
                                      "    color:  #555555;\n"
                                      "font: bold;\n"
                                      "    font-size: 15px}")
@@ -168,6 +171,7 @@ class Result_Dialog(object):
         self.horizontalLayout_11.setObjectName("horizontalLayout_11")
         self.label_3 = QtWidgets.QLabel(self.widget_13)
         self.label_3.setStyleSheet("#label_3{\n"
+                                   "background-color: transparent;"
                                    "color: rgba(111, 75, 39, 0.77);\n"
                                    "font-size: 13px;\n"
                                    "font-weight: bold;\n"
@@ -176,6 +180,7 @@ class Result_Dialog(object):
         self.horizontalLayout_11.addWidget(self.label_3)
         self.widthlbl = QtWidgets.QLabel(self.widget_13)
         self.widthlbl.setStyleSheet("#widthlbl{\n"
+                                    "background-color: transparent;"
                                     "    color:  #555555;\n"
                                     "font: bold;\n"
                                     "    font-size: 15px;\n"
@@ -197,6 +202,7 @@ class Result_Dialog(object):
         self.horizontalLayout_13.setObjectName("horizontalLayout_13")
         self.widgetPosition = QtWidgets.QLabel(self.widget_11)
         self.widgetPosition.setStyleSheet("#widgetPosition{\n"
+                                          "background-color: transparent;"
                                           "color: rgba(111, 75, 39, 0.77);\n"
                                           "font-size: 13px;\n"
                                           "font-weight: bold;\n"
@@ -205,6 +211,7 @@ class Result_Dialog(object):
         self.horizontalLayout_13.addWidget(self.widgetPosition)
         self.position_lbl = QtWidgets.QLabel(self.widget_11)
         self.position_lbl.setStyleSheet("#position_lbl{\n"
+                                        "background-color: transparent;"
                                         "    color:  #555555;\n"
                                         "font: bold;\n"
                                         "    font-size: 15px;\n"
@@ -225,6 +232,7 @@ class Result_Dialog(object):
         self.LabelPos.setMinimumSize(QtCore.QSize(180, 0))
         self.LabelPos.setMaximumSize(QtCore.QSize(16777215, 16777215))
         self.LabelPos.setStyleSheet("#LabelPos{\n"
+                                    "background-color: transparent;"
                                     "color: rgba(111, 75, 39, 0.77);\n"
                                     "font-size: 13px;\n"
                                     "font-weight: bold;\n"
@@ -242,6 +250,7 @@ class Result_Dialog(object):
         self.LabelNeg.setMinimumSize(QtCore.QSize(180, 0))
         self.LabelNeg.setMaximumSize(QtCore.QSize(16777215, 16777215))
         self.LabelNeg.setStyleSheet("#LabelNeg{\n"
+                                    "background-color: transparent;"
                                     "color: rgba(111, 75, 39, 0.77);\n"
                                     "font-size: 13px;\n"
                                     "font-weight: bold;\n"
@@ -260,6 +269,7 @@ class Result_Dialog(object):
         self.i.setMinimumSize(QtCore.QSize(30, 30))
         self.i.setMaximumSize(QtCore.QSize(30, 30))
         self.i.setStyleSheet("#i{\n"
+                             "background-color: transparent;"
                              "    border-image: url(images/i.png)  ;}")
         self.i.setText("")
         self.i.setAlignment(QtCore.Qt.AlignCenter)
@@ -268,6 +278,7 @@ class Result_Dialog(object):
         self.horizontalLayout_12.addWidget(self.i)
         self.concretecracked = QtWidgets.QLabel(self.widget_14)
         self.concretecracked.setStyleSheet("#concretecracked{\n"
+                                           "background-color: transparent;"
                                            "color: #2E74A9;\n"
                                            "font: bold;\n"
                                            "font-size: 15px;\n"
@@ -459,12 +470,16 @@ class Result_Dialog(object):
         self.icon.setMaximumSize(QtCore.QSize(50, 50))
         self.icon.setPixmap(QtGui.QPixmap("images/question.png"))
         self.icon.setScaledContents(True)
+        self.icon.setStyleSheet("#icon{\n"
+                                   "background-color: transparent;"
+                                   "}")
         self.icon.setAlignment(QtCore.Qt.AlignCenter)
         self.icon.setWordWrap(True)
         self.icon.setObjectName("icon")
         self.horizontalLayout_2.addWidget(self.icon)
         self.message = QtWidgets.QLabel(self.widget_2)
         self.message.setStyleSheet("#message{\n"
+                                   "background-color: transparent;"
                                    "font-family: \"Inter\";\n"
                                    "font-size: 13pt; \n"
                                    "color: #000000;\n"
@@ -899,6 +914,7 @@ class Result_Dialog(object):
         label = QLabel("Choose an existing project")
         label.setAlignment(Qt.AlignCenter)
         label.setStyleSheet("#label{\n"
+                                   "background-color: transparent;"
                             "    font: 900 13pt \"Segoe UI Black\";\n"
                             "    alignment: center;\n"
                             "    color: rgba(111, 75, 39, 0.77);\n"
@@ -1223,6 +1239,7 @@ class Result_Dialog(object):
         label = QLabel("Choose folder to save")
         label.setAlignment(Qt.AlignCenter)
         label.setStyleSheet("#label{\n"
+                                   "background-color: transparent;"
                             "    font: 900 13pt \"Segoe UI Black\";\n"
                             "    alignment: center;\n"
                             "    color: rgba(111, 75, 39, 0.77);\n"
@@ -1747,7 +1764,8 @@ class Result_Dialog(object):
         font.setKerning(False)
         label.setFont(font)
         label.setStyleSheet(
-            "QLabel { font: 900 \"Segoe UI\"; color: #4A3B28; font-family: Arial; Text-align: Center; font-size: 22pt;}")
+            "QLabel { font: 900 \"Segoe UI\"; color: #4A3B28; font-family: Arial; Text-align: Center; font-size: 22pt;background-color: transparent;}"
+)
         label.setAlignment(QtCore.Qt.AlignCenter)
         label.setWordWrap(True)
         label.setObjectName("label")
