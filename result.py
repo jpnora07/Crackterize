@@ -1157,40 +1157,44 @@ class Result_Dialog(object):
         NewProjectDialog.exec()
 
     def add_new_project_in_db(self):
-        # Get the text from the QTextEdit widget
-        new_projects = self.ET_newproject.toPlainText()
+        try:
+            # Get the text from the QTextEdit widget
+            new_projects = self.ET_newproject.toPlainText()
 
-        if len(new_projects) == 0:
-            # If new_projects is empty, show an error message
-            self.creating_new_project()
-        else:
-            BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-            db_path = os.path.join(BASE_DIR, 'Projects.db')
-            # Create a connection to a SQLite database or create it if it doesn't exist
-            self.conn = sqlite3.connect(db_path)
-            self.c = self.conn.cursor()
-
-            # Check if the Projects table already exists in the database
-            self.c.execute("SELECT count(name) FROM sqlite_master WHERE type='table' AND name='Projects'")
-            if self.c.fetchone()[0] == 0:
-                # If the Projects table does not exist, create it
-                self.c.execute(
-                    '''CREATE TABLE Projects (id INTEGER PRIMARY KEY, project_name TEXT, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)''')
-                self.conn.commit()
-
-            # Check if the project name already exists in the database
-            self.c.execute("SELECT COUNT(*) FROM Projects WHERE project_name = ? ORDER BY created_at DESC", (new_projects,))
-            result = self.c.fetchone()
-
-            if result[0] == 0:
-                # If the project name doesn't exist, insert it into the database
-                self.c.execute("INSERT INTO Projects (project_name) VALUES (?)", (new_projects,))
-                self.conn.commit()
-                self.show_dialog_success_save()
-                self.Save_to_existing_Project()
-            else:
-                # If the project name already exists, show a dialog message to inform the user
+            if len(new_projects) == 0:
+                # If new_projects is empty, show an error message
                 self.creating_new_project()
+            else:
+                BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+                db_path = os.path.join(BASE_DIR, 'Projects.db')
+                # Create a connection to a SQLite database or create it if it doesn't exist
+                self.conn = sqlite3.connect(db_path)
+                self.c = self.conn.cursor()
+
+                # Check if the Projects table already exists in the database
+                self.c.execute("SELECT count(name) FROM sqlite_master WHERE type='table' AND name='Projects'")
+                if self.c.fetchone()[0] == 0:
+                    # If the Projects table does not exist, create it
+                    self.c.execute(
+                        '''CREATE TABLE Projects (id INTEGER PRIMARY KEY, project_name TEXT, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)''')
+                    self.conn.commit()
+
+                # Check if the project name already exists in the database
+                self.c.execute("SELECT COUNT(*) FROM Projects WHERE project_name = ? ORDER BY created_at DESC", (new_projects,))
+                result = self.c.fetchone()
+
+                if result[0] == 0:
+                    # If the project name doesn't exist, insert it into the database
+                    self.c.execute("INSERT INTO Projects (project_name) VALUES (?)", (new_projects,))
+                    self.conn.commit()
+                    message = f"Successfully saved the {new_projects}."
+                    self.show_dialog_success_save(message)
+                    self.Save_to_existing_Project()
+                else:
+                    # If the project name already exists, show a dialog message to inform the user
+                    self.creating_new_project()
+        except Exception as e:
+            print(e)
 
     def select_folder(self):
         with open("selected_project_in_result.txt", 'r') as f:
@@ -1383,7 +1387,8 @@ class Result_Dialog(object):
                 self.c.execute("INSERT INTO Location_Folder (project_name,folder_name) VALUES (?,?)",
                                (self.project_name, new_folder,))
                 self.conn.commit()
-                self.show_dialog_success_save()
+                message = "Successfully saved"
+                self.show_dialog_success_save(message)
                 self.select_folder()
             else:
                 # If the project name already exists, show a dialog message to inform the user
@@ -1561,7 +1566,8 @@ class Result_Dialog(object):
             conn.commit()
             conn.close()
             self.delete_usedtext_file()
-            self.show_dialog_success_save()
+            message = "Successfully saved"
+            self.show_dialog_success_save(message)
             try:
                 self.close_segment_dialog.close()
             except Exception as e:
@@ -1691,7 +1697,7 @@ class Result_Dialog(object):
 
 
 
-    def show_dialog_success_save(self):
+    def show_dialog_success_save(self, message):
         # Create dialog box
         Dialog = QtWidgets.QDialog()
         Dialog.setObjectName("Dialog")
@@ -1729,7 +1735,7 @@ class Result_Dialog(object):
         verticalLayout_4.setContentsMargins(-1, 20, -1, 0)
         verticalLayout_4.setObjectName("verticalLayout_4")
         label = QtWidgets.QLabel(widget_5)
-        label.setText(f"Successfully saved in {self.selected_project_name}/{self.folder_name}")
+        label.setText(message)
 
         font = QtGui.QFont()
         font.setFamily("Arial")
