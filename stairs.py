@@ -1,4 +1,3 @@
-
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import Qt
 
@@ -6,13 +5,13 @@ from PyQt5.QtCore import Qt
 class stairs(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
-        Dialog.resize(340, 457)
+        Dialog.resize(600, 600)
         Dialog.setWindowFlags(Qt.FramelessWindowHint)
         self.verticalLayout = QtWidgets.QVBoxLayout(Dialog)
         self.verticalLayout.setObjectName("verticalLayout")
         self.widget = QtWidgets.QWidget(Dialog)
         self.widget.setStyleSheet("#widget{\n"
-                                  "background-image: url(images/bg.jpg);\n"
+
                                   "border-top-left-radius: 10px;\n"
                                   "border-top-right-radius: 10px;\n"
                                   "border-bottom-left-radius: 10px;\n"
@@ -239,9 +238,9 @@ class stairs(object):
         self.horizontalLayout_8.setObjectName("horizontalLayout_8")
         self.result = QtWidgets.QLabel(self.widget_6)
         self.result.setStyleSheet("#result{\n"
-                                "font: 200 10pt Segoe UI Black;\n"
-                                "alignment: center;\n"
-                                "}")
+                                  "font: 200 10pt Segoe UI Black;\n"
+                                  "alignment: center;\n"
+                                  "}")
         self.result.setObjectName("result")
         self.horizontalLayout_8.addWidget(self.result)
         self.verticalLayout_2.addWidget(self.widget_6, 0, QtCore.Qt.AlignHCenter)
@@ -313,6 +312,7 @@ class stairs(object):
             self.result.setText(f'Total stair height: {total_height:.2f} inches\nSlope: {slope:.2f}')
         except Exception as e:
             print(e)
+
 
 if __name__ == "__main__":
     import sys

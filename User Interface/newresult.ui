@@ -366,67 +366,6 @@ font-weight: bold;
              </widget>
             </item>
             <item>
-             <widget class="QWidget" name="widget_14" native="true">
-              <property name="minimumSize">
-               <size>
-                <width>0</width>
-                <height>60</height>
-               </size>
-              </property>
-              <layout class="QHBoxLayout" name="horizontalLayout_12">
-               <item>
-                <widget class="QLabel" name="i">
-                 <property name="minimumSize">
-                  <size>
-                   <width>30</width>
-                   <height>30</height>
-                  </size>
-                 </property>
-                 <property name="maximumSize">
-                  <size>
-                   <width>30</width>
-                   <height>30</height>
-                  </size>
-                 </property>
-                 <property name="styleSheet">
-                  <string notr="true">#i{
-	border-image: url(:/images/i.png)  ;}</string>
-                 </property>
-                 <property name="text">
-                  <string/>
-                 </property>
-                 <property name="alignment">
-                  <set>Qt::AlignCenter</set>
-                 </property>
-                 <property name="wordWrap">
-                  <bool>false</bool>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QLabel" name="concretecracked">
-                 <property name="styleSheet">
-                  <string notr="true">#concretecracked{
-color: #2E74A9;
-font: bold;
-font-size: 15px;
-}</string>
-                 </property>
-                 <property name="text">
-                  <string>Concrete is 2.87% cracked.</string>
-                 </property>
-                 <property name="alignment">
-                  <set>Qt::AlignCenter</set>
-                 </property>
-                 <property name="wordWrap">
-                  <bool>true</bool>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </widget>
-            </item>
-            <item>
              <widget class="QWidget" name="widget_17" native="true">
               <layout class="QHBoxLayout" name="horizontalLayout">
                <item>
@@ -500,7 +439,7 @@ background-color: white;
                   <string>Print</string>
                  </property>
                  <property name="icon">
-                  <iconset resource="../images/images.qrc">
+                  <iconset>
                    <normaloff>:/images/print_icon.png</normaloff>:/images/print_icon.png</iconset>
                  </property>
                  <property name="iconSize">

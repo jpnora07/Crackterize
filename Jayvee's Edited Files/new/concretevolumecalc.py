@@ -23,7 +23,7 @@ class concrete_cal(object):
         self.verticalLayout.setObjectName("verticalLayout")
         self.widget = QtWidgets.QWidget(Dialog)
         self.widget.setStyleSheet("#widget{\n"
-
+                                  
                                   "border-top-left-radius: 10px;\n"
                                   "border-top-right-radius: 10px;\n"
                                   "border-bottom-left-radius: 10px;\n"
@@ -112,10 +112,10 @@ class concrete_cal(object):
         self.verticalLayout_10.addWidget(self.label_5)
         self.type_comboBox = QtWidgets.QComboBox(self.widget_9)
         self.type_comboBox.setStyleSheet("#comboBox{\n"
-                                         "font: 11pt Arial;\n"
-                                         "alignment: center;\n"
-                                         "color: rgba(111, 75, 39, 0.77);\n"
-                                         "}")
+                                    "font: 11pt Arial;\n"
+                                    "alignment: center;\n"
+                                    "color: rgba(111, 75, 39, 0.77);\n"
+                                    "}")
         self.type_comboBox.setObjectName("type_comboBox")
         self.type_comboBox.addItem('Square Slab')
         self.type_comboBox.addItem('Round Slab')
@@ -238,6 +238,7 @@ class concrete_cal(object):
         self.closeBtn.setText(_translate("Dialog", "Close"))
         self.result.setText(_translate("Dialog", " "))
 
+
     def calculate_concrete(self):
         try:
             self.calculate_concrete()
@@ -259,6 +260,8 @@ class concrete_cal(object):
                     weight, cubic_yards, concrete_type.lower()))
         except Exception as e:
             print(e)
+
+
 
 
 if __name__ == "__main__":

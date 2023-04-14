@@ -21,7 +21,7 @@ class hole(object):
         self.verticalLayout.setObjectName("verticalLayout")
         self.widget = QtWidgets.QWidget(Dialog)
         self.widget.setStyleSheet("#widget{\n"
-
+                
                                   "border-top-left-radius: 10px;\n"
                                   "border-top-right-radius: 10px;\n"
                                   "border-bottom-left-radius: 10px;\n"
@@ -65,6 +65,7 @@ class hole(object):
         self.label_3.setObjectName("label_3")
         self.horizontalLayout.addWidget(self.label_3)
         self.Dia_lineEdit = QtWidgets.QLineEdit(self.widget_6)
+
 
         self.Dia_lineEdit.setMinimumSize(QtCore.QSize(-50, 0))
         self.Dia_lineEdit.setObjectName("Dia_lineEdit")

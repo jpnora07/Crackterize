@@ -12,7 +12,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import Qt
 
 
-class curb(object):
+class ui_curb(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
         Dialog.setWindowFlags(Qt.FramelessWindowHint)
@@ -332,7 +332,7 @@ if __name__ == "__main__":
 
     app = QtWidgets.QApplication(sys.argv)
     Dialog = QtWidgets.QDialog()
-    ui = curb()
+    ui = ui_curb()
     ui.setupUi(Dialog)
     Dialog.show()
     sys.exit(app.exec_())
