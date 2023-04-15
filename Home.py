@@ -139,7 +139,6 @@ class Ui_MainWindow(object):
         self.widget_2 = QtWidgets.QWidget(self.widget)
         self.widget_2.setObjectName("widget_2")
         self.verticalLayout_3 = QtWidgets.QHBoxLayout(self.widget_2)
-        self.verticalLayout_3.setContentsMargins(180, 50, 180, 60)
         self.verticalLayout_3.setObjectName("verticalLayout_3")
         self.threeBtn = QtWidgets.QWidget(self.widget_2)
 
