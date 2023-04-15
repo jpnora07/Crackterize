@@ -7,6 +7,7 @@ from PyQt5.QtCore import Qt
 from Circular_Slab_or_Tube import circular
 from Curb_Gutter_Barrier import curb
 from Hole_Column_RoundFootings import hole
+from Slabs_Walls_SquareFootings import slabs
 from concretevolumecalc import concrete_cal
 from scientific_calculator import sci_Calculator
 from stairs import stairs
@@ -406,7 +407,7 @@ class cal_dialog(object):
             slabs_wallsfootings = QtWidgets.QDialog(self.Dialog)
             x = (self.Dialog.width() - self.Dialog.width()) // 2
             y = (self.Dialog.height() - self.Dialog.height()) // 2
-            ui = curb()
+            ui = slabs()
 
             ui.setupUi(slabs_wallsfootings)
             slabs_wallsfootings.move(x, y)
