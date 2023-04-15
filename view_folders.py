@@ -235,6 +235,16 @@ class view_folder_dialog(object):
         self.fetch_folders_of_projects()
 
     def closeEvent(self):
+        selected_folder_vrFile = "selected_folder_vrFile.txt"
+        selected_project = "selected_project.txt"
+        try:
+            os.remove(selected_folder_vrFile)
+        except FileNotFoundError:
+            print(f"{selected_folder_vrFile} already removed or does not exist")
+        try:
+            os.remove(selected_project)
+        except FileNotFoundError:
+            print(f"{selected_project} already removed or does not exist")
         self.view_folder_dialog_orig.close()
         self.background_widget.hide()
 

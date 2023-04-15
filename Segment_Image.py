@@ -462,7 +462,7 @@ class Ui_DialogSegment(object):
         self.removeNoise.setObjectName("removeNoise")
         self.removeNoise.clicked.connect(self.remove_noise)
         self.verticalLayout_2.addWidget(self.removeNoise)
-        self.calculate = QtWidgets.QPushButton("Measure The Crack", self.widget_4)
+        self.calculate = QtWidgets.QPushButton("Measure the Crack", self.widget_4)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -492,9 +492,136 @@ class Ui_DialogSegment(object):
         # self.calculate.hide()
         self.verticalLayout_2.addWidget(self.calculate)
         self.verticalLayout_7.addWidget(self.widget_4)
+
+        # Load the GIF
+        self.gif_path = "images/segment_in_process.gif"
+        self.gif = QMovie(self.gif_path)
+        self.gif.start()
+
         self.widget_11 = QtWidgets.QWidget(self.widget_3)
         self.widget_11.setObjectName("widget_11")
+        self.verticalLayout_4 = QtWidgets.QVBoxLayout(self.widget_11)
+        self.verticalLayout_4.setContentsMargins(0, 0, 0, 0)
+        self.verticalLayout_4.setSpacing(0)
+        self.verticalLayout_4.setObjectName("verticalLayout_4")
+        self.widget_14 = QtWidgets.QWidget(self.widget_11)
+        self.widget_14.setMinimumSize(QtCore.QSize(0, 45))
+        self.widget_14.setObjectName("widget_14")
+        self.horizontalLayout_12 = QtWidgets.QHBoxLayout(self.widget_14)
+        self.horizontalLayout_12.setContentsMargins(-1, 0, -1, 0)
+        self.horizontalLayout_12.setObjectName("horizontalLayout_12")
+        self.i = QtWidgets.QLabel(self.widget_14)
+        self.i.setMinimumSize(QtCore.QSize(30, 30))
+        self.i.setMaximumSize(QtCore.QSize(30, 30))
+        self.i.setStyleSheet("background-color:transparent;")
+        self.i.setText("")
+        self.i.setPixmap(QtGui.QPixmap("images/i.png"))
+        self.i.setScaledContents(True)
+        self.i.setAlignment(QtCore.Qt.AlignCenter)
+        self.i.setWordWrap(True)
+        self.i.setObjectName("i")
+        self.horizontalLayout_12.addWidget(self.i)
+        self.concretecracked = QtWidgets.QLabel("The image is detected as cracked.", self.widget_14)
+        self.concretecracked.setMaximumSize(QtCore.QSize(16777215, 50))
+        self.concretecracked.setStyleSheet("#concretecracked{background-color:transparent;\n"
+                                           "color: #2E74A9;\n"
+                                           "font: bold;\n"
+                                           "font-size: 12px;\n"
+                                           "}")
+        self.concretecracked.setAlignment(QtCore.Qt.AlignCenter)
+        self.concretecracked.setWordWrap(True)
+        self.concretecracked.setObjectName("concretecracked")
+        self.horizontalLayout_12.addWidget(self.concretecracked)
+        self.verticalLayout_4.addWidget(self.widget_14)
+        self.widget_15 = QtWidgets.QWidget(self.widget_11)
+        self.widget_15.setMinimumSize(QtCore.QSize(0, 45))
+        self.widget_15.setObjectName("widget_15")
+        self.horizontalLayout_13 = QtWidgets.QHBoxLayout(self.widget_15)
+        self.horizontalLayout_13.setContentsMargins(-1, 0, 9, 0)
+        self.horizontalLayout_13.setObjectName("horizontalLayout_13")
+        self.i_2 = QtWidgets.QLabel(self.widget_15)
+        self.i_2.setMinimumSize(QtCore.QSize(30, 30))
+        self.i_2.setMaximumSize(QtCore.QSize(30, 30))
+        self.i_2.setStyleSheet("background-color:transparent;")
+        self.i_2.setPixmap(QtGui.QPixmap("images/not_done.png"))
+        # self.i_2.setMovie(gif) #
+        self.i_2.setScaledContents(True)
+        self.i_2.setAlignment(QtCore.Qt.AlignCenter)
+        self.i_2.setWordWrap(True)
+        self.i_2.setObjectName("i_2")
+        self.horizontalLayout_13.addWidget(self.i_2)
+        self.remove_noise_lbl = QtWidgets.QLabel(self.widget_15)
+        self.remove_noise_lbl.setText("Remove Noise")
+        self.remove_noise_lbl.setStyleSheet("#remove_noise_lbl{background-color:transparent;\n"
+                                            "color: #2E74A9;\n"
+                                            "font: bold;\n"
+                                            "font-size: 12px;\n"
+                                            "}")
+        self.remove_noise_lbl.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
+        self.remove_noise_lbl.setWordWrap(True)
+        self.remove_noise_lbl.setObjectName("remove_noise_lbl")
+        self.horizontalLayout_13.addWidget(self.remove_noise_lbl)
+        self.verticalLayout_4.addWidget(self.widget_15)
+        self.widget_16 = QtWidgets.QWidget(self.widget_11)
+        self.widget_16.setMinimumSize(QtCore.QSize(0, 45))
+        self.widget_16.setObjectName("widget_16")
+        self.horizontalLayout_14 = QtWidgets.QHBoxLayout(self.widget_16)
+        self.horizontalLayout_14.setContentsMargins(-1, 0, -1, 0)
+        self.horizontalLayout_14.setObjectName("horizontalLayout_14")
+        self.i_3 = QtWidgets.QLabel(self.widget_16)
+        self.i_3.setMinimumSize(QtCore.QSize(30, 30))
+        self.i_3.setMaximumSize(QtCore.QSize(30, 30))
+        self.i_3.setStyleSheet("background-color:transparent;")
+        self.i_3.setPixmap(QtGui.QPixmap("images/not_done.png"))
+        #self.i_3.setMovie(gif)#
+        self.i_3.setScaledContents(True)
+        self.i_3.setAlignment(QtCore.Qt.AlignCenter)
+        self.i_3.setWordWrap(True)
+        self.i_3.setObjectName("i_3")
+        self.horizontalLayout_14.addWidget(self.i_3)
+        self.meas_width_lbl = QtWidgets.QLabel(self.widget_16)
+        self.meas_width_lbl.setText("Measure width")
+        self.meas_width_lbl.setStyleSheet("#meas_width_lbl{background-color:transparent;\n"
+                                          "color: #2E74A9;\n"
+                                          "font: bold;\n"
+                                          "font-size: 12px;\n"
+                                          "}")
+        self.meas_width_lbl.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
+        self.meas_width_lbl.setWordWrap(True)
+        self.meas_width_lbl.setObjectName("meas_width_lbl")
+        self.horizontalLayout_14.addWidget(self.meas_width_lbl)
+        self.verticalLayout_4.addWidget(self.widget_16)
+        self.widget_17 = QtWidgets.QWidget(self.widget_11)
+        self.widget_17.setMinimumSize(QtCore.QSize(0, 45))
+        self.widget_17.setObjectName("widget_17")
+        self.horizontalLayout_15 = QtWidgets.QHBoxLayout(self.widget_17)
+        self.horizontalLayout_15.setContentsMargins(-1, 0, -1, 0)
+        self.horizontalLayout_15.setObjectName("horizontalLayout_15")
+        self.i_4 = QtWidgets.QLabel(self.widget_17)
+        self.i_4.setMinimumSize(QtCore.QSize(30, 30))
+        self.i_4.setMaximumSize(QtCore.QSize(30, 30))
+        self.i_4.setStyleSheet("background-color:transparent;")
+        self.i_4.setPixmap(QtGui.QPixmap("images/not_done.png"))
+        self.i_4.setScaledContents(True)
+        self.i_4.setAlignment(QtCore.Qt.AlignCenter)
+        self.i_4.setWordWrap(True)
+        self.i_4.setObjectName("i_4")
+        self.horizontalLayout_15.addWidget(self.i_4)
+        self.meas_length_lbl = QtWidgets.QLabel(self.widget_17)
+        self.meas_length_lbl.setText("Measure length")
+        self.meas_length_lbl.setStyleSheet("#meas_length_lbl{\n"
+                                           "background-color:transparent;\n"
+                                           "color: #2E74A9;\n"
+                                           "font: bold;\n"
+                                           "font-size: 12px;\n"
+                                           "}")
+        self.meas_length_lbl.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
+        self.meas_length_lbl.setWordWrap(True)
+        self.meas_length_lbl.setObjectName("meas_length_lbl")
+        self.horizontalLayout_15.addWidget(self.meas_length_lbl)
+        self.verticalLayout_4.addWidget(self.widget_17)
         self.verticalLayout_7.addWidget(self.widget_11)
+
         self.widget_5 = QtWidgets.QWidget(self.widget_3)
         self.widget_5.setMinimumSize(QtCore.QSize(0, 50))
         self.widget_5.setMaximumSize(QtCore.QSize(16777215, 50))
@@ -550,7 +677,7 @@ class Ui_DialogSegment(object):
         self.label.setText(_translate("Dialog", "Adjust Threshold"))
         self.label_2.setText(_translate("Dialog", "Distance between Crack and Camera"))
         self.removeNoise.setText(_translate("Dialog", "Denoise Image"))
-        self.proceed.setText(_translate("Dialog", "Proceed"))
+        self.proceed.setText(_translate("Dialog", "Proceed to result"))
 
     def closeEvent(self):
         closeDialog = QDialog()
@@ -793,6 +920,8 @@ class Ui_DialogSegment(object):
         try:
 
             self.load_dialog = self.loading_remove_noise()
+            self.i_2.setMovie(self.gif)
+            self.remove_noise_lbl.setText("Removing noise...")
             self.load_dialog.show()
             self.background_widget_segment.show()
             # Create the noise removal thread and start it
@@ -806,6 +935,9 @@ class Ui_DialogSegment(object):
             return
 
     def show_result_noise(self, result):
+
+        self.i_2.setPixmap(QtGui.QPixmap("images/done.png"))
+        self.remove_noise_lbl.setText("Remove Noise")
         self.result = result
         self.update_image(result)
         self.load_dialog.close()
@@ -840,6 +972,12 @@ class Ui_DialogSegment(object):
                 return
             self.load_dialog_measure = self.loading_measuring()
             self.load_dialog_measure.show()
+            self.i_3.setMovie(self.gif)
+            self.meas_width_lbl.setText("Measuring width...")
+
+            self.i_4.setMovie(self.gif)
+            self.meas_length_lbl.setText("Measuring length...")
+
             self.background_widget_segment.show()
 
             self.compute_thread_width = getWidth_of_crack(float(self.NumOfDistance.toPlainText()),
@@ -852,6 +990,7 @@ class Ui_DialogSegment(object):
             print(e)
 
     def getLength_of_crack_function(self):
+
         print("Finish width")
         try:
 
@@ -863,6 +1002,12 @@ class Ui_DialogSegment(object):
             print(e)
 
     def getLength_of_crack_function_finish(self):
+
+        self.i_3.setPixmap(QtGui.QPixmap("images/done.png"))
+        self.meas_width_lbl.setText("Measure width")
+        self.i_4.setPixmap(QtGui.QPixmap("images/done.png"))
+        self.meas_length_lbl.setText("Measure length")
+
         self.load_dialog_measure.close()
         self.background_widget_segment.hide()
         print("Finish length")

@@ -314,6 +314,7 @@ class view_result_dialog(object):
         self.fetch_folders_of_projects()
 
     def closeEvent(self):
+
         self.view_folder_dialog.close()
 
 
@@ -340,6 +341,7 @@ class view_result_dialog(object):
         # Update the GUI with the results of the image processing task
         # Update the GUI with the results of the image processing task
         self.load_dialog.close()
+        self.background_widget_results.hide()
         if np.argmax(score) == 0:
             try:
                 with open('Predicted_width.txt', 'w') as f:
@@ -357,7 +359,13 @@ class view_result_dialog(object):
             result_dialog.move(x, y)
             result_dialog.show()
             result_dialog.exec_()
+            selected_folder_vrFile = "selected_folder_vrFile.txt"
+            if os.path.exists(selected_folder_vrFile):
+                print("Result folder open")
+            else:
+                self.view_folder_dialog_orig.close()
 
+            self.view_folder_dialog.close()
         else:
             segment_dialog = QtWidgets.QDialog(self.view_folder_dialog)
             ui = Ui_DialogSegment(self.background_widget, self.history, self.myProjects)
@@ -366,7 +374,13 @@ class view_result_dialog(object):
             y = (self.view_folder_dialog.height() - segment_dialog.height()) // 2
             segment_dialog.move(x, y)
             segment_dialog.exec_()
-            self.view_folder_dialog_orig.close()
+            selected_folder_vrFile = "selected_folder_vrFile.txt"
+            if os.path.exists(selected_folder_vrFile):
+                print("Result folder open")
+            else:
+                self.view_folder_dialog_orig.close()
+
+            self.view_folder_dialog.close()
 
     def open_file_dialog(self):
         file_dialog = QFileDialog()

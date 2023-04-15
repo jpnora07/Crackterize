@@ -407,7 +407,11 @@ class result_with_details(object):
         new_remark = 'New_Remark.txt'
         if os.path.isfile(new_remark):
             os.remove(new_remark)
-        self.background_widget.close()
+        selected_folder_vrFile = "selected_folder_vrFile.txt"
+        if os.path.exists(selected_folder_vrFile):
+            print("Result folder open")
+        else:
+            self.background_widget.hide()
 
     def printpreviewDialog(self):
         printer = QPrinter()
@@ -696,7 +700,12 @@ class result_with_details(object):
             self.conn.commit()
             self.Dialog.close()
             self.closeDialog.close()
-            self.background_widget.hide()
+            selected_folder_vrFile = "selected_folder_vrFile.txt"
+            if os.path.exists(selected_folder_vrFile):
+                print("Result folder open")
+            else:
+                self.background_widget.hide()
+
         except Exception as e:
             print(e)
 
@@ -893,14 +902,22 @@ class result_with_details(object):
         self.widget_2.setObjectName("widget_2")
         self.horizontalLayout_2.addWidget(self.widget_2)
         self.edit_remarks = QtWidgets.QPushButton(self.widget)
-        self.edit_remarks.setMinimumSize(QtCore.QSize(23, 23))
-        self.edit_remarks.setMaximumSize(QtCore.QSize(23, 23))
-        self.edit_remarks.setText("Edit Remarks")
+        self.edit_remarks.setMinimumSize(QtCore.QSize(30, 23))
+        self.edit_remarks.setMaximumSize(QtCore.QSize(30, 23))
+        self.edit_remarks.setText("edit")
         #icon = QtGui.QIcon()
         #icon.addPixmap(QtGui.QPixmap("images/editor.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         #self.edit_remarks.setIcon(icon)
         self.edit_remarks.setIconSize(QtCore.QSize(20, 25))
         self.edit_remarks.setFlat(True)
+        self.edit_remarks.setStyleSheet("#edit_remarks{\n"
+                                   "font-weight:bold;\n"
+                                   "color: #6F4B27;\n"
+                                   "font-family: Inter;}"
+                                   "#edit_remarks::hover{\n"
+                                   "color: #555555;\n"
+                                   "}\n"
+                                   "")
         self.edit_remarks.setObjectName("edit_remarks")
         self.horizontalLayout_2.addWidget(self.edit_remarks)
         self.verticalLayout_3.addWidget(self.widget)
@@ -1215,4 +1232,8 @@ class result_with_details(object):
     def close_event(self):
         self.QMessageDialog.close()
         self.Dialog.close()
-        self.background_widget.hide()
+        selected_folder_vrFile = "selected_folder_vrFile.txt"
+        if os.path.exists(selected_folder_vrFile):
+            print("Result folder open")
+        else:
+            self.background_widget.hide()

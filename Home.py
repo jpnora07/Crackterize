@@ -788,6 +788,12 @@ class Ui_MainWindow(object):
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def upload_image(self):
+
+        selected_folder_vrFile = "selected_folder_vrFile.txt"
+        try:
+            os.remove(selected_folder_vrFile)
+        except FileNotFoundError:
+            print(f"{selected_folder_vrFile} already removed or does not exist")
         image_path = self.open_file_dialog()
         if image_path is not None:
             try:

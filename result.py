@@ -376,7 +376,7 @@ class Result_Dialog(object):
         self.horizontalLayout_5.setObjectName("horizontalLayout_5")
         self.savebtn = QtWidgets.QPushButton(self.widget_2)
         self.savebtn.setMinimumSize(QtCore.QSize(0, 35))
-        self.savebtn.clicked.connect(self.Choose_where_to_save)
+        self.savebtn.clicked.connect(self.save_new_result)
         self.savebtn.setMaximumSize(QtCore.QSize(16777215, 35))
         self.savebtn.setStyleSheet("#savebtn{\n"
                                    "background: #2E74A9;\n"
@@ -412,13 +412,22 @@ class Result_Dialog(object):
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
         Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
-        self.concretecracked_2.setText(_translate("Dialog", "Detected:"))
+        self.concretecracked_2.setText(_translate("Dialog", "Result:"))
         self.label_2.setText(_translate("Dialog", "Length:"))
         self.label_3.setText(_translate("Dialog", "Width: "))
         self.widgetPosition.setText(_translate("Dialog", "Orientation:"))
         self.adddetails.setText(_translate("Dialog", "Add Details"))
         self.print1.setText(_translate("Dialog", "Print"))
         self.savebtn.setText(_translate("Dialog", "Save"))
+
+    def save_new_result(self):
+        selected_folder_vrFile = "selected_folder_vrFile.txt"
+        if os.path.exists(selected_folder_vrFile):
+            self.save_result_image_to_db()
+            print(selected_folder_vrFile, "exists")
+        else:
+            print(selected_folder_vrFile, "does not exist")
+            self.Choose_where_to_save()
 
     def closeEvent(self, event):
         closeDialog = QDialog()
@@ -1452,7 +1461,14 @@ class Result_Dialog(object):
 
         except Exception as e:
             print(f"Error at database {e}")
-        self.folder_name = self.select_folder_dialog.sender().text()
+
+        selected_folder_vrFile = "selected_folder_vrFile.txt"
+        if os.path.exists(selected_folder_vrFile):
+            with open(selected_folder_vrFile, "r") as f:
+                self.folder_name = f.read()
+        else:
+            self.folder_name = self.select_folder_dialog.sender().text()
+
         BASE_DIR = os.path.dirname(os.path.abspath(__file__))
         db_path = os.path.join(BASE_DIR, 'Projects.db')
 
@@ -1547,7 +1563,12 @@ class Result_Dialog(object):
                 os.remove(selected_project_in_result)
             except FileNotFoundError:
                 print(f"{selected_project_in_result} already removed or does not exist")
-            self.background_widget.hide()
+            selected_folder_vrFile = "selected_folder_vrFile.txt"
+            if os.path.exists(selected_folder_vrFile):
+                print("Result folder open")
+            else:
+                self.background_widget.hide()
+
             self.Dialog.close()
         except Exception as e:
             print(f"Error at closing {e}")
@@ -1767,13 +1788,14 @@ class Result_Dialog(object):
         Predicted_width = "Predicted_width.txt"
         Remarks_written = "Remarks_written.txt"
         #selected_folder_vrFile = "selected_folder_vrFile.txt"
+        #selected_project = "selected_project.txt"
         Selected_location_crack = "Selected_location_crack.txt"
         Selected_progression_crack = "Selected_progression_crack.txt"
         Selected_type_crack = "Selected_type_crack.txt"
-        #selected_project = "selected_project.txt"
         threshold = "threshold_image.jpg"
 
         try:
+
             try:
                 os.remove(threshold)
             except FileNotFoundError:
