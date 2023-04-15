@@ -1,0 +1,609 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Dialog</class>
+ <widget class="QDialog" name="Dialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>645</width>
+    <height>624</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Dialog</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QWidget" name="widget" native="true">
+     <layout class="QVBoxLayout" name="verticalLayout_2">
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QScrollArea" name="scrollArea">
+        <property name="styleSheet">
+         <string notr="true">#scrollArea {
+background-color: #F4EBE6;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+QScrollArea viewport {
+    background-color: yellow; /* set the background color */
+}
+
+QScrollBar:vertical {
+    background-color: #c3c3c3;
+    width: 15px;
+    margin: 15px 3px 15px 3px;
+    border: 1px transparent #2A2929;
+    border-radius: 4px;
+}
+
+QScrollBar:vertical:hover {
+    width: 20px;
+}
+
+QScrollBar::handle:vertical {
+    background-color: #8c8c8c;
+    min-height: 5px;
+    border-radius: 4px;
+}
+
+QScrollBar::sub-line:vertical {
+    margin: 3px 0px 3px 0px;
+    border-image: url(:/images/up_arrow_disabled.png);
+    height: 10px;
+    width: 10px;
+    subcontrol-position: top;
+    subcontrol-origin: margin;
+}
+
+QScrollBar::add-line:vertical {
+    margin: 3px 0px 3px 0px;
+    border-image: url(:/images/down_arrow_disabled.png);
+    height: 10px;
+    width: 10px;
+    subcontrol-position: bottom;
+    subcontrol-origin: margin;
+}
+
+QScrollBar::up-arrow:vertical,
+QScrollBar::down-arrow:vertical {
+    background: none;
+}
+
+QScrollBar::add-page:vertical,
+QScrollBar::sub-page:vertical {
+    background: none;
+}
+</string>
+        </property>
+        <property name="widgetResizable">
+         <bool>true</bool>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+        <widget class="QWidget" name="scrollAreaWidgetContents">
+         <property name="geometry">
+          <rect>
+           <x>0</x>
+           <y>-927</y>
+           <width>612</width>
+           <height>1673</height>
+          </rect>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>50</width>
+           <height>35</height>
+          </size>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">#scrollAreaWidgetContents{
+background-color: transparent;
+color: #4A3B28;
+min-height: 35px; min-width: 50px;;
+                    
+}</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_3">
+          <property name="leftMargin">
+           <number>15</number>
+          </property>
+          <property name="topMargin">
+           <number>15</number>
+          </property>
+          <property name="rightMargin">
+           <number>15</number>
+          </property>
+          <property name="bottomMargin">
+           <number>15</number>
+          </property>
+          <item>
+           <widget class="QWidget" name="widget_4" native="true">
+            <layout class="QVBoxLayout" name="verticalLayout_5">
+             <property name="spacing">
+              <number>0</number>
+             </property>
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="QLabel" name="label_2">
+               <property name="font">
+                <font>
+                 <family>Segoe UI Black</family>
+                 <pointsize>17</pointsize>
+                 <italic>false</italic>
+                 <bold>false</bold>
+                </font>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">#label_2{
+font: 150 17pt Segoe UI Black;
+alignment: center;
+color: rgba(111, 75, 39, 0.77);
+                                 }</string>
+               </property>
+               <property name="text">
+                <string>How To Use                     </string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_6">
+               <property name="styleSheet">
+                <string notr="true">#label_6{
+font:  100 10pt &quot;Arial&quot;;
+letter-spacing: 1px;
+line-height: 3.5px;
+color: #4A3B28;}</string>
+               </property>
+               <property name="text">
+                <string>&lt;b&gt;1.&lt;/b&gt; Upload a single image file that you want to analyze by clicking the &quot;Upload Image&quot; button on the main menu of the application.&lt;br&gt;&lt;br&gt;
+&lt;b&gt;2.&lt;/b&gt; Adjust the threshold of the uploaded image by dragging the slider to highlight the cracks in the image.&lt;br&gt;&lt;br&gt;
+&lt;b&gt;3.&lt;/b&gt; Input the distance between the camera and the subject when the image was taken.&lt;br&gt;&lt;br&gt;
+&lt;b&gt;4.&lt;/b&gt; Click the &quot;Denoise Image&quot; button to remove any unnecessary noise from the image.&lt;br&gt;&lt;br&gt;
+&lt;b&gt;5.&lt;/b&gt; Click the &quot;Measure the Crack&quot; button to analyze the image and detect the measurements of the crack.&lt;br&gt;&lt;br&gt;
+&lt;b&gt;6.&lt;/b&gt; The results page will display on the screen, indicating whether the image contains cracks or not. If there are cracks found, the measurements of the crack will also be displayed.&lt;br&gt;&lt;br&gt;
+&lt;b&gt;7.&lt;/b&gt; Click the &quot;Add Details&quot; button to provide additional information about the crack, including the Location of Crack, Crack Type, Crack Progression and Remarks which may contain any notes you want to include.&lt;br&gt;&lt;br&gt;
+&lt;b&gt;8.&lt;/b&gt; Choose where to save the results by clicking the &quot;Save&quot; button.&lt;br&gt;&lt;br&gt;
+&lt;b&gt;9.&lt;/b&gt; If desired, click the &quot;Print&quot; button to print or save a PDF copy of the results.&lt;br&gt;&lt;br&gt;
+&lt;b&gt;10.&lt;/b&gt; That's it! With these simple steps, you can quickly and easily use CRACKTERIZE to detect cracks on concrete surfaces.</string>
+               </property>
+               <property name="scaledContents">
+                <bool>false</bool>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignJustify|Qt::AlignVCenter</set>
+               </property>
+               <property name="wordWrap">
+                <bool>true</bool>
+               </property>
+               <property name="margin">
+                <number>25</number>
+               </property>
+               <property name="indent">
+                <number>-1</number>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QWidget" name="widget_7" native="true">
+            <layout class="QVBoxLayout" name="verticalLayout_6">
+             <property name="spacing">
+              <number>0</number>
+             </property>
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="QLabel" name="label_3">
+               <property name="styleSheet">
+                <string notr="true">#label_3{
+font: 150 17pt Segoe UI Black;
+alignment: center;
+color: rgba(111, 75, 39, 0.77);
+                                 }</string>
+               </property>
+               <property name="text">
+                <string>Creating New Projects &amp; Folders</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_4">
+               <property name="styleSheet">
+                <string notr="true">#label_4{
+font:  100 10pt &quot;Arial&quot;;
+letter-spacing: 1px;
+line-height: 3.5px;
+color: #4A3B28;}</string>
+               </property>
+               <property name="text">
+                <string>&lt;b&gt;1.&lt;/b&gt; Click the &quot;Create Project&quot; button displayed on the main menu of the application.&lt;br&gt;&lt;br&gt;
+&lt;b&gt;2.&lt;/b&gt; Name your project based on the location where the images that will be saved inside it were taken for a more effective file management.&lt;br&gt;&lt;br&gt;
+&lt;b&gt;3.&lt;/b&gt; Inside your project, create folders to organize your files. You can name your folders based on your preferences. You can also create new folders within your 4, project anytime you want by selecting the &quot;New Folder&quot; button within the project.&lt;br&gt;&lt;br&gt;
+&lt;b&gt;4.&lt;/b&gt; You can upload an image into the folders you've created and it will automatically be processed and proceed to the application’s main function upon uploading or you can go back to the main menu and use the “Upload Image” button as it will give you the option to choose where to save the results. You can select an existing folder within your project, or create a new folder on the spot to save the results in it.&lt;br&gt;&lt;br&gt;
+&lt;b&gt;5.&lt;/b&gt; After using the main function, the app You can also create new folders within your project anytime you want by selecting the &quot;Create New Folder&quot; button within the project.&lt;br&gt;&lt;br&gt;
+&lt;b&gt;6.&lt;/b&gt; To access your projects and folders later, simply navigate to the main menu and select the project you want to view.&lt;br&gt;&lt;br&gt;
+&lt;b&gt;7.&lt;/b&gt; Enjoy using the app's project feature to keep your files organized and easily accessible!</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignJustify|Qt::AlignVCenter</set>
+               </property>
+               <property name="wordWrap">
+                <bool>true</bool>
+               </property>
+               <property name="margin">
+                <number>25</number>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QWidget" name="widget_3" native="true">
+            <layout class="QVBoxLayout" name="verticalLayout_7">
+             <property name="spacing">
+              <number>0</number>
+             </property>
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="QLabel" name="label_7">
+               <property name="styleSheet">
+                <string notr="true">#label_7{
+font: 150 17pt Segoe UI Black;
+alignment: center;
+color: rgba(111, 75, 39, 0.77);
+                                 }</string>
+               </property>
+               <property name="text">
+                <string>Calculator</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_5">
+               <property name="font">
+                <font>
+                 <family>Arial</family>
+                 <pointsize>10</pointsize>
+                 <italic>false</italic>
+                 <bold>false</bold>
+                 <underline>false</underline>
+                 <strikeout>false</strikeout>
+                 <stylestrategy>PreferAntialias</stylestrategy>
+                 <kerning>true</kerning>
+                </font>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">#label_5{
+font:  100 10pt &quot;Arial&quot;;
+letter-spacing: 1px;
+line-height: 3.5px;
+color: #4A3B28;}</string>
+               </property>
+               <property name="text">
+                <string>The calculator button in the main menu of the app provides access to different types of engineering-related calculators, such as Scientific Calculator, Stairs Calculator, Curb and Gutter Barrier Calculator, and others. These calculators can be used to perform quick calculations related to various engineering tasks and projects, without the need for a separate calculator app or tool.</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignJustify|Qt::AlignVCenter</set>
+               </property>
+               <property name="wordWrap">
+                <bool>true</bool>
+               </property>
+               <property name="margin">
+                <number>25</number>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QWidget" name="widget_5" native="true">
+            <layout class="QVBoxLayout" name="verticalLayout_8">
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="QWidget" name="widget_10" native="true">
+               <layout class="QVBoxLayout" name="verticalLayout_9">
+                <property name="leftMargin">
+                 <number>0</number>
+                </property>
+                <property name="topMargin">
+                 <number>0</number>
+                </property>
+                <property name="rightMargin">
+                 <number>0</number>
+                </property>
+                <item>
+                 <widget class="QLabel" name="label_8">
+                  <property name="styleSheet">
+                   <string notr="true">#label_8{
+font: 150 17pt Segoe UI Black;
+alignment: center;
+color: rgba(111, 75, 39, 0.77);
+                                 }</string>
+                  </property>
+                  <property name="text">
+                   <string>Developers</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QWidget" name="widget_11" native="true">
+               <property name="minimumSize">
+                <size>
+                 <width>200</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <layout class="QHBoxLayout" name="horizontalLayout">
+                <property name="leftMargin">
+                 <number>25</number>
+                </property>
+                <item>
+                 <widget class="QLabel" name="label_11">
+                  <property name="minimumSize">
+                   <size>
+                    <width>70</width>
+                    <height>70</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>70</width>
+                    <height>70</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string/>
+                  </property>
+                  <property name="pixmap">
+                   <pixmap resource="../Crackterize2/images/images.qrc">:/images/Ilagan.png</pixmap>
+                  </property>
+                  <property name="scaledContents">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="label_9">
+                  <property name="styleSheet">
+                   <string notr="true">#label_9{
+font: 150 14pt Segoe UI Black;
+alignment: center;
+color: rgba(111, 75, 39, 0.77);
+                                 }</string>
+                  </property>
+                  <property name="text">
+                   <string>Ilagan, Jayvee P.</string>
+                  </property>
+                  <property name="indent">
+                   <number>10</number>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QWidget" name="widget_9" native="true">
+               <layout class="QHBoxLayout" name="horizontalLayout_2">
+                <property name="leftMargin">
+                 <number>25</number>
+                </property>
+                <item>
+                 <widget class="QLabel" name="label_12">
+                  <property name="maximumSize">
+                   <size>
+                    <width>70</width>
+                    <height>70</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string/>
+                  </property>
+                  <property name="pixmap">
+                   <pixmap resource="../Crackterize2/images/images.qrc">:/newPrefix/Maiquez.png</pixmap>
+                  </property>
+                  <property name="scaledContents">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="label_10">
+                  <property name="styleSheet">
+                   <string notr="true">#label_10{
+font: 150 14pt Segoe UI Black;
+alignment: center;
+color: rgba(111, 75, 39, 0.77);
+                                 }</string>
+                  </property>
+                  <property name="text">
+                   <string>Maiquez, John Carlo M.</string>
+                  </property>
+                  <property name="indent">
+                   <number>10</number>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QWidget" name="widget_8" native="true">
+               <layout class="QHBoxLayout" name="horizontalLayout_3">
+                <property name="leftMargin">
+                 <number>25</number>
+                </property>
+                <item>
+                 <widget class="QLabel" name="label_13">
+                  <property name="minimumSize">
+                   <size>
+                    <width>70</width>
+                    <height>70</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>70</width>
+                    <height>70</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string/>
+                  </property>
+                  <property name="pixmap">
+                   <pixmap resource="../Crackterize2/images/images.qrc">:/images/Narvaez.png</pixmap>
+                  </property>
+                  <property name="scaledContents">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="label_14">
+                  <property name="styleSheet">
+                   <string notr="true">#label_14{
+font: 150 14pt Segoe UI Black;
+alignment: center;
+color: rgba(111, 75, 39, 0.77);
+                                 }</string>
+                  </property>
+                  <property name="text">
+                   <string>Narvaez, Allyza Mae A.</string>
+                  </property>
+                  <property name="indent">
+                   <number>10</number>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QWidget" name="widget_6" native="true">
+               <layout class="QHBoxLayout" name="horizontalLayout_4">
+                <property name="leftMargin">
+                 <number>25</number>
+                </property>
+                <item>
+                 <widget class="QLabel" name="label_15">
+                  <property name="minimumSize">
+                   <size>
+                    <width>70</width>
+                    <height>70</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>70</width>
+                    <height>70</height>
+                   </size>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">#label_15{border-bottom-radius:7px;}</string>
+                  </property>
+                  <property name="text">
+                   <string/>
+                  </property>
+                  <property name="pixmap">
+                   <pixmap>../../Downloads/Nora.png</pixmap>
+                  </property>
+                  <property name="scaledContents">
+                   <bool>true</bool>
+                  </property>
+                  <property name="wordWrap">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="label_16">
+                  <property name="styleSheet">
+                   <string notr="true">#label_16{
+font: 150 14pt Segoe UI Black;
+alignment: center;
+color: rgba(111, 75, 39, 0.77);
+                                 }</string>
+                  </property>
+                  <property name="text">
+                   <string>Nora, John Patrick B.</string>
+                  </property>
+                  <property name="indent">
+                   <number>10</number>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources>
+  <include location="images/images.qrc"/>
+  <include location="../Crackterize2/images/images.qrc"/>
+ </resources>
+ <connections/>
+</ui>
