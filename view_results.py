@@ -620,7 +620,7 @@ class view_result_dialog(object):
             view_result_dialog = QtWidgets.QDialog(self.view_folder_dialog)
             x = (self.view_folder_dialog.width() - self.view_folder_dialog.width()) // 2
             y = (self.view_folder_dialog.height() - self.view_folder_dialog.height()) // 2
-            ui = result_with_details(self.background_widget)
+            ui = result_with_details(self.background_widget, self.history)
 
             ui.setupUi(view_result_dialog)
             view_result_dialog.move(x, y)

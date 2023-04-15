@@ -10,7 +10,8 @@ from PyQt5.QtWidgets import QDialog, QMessageBox
 
 
 class result_with_details(object):
-    def __init__(self, background_widget):
+    def __init__(self, background_widget, history):
+        self.history = history
         self.background_widget = background_widget
 
     def setupUi(self, Dialog):
@@ -683,8 +684,19 @@ class result_with_details(object):
             with open('image_id.txt', 'r') as f:
                 result_id = f.read()
             self.c.execute("DELETE FROM Save_Files WHERE id = ?", (result_id,))
+            self.history.clear()  # This should work now
+            self.c.execute("SELECT * FROM Save_Files ORDER BY created_at DESC")
+            rows = self.c.fetchall()
+            print(rows)
+            for row in rows:
+                status = str(row[9])
+                recent = str(row[14])
+                id = str(row[0])
+                self.history.addItem(status + " - " + recent, id)
             self.conn.commit()
             self.Dialog.close()
+            self.closeDialog.close()
+            self.background_widget.hide()
         except Exception as e:
             print(e)
 
