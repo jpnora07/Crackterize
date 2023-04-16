@@ -71,6 +71,7 @@ class cal_dialog(object):
                                  "}")
         self.label.setAlignment(QtCore.Qt.AlignCenter)
         self.label.setObjectName("label")
+        self.label.setWordWrap(True)
         self.verticalLayout_10.addWidget(self.label)
         self.verticalLayout_2.addWidget(self.widget_2)
         self.widget_3 = QtWidgets.QWidget(self.widget)
