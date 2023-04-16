@@ -352,7 +352,9 @@ class Ui_DialogSegment(object):
         self.thresholderNum.setAlignment(QtCore.Qt.AlignCenter)
         self.thresholderNum.setFixedSize(40, 30)
         self.thresholderNum.setStyleSheet(
-            "  background-color: transparent; ")
+            "  background-color: transparent; "
+            "color:black;"
+            "font_size:12px;")
         self.thresholderNum.setObjectName("thresholderNum")
         self.horizontalLayout_3.addWidget(self.thresholderNum)
         self.verticalLayout_6.addWidget(self.widget_9)
@@ -365,7 +367,16 @@ class Ui_DialogSegment(object):
         self.verticalLayout_7 = QtWidgets.QVBoxLayout(self.widget_3)
         self.verticalLayout_7.setContentsMargins(-1, 0, -1, 0)
         self.verticalLayout_7.setObjectName("verticalLayout_7")
-        self.label_2 = QtWidgets.QLabel(self.widget_3)
+        self.widget_12 = QtWidgets.QWidget(self.widget_3)
+        self.widget_12.setMaximumSize(QtCore.QSize(16777215, 130))
+        self.widget_12.setStyleSheet("#widget_12{border: 3px solid white;\n"
+                                     "border-color: rgb(172, 172, 172);;;}")
+        self.widget_12.setObjectName("widget_12")
+        self.verticalLayout_5 = QtWidgets.QVBoxLayout(self.widget_12)
+        self.verticalLayout_5.setContentsMargins(10, 0, 10, 0)
+        self.verticalLayout_5.setSpacing(0)
+        self.verticalLayout_5.setObjectName("verticalLayout_5")
+        self.label_2 = QtWidgets.QLabel(self.widget_12)
         self.label_2.setMaximumSize(QtCore.QSize(16777215, 50))
         self.label_2.setStyleSheet("#label_2{\n"
                                    "  background-color: transparent;  \n"
@@ -379,13 +390,13 @@ class Ui_DialogSegment(object):
         self.label_2.setAlignment(QtCore.Qt.AlignCenter)
         self.label_2.setWordWrap(True)
         self.label_2.setObjectName("label_2")
-        self.verticalLayout_7.addWidget(self.label_2)
-        self.widget_10 = QtWidgets.QWidget(self.widget_3)
+        self.verticalLayout_5.addWidget(self.label_2)
+        self.widget_10 = QtWidgets.QWidget(self.widget_12)
         self.widget_10.setMaximumSize(QtCore.QSize(16777215, 50))
         self.widget_10.setObjectName("widget_10")
         self.horizontalLayout_2 = QtWidgets.QHBoxLayout(self.widget_10)
         self.horizontalLayout_2.setContentsMargins(0, 0, 0, 0)
-        self.horizontalLayout_2.setSpacing(10)
+        self.horizontalLayout_2.setSpacing(5)
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
         self.NumOfDistance = QtWidgets.QTextEdit(self.widget_10)
         self.NumOfDistance.setEnabled(True)
@@ -396,15 +407,15 @@ class Ui_DialogSegment(object):
         self.NumOfDistance.setAutoFillBackground(False)
         self.NumOfDistance.setAlignment(QtCore.Qt.AlignCenter | QtCore.Qt.AlignVCenter)
         self.NumOfDistance.setStyleSheet("""
-    #NumOfDistance {
-        color: black;
-        background-color: white;
-        border: 1px solid gray;
-        padding: 5px;
-        text-align: center;
-    
-    }
-""")
+            #NumOfDistance {
+                color: black;
+                background-color: white;
+                border: 1px solid gray;
+                padding: 5px;
+                text-align: center;
+
+            }
+        """)
         self.NumOfDistance.setLineWidth(0)
         self.NumOfDistance.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
         self.NumOfDistance.setSizeAdjustPolicy(QtWidgets.QAbstractScrollArea.AdjustIgnored)
@@ -413,18 +424,40 @@ class Ui_DialogSegment(object):
         self.NumOfDistance.setObjectName("NumOfDistance")
         self.horizontalLayout_2.addWidget(self.NumOfDistance)
         self.units = QtWidgets.QComboBox(self.widget_10)
-        self.units.setMinimumSize(QtCore.QSize(100, 40))
+        self.units.setMinimumSize(QtCore.QSize(0, 40))
         self.units.setMaximumSize(QtCore.QSize(16777215, 40))
-        self.units.setObjectName("units")
         self.units.addItems(["Millimeter (mm)", "Centimeter (cm)", "Inch (in)", "Foot (ft)", "Yard (yd)", "Meter (m)"])
-        self.units.setStyleSheet("#NumOfDistance{\n"
-                                 "background-color:white;"
-                                 "font-size:18px;\n"
-                                 "text-allign:center;\n"
-                                 "border:1px solid grey;\n"
+        self.units.setStyleSheet("\n"
+                                 "#units{\n"
+                                 "font: 600 8pt \"Segoe UI\";\n"
+                                 "color:#4A3B28;\n"
+                                 "background: transparent;\n"
+                                 "}\n"
+                                 "#units::drop-down{\n"
+                                 "image:url(images/arrowdown.png);\n"
+                                 "width: 15px;\n"
+                                 "height: 15px;\n"
+                                 "margin-top:3px;\n"
+                                 "}\n"
+                                 "#units QAbstractItemView {\n"
+                                 "background-color: rgba(255, 255, 255, 0.75);\n"
+                                 "padding: 2px;\n"
+                                 "color:#4A3B28;\n"
+                                 "outline: none;\n"
+                                 "}\n"
+                                 "#units QAbstractItemView::item {\n"
+                                 "background-color: #FFFFFF;\n"
+                                 "color: #4A3B28;\n"
+                                 "text-align: center;\n"
+                                 "    }\n"
+                                 "#units.comboBoxClass QLineEdit {\n"
+                                 "    text-align: center;\n"
+                                 "color:#4A3B28;\n"
                                  "}")
+        self.units.setObjectName("units")
         self.horizontalLayout_2.addWidget(self.units)
-        self.verticalLayout_7.addWidget(self.widget_10)
+        self.verticalLayout_5.addWidget(self.widget_10)
+        self.verticalLayout_7.addWidget(self.widget_12)
         self.widget_4 = QtWidgets.QWidget(self.widget_3)
         self.widget_4.setMinimumSize(QtCore.QSize(0, 0))
         self.widget_4.setMaximumSize(QtCore.QSize(307, 120))

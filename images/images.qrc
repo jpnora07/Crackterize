@@ -1,5 +1,9 @@
 <RCC>
   <qresource prefix="images">
+    <file>asddas.png</file>
+    <file>esc brown.png</file>
+    <file>esc.png</file>
+    <file>back.png</file>
     <file>checked.png</file>
     <file>failed.png</file>
     <file>info.png</file>

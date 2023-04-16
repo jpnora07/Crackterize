@@ -40,18 +40,21 @@ class add_details_dialog(object):
         self.verticalLayout = QtWidgets.QVBoxLayout(self.widget)
         self.verticalLayout.setContentsMargins(-1, 0, -1, -1)
         self.verticalLayout.setObjectName("verticalLayout")
+
         self.widget_2 = QtWidgets.QWidget(self.widget)
         self.widget_2.setObjectName("widget_2")
+
         self.horizontalLayout_2 = QtWidgets.QHBoxLayout(self.widget_2)
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
         self.WithLogo = QtWidgets.QWidget(self.widget_2)
         self.WithLogo.setMinimumSize(QtCore.QSize(500, 80))
-        self.WithLogo.setMaximumSize(QtCore.QSize(564, 80))
+        self.WithLogo.setMaximumSize(QtCore.QSize(500, 80))
         self.WithLogo.setStyleSheet("#WithLogo{border-image: url(images/Crackterize.png) 400 0 400 0 stretch;}")
         self.WithLogo.setObjectName("WithLogo")
-        self.horizontalLayout_3 = QtWidgets.QHBoxLayout(self.WithLogo)
-        self.horizontalLayout_3.setObjectName("horizontalLayout_3")
         self.horizontalLayout_2.addWidget(self.WithLogo)
+        self.horizontalLayout_3 = QtWidgets.QHBoxLayout(self.WithLogo)
+
+        self.horizontalLayout_3.setObjectName("horizontalLayout_3")
         self.verticalLayout.addWidget(self.widget_2)
         self.widget_3 = QtWidgets.QWidget(self.widget)
         self.widget_3.setObjectName("widget_3")
@@ -80,7 +83,7 @@ class add_details_dialog(object):
                                    "        border-radius: 10px;\n"
                                    "        font-size: 18px;\n"
                                    "        font-family: Arial;\n"
-                                   "        color: #333;\n"
+                                   "color:rgb(144, 115, 87);"
                                    "        background-color: #fff;\n"
                                    "        border: 2px solid #aaa;\n"
                                    "        padding: 2px;\n"
@@ -102,11 +105,13 @@ class add_details_dialog(object):
                                    "#loc_box QAbstractItemView {\n"
                                    "background-color: rgb(255, 255, 255);\n"
                                    "outline: none;\n"
+                                   "color:rgb(144, 115, 87);"
                                    " text-align: center;}\n"
                                    "\n"
                                    "#loc_box QAbstractItemView::item {\n"
                                    "background-color: #F4EBE6;\n"
                                    " color: #4A3B28;\n"
+                                   "color:rgb(144, 115, 87);"
                                    " text-align: center;\n"
                                    "min-height: 35px; min-width: 50px;\n"
                                    " border:0px;}\n"
@@ -114,6 +119,7 @@ class add_details_dialog(object):
                                    "#loc_box QListView{\n"
                                    "border: none;\n"
                                    " font-weight:bold;\n"
+                                   "color:rgb(144, 115, 87);"
                                    " text-align: center;}\n"
                                    "#loc_box QListView::item{border:0px;\n"
                                    "border-radius: 15px;\n"
@@ -123,12 +129,34 @@ class add_details_dialog(object):
                                    "color: white; \n"
                                    "background-color: #4A3B28}")
         self.loc_box.setObjectName("loc_box")
-        self.loc_box.addItems(["Vertical Crack/s on Wall", "Horizontal Crack/s on Wall", "Corner Crack/s",
-                               "Crack/s at the Beam Column Junction",
-                               "Crack/s on Column", "Crack/s on Slabs", "Crack/s on Slab Foundation",
-                               "Crack/s on Foundation",
-                               "Crack/s on Pavement"])
-        #self.loc_box.currentIndexChanged.connect(self.location_function)
+        self.loc_box.setMaxVisibleItems(10)
+        self.loc_box.addItems([
+            "Balconies and decks",
+            "Basements",
+            "Bridges",
+            "Ceilings",
+            "Chimneys",
+            "Concrete slabs",
+            "Dams",
+            "Electrical systems",
+            "Exterior surfaces",
+            "Fireplaces",
+            "Floors",
+            "Foundations",
+            "Historic structures",
+            "Parking structures",
+            "Pavements",
+            "Pipes and plumbing",
+            "Retaining walls",
+            "Roofs",
+            "Silos",
+            "Staircases",
+            "Storage tanks",
+            "Tunnels",
+            "Walls",
+            "Windows and doors"
+        ])
+        # self.loc_box.currentIndexChanged.connect(self.location_function)
         self.horizontalLayout_4.addWidget(self.loc_box)
         self.verticalLayout_2.addWidget(self.widget_6)
         self.widget_7 = QtWidgets.QWidget(self.widget_3)
@@ -154,7 +182,7 @@ class add_details_dialog(object):
                                     "        border-radius: 10px;\n"
                                     "        font-size: 18px;\n"
                                     "        font-family: Arial;\n"
-                                    "        color: #333;\n"
+                                    "color:rgb(144, 115, 87);"
                                     "        background-color: #fff;\n"
                                     "        border: 2px solid #aaa;\n"
                                     "        padding: 2px;\n"
@@ -176,11 +204,13 @@ class add_details_dialog(object):
                                     "#type_box QAbstractItemView {\n"
                                     "background-color: rgb(255, 255, 255);\n"
                                     "outline: none;\n"
+                                    "color:rgb(144, 115, 87);"
                                     " text-align: center;}\n"
                                     "\n"
                                     "#type_box QAbstractItemView::item {\n"
                                     "background-color: #F4EBE6;\n"
                                     " color: #4A3B28;\n"
+                                    "color:rgb(144, 115, 87);"
                                     " text-align: center;\n"
                                     "min-height: 35px; min-width: 50px;\n"
                                     " border:0px;}\n"
@@ -188,6 +218,7 @@ class add_details_dialog(object):
                                     "#type_box QListView{\n"
                                     "border: none;\n"
                                     " font-weight:bold;\n"
+                                    "color:rgb(144, 115, 87);"
                                     " text-align: center;}\n"
                                     "#type_box QListView::item{border:0px;\n"
                                     "border-radius: 15px;\n"
@@ -197,10 +228,15 @@ class add_details_dialog(object):
                                     "color: white; \n"
                                     "background-color: #4A3B28}")
         self.type_box.setObjectName("type_box")
+        self.type_box.setMaxVisibleItems(10)
         self.type_box.addItems(
-            ["Drying Shrinkage Crack/s", "Thermal Crack/s", "Structural Crack/s", "Settlement Crack/s",
-             "Corrosion Induced Crack/s", "Alkali-Silica Reaction", "Heaving Crack/s", "Overloading Crack/s",
-             "Joint Crack/s"])
+            ["Abrasion cracks", "Alkali-aggregate reaction (AAR) cracks", "Blistering cracks",
+             "Chemical reaction cracks", "Construction joints", "Corner cracks", "Craze cracks", "Crazing cracks",
+             "Diagonal cracks", "Drying shrinkage cracks", "Excessive load cracks", "Flexural cracks", "Impact cracks",
+             "Inadequate curing cracks", "Joint reflection cracks", "Lateral cracks", "Overloading cracks",
+             "Overlapping cracks", "Plastic shrinkage cracks", "Reflection cracks", "Scaling cracks",
+             "Settlement cracks", "Shear cracks", "Shrinkage cracks", "Spalling cracks", "Structural cracks",
+             "Temperature cracks", "Thermal cracks", "Vibration cracks"])
         # self.type_box.currentIndexChanged.connect(self.type_function)
         self.horizontalLayout_5.addWidget(self.type_box)
         self.verticalLayout_2.addWidget(self.widget_7)
@@ -226,7 +262,7 @@ class add_details_dialog(object):
                                            "        border-radius: 10px;\n"
                                            "        font-size: 18px;\n"
                                            "        font-family: Arial;\n"
-                                           "        color: #333;\n"
+                                           "color:rgb(144, 115, 87);"
                                            "        background-color: #fff;\n"
                                            "        border: 2px solid #aaa;\n"
                                            "        padding: 2px;\n"
@@ -248,11 +284,13 @@ class add_details_dialog(object):
                                            "#progression_box QAbstractItemView {\n"
                                            "background-color: rgb(255, 255, 255);\n"
                                            "outline: none;\n"
+                                           "color:rgb(144, 115, 87);"
                                            " text-align: center;}\n"
                                            "\n"
                                            "#progression_box QAbstractItemView::item {\n"
                                            "background-color: #F4EBE6;\n"
                                            " color: #4A3B28;\n"
+                                           "color:rgb(144, 115, 87);"
                                            " text-align: center;\n"
                                            "min-height: 35px; min-width: 50px;\n"
                                            " border:0px;}\n"
@@ -260,6 +298,7 @@ class add_details_dialog(object):
                                            "#progression_box QListView{\n"
                                            "border: none;\n"
                                            " font-weight:bold;\n"
+                                           "color:rgb(144, 115, 87);"
                                            " text-align: center;}\n"
                                            "#progression_box QListView::item{border:0px;\n"
                                            "border-radius: 15px;\n"
@@ -268,13 +307,35 @@ class add_details_dialog(object):
                                            "#progression_box QListView::item:selected { \n"
                                            "color: white; \n"
                                            "background-color: #4A3B28}")
-        self.progression_box.addItems(["Fatigue Crack/s", "Environmental Crack/s", "Creep Crack Growth",
-                                       "Overload Crack Growth", "Thermal Fatigue Crack Growth",
-                                       "Corrosion Fatigue Crack Growth",
-                                       "Stress Corrosion Cracking", "Hydrogen Embrittlement",
-                                       "Wear-Induced Crack Growth"])
+        self.progression_box.addItems([
+            'Buckling',
+            'Convergence',
+            'Corrosion',
+            'Corrosion-induced cracking',
+            'Creep rupture',
+            'Delayed cracking',
+            'Delamination',
+            'Erosion',
+            'Erosion or weathering cracks',
+            'Fatigue cracking',
+            'Frost heave cracks',
+            'Intersecting',
+            'Joint spalling',
+            'Longitudinal cracking',
+            'Mud cracking',
+            'Network',
+            'Pattern cracking',
+            'Propagation',
+            'Reinforcement corrosion',
+            'Spalling',
+            'Structural failure',
+            'Thermal expansion and contraction cracks',
+            'Transverse cracking',
+            'Veining',
+            'Water infiltration cracks'
+        ])
         self.progression_box.setObjectName("progression_box")
-        #self.progression_box.currentIndexChanged.connect(self.progression_function)
+        # self.progression_box.currentIndexChanged.connect(self.progression_function)
         self.horizontalLayout_6.addWidget(self.progression_box)
         self.verticalLayout_2.addWidget(self.widget_8)
         self.verticalLayout.addWidget(self.widget_3)
@@ -444,5 +505,3 @@ class add_details_dialog(object):
                             break
         except Exception as e:
             print(e)
-
-

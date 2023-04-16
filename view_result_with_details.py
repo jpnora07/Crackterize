@@ -60,15 +60,22 @@ class result_with_details(object):
         self.verticalLayout = QtWidgets.QVBoxLayout(self.widget)
         self.verticalLayout.setContentsMargins(-1, 0, -1, 0)
         self.verticalLayout.setObjectName("verticalLayout")
+
+        self.widget_212 = QtWidgets.QWidget(self.widget)
+        self.horizontalLayout_111 = QtWidgets.QHBoxLayout(self.widget_212)
         self.WithLogo = QtWidgets.QWidget(self.widget)
-        self.WithLogo.setMinimumSize(QtCore.QSize(564, 80))
-        self.WithLogo.setMaximumSize(QtCore.QSize(16777215, 80))
+        self.WithLogo.setMinimumSize(QtCore.QSize(500, 80))
+        self.WithLogo.setMaximumSize(QtCore.QSize(500, 80))
         self.WithLogo.setStyleSheet("#WithLogo{border-image: url(images/Crackterize.png) 400 0 400 0 stretch;}")
         self.WithLogo.setObjectName("WithLogo")
+
+        self.horizontalLayout_111.addWidget(self.WithLogo)
+        self.verticalLayout.addWidget(self.widget_212)
+
         self.horizontalLayout_3 = QtWidgets.QHBoxLayout(self.WithLogo)
         self.horizontalLayout_3.setContentsMargins(-1, 0, -1, -1)
         self.horizontalLayout_3.setObjectName("horizontalLayout_3")
-        self.verticalLayout.addWidget(self.WithLogo)
+
         self.widget_4 = QtWidgets.QWidget(self.widget)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
@@ -381,7 +388,7 @@ class result_with_details(object):
                 self.pixmap_orig = QPixmap()
                 self.pixmap_orig.loadFromData(byte_array_orig)
 
-                self.label_image.setFixedSize(322, 447)
+                self.label_image.setMinimumSize(QtCore.QSize(300, 300))
                 label_size = self.label_image.size()
                 scaled_pixmap = self.pixmap.scaled(label_size, Qt.KeepAspectRatio, Qt.SmoothTransformation)
 

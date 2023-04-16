@@ -12,14 +12,14 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>983</width>
-    <height>573</height>
+    <width>1000</width>
+    <height>700</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>983</width>
-    <height>573</height>
+    <width>1000</width>
+    <height>700</height>
    </size>
   </property>
   <property name="maximumSize">
@@ -58,81 +58,64 @@ block-size: fit-content;</string>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout">
        <item>
-        <widget class="QWidget" name="widget_3" native="true">
-         <layout class="QVBoxLayout" name="verticalLayout_2">
+        <widget class="QWidget" name="widget_2" native="true">
+         <layout class="QVBoxLayout" name="verticalLayout_3">
+          <property name="leftMargin">
+           <number>180</number>
+          </property>
+          <property name="topMargin">
+           <number>50</number>
+          </property>
+          <property name="rightMargin">
+           <number>180</number>
+          </property>
+          <property name="bottomMargin">
+           <number>60</number>
+          </property>
           <item>
-           <widget class="QWidget" name="widget_6" native="true">
-            <property name="styleSheet">
-             <string notr="true">background-image:url(:/images/Crackterize.png);
-background-repeat: no-repeat; 
-background-position: center;</string>
+           <widget class="QWidget" name="threeBtn" native="true">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>0</height>
+             </size>
             </property>
-            <widget class="QWidget" name="widget_2" native="true">
-             <property name="geometry">
-              <rect>
-               <x>0</x>
-               <y>-20</y>
-               <width>947</width>
-               <height>168</height>
-              </rect>
-             </property>
-             <layout class="QVBoxLayout" name="verticalLayout_3">
-              <property name="leftMargin">
-               <number>180</number>
-              </property>
-              <property name="topMargin">
-               <number>50</number>
-              </property>
-              <property name="rightMargin">
-               <number>180</number>
-              </property>
-              <property name="bottomMargin">
-               <number>60</number>
-              </property>
-              <item>
-               <widget class="QWidget" name="threeBtn" native="true">
-                <property name="minimumSize">
-                 <size>
-                  <width>0</width>
-                  <height>0</height>
-                 </size>
-                </property>
-                <property name="styleSheet">
-                 <string notr="true">#threeBtn{
+            <property name="styleSheet">
+             <string notr="true">#threeBtn{
 background-color: rgb(255, 255, 255);
 border-radius:28px;
 }
 </string>
-                </property>
-                <layout class="QHBoxLayout" name="horizontalLayout">
-                 <property name="spacing">
-                  <number>20</number>
-                 </property>
-                 <property name="leftMargin">
-                  <number>20</number>
-                 </property>
-                 <property name="topMargin">
-                  <number>15</number>
-                 </property>
-                 <property name="rightMargin">
-                  <number>20</number>
-                 </property>
-                 <property name="bottomMargin">
-                  <number>15</number>
-                 </property>
-                 <item>
-                  <widget class="QComboBox" name="myProjects">
-                   <property name="minimumSize">
-                    <size>
-                     <width>25</width>
-                     <height>0</height>
-                    </size>
-                   </property>
-                   <property name="toolTip">
-                    <string/>
-                   </property>
-                   <property name="styleSheet">
-                    <string notr="true">#myProjects{
+            </property>
+            <layout class="QHBoxLayout" name="horizontalLayout">
+             <property name="spacing">
+              <number>20</number>
+             </property>
+             <property name="leftMargin">
+              <number>20</number>
+             </property>
+             <property name="topMargin">
+              <number>15</number>
+             </property>
+             <property name="rightMargin">
+              <number>20</number>
+             </property>
+             <property name="bottomMargin">
+              <number>15</number>
+             </property>
+             <item>
+              <widget class="QComboBox" name="myProjects">
+               <property name="minimumSize">
+                <size>
+                 <width>25</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="toolTip">
+                <string/>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">#myProjects{
 border-radius:4px;
 font: 600 12pt &quot;Segoe UI&quot;;
 color:#4A3B28;
@@ -173,13 +156,13 @@ QListView::item:hover{
     background-color:   rgb(47, 175, 178);
     border:                 none;
 }</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QComboBox" name="history">
-                   <property name="styleSheet">
-                    <string notr="true">#history{
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QComboBox" name="history">
+               <property name="styleSheet">
+                <string notr="true">#history{
 border-radius:4px;
 font: 600 12pt &quot;Segoe UI&quot;;
 color:#4A3B28;
@@ -205,18 +188,18 @@ text-align: center;
 #history.comboBoxClass QLineEdit {
     text-align: center;
 }</string>
-                   </property>
-                   <item>
-                    <property name="text">
-                     <string>        History</string>
-                    </property>
-                   </item>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QComboBox" name="howtoUse">
-                   <property name="styleSheet">
-                    <string notr="true">#howtoUse{
+               </property>
+               <item>
+                <property name="text">
+                 <string>        History</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+             <item>
+              <widget class="QComboBox" name="howtoUse">
+               <property name="styleSheet">
+                <string notr="true">#howtoUse{
 border-radius:4px;
 font: 600 12pt &quot;Segoe UI&quot;;
 color:#4A3B28;
@@ -242,19 +225,105 @@ text-align: center;
 #howtoUse.comboBoxClass QLineEdit {
     text-align: center;
 }</string>
-                   </property>
-                   <item>
-                    <property name="text">
-                     <string>  How to Use</string>
-                    </property>
-                   </item>
-                  </widget>
-                 </item>
-                </layout>
-               </widget>
-              </item>
-             </layout>
-            </widget>
+               </property>
+               <item>
+                <property name="text">
+                 <string>  How to Use</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+             <item>
+              <widget class="QWidget" name="how_widget" native="true">
+               <layout class="QHBoxLayout" name="horizontalLayout_5">
+                <property name="spacing">
+                 <number>0</number>
+                </property>
+                <property name="leftMargin">
+                 <number>0</number>
+                </property>
+                <property name="topMargin">
+                 <number>0</number>
+                </property>
+                <property name="rightMargin">
+                 <number>0</number>
+                </property>
+                <property name="bottomMargin">
+                 <number>0</number>
+                </property>
+                <item>
+                 <widget class="QPushButton" name="how_btn2">
+                  <property name="styleSheet">
+                   <string notr="true">font: 600 12pt &quot;Segoe UI&quot;;
+color:#4A3B28;
+background: transparent;</string>
+                  </property>
+                  <property name="text">
+                   <string>Help and Info</string>
+                  </property>
+                  <property name="iconSize">
+                   <size>
+                    <width>21</width>
+                    <height>21</height>
+                   </size>
+                  </property>
+                  <property name="default">
+                   <bool>false</bool>
+                  </property>
+                  <property name="flat">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QPushButton" name="how_btn">
+                  <property name="maximumSize">
+                   <size>
+                    <width>40</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">
+background: transparent;</string>
+                  </property>
+                  <property name="text">
+                   <string/>
+                  </property>
+                  <property name="icon">
+                   <iconset resource="../images/images.qrc">
+                    <normaloff>:/images/arrowdown.png</normaloff>:/images/arrowdown.png</iconset>
+                  </property>
+                  <property name="iconSize">
+                   <size>
+                    <width>21</width>
+                    <height>21</height>
+                   </size>
+                  </property>
+                  <property name="flat">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QWidget" name="widget_3" native="true">
+         <layout class="QVBoxLayout" name="verticalLayout_2">
+          <item>
+           <widget class="QWidget" name="widget_6" native="true">
+            <property name="styleSheet">
+             <string notr="true">background-image:url(:/images/Crackterize.png);
+background-repeat: no-repeat; 
+background-position: center;</string>
+            </property>
            </widget>
           </item>
          </layout>
