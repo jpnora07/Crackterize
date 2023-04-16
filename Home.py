@@ -102,7 +102,7 @@ class Ui_MainWindow(object):
         self.Mainwindow = MainWindow
         MainWindow.setObjectName("Crackterize")
         # Set the logo using an QIcon object
-        logo = QIcon('images/icon_head.jpg')
+        logo = QIcon('images/main_icon.png')
         MainWindow.setWindowIcon(logo)
         MainWindow.setWindowModality(QtCore.Qt.NonModal)
         MainWindow.setEnabled(True)
@@ -161,7 +161,7 @@ class Ui_MainWindow(object):
                                     "")
         self.threeBtn.setObjectName("threeBtn")
         self.horizontalLayout = QtWidgets.QHBoxLayout(self.threeBtn)
-        self.horizontalLayout.setContentsMargins(20, 15, 20, 15)
+        self.horizontalLayout.setContentsMargins(100, 15, 100, 15)
         self.horizontalLayout.setSpacing(20)
         self.horizontalLayout.setObjectName("horizontalLayout")
         self.myProjects = QtWidgets.QComboBox(self.threeBtn)
@@ -652,7 +652,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_6.setContentsMargins(30, 30, 30, 30)
         self.verticalLayout_6.setSpacing(0)
         self.verticalLayout_6.setObjectName("verticalLayout_6")
-        self.calLbl = QtWidgets.QPushButton("Calculate Measurements", self.widgetUpload_2)
+        self.calLbl = QtWidgets.QPushButton("Concrete Calculator", self.widgetUpload_2)
         self.calLbl.setStyleSheet("#calLbl{\n"
                                   "font-weight:bold;\n"
                                   " color:#363131;\n"
@@ -1014,6 +1014,26 @@ class Ui_MainWindow(object):
             self.horizontalLayout_4.addWidget(self.label_16)
             self.verticalLayout_8.addWidget(self.widget_6)
             self.verticalLayout_3.addWidget(self.widget_5)
+
+            self.widget_2 = QtWidgets.QWidget(self.scrollAreaWidgetContents)
+            self.widget_2.setObjectName("widget_2")
+            self.horizontalLayout_5 = QtWidgets.QHBoxLayout(self.widget_2)
+            self.horizontalLayout_5.setContentsMargins(-1, 0, -1, 0)
+            self.horizontalLayout_5.setObjectName("horizontalLayout_5")
+            self.toolButton = QtWidgets.QToolButton(self.widget_2)
+            self.toolButton.setText("Press Esc to exit.")
+            self.toolButton.setMinimumSize(QtCore.QSize(30, 30))
+            self.toolButton.setStyleSheet("color:rgba(111, 75, 39, 0.77);")
+            icon = QtGui.QIcon()
+            icon.addPixmap(QtGui.QPixmap("images/asddas.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+            self.toolButton.setIcon(icon)
+            self.toolButton.setIconSize(QtCore.QSize(40, 40))
+            self.toolButton.setToolButtonStyle(QtCore.Qt.ToolButtonTextUnderIcon)
+            self.toolButton.setAutoRaise(True)
+            self.toolButton.setObjectName("toolButton")
+            self.horizontalLayout_5.addWidget(self.toolButton)
+            self.verticalLayout_3.addWidget(self.widget_2)
+
             self.scrollArea.setWidget(self.scrollAreaWidgetContents)
             self.verticalLayout_2.addWidget(self.scrollArea)
             self.verticalLayout.addWidget(self.widget)
@@ -1028,7 +1048,7 @@ class Ui_MainWindow(object):
                                             "<b>6.</b> To access your projects and folders later, simply navigate to the main menu and select the project you want to view.<br><br>\n"
                                             "<b>7.</b> Enjoy using the app\'s project feature to keep your files organized and easily accessible!")
             self.label_7.setText("Calculator")
-            self.label_5.setText("The calculator button in the main menu of the app provides access to different types of engineering-related calculators, such as Scientific Calculator, Stairs Calculator, Curb and Gutter Barrier Calculator, and others. These calculators can be used to perform quick calculations related to various engineering tasks and projects, without the need for a separate calculator app or tool.")
+            self.label_5.setText("The calculator button in the main menu of the app provides access to different types of engineering-related calculators, such as Stairs Calculator, Curb and Gutter Barrier Calculator, and others. These calculators can be used to perform quick calculations related to various engineering tasks and projects, without the need for a separate calculator app or tool.")
             self.label_8.setText("Developers")
             self.label_9.setText("Ilagan, Jayvee P.")
             self.label_10.setText("Maiquez, John Carlo M.")
@@ -1152,6 +1172,7 @@ class Ui_MainWindow(object):
         self.ET_newproject.setStyleSheet("#ET_newproject{\n"
                                          "text-allign:center;\n"
                                          "font-size:20px;\n"
+                                         "color:rgb(144, 115, 87);"
                                          "padding:8px;\n"
                                          "background-color: rgb(255, 255, 255);\n"
                                          "border-top-left-radius :12px;\n"

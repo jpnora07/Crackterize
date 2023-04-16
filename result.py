@@ -68,15 +68,20 @@ class Result_Dialog(object):
         self.verticalLayout.addWidget(self.widget_16)
         self.verticalLayout.setContentsMargins(-1, 9, -1, 0)
         self.verticalLayout.setObjectName("verticalLayout")
+
+        self.widget_212 = QtWidgets.QWidget(self.widget)
+        self.horizontalLayout_111 = QtWidgets.QHBoxLayout(self.widget_212)
         self.WithLogo = QtWidgets.QWidget(self.widget)
         self.WithLogo.setMinimumSize(QtCore.QSize(500, 80))
-        self.WithLogo.setMaximumSize(QtCore.QSize(16777215, 80))
+        self.WithLogo.setMaximumSize(QtCore.QSize(500, 80))
         self.WithLogo.setStyleSheet("#WithLogo{border-image: url(images/Crackterize.png) 400 0 400 0 stretch;}")
         self.WithLogo.setObjectName("WithLogo")
+        self.horizontalLayout_111.addWidget(self.WithLogo)
         self.horizontalLayout_3 = QtWidgets.QHBoxLayout(self.WithLogo)
+
         self.horizontalLayout_3.setContentsMargins(-1, 0, -1, -1)
         self.horizontalLayout_3.setObjectName("horizontalLayout_3")
-        self.verticalLayout.addWidget(self.WithLogo)
+        self.verticalLayout.addWidget(self.widget_212)
         self.widget_4 = QtWidgets.QWidget(self.widget)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
@@ -1056,6 +1061,7 @@ class Result_Dialog(object):
                                          "text-allign:center;\n"
                                          "font-size:20px;\n"
                                          "padding:8px;\n"
+                                         "color:rgb(144, 115, 87);"
                                          "background-color: rgb(255, 255, 255);\n"
                                          "border-top-left-radius :12px;\n"
                                          "border-top-right-radius : 12px; \n"
@@ -1613,6 +1619,7 @@ class Result_Dialog(object):
                                         "text-allign:center;\n"
                                         "font-size:20px;\n"
                                         "padding:8px;\n"
+                                         "color:rgb(144, 115, 87);"
                                         "background-color: rgb(255, 255, 255);\n"
                                         "border-top-left-radius :12px;\n"
                                         "border-top-right-radius : 12px; \n"

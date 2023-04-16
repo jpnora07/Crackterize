@@ -100,9 +100,9 @@ QScrollBar::sub-page:vertical {
          <property name="geometry">
           <rect>
            <x>0</x>
-           <y>-927</y>
+           <y>-1095</y>
            <width>612</width>
-           <height>1673</height>
+           <height>1701</height>
           </rect>
          </property>
          <property name="minimumSize">
@@ -409,7 +409,7 @@ color: rgba(111, 75, 39, 0.77);
                    <string/>
                   </property>
                   <property name="pixmap">
-                   <pixmap resource="../Crackterize2/images/images.qrc">:/images/Ilagan.png</pixmap>
+                   <pixmap>:/images/Ilagan.png</pixmap>
                   </property>
                   <property name="scaledContents">
                    <bool>true</bool>
@@ -454,7 +454,7 @@ color: rgba(111, 75, 39, 0.77);
                    <string/>
                   </property>
                   <property name="pixmap">
-                   <pixmap resource="../Crackterize2/images/images.qrc">:/newPrefix/Maiquez.png</pixmap>
+                   <pixmap>:/newPrefix/Maiquez.png</pixmap>
                   </property>
                   <property name="scaledContents">
                    <bool>true</bool>
@@ -505,7 +505,7 @@ color: rgba(111, 75, 39, 0.77);
                    <string/>
                   </property>
                   <property name="pixmap">
-                   <pixmap resource="../Crackterize2/images/images.qrc">:/images/Narvaez.png</pixmap>
+                   <pixmap>:/images/Narvaez.png</pixmap>
                   </property>
                   <property name="scaledContents">
                    <bool>true</bool>
@@ -534,6 +534,9 @@ color: rgba(111, 75, 39, 0.77);
              </item>
              <item>
               <widget class="QWidget" name="widget_6" native="true">
+               <property name="styleSheet">
+                <string notr="true"/>
+               </property>
                <layout class="QHBoxLayout" name="horizontalLayout_4">
                 <property name="leftMargin">
                  <number>25</number>
@@ -592,6 +595,50 @@ color: rgba(111, 75, 39, 0.77);
             </layout>
            </widget>
           </item>
+          <item>
+           <widget class="QWidget" name="widget_2" native="true">
+            <layout class="QHBoxLayout" name="horizontalLayout_5">
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="QToolButton" name="toolButton">
+               <property name="minimumSize">
+                <size>
+                 <width>30</width>
+                 <height>30</height>
+                </size>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">color:rgba(111, 75, 39, 0.77);</string>
+               </property>
+               <property name="text">
+                <string>Press Esc to exit.</string>
+               </property>
+               <property name="icon">
+                <iconset resource="../images/images.qrc">
+                 <normaloff>:/images/asddas.png</normaloff>:/images/asddas.png</iconset>
+               </property>
+               <property name="iconSize">
+                <size>
+                 <width>40</width>
+                 <height>40</height>
+                </size>
+               </property>
+               <property name="toolButtonStyle">
+                <enum>Qt::ToolButtonTextUnderIcon</enum>
+               </property>
+               <property name="autoRaise">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
          </layout>
         </widget>
        </widget>
@@ -602,8 +649,7 @@ color: rgba(111, 75, 39, 0.77);
   </layout>
  </widget>
  <resources>
-  <include location="images/images.qrc"/>
-  <include location="../Crackterize2/images/images.qrc"/>
+  <include location="../images/images.qrc"/>
  </resources>
  <connections/>
 </ui>

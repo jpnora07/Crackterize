@@ -80,34 +80,7 @@ class cal_dialog(object):
         self.verticalLayout_3.setContentsMargins(9, 4, 9, 4)
         self.verticalLayout_3.setSpacing(4)
         self.verticalLayout_3.setObjectName("verticalLayout_3")
-        self.scientific = QtWidgets.QPushButton(self.widget_3)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.scientific.sizePolicy().hasHeightForWidth())
-        self.scientific.setSizePolicy(sizePolicy)
-        self.scientific.clicked.connect(self.scifi_function)
-        self.scientific.setStyleSheet("#scientific{\n"
-                                      "font-weight:bold;\n"
-                                      "color: white;\n"
-                                      "background-color: #6F4B27;\n"
-                                      "font-family: Inter;\n"
-                                      "border-top-left-radius: 7px;\n"
-                                      "border-top-right-radius: 7px;\n"
-                                      "border-bottom-left-radius: 7px;\n"
-                                      "border-bottom-right-radius: 7px;\n"
-                                      "font-size: 15px;\n"
-                                      "text-align: center;\n"
-                                      "}\n"
-                                      "#scientific:hover{\n"
-                                      "color: rgb(144,115,87);\n"
-                                      "border : 3px solid rgb(144,115,87);\n"
-                                      "background-color: white;\n"
-                                      "}\n"
-                                      "")
-        self.scientific.setFlat(False)
-        self.scientific.setObjectName("scientific")
-        self.verticalLayout_3.addWidget(self.scientific)
+
         self.verticalLayout_2.addWidget(self.widget_3)
         self.widget_5 = QtWidgets.QWidget(self.widget)
         self.widget_5.setObjectName("widget_5")
@@ -333,8 +306,7 @@ class cal_dialog(object):
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
         Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
-        self.label.setText(_translate("Dialog", "Calculator"))
-        self.scientific.setText(_translate("Dialog", "Scientific Calculator"))
+        self.label.setText(_translate("Dialog", "Concrete Calculators"))
         self.stairs.setText(_translate("Dialog", "Stairs Calculator"))
         self.curbgutter.setText(_translate("Dialog", "Curb and Gutter Barrier Calculator"))
         self.slabssquare.setText(_translate("Dialog", "Slabs / Square Footings Calculator"))
@@ -344,18 +316,6 @@ class cal_dialog(object):
     def exit_function(self):
         self.Dialog.close()
         self.background_widget.hide()
-    def scifi_function(self):
-        try:
-
-            ui = sci_Calculator() #class name of file dialog
-            ui.move(
-                QtWidgets.QApplication.desktop().screen().rect().center() - ui.rect().center()
-            )
-            ui.show()
-            ui.exec_()
-
-        except Exception as e:
-            print(e)
 
     def concrete_function(self):
         try:

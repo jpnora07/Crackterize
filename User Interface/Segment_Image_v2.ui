@@ -215,7 +215,7 @@ width: fit-content;
         </property>
         <layout class="QVBoxLayout" name="verticalLayout_6">
          <property name="topMargin">
-          <number>0</number>
+          <number>12</number>
          </property>
          <item>
           <widget class="QWidget" name="widget_8" native="true">
@@ -315,110 +315,139 @@ border-color: rgb(172, 172, 172);;
           <number>0</number>
          </property>
          <item>
-          <widget class="QLabel" name="label_2">
+          <widget class="QWidget" name="widget_12" native="true">
            <property name="maximumSize">
             <size>
              <width>16777215</width>
-             <height>50</height>
+             <height>130</height>
             </size>
            </property>
            <property name="styleSheet">
-            <string notr="true">#label_2{
+            <string notr="true">#widget_12{border: 3px solid white;
+border-color: rgb(172, 172, 172);;;}</string>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_5">
+            <property name="spacing">
+             <number>0</number>
+            </property>
+            <property name="leftMargin">
+             <number>10</number>
+            </property>
+            <property name="topMargin">
+             <number>0</number>
+            </property>
+            <property name="rightMargin">
+             <number>10</number>
+            </property>
+            <property name="bottomMargin">
+             <number>0</number>
+            </property>
+            <item>
+             <widget class="QLabel" name="label_2">
+              <property name="maximumSize">
+               <size>
+                <width>16777215</width>
+                <height>50</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">#label_2{
 	
 color: #2E74A9;
 font: bold;
 font-size: 13px;
 border-bottom-color: rgb(172, 172, 172);;
 }</string>
-           </property>
-           <property name="text">
-            <string>Distance between Crack and Camera</string>
-           </property>
-           <property name="textFormat">
-            <enum>Qt::PlainText</enum>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignCenter</set>
-           </property>
-           <property name="wordWrap">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QWidget" name="widget_10" native="true">
-           <property name="maximumSize">
-            <size>
-             <width>16777215</width>
-             <height>50</height>
-            </size>
-           </property>
-           <layout class="QHBoxLayout" name="horizontalLayout_2">
-            <property name="spacing">
-             <number>10</number>
-            </property>
-            <property name="leftMargin">
-             <number>0</number>
-            </property>
-            <property name="topMargin">
-             <number>0</number>
-            </property>
-            <property name="rightMargin">
-             <number>0</number>
-            </property>
-            <property name="bottomMargin">
-             <number>0</number>
-            </property>
-            <item>
-             <widget class="QTextEdit" name="NumOfDistance">
-              <property name="enabled">
+              </property>
+              <property name="text">
+               <string>Distance between Crack and Camera</string>
+              </property>
+              <property name="textFormat">
+               <enum>Qt::PlainText</enum>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
+              </property>
+              <property name="wordWrap">
                <bool>true</bool>
               </property>
-              <property name="minimumSize">
-               <size>
-                <width>0</width>
-                <height>40</height>
-               </size>
-              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QWidget" name="widget_10" native="true">
               <property name="maximumSize">
                <size>
-                <width>50</width>
-                <height>40</height>
+                <width>16777215</width>
+                <height>50</height>
                </size>
               </property>
-              <property name="acceptDrops">
-               <bool>true</bool>
-              </property>
-              <property name="layoutDirection">
-               <enum>Qt::LeftToRight</enum>
-              </property>
-              <property name="autoFillBackground">
-               <bool>false</bool>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">#distanceNum{
+              <layout class="QHBoxLayout" name="horizontalLayout_2">
+               <property name="spacing">
+                <number>5</number>
+               </property>
+               <property name="leftMargin">
+                <number>0</number>
+               </property>
+               <property name="topMargin">
+                <number>0</number>
+               </property>
+               <property name="rightMargin">
+                <number>0</number>
+               </property>
+               <property name="bottomMargin">
+                <number>0</number>
+               </property>
+               <item>
+                <widget class="QTextEdit" name="NumOfDistance">
+                 <property name="enabled">
+                  <bool>true</bool>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>50</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                 <property name="acceptDrops">
+                  <bool>true</bool>
+                 </property>
+                 <property name="layoutDirection">
+                  <enum>Qt::LeftToRight</enum>
+                 </property>
+                 <property name="autoFillBackground">
+                  <bool>false</bool>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">#distanceNum{
 font-size:18px;
 text-allign:center;
 border:1px solid grey;
+color:black;
 }</string>
-              </property>
-              <property name="lineWidth">
-               <number>0</number>
-              </property>
-              <property name="verticalScrollBarPolicy">
-               <enum>Qt::ScrollBarAlwaysOff</enum>
-              </property>
-              <property name="sizeAdjustPolicy">
-               <enum>QAbstractScrollArea::AdjustIgnored</enum>
-              </property>
-              <property name="lineWrapMode">
-               <enum>QTextEdit::NoWrap</enum>
-              </property>
-              <property name="readOnly">
-               <bool>false</bool>
-              </property>
-              <property name="html">
-               <string notr="true">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+                 </property>
+                 <property name="lineWidth">
+                  <number>0</number>
+                 </property>
+                 <property name="verticalScrollBarPolicy">
+                  <enum>Qt::ScrollBarAlwaysOff</enum>
+                 </property>
+                 <property name="sizeAdjustPolicy">
+                  <enum>QAbstractScrollArea::AdjustIgnored</enum>
+                 </property>
+                 <property name="lineWrapMode">
+                  <enum>QTextEdit::NoWrap</enum>
+                 </property>
+                 <property name="readOnly">
+                  <bool>false</bool>
+                 </property>
+                 <property name="html">
+                  <string notr="true">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 hr { height: 1px; border-width: 0; }
@@ -426,56 +455,86 @@ li.unchecked::marker { content: &quot;\2610&quot;; }
 li.checked::marker { content: &quot;\2612&quot;; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Segoe UI'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:18px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-              </property>
-              <property name="placeholderText">
-               <string>0</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QComboBox" name="units">
-              <property name="minimumSize">
-               <size>
-                <width>0</width>
-                <height>40</height>
-               </size>
-              </property>
-              <property name="maximumSize">
-               <size>
-                <width>16777215</width>
-                <height>40</height>
-               </size>
-              </property>
-              <item>
-               <property name="text">
-                <string>Milimeter (mm)</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>Centimeter (cm)</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>Meter (m)</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>Foot (ft)</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>Yard (yd)</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>Inch (in)</string>
-               </property>
-              </item>
+                 </property>
+                 <property name="placeholderText">
+                  <string>0</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QComboBox" name="units">
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>16777215</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">
+#units{
+font: 600 8pt &quot;Segoe UI&quot;;
+color:#4A3B28;
+background: transparent;
+}
+#units::drop-down{
+image:url(:/images/arrowdown.png);
+width: 15px;
+height: 15px;
+margin-top:3px;
+}
+#units QAbstractItemView {
+background-color: rgba(255, 255, 255, 0.75);
+padding: 2px;
+outline: none;
+}
+#units QAbstractItemView::item {
+background-color: #FFFFFF;
+color: #4A3B28;
+text-align: center;
+    }
+#units.comboBoxClass QLineEdit {
+    text-align: center;
+}</string>
+                 </property>
+                 <item>
+                  <property name="text">
+                   <string>Milimeter (mm)</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>Centimeter (cm)</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>Meter (m)</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>Foot (ft)</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>Yard (yd)</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>Inch (in)</string>
+                  </property>
+                 </item>
+                </widget>
+               </item>
+              </layout>
              </widget>
             </item>
            </layout>
