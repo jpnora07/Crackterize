@@ -12,7 +12,7 @@ class slabs(object):
         self.verticalLayout.setObjectName("verticalLayout")
         self.widget = QtWidgets.QWidget(Dialog)
         self.widget.setStyleSheet("#widget{\n"
-                                  "background-image: url(images/bg.jpg);\n"
+                                 
                                   "border-top-left-radius: 10px;\n"
                                   "border-top-right-radius: 10px;\n"
                                   "border-bottom-left-radius: 10px;\n"
@@ -273,7 +273,6 @@ class slabs(object):
         self.label_4.setText(_translate("Dialog", "Length:"))
         self.label_5.setText(_translate("Dialog", "Width:"))
         self.CHeight.setText(_translate("Dialog", "Thickness/Height:"))
-        self.label_6.setText(_translate("Dialog", "Quality:"))
         self.label_7.setText(_translate("Dialog", "Units:"))
         self.unit_comboBox.setItemText(0, _translate("Dialog", "Inches"))
         self.unit_comboBox.setItemText(1, _translate("Dialog", "Feet"))

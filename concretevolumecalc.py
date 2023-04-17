@@ -123,13 +123,11 @@ class concrete_cal(object):
                                          "}")
         self.type_comboBox.setObjectName("type_comboBox")
         self.type_comboBox.addItem('Square Slab')
-        self.type_comboBox.addItem('Round Slab')
+        self.type_comboBox.addItem(' ')
         self.type_comboBox.addItem('Wall')
         self.type_comboBox.addItem('Footer')
         self.type_comboBox.addItem('Square Column')
-        self.type_comboBox.addItem('Round Column')
-        self.type_comboBox.addItem('Steps')
-        self.type_comboBox.addItem('Curb & Gutter')
+
         self.verticalLayout_10.addWidget(self.type_comboBox)
         self.verticalLayout_2.addWidget(self.widget_9)
         self.widget_5 = QtWidgets.QWidget(self.widget)
@@ -213,7 +211,7 @@ class concrete_cal(object):
         self.result = QtWidgets.QLabel(self.widget_8)
         self.result.setStyleSheet("#result{\n"
                                   "  background-color: transparent;  \n"
-                                  "font: 200 12pt Segoe UI Black;\n"
+                                  "font: 150 8pt Segoe UI Black;\n"
                                   "alignment: center;\n"
                                   "}")
         self.result.setObjectName("result")
@@ -227,19 +225,17 @@ class concrete_cal(object):
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
         Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
-        self.label.setText(_translate("Dialog", "Concrete Calculator"))
+        self.label.setText(_translate("Dialog", "Square Concrete Calculator"))
         self.label_2.setText(_translate("Dialog", "Length (ft)"))
         self.label_3.setText(_translate("Dialog", "Width (ft)"))
         self.label_4.setText(_translate("Dialog", "Thickness (in)"))
         self.label_5.setText(_translate("Dialog", "Concrete Type"))
         self.type_comboBox.setItemText(0, _translate("Dialog", "Square Slab"))
-        self.type_comboBox.setItemText(1, _translate("Dialog", "Round Slab"))
-        self.type_comboBox.setItemText(2, _translate("Dialog", "Wall"))
-        self.type_comboBox.setItemText(3, _translate("Dialog", "Footer"))
+        self.type_comboBox.setItemText(1, _translate("Dialog", "Wall"))
+        self.type_comboBox.setItemText(2, _translate("Dialog", "Footer"))
+        self.type_comboBox.setItemText(3, _translate("Dialog", "Square"))
         self.type_comboBox.setItemText(4, _translate("Dialog", "Square Column"))
-        self.type_comboBox.setItemText(5, _translate("Dialog", "Round Column"))
-        self.type_comboBox.setItemText(6, _translate("Dialog", "Steps"))
-        self.type_comboBox.setItemText(7, _translate("Dialog", "Curb & Gutter"))
+
         self.calculateBtn.setText(_translate("Dialog", "Calculate"))
         self.closeBtn.setText(_translate("Dialog", "Close"))
         self.result.setText(_translate("Dialog", " "))

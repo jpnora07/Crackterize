@@ -158,24 +158,12 @@ class stairs(object):
                                    "}")
         self.label_2.setObjectName("label_2")
         self.horizontalLayout_6.addWidget(self.label_2, 0, QtCore.Qt.AlignHCenter)
-        self.unit_comboBox = QtWidgets.QComboBox(self.widget_5)
+
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.unit_comboBox.sizePolicy().hasHeightForWidth())
-        self.unit_comboBox.setSizePolicy(sizePolicy)
-        self.unit_comboBox.setStyleSheet("#unit_comboBox{\n"
-                                         "font: 200 11pt Arial, Sans Serif;\n"
-                                         "alignment: center;\n"
-                                         "color: rgba(111, 75, 39, 0.77);\n"
-                                         "}")
-        self.unit_comboBox.setObjectName("unit_comboBox")
-        self.unit_comboBox.addItem("")
-        self.unit_comboBox.addItem("")
-        self.unit_comboBox.addItem("")
-        self.unit_comboBox.addItem("")
-        self.unit_comboBox.addItem("")
-        self.horizontalLayout_6.addWidget(self.unit_comboBox)
+
+
         self.verticalLayout_2.addWidget(self.widget_5)
         self.widget_9 = QtWidgets.QWidget(self.widget)
         self.widget_9.setObjectName("widget_9")
@@ -266,12 +254,7 @@ class stairs(object):
         self.label_8.setText(_translate("Dialog", "Width:"))
         self.label_6.setText(_translate("Dialog", "Platform Depth:"))
         self.label_7.setText(_translate("Dialog", "Number of Steps:"))
-        self.label_2.setText(_translate("Dialog", "Units:"))
-        self.unit_comboBox.setItemText(0, _translate("Dialog", "Inches"))
-        self.unit_comboBox.setItemText(1, _translate("Dialog", "Feet"))
-        self.unit_comboBox.setItemText(2, _translate("Dialog", "Yards"))
-        self.unit_comboBox.setItemText(3, _translate("Dialog", "Meters"))
-        self.unit_comboBox.setItemText(4, _translate("Dialog", "Centimeters"))
+
         self.calculateBtn.setText(_translate("Dialog", "Calculate"))
         self.closeBtn.setText(_translate("Dialog", "Close"))
 
@@ -284,40 +267,15 @@ class stairs(object):
             platform_depth = float(self.depth_lineEdit.text())
             num_steps = int(self.steps_lineEdit.text())
 
-            # Convert input values to inches based on selected unit
-            units = self.unit_comboBox.currentText()
-            if units == 'inches':
-                pass
-            elif units == 'feet':
-                run *= 12
-                rise *= 12
-                width *= 12
-                platform_depth *= 12
-            elif units == 'yards':
-                run *= 36
-                rise *= 36
-                width *= 36
-                platform_depth *= 36
-            elif units == 'meters':
-                run *= 39.3701
-                rise *= 39.3701
-                width *= 39.3701
-                platform_depth *= 39.3701
-            elif units == 'centimeters':
-                run /= 2.54
-                rise /= 2.54
-                width /= 2.54
-                platform_depth /= 2.54
-            else:
-                pass
+
 
             # Calculate total stair height and slope
             total_height = rise * num_steps
             total_run = run * num_steps + platform_depth
-            slope = total_height / total_run
+
 
             # Update output label with results
-            self.result.setText(f'Total stair height: {total_height:.2f} inches\nSlope: {slope:.2f}')
+            self.result.setText(f'Total stair height: {total_height:.2f} inches\n')
         except Exception as e:
             print(e)
 

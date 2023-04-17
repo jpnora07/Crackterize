@@ -170,19 +170,6 @@ class curb(object):
                                 "}")
         self.unit.setObjectName("unit")
         self.horizontalLayout_7.addWidget(self.unit, 0, QtCore.Qt.AlignHCenter)
-        self.unit_comboBox = QtWidgets.QComboBox(self.widget_9)
-        self.unit_comboBox.setStyleSheet("#unit_comboBox{\n"
-                                         "font: 200 11pt Arial, Sans Serif;\n"
-                                         "alignment: center;\n"
-                                         "color: rgba(111, 75, 39, 0.77);\n"
-                                         "}")
-        self.unit_comboBox.setObjectName("unit_comboBox")
-        self.unit_comboBox.addItem("")
-        self.unit_comboBox.addItem("")
-        self.unit_comboBox.addItem("")
-        self.unit_comboBox.addItem("")
-        self.unit_comboBox.addItem("")
-        self.horizontalLayout_7.addWidget(self.unit_comboBox, 0, QtCore.Qt.AlignLeft)
         self.verticalLayout_2.addWidget(self.widget_9)
         self.widget_6 = QtWidgets.QWidget(self.widget)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
@@ -278,12 +265,6 @@ class curb(object):
         self.FThickness.setText(_translate("Dialog", "Flag Thickness:"))
         self.length.setText(_translate("Dialog", "Length:"))
         self.quantity.setText(_translate("Dialog", "Quantity:"))
-        self.unit.setText(_translate("Dialog", "Unit"))
-        self.unit_comboBox.setItemText(0, _translate("Dialog", "Inches"))
-        self.unit_comboBox.setItemText(1, _translate("Dialog", "Feet"))
-        self.unit_comboBox.setItemText(2, _translate("Dialog", "Yards"))
-        self.unit_comboBox.setItemText(3, _translate("Dialog", "Meters"))
-        self.unit_comboBox.setItemText(4, _translate("Dialog", "Centimeters"))
         self.calculateBtn.setText(_translate("Dialog", "Calculate"))
         self.closeBtn.setText(_translate("Dialog", "Close"))
 
@@ -323,7 +304,7 @@ class curb(object):
                 volume /= 46656
                 unit = 'yd^3'
             else:
-                volume /= 46656000
+                volume = 46656000
                 unit = 'm^3'
 
             # Display result

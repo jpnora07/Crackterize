@@ -8,7 +8,7 @@ import tensorflow as tf
 from tensorflow import keras
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import Qt, QTimer, QThread, pyqtSignal
-from PyQt5.QtGui import QIcon, QMouseEvent, QMovie
+from PyQt5.QtGui import QIcon, QMouseEvent, QMovie, QPixmap
 from PyQt5.QtWidgets import QListView, QComboBox, QDialog, QFileDialog, QStyledItemDelegate, QScrollBar, \
     QAbstractItemView, QLineEdit, QFrame
 
@@ -166,8 +166,19 @@ class Ui_MainWindow(object):
         self.horizontalLayout.setObjectName("horizontalLayout")
         self.myProjects = QtWidgets.QComboBox(self.threeBtn)
         self.myProjects.setMinimumSize(QtCore.QSize(25, 0))
-        self.myProjects.setGeometry(200, 150, 150, 30)
+        self.myProjects.setMaximumSize(QtCore.QSize(150, 16777215))
+        self.myProjects.setGeometry(115, 90, 100, 30)
         self.myProjects.setLineEdit(self.QTComboBoxButton(self.myProjects))
+        self.projects_icon = QtWidgets.QLabel(self.threeBtn)
+        self.projects_icon.setMaximumSize(QtCore.QSize(30, 30))
+        self.projects_icon.setGeometry(70, 15, 40, 70)
+        self.projects_icon.setStyleSheet("\n"
+                                    "background: transparent;")
+        #howto_icon = QtGui.QIcon()
+        # howto_icon.addPixmap(QtGui.QPixmap("images/howtouse_icon.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        myprojects_icon = QPixmap("images/folder_icon.png")
+        self.projects_icon.setPixmap(myprojects_icon)
+        self.projects_icon.setObjectName("projects_icon")
         self.ledit = self.myProjects.lineEdit()
         self.ledit.setReadOnly(True)
         self.ledit.setAlignment(Qt.AlignCenter)
@@ -183,6 +194,7 @@ class Ui_MainWindow(object):
         except Exception as e:
             print("Empty Projects! Users not yet add projects: ", e)
         self.myProjects.setEditText("My Projects")
+
 
         def handleSelection(text):
             # change back to default title after item is selected
@@ -266,6 +278,7 @@ class Ui_MainWindow(object):
             """
         )
 
+
         scroll_bar = QScrollBar()
         view.setVerticalScrollBar(scroll_bar)
         self.myProjects.setView(view)
@@ -291,6 +304,7 @@ class Ui_MainWindow(object):
                                       "}\n"
                                       "#myProjects::drop-down{\n"
                                       "image:url(images/arrowdown.png);\n"
+                                      "background-position: -10px -10px;"
                                       "width: 20px;\n"
                                       "height: 20px;\n"
                                       "text-align: center;\n"
@@ -332,14 +346,26 @@ class Ui_MainWindow(object):
                                       "height: 10px;\n"
                                       "}\n")
 
+        self.myProjects.setIconSize(QtCore.QSize(21, 21))
         self.myProjects.setObjectName("myProjects")
         self.horizontalLayout.addWidget(self.myProjects)
 
         self.history = QtWidgets.QComboBox(self.threeBtn)
         self.history.view().parentWidget().setStyleSheet('border: none;')
-        self.history.setGeometry(200, 150, 150, 30)
+        self.history.setGeometry(300, 150, 150, 30)
         self.history.setEditable(True)
+        self.history.setMaximumSize(800, 16777215)
         self.history.setLineEdit(self.QTComboBoxButton(self.history))
+        self.history_icon = QtWidgets.QLabel(self.threeBtn)
+        self.history_icon.setMaximumSize(QtCore.QSize(30, 30))
+        self.history_icon.setGeometry(300, 15, 40, 70)
+        self.history_icon.setStyleSheet("\n"
+                                         "background: transparent;")
+        #history_icon = QtGui.QIcon()
+        # howto_icon.addPixmap(QtGui.QPixmap("images/howtouse_icon.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        history_icon = QPixmap("images/history_icon.png")
+        self.history_icon.setPixmap(history_icon)
+        self.history_icon.setObjectName("history_icon")
         self.ledit = self.history.lineEdit()
         self.ledit.setReadOnly(True)
         self.ledit.setAlignment(Qt.AlignCenter)
@@ -465,7 +491,7 @@ class Ui_MainWindow(object):
                                    "image:url(images/arrowdown.png);\n"
                                    "width: 20px;\n"
                                    "height: 20px;\n"
-                                   "text-align: center;\n"
+                                   "text-align: bottom;\n"
                                    "}\n"
 
                                    "#history::drop-down::pressed{\n"
@@ -517,27 +543,26 @@ class Ui_MainWindow(object):
         self.horizontalLayout.addWidget(self.history)
 
 
-
-
         self.how_widget = QtWidgets.QWidget(self.threeBtn)
-        self.how_widget.setGeometry(QtCore.QRect(120, 100, 150, 31))
+        self.how_widget.setGeometry(QtCore.QRect(115, 200, 500, 31))
         self.how_widget.setObjectName("how_widget")
         self.horizontalLayout11 = QtWidgets.QHBoxLayout(self.how_widget)
         self.horizontalLayout11.setContentsMargins(0, 0, 0, 0)
         self.horizontalLayout11.setSpacing(0)
         self.horizontalLayout11.setObjectName("horizontalLayout")
         self.how_btn2 = QtWidgets.QPushButton("Help and Info", self.how_widget)
+        self.how_btn2.setIcon(QIcon('images/howtouse_icon.png'))
         self.how_btn2.setStyleSheet("font: 600 12pt \"Segoe UI\";\n"
                                     "color:#4A3B28;\n"
                                     "background: transparent;")
-        self.how_btn2.setIconSize(QtCore.QSize(21, 21))
+        self.how_btn2.setIconSize(QtCore.QSize(25, 25))
         self.how_btn2.setDefault(False)
         self.how_btn2.setFlat(True)
         self.how_btn2.setObjectName("how_btn2")
         self.how_btn2.clicked.connect(self.how_and_help)
         self.horizontalLayout11.addWidget(self.how_btn2)
         self.how_btn = QtWidgets.QPushButton(self.how_widget)
-        self.how_btn.setMaximumSize(QtCore.QSize(40, 16777215))
+        self.how_btn.setMaximumSize(QtCore.QSize(20, 167))
         self.how_btn.setStyleSheet("\n"
                                    "background: transparent;")
         icon = QtGui.QIcon()
@@ -628,7 +653,6 @@ class Ui_MainWindow(object):
         self.create = QtWidgets.QPushButton("or create a new project", self.widgetUpload)
         self.create.clicked.connect(self.creating_new_project)
         self.create.setStyleSheet("#create{\n"
-
                                   "font-weight:bold;\n"
                                   " color:#363131;\n"
                                   "background-color: rgb(255, 255, 255);\n"

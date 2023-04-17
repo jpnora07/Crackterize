@@ -7,10 +7,8 @@ from PyQt5.QtCore import Qt
 from Circular_Slab_or_Tube import circular
 from Curb_Gutter_Barrier import curb
 from Hole_Column_RoundFootings import hole
-from Slabs_Walls_SquareFootings import slabs
 from concretevolumecalc import concrete_cal
-from scientific_calculator import sci_Calculator
-from stairs import stairs
+
 
 
 class cal_dialog(object):
@@ -63,7 +61,6 @@ class cal_dialog(object):
         self.verticalLayout_10.setObjectName("verticalLayout_10")
         self.label = QtWidgets.QLabel(self.widget_2)
         self.label.setStyleSheet("#label{\n"
-                                 
                                              "  background-color: transparent;  \n"
                                  "    font: 900 34pt \"Segoe UI Black\";\n"
                                  "    alignment: center;\n"
@@ -90,33 +87,9 @@ class cal_dialog(object):
         self.verticalLayout_5.setContentsMargins(9, 4, 9, 4)
         self.verticalLayout_5.setSpacing(4)
         self.verticalLayout_5.setObjectName("verticalLayout_5")
-        self.stairs = QtWidgets.QPushButton(self.widget_5)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.stairs.sizePolicy().hasHeightForWidth())
-        self.stairs.setSizePolicy(sizePolicy)
-        self.stairs.clicked.connect(self.stairs_function)
-        self.stairs.setStyleSheet("#stairs{\n"
-                                  "font-weight:bold;\n"
-                                  "color: white;\n"
-                                  "background-color: #6F4B27;\n"
-                                  "border-top-left-radius: 7px;\n"
-                                  "border-top-right-radius: 7px;\n"
-                                  "border-bottom-left-radius: 7px;\n"
-                                  "border-bottom-right-radius: 7px;\n"
-                                  "font-family: Inter;\n"
-                                  "font-size: 15px;\n"
-                                  "text-align: center;\n"
-                                  "}\n"
-                                  "#stairs:hover{\n"
-                                  "color: rgb(144,115,87);\n"
-                                  "border : 3px solid rgb(144,115,87);\n"
-                                  "background-color: white;\n"
-                                  "}\n"
-                                  "")
-        self.stairs.setObjectName("stairs")
-        self.verticalLayout_5.addWidget(self.stairs)
         self.verticalLayout_2.addWidget(self.widget_5)
         self.widget_6 = QtWidgets.QWidget(self.widget)
         self.widget_6.setObjectName("widget_6")
@@ -161,34 +134,10 @@ class cal_dialog(object):
         self.verticalLayout_7.setContentsMargins(9, 4, 9, 4)
         self.verticalLayout_7.setSpacing(4)
         self.verticalLayout_7.setObjectName("verticalLayout_7")
-        self.slabssquare = QtWidgets.QPushButton(self.widget_7)
+
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.slabssquare.sizePolicy().hasHeightForWidth())
-        self.slabssquare.setSizePolicy(sizePolicy)
-        self.slabssquare.clicked.connect(self.slabssquare_function)
-        self.slabssquare.setStyleSheet("#slabssquare{\n"
-                                       "font-weight:bold;\n"
-                                       "color: white;\n"
-                                       "background-color: #6F4B27;\n"
-                                       "border-top-left-radius: 7px;\n"
-                                       "border-top-right-radius: 7px;\n"
-                                       "border-bottom-left-radius: 7px;\n"
-                                       "border-bottom-right-radius: 7px;\n"
-                                       "font-family: Inter;\n"
-                                       "font-size: 15px;\n"
-                                       "text-align: center;\n"
-                                       "}\n"
-                                       "#slabssquare:hover{\n"
-                                       "color: rgb(144,115,87);\n"
-                                       "border : 3px solid rgb(144,115,87);\n"
-                                       "background-color: white;\n"
-                                       "}\n"
-                                       "")
-        self.slabssquare.setObjectName("slabssquare")
-        self.verticalLayout_7.addWidget(self.slabssquare)
-        self.verticalLayout_2.addWidget(self.widget_7)
 
         #
         self.widget_new = QtWidgets.QWidget(self.widget)
@@ -198,7 +147,7 @@ class cal_dialog(object):
         self.verticalLayout_new.setContentsMargins(9, 4, 9, 4)
         self.verticalLayout_new.setSpacing(4)
         self.verticalLayout_new.setObjectName("verticalLayout_7")
-        self.concrete_cal = QtWidgets.QPushButton("Concrete Calculator", self.widget_new)
+        self.concrete_cal = QtWidgets.QPushButton(" Square Concrete Calculator", self.widget_new)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -308,9 +257,7 @@ class cal_dialog(object):
         _translate = QtCore.QCoreApplication.translate
         Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
         self.label.setText(_translate("Dialog", "Concrete Calculators"))
-        self.stairs.setText(_translate("Dialog", "Stairs Calculator"))
         self.curbgutter.setText(_translate("Dialog", "Curb and Gutter Barrier Calculator"))
-        self.slabssquare.setText(_translate("Dialog", "Slabs / Square Footings Calculator"))
         self.holecolumn.setText(_translate("Dialog", "Hole / Round Footings Calculator"))
         self.circularslab.setText(_translate("Dialog", "Circular Slab or Tube Calculator"))
 
@@ -332,20 +279,6 @@ class cal_dialog(object):
         except Exception as e:
             print(e)
 
-    def stairs_function(self):
-        try:
-
-            qstairs = QtWidgets.QDialog(self.Dialog)
-            x = (self.Dialog.width() - self.Dialog.width()) // 2
-            y = (self.Dialog.height() - self.Dialog.height()) // 2
-            ui = stairs()
-
-            ui.setupUi(qstairs)
-            qstairs.move(x, y)
-            qstairs.show()
-            qstairs.exec_()
-        except Exception as e:
-            print(e)
 
     def curbgutter_function(self):
         try:
@@ -362,20 +295,6 @@ class cal_dialog(object):
         except Exception as e:
             print(e)
 
-    def slabssquare_function(self):
-        try:
-
-            slabs_wallsfootings = QtWidgets.QDialog(self.Dialog)
-            x = (self.Dialog.width() - self.Dialog.width()) // 2
-            y = (self.Dialog.height() - self.Dialog.height()) // 2
-            ui = slabs()
-
-            ui.setupUi(slabs_wallsfootings)
-            slabs_wallsfootings.move(x, y)
-            slabs_wallsfootings.show()
-            slabs_wallsfootings.exec_()
-        except Exception as e:
-            print(e)
 
     def holecolumn_function(self):
         try:
