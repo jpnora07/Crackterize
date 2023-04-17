@@ -1287,7 +1287,7 @@ class Ui_MainWindow(object):
                     f.write(new_projects)
                 try:
                     folder_dialog = QtWidgets.QDialog(self.Mainwindow)
-                    ui = view_folder_dialog(self.background_widget, self.myProjects)
+                    ui = view_folder_dialog(self.background_widget, self.history, self.myProjects)
                     ui.setupUi(folder_dialog)
                     x = (self.Mainwindow.width() - folder_dialog.width()) // 2
                     y = (self.Mainwindow.height() - folder_dialog.height()) // 2
