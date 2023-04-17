@@ -104,7 +104,7 @@ class Ui_MainWindow(object):
         # Set the logo using an QIcon object
         logo = QIcon('images/main_icon.png')
         MainWindow.setWindowIcon(logo)
-        MainWindow.setWindowModality(QtCore.Qt.NonModal)
+        MainWindow.setWindowModality(QtCore.Qt.NonModal)#
         MainWindow.setEnabled(True)
         # MainWindow.setFixedSize(1000, 700)
 
