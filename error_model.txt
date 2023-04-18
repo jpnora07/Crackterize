@@ -1,1 +1,0 @@
-'tuple' object has no attribute 'rank'
