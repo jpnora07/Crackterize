@@ -7,10 +7,10 @@ import numpy as np
 import tensorflow as tf
 from tensorflow import keras
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import Qt, QTimer, QThread, pyqtSignal
+from PyQt5.QtCore import Qt, QTimer, QThread, pyqtSignal, QSize
 from PyQt5.QtGui import QIcon, QMouseEvent, QMovie, QPixmap
 from PyQt5.QtWidgets import QListView, QComboBox, QDialog, QFileDialog, QStyledItemDelegate, QScrollBar, \
-    QAbstractItemView, QLineEdit, QFrame
+    QAbstractItemView, QLineEdit, QFrame, QPushButton
 
 from Segment_Image import Ui_DialogSegment
 from calculatorButtons import cal_dialog
@@ -49,7 +49,7 @@ class ImageProcessingThread(QThread):
                 self.imageCnn = np.expand_dims(self.imageCnn, axis=0)
 
                 self.modelCnn = keras.models.load_model('resnet_model_cnn.h5')
-                predictions = self.modelCnn.predict(self.imageCnn)
+                predictions = self.modelCnn.predict(self.imageCnn, verbose=0)
                 score = tf.nn.softmax(predictions)
                 print(score)
                 class_names = ['No Detected Crack', 'Contains Crack']
@@ -176,8 +176,9 @@ class Ui_MainWindow(object):
                                     "background: transparent;")
         #howto_icon = QtGui.QIcon()
         # howto_icon.addPixmap(QtGui.QPixmap("images/howtouse_icon.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        myprojects_icon = QPixmap("images/folder_icon.png")
-        self.projects_icon.setPixmap(myprojects_icon)
+        myprojects_icon = QPixmap("images/foler.png")
+        scaled_pixmap = myprojects_icon.scaled(18, 18)
+        self.projects_icon.setPixmap(scaled_pixmap)
         self.projects_icon.setObjectName("projects_icon")
         self.ledit = self.myProjects.lineEdit()
         self.ledit.setReadOnly(True)
@@ -364,7 +365,8 @@ class Ui_MainWindow(object):
         #history_icon = QtGui.QIcon()
         # howto_icon.addPixmap(QtGui.QPixmap("images/howtouse_icon.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         history_icon = QPixmap("images/history_icon.png")
-        self.history_icon.setPixmap(history_icon)
+        scaled_pixmap = history_icon.scaled(22, 22)
+        self.history_icon.setPixmap(scaled_pixmap)
         self.history_icon.setObjectName("history_icon")
         self.ledit = self.history.lineEdit()
         self.ledit.setReadOnly(True)
@@ -550,13 +552,18 @@ class Ui_MainWindow(object):
         self.horizontalLayout11.setContentsMargins(0, 0, 0, 0)
         self.horizontalLayout11.setSpacing(0)
         self.horizontalLayout11.setObjectName("horizontalLayout")
-        self.how_btn2 = QtWidgets.QPushButton("Help and Info", self.how_widget)
-        self.how_btn2.setIcon(QIcon('images/howtouse_icon.png'))
+        self.how_btn2 = QPushButton("Help and Info", self.how_widget)
+        pixmap = QPixmap('images/howtouse_icon.png')
+        icon_size = QSize(20, 20)
+        pixmap_padded = pixmap.scaled(icon_size.width() + 100, icon_size.height(), Qt.KeepAspectRatio,
+                                      Qt.SmoothTransformation)
+        icon = QIcon(pixmap_padded)
+        self.how_btn2.setIcon(icon)
         self.how_btn2.setStyleSheet("font: 600 12pt \"Segoe UI\";\n"
                                     "color:#4A3B28;\n"
-                                    "background: transparent;")
-        self.how_btn2.setIconSize(QtCore.QSize(25, 25))
-        self.how_btn2.setDefault(False)
+                                    "background: transparent;\n"
+                                    "padding-left: 10px;")
+        self.how_btn2.setIconSize(icon_size)
         self.how_btn2.setFlat(True)
         self.how_btn2.setObjectName("how_btn2")
         self.how_btn2.clicked.connect(self.how_and_help)
@@ -631,6 +638,7 @@ class Ui_MainWindow(object):
         self.uploadImg = QtWidgets.QPushButton("  Upload Image", self.widgetUpload)
         self.uploadImg.clicked.connect(self.upload_image)
         self.uploadImg.setIcon(QIcon('images/uploadIcon.png'))
+        self.uploadImg.setIconSize(QSize(17, 17))
         self.uploadImg.setStyleSheet("#uploadImg{\n"
                                      "height:40px;\n"
                                      "font-weight:bold;\n"
@@ -1321,6 +1329,8 @@ class Ui_MainWindow(object):
                     print(e)
                 for row in rows:
                     self.myProjects.addItem(row[0])
+
+                self.myProjects.setEditText("My Projects")
             else:
                 # If the project name already exists, show a dialog message to inform the user
                 self.show_dialog_failed_save()

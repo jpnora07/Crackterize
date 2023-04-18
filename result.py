@@ -1172,6 +1172,8 @@ class Result_Dialog(object):
                     for row in rows:
                         self.myProjects.addItem(row[0])
 
+                    self.myProjects.setEditText("My Projects")
+
                     self.show_dialog_success_save(message)
                     self.Save_to_existing_Project()
                 else:
@@ -1552,6 +1554,8 @@ class Result_Dialog(object):
                 recent = str(row[14])
                 id = str(row[0])
                 self.myHistory.addItem(status + " - " + recent, id)
+
+            self.myHistory.setEditText("History")
         except Exception as e:
             print(f"Error at parameters {e}")
         try:
@@ -1772,6 +1776,7 @@ class Result_Dialog(object):
 
     def update_image(self, image):
         # Get the size of the label
+        self.result_Img.setAlignment(QtCore.Qt.AlignCenter)
         label_size = self.result_Img.size()
 
         # Convert the image to a QImage

@@ -387,7 +387,7 @@ class result_with_details(object):
                 byte_array_orig = QByteArray(self.image_orig)
                 self.pixmap_orig = QPixmap()
                 self.pixmap_orig.loadFromData(byte_array_orig)
-
+                self.label_image.setAlignment(QtCore.Qt.AlignCenter)
                 self.label_image.setMinimumSize(QtCore.QSize(300, 300))
                 label_size = self.label_image.size()
                 scaled_pixmap = self.pixmap.scaled(label_size, Qt.KeepAspectRatio, Qt.SmoothTransformation)

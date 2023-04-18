@@ -728,7 +728,8 @@ class view_result_dialog(object):
         # create a table if it doesn't exist
         self.c.execute('''SELECT count(name) FROM sqlite_master WHERE type='table' AND name='Save_Files' ''')
         if self.c.fetchone()[0] == 0:
-            self.c.execute('''CREATE TABLE Save_Files (id INTEGER PRIMARY KEY, folder_name TEXT, image BLOB, width TEXT, 
+            self.c.execute('''CREATE TABLE Save_Files (id INTEGER PRIMARY KEY, folder_name TEXT, 
+                                image_result BLOB, image_original BLOB,  width TEXT, 
             length TEXT, position TEXT, No_Crack TEXT, Crack TEXT, Status TEXT, selected_loc TEXT, selected_type 
             TEXT, selected_prog TEXT, remarks TEXT created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)''')
         # fetch data from the database

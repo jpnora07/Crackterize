@@ -150,6 +150,11 @@ if __name__ == '__main__':
     splash = SplashScreen()
     splash.show()
 
+    pixmap = splash.grab()
+
+    # Save the screenshot to a file
+    pixmap.save("splash.png")
+
     try:
         sys.exit(app.exec_())
     except SystemExit:
