@@ -1,5 +1,6 @@
 import os
 import sqlite3
+from datetime import datetime
 from functools import partial
 
 import tensorflow as tf
@@ -731,9 +732,11 @@ class view_result_dialog(object):
             self.c.execute('''CREATE TABLE Save_Files (id INTEGER PRIMARY KEY, folder_name TEXT, 
                                 image_result BLOB, image_original BLOB,  width TEXT, 
             length TEXT, position TEXT, No_Crack TEXT, Crack TEXT, Status TEXT, selected_loc TEXT, selected_type 
-            TEXT, selected_prog TEXT, remarks TEXT created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)''')
+            TEXT, selected_prog TEXT, remarks TEXT created_at TEXT)''')
+        timestamp = datetime.now()
+        timestamp_str = timestamp.strftime('%Y-%m-%d %H:%M:%S')
         # fetch data from the database
-        self.c.execute("SELECT * FROM Save_Files WHERE folder_name = ?", (folder_name,))
+        self.c.execute("SELECT * FROM Save_Files WHERE folder_name = ? AND timestamp = ?", (folder_name, timestamp_str))
         data = self.c.fetchall()
         print(data)
         self.add_button_folder(data)
