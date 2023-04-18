@@ -704,6 +704,7 @@ class result_with_details(object):
                 recent = str(row[14])
                 id = str(row[0])
                 self.history.addItem(status + " - " + recent, id)
+            self.history.setEditText("History")
             self.conn.commit()
             self.Dialog.close()
             self.closeDialog.close()
