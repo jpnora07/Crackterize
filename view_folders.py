@@ -97,7 +97,6 @@ class view_folder_dialog(object):
         widget = QtWidgets.QWidget(view_folder_dialog)
         widget.setGeometry(QtCore.QRect(100, 50, 140, 140))
         widget.setObjectName("widget")
-        widget.setStyleSheet("background-color:blue;")
         verticalLayout = QtWidgets.QVBoxLayout(widget)
         verticalLayout.setContentsMargins(0, 0, 0, 0)
         verticalLayout.setObjectName("verticalLayout")
