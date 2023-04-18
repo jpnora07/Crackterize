@@ -730,7 +730,7 @@ class result_with_details(object):
             self.c.execute('''CREATE TABLE Save_Files (id INTEGER PRIMARY KEY, folder_name TEXT, 
                                 image_result BLOB, image_original BLOB,  width TEXT, 
             length TEXT, position TEXT, No_Crack TEXT, Crack TEXT, Status TEXT, selected_loc TEXT, selected_type 
-            TEXT, selected_prog TEXT, remarks TEXT created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)''')
+            TEXT, selected_prog TEXT, remarks TEXT created_at TEXT)''')
         # fetch data from the database
         self.c.execute("SELECT * FROM Save_Files WHERE id = ?", (result_id,))
         data = self.c.fetchall()
