@@ -1,6 +1,5 @@
 import sys
 import time
-
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QProgressBar, QLabel, QFrame, QHBoxLayout, QVBoxLayout
 from PyQt5.QtGui import QPixmap
@@ -149,7 +148,6 @@ if __name__ == '__main__':
 
     splash = SplashScreen()
     splash.show()
-
     pixmap = splash.grab()
 
     # Save the screenshot to a file

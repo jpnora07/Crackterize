@@ -1,5 +1,6 @@
 import os
 import sqlite3
+import sys
 from datetime import datetime
 from functools import partial
 
@@ -37,7 +38,7 @@ class ImageProcessingThread(QThread):
                 self.imageCnn = np.expand_dims(self.imageCnn, axis=0)
 
                 self.modelCnn = keras.models.load_model('resnet_model_cnn.h5')
-                predictions = self.modelCnn.predict(self.imageCnn)
+                predictions = self.modelCnn.predict(self.imageCnn, verbose=0)
                 score = tf.nn.softmax(predictions)
                 print(score)
                 class_names = ['No Detected Crack', 'Contains Crack']
@@ -523,8 +524,11 @@ class view_result_dialog(object):
             self.show_dialog_empty_text_error()
             self.creating_new_Location()
         else:
-            BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-            db_path = os.path.join(BASE_DIR, 'Projects.db')
+            dir_path = os.path.join(os.environ['APPDATA'], 'Crackterize')
+            if not os.path.exists(dir_path):
+                os.makedirs(dir_path)
+
+            db_path = os.path.join(dir_path, 'Projects.db')
             # Create a connection to a SQLite database or create it if it doesn't exist
             self.conn = sqlite3.connect(db_path)
             self.c = self.conn.cursor()
@@ -721,8 +725,11 @@ class view_result_dialog(object):
     def fetch_folders_of_projects(self):
         with open('selected_folder_vrFile.txt', 'r') as f:
             folder_name = f.read()
-        BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-        db_path = os.path.join(BASE_DIR, 'Projects.db')
+        dir_path = os.path.join(os.environ['APPDATA'], 'Crackterize')
+        if not os.path.exists(dir_path):
+            os.makedirs(dir_path)
+
+        db_path = os.path.join(dir_path, 'Projects.db')
         # Create a connection to a SQLite database or create it if it doesn't exist
         self.conn = sqlite3.connect(db_path)
         self.c = self.conn.cursor()

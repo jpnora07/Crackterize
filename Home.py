@@ -184,8 +184,11 @@ class Ui_MainWindow(object):
         self.ledit.setReadOnly(True)
         self.ledit.setAlignment(Qt.AlignCenter)
         try:
-            BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-            db_path = os.path.join(BASE_DIR, 'Projects.db')
+            dir_path = os.path.join(os.environ['APPDATA'], 'Crackterize')
+            if not os.path.exists(dir_path):
+                os.makedirs(dir_path)
+
+            db_path = os.path.join(dir_path, 'Projects.db')
             conn = sqlite3.connect(db_path)
             c = conn.cursor()
             c.execute("SELECT * FROM Projects ORDER BY created_at DESC")
@@ -372,8 +375,11 @@ class Ui_MainWindow(object):
         self.ledit.setReadOnly(True)
         self.ledit.setAlignment(Qt.AlignCenter)
         try:
-            BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-            db_path = os.path.join(BASE_DIR, 'Projects.db')
+            dir_path = os.path.join(os.environ['APPDATA'], 'Crackterize')
+            if not os.path.exists(dir_path):
+                os.makedirs(dir_path)
+
+            db_path = os.path.join(dir_path, 'Projects.db')
             conn = sqlite3.connect(db_path)
             c = conn.cursor()
             c.execute("SELECT * FROM Save_Files ORDER BY created_at DESC")
@@ -543,7 +549,6 @@ class Ui_MainWindow(object):
                                    "background-color: #4A3B28}")
         self.history.setObjectName("history")
         self.horizontalLayout.addWidget(self.history)
-
 
         self.how_widget = QtWidgets.QWidget(self.threeBtn)
         self.how_widget.setGeometry(QtCore.QRect(115, 200, 500, 31))
@@ -1289,8 +1294,11 @@ class Ui_MainWindow(object):
             self.show_dialog_empty_text_error()
             self.creating_new_project()
         else:
-            BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-            db_path = os.path.join(BASE_DIR, 'Projects.db')
+            dir_path = os.path.join(os.environ['APPDATA'], 'Crackterize')
+            if not os.path.exists(dir_path):
+                os.makedirs(dir_path)
+
+            db_path = os.path.join(dir_path, 'Projects.db')
             # Create a connection to a SQLite database or create it if it doesn't exist
             self.conn = sqlite3.connect(db_path)
             self.c = self.conn.cursor()

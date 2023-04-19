@@ -1,5 +1,6 @@
 import os
 import sqlite3
+import sys
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import QSize, Qt, QTimer, pyqtSignal, QObject
@@ -377,8 +378,11 @@ class view_folder_dialog(object):
             self.show_dialog_empty_text_error(message)
             self.creating_new_Location()
         else:
-            BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-            db_path = os.path.join(BASE_DIR, 'Projects.db')
+            dir_path = os.path.join(os.environ['APPDATA'], 'Crackterize')
+            if not os.path.exists(dir_path):
+                os.makedirs(dir_path)
+
+            db_path = os.path.join(dir_path, 'Projects.db')
             # Create a connection to a SQLite database or create it if it doesn't exist
             self.conn = sqlite3.connect(db_path)
             self.c = self.conn.cursor()
@@ -558,8 +562,11 @@ class view_folder_dialog(object):
         Dialog.exec()
 
     def fetch_folders_of_projects(self):
-        BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-        db_path = os.path.join(BASE_DIR, 'Projects.db')
+        dir_path = os.path.join(os.environ['APPDATA'], 'Crackterize')
+        if not os.path.exists(dir_path):
+            os.makedirs(dir_path)
+
+        db_path = os.path.join(dir_path, 'Projects.db')
         # Create a connection to a SQLite database or create it if it doesn't exist
         self.conn = sqlite3.connect(db_path)
         self.c = self.conn.cursor()

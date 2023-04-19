@@ -1,5 +1,6 @@
 import os
 import sqlite3
+import sys
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import Qt, QByteArray, QSizeF
@@ -497,9 +498,11 @@ class result_with_details(object):
 
     def delete_result(self):
         try:
+            dir_path = os.path.join(os.environ['APPDATA'], 'Crackterize')
+            if not os.path.exists(dir_path):
+                os.makedirs(dir_path)
 
-            BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-            db_path = os.path.join(BASE_DIR, 'Projects.db')
+            db_path = os.path.join(dir_path, 'Projects.db')
             self.conn = sqlite3.connect(db_path)
             self.c = self.conn.cursor()
             try:
@@ -522,8 +525,11 @@ class result_with_details(object):
         else:
 
             self.QMessage_Error_dialog()
-        BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-        db_path = os.path.join(BASE_DIR, 'Projects.db')
+        dir_path = os.path.join(os.environ['APPDATA'], 'Crackterize')
+        if not os.path.exists(dir_path):
+            os.makedirs(dir_path)
+
+        db_path = os.path.join(dir_path, 'Projects.db')
         self.conn = sqlite3.connect(db_path)
         self.c = self.conn.cursor()
         try:
@@ -695,6 +701,10 @@ class result_with_details(object):
             with open('image_id.txt', 'r') as f:
                 result_id = f.read()
             self.c.execute("DELETE FROM Save_Files WHERE id = ?", (result_id,))
+
+            self.c.execute("DELETE FROM Location_Folder WHERE id = ?", (result_id,))
+
+            self.c.execute("DELETE FROM Projects WHERE id = ?", (result_id,))
             self.history.clear()  # This should work now
             self.c.execute("SELECT * FROM Save_Files ORDER BY created_at DESC")
             rows = self.c.fetchall()
@@ -720,8 +730,12 @@ class result_with_details(object):
     def fetch_save_files_of_projects(self):
         with open('image_id.txt', 'r') as f:
             result_id = f.read()
-        BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-        db_path = os.path.join(BASE_DIR, 'Projects.db')
+
+        dir_path = os.path.join(os.environ['APPDATA'], 'Crackterize')
+        if not os.path.exists(dir_path):
+            os.makedirs(dir_path)
+
+        db_path = os.path.join(dir_path, 'Projects.db')
         # Create a connection to a SQLite database or create it if it doesn't exist
         self.conn = sqlite3.connect(db_path)
         self.c = self.conn.cursor()
