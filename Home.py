@@ -1085,7 +1085,7 @@ class Ui_MainWindow(object):
                                             "<b>6.</b> To access your projects and folders later, simply navigate to the main menu and select the project you want to view.<br><br>\n"
                                             "<b>7.</b> Enjoy using the app\'s project feature to keep your files organized and easily accessible!")
             self.label_7.setText("Calculator")
-            self.label_5.setText("The calculator button in the main menu of the app provides access to different types of engineering-related calculators, such as Stairs Calculator, Curb and Gutter Barrier Calculator, and others. These calculators can be used to perform quick calculations related to various engineering tasks and projects, without the need for a separate calculator app or tool.")
+            self.label_5.setText("The calculator button in the main menu of the app provides access to different types of engineering-related calculators, such as Curb and Gutter Barrier Calculator, Square Concrete Calculator, Hole/Round Footings Calculator and Circular Slab or Tube Calculator. These calculators can be used to perform quick calculations related to various engineering tasks and projects, without the need for a separate calculator app or tool.")
             self.label_8.setText("Developers")
             self.label_9.setText("Ilagan, Jayvee P.")
             self.label_10.setText("Maiquez, John Carlo M.")

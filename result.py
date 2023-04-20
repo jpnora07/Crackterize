@@ -711,6 +711,8 @@ class Result_Dialog(object):
         cursor.insertText(f"Location of Crack: {self._selected_loc}\n\n", font_format)
         cursor.insertText(f"Crack Type: {self._selected_type}\n\n", font_format)
         cursor.insertText(f"Crack Progression: { self._selected_prog}\n\n", font_format)
+        cursor.insertText(f"Remarks: { self._remarks}\n\n", font_format)
+
         #cursor.insertText(f"Date Added: {self.date}\n", font_format)
 
         painter = QPainter()
@@ -856,15 +858,11 @@ class Result_Dialog(object):
         self.existing_folder_dialog.resize(419, 365)
         # Create the main layout
         layout = QVBoxLayout(self.existing_folder_dialog)
-        if getattr(sys, 'frozen', False):
-            # we are running in a bundle, e.g. a PyInstaller executable
-            BASE_DIR = os.path.dirname(sys.executable)
-            print("Running in an executable file.")
-        else:
-            # we are running in a normal Python environment
-            BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-            print("Not running in an executable file.")
-        db_path = os.path.join(BASE_DIR, 'Projects.db')
+        dir_path = os.path.join(os.environ['APPDATA'], 'Crackterize')
+        if not os.path.exists(dir_path):
+            os.makedirs(dir_path)
+
+        db_path = os.path.join(dir_path, 'Projects.db')
         # Create a connection to a SQLite database or create it if it doesn't exist
         conn = sqlite3.connect(db_path)
         c = conn.cursor()
@@ -1152,15 +1150,11 @@ class Result_Dialog(object):
                 # If new_projects is empty, show an error message
                 self.creating_new_project()
             else:
-                if getattr(sys, 'frozen', False):
-                    # we are running in a bundle, e.g. a PyInstaller executable
-                    BASE_DIR = os.path.dirname(sys.executable)
-                    print("Running in an executable file.")
-                else:
-                    # we are running in a normal Python environment
-                    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-                    print("Not running in an executable file.")
-                db_path = os.path.join(BASE_DIR, 'Projects.db')
+                dir_path = os.path.join(os.environ['APPDATA'], 'Crackterize')
+                if not os.path.exists(dir_path):
+                    os.makedirs(dir_path)
+
+                db_path = os.path.join(dir_path, 'Projects.db')
                 # Create a connection to a SQLite database or create it if it doesn't exist
                 self.conn = sqlite3.connect(db_path)
                 self.c = self.conn.cursor()

@@ -376,7 +376,7 @@ class result_with_details(object):
                 self.loc = data[0][10]
                 self.type = data[0][11]
                 self.prog = data[0][12]
-                self.remarks = data[0][13]
+                self.remarks_db = data[0][13]
                 self.date = data[0][14]
                 self.image = data[0][2]
                 self.image_orig = data[0][3]
@@ -484,6 +484,7 @@ class result_with_details(object):
         cursor.insertText(f"Location of Crack: {self.loc}\n", font_format)
         cursor.insertText(f"Crack Type: {self.type}\n", font_format)
         cursor.insertText(f"Crack Progression: {self.prog}\n", font_format)
+        cursor.insertText(f"Remarks: {self.remarks_db}\n", font_format)
         cursor.insertText(f"Date Added: {self.date}\n", font_format)
 
         painter = QPainter()
@@ -702,9 +703,6 @@ class result_with_details(object):
                 result_id = f.read()
             self.c.execute("DELETE FROM Save_Files WHERE id = ?", (result_id,))
 
-            self.c.execute("DELETE FROM Location_Folder WHERE id = ?", (result_id,))
-
-            self.c.execute("DELETE FROM Projects WHERE id = ?", (result_id,))
             self.history.clear()  # This should work now
             self.c.execute("SELECT * FROM Save_Files ORDER BY created_at DESC")
             rows = self.c.fetchall()
@@ -933,6 +931,7 @@ class result_with_details(object):
         self.edit_remarks.setIconSize(QtCore.QSize(20, 25))
         self.edit_remarks.setFlat(True)
         self.edit_remarks.setStyleSheet("#edit_remarks{\n"
+                                        "font-size: 10px;"
                                    "font-weight:bold;\n"
                                    "color: #6F4B27;\n"
                                    "font-family: Inter;}"
