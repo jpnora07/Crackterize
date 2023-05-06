@@ -976,7 +976,6 @@ class Ui_DialogSegment(object):
         self.background_widget_segment.hide()
 
     def getWidth_of_crack_function(self):
-
         try:
             distance = float(self.NumOfDistance.toPlainText())
         except ValueError:

@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="images">
+    <file>edit_remarks.png</file>
     <file>howtouse_icon.png</file>
     <file>asddas.png</file>
     <file>esc brown.png</file>

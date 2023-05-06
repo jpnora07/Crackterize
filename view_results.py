@@ -5,83 +5,29 @@ from datetime import datetime
 from functools import partial
 
 import tensorflow as tf
+from PyQt5.QtPrintSupport import QPrintPreviewDialog, QPrinter
 from tensorflow import keras
 import cv2
 import numpy as np
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import Qt, QTimer, pyqtSignal, QByteArray, QThread
-from PyQt5.QtGui import QPixmap, QMovie
+from PyQt5.QtCore import Qt, QTimer, pyqtSignal, QByteArray, QThread, QSizeF, QSize
+from PyQt5.QtGui import QPixmap, QMovie, QPainter, QTextCursor, QTextImageFormat, QFont, QTextCharFormat, QTextDocument
 from PyQt5.QtWidgets import QHBoxLayout, QVBoxLayout, QScrollArea, QWidget, QFileDialog, QDialog, QFrame
 
+from Detect_Crack import Detect_Crack_Dialog
 from Segment_Image import Ui_DialogSegment
 from result import Result_Dialog
 from view_result_with_details import result_with_details
 
-class ImageProcessingThread(QThread):
-    finished = pyqtSignal(object)
-    error = pyqtSignal(str)
-
-    def __init__(self, image_path):
-        super().__init__()
-        self.image_path = image_path
-
-    def run(self):
-        try:
-            # Load and process the image here
-            image = cv2.imread(self.image_path)
-            # Save the image to a temporary file
-            temp_file_path = 'temp_image_original.jpg'
-            cv2.imwrite(temp_file_path, image)
-            # Check if the image is valid
-            if image is not None:
-                self.imageCnn = cv2.resize(image, (224, 224))
-                self.imageCnn = np.expand_dims(self.imageCnn, axis=0)
-
-                self.modelCnn = keras.models.load_model('resnet_model_cnn.h5')
-                predictions = self.modelCnn.predict(self.imageCnn, verbose=0)
-                score = tf.nn.softmax(predictions)
-                print(score)
-                class_names = ['No Detected Crack', 'Contains Crack']
-
-                # Get the index of the predicted class
-                predicted_class_index = np.argmax(score, axis=1)[0]
-
-                # Get the name and score of the predicted class
-                predicted_class_name = class_names[predicted_class_index]
-
-                predicted_class_score = 100 * score[0][predicted_class_index]
-                if predicted_class_index == 0:
-                    predicted_Negative_score = predicted_class_score
-                    predicted_Positive_score = 100 - predicted_Negative_score
-                else:
-                    predicted_Positive_score = predicted_class_score
-                    predicted_Negative_score = 100 - predicted_Positive_score
-
-                print(f"Positive crack probability: {predicted_Positive_score:.2f}%")
-                print(f"Negative crack probability: {predicted_Negative_score:.2f}%")
-                Negative_score = f"{predicted_Negative_score:.2f}%"
-                Positive_score = f"{predicted_Positive_score:.2f}%"
-                with open('Negative_score.txt', 'w') as f:
-                    f.write(Negative_score)
-                with open('Positive_score.txt', 'w') as f:
-                    f.write(Positive_score)
-                with open('Predicted_Class_name.txt', 'w') as f:
-                    f.write(predicted_class_name)
-                self.finished.emit(score)
-
-            else:
-                self.error.emit("Invalid image format")
-
-        except Exception as e:
-            print(e)
-            self.error.emit(str(e))
 
 class view_result_dialog(object):
-    def __init__(self, background_widget, view_folder_dialog_orig, history, projects):
+    def __init__(self, background_widget, view_folder_dialog_orig, history, projects, mainwindow):
+        self.Mainwindow = mainwindow
         self.history = history
         self.myProjects = projects
         self.background_widget = background_widget
         self.view_folder_dialog_orig = view_folder_dialog_orig
+
     def setupUi(self, view_folder_dialog):
         # self.data_added.connect(self.refreshWidget)
         self.view_folder_dialog = view_folder_dialog
@@ -277,8 +223,31 @@ class view_result_dialog(object):
         self.frame.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.frame.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame.setObjectName("frame")
-        self.horizontalLayout_3 = QtWidgets.QHBoxLayout(self.frame)
+        self.horizontalLayout_3 = QtWidgets.QVBoxLayout(self.frame)
         self.horizontalLayout_3.setObjectName("horizontalLayout_3")
+        self.print = QtWidgets.QPushButton("Print", self.frame)
+        self.print.setStyleSheet("#print{\n"
+                                 "height:40px;\n"
+                                 "font-weight:bold;\n"
+                                 "font-size:18px;\n"
+                                 "color:white;\n"
+                                 "background-color: #2E74A9;\n"
+                                 "border-top-left-radius :20px;\n"
+                                 "border-top-right-radius : 20px; \n"
+                                 "border-bottom-left-radius : 20px; \n"
+                                 "border-bottom-right-radius : 20px;\n"
+                                 "}\n"
+                                 "#print:hover{\n"
+                                 "color:#2E74A9;\n"
+                                 "border :2px solid #2E74A9;\n"
+                                 "background-color: white;\n"
+                                 "}\n"
+                                 "")
+        self.print.setFlat(False)
+        self.print.setObjectName("print")
+        self.print.clicked.connect(self.printer)
+        self.horizontalLayout_3.addWidget(self.print)
+
         self.back = QtWidgets.QPushButton("Back", self.frame)
         self.back.setStyleSheet("#back{\n"
                                 "height:40px;\n"
@@ -315,74 +284,142 @@ class view_result_dialog(object):
         # Calling a function that fetch the folders of project
         self.fetch_folders_of_projects()
 
-    def closeEvent(self):
+    def printer(self):
 
+        dir_path = os.path.join(os.environ['APPDATA'], 'Crackterize')
+        if not os.path.exists(dir_path):
+            os.makedirs(dir_path)
+        db_path = os.path.join(dir_path, 'Projects.db')
+        conn = sqlite3.connect(db_path)
+        c = conn.cursor()
+        c.execute("SELECT * FROM Save_Files WHERE folder_name = ? ORDER BY created_at DESC", (self.selected_item,))
+        rows = c.fetchall()
+
+        try:
+            printer = QPrinter()
+            printer.setPageSize(QPrinter.Letter)
+            printer.setOrientation(QPrinter.Portrait)
+            printer.setOutputFormat(QPrinter.PdfFormat)
+            printer.setOutputFileName("preview.pdf")
+
+            # create a QTextDocument to hold the text to be printed
+            doc = QTextDocument()
+            doc.setPageSize(QSizeF(792, 612))  # set page size to 11x8.5 inches (in points)
+            doc.setDocumentMargin(36)
+
+            # create a QTextCursor to insert text into the QTextDocument
+            cursor = QTextCursor(doc)
+
+            font_format = QTextCharFormat()
+            font_format.setFont(QFont("Arial", 15))
+            bold_format = QTextCharFormat()
+            bold_format.setFont(QFont("Arial", 15))
+            bold_format.setFontWeight(QFont.Bold)
+
+            # loop through the fetched data and add each row to a separate page
+            for row in rows:
+                # image_data = row[15]
+                # pixmap = QPixmap()
+                # pixmap.loadFromData(image_data)
+                dir_path = os.path.join(os.environ['APPDATA'], 'Crackterize')
+                images_path = os.path.join(dir_path, 'Result Images')
+
+                if not os.path.exists(images_path):
+                    os.makedirs(images_path)
+
+                # save the image to a file with the id as the name
+                # file_path = os.path.join(images_path, f"{row[0]}.png")
+                # pixmap.save(file_path, "PNG")
+
+                # get all the image file names in the folder
+                file_names = [f for f in os.listdir(images_path) if os.path.isfile(os.path.join(images_path, f))]
+
+                # find the file name that matches the row ID
+                for file_name in file_names:
+                    if os.path.splitext(file_name)[0] == str(row[0]):
+                        # add the saved image to the document
+                        max_size = QSize(700, 450)
+                        image_format = QTextImageFormat()
+                        image_format.setWidth(max_size.width())
+                        image_format.setHeight(max_size.height())
+                        image_format.setName(os.path.join(images_path, file_name))
+                        header_html = "<h1 style='font-size: 18px;'>Crackterize Result</h1>"
+                        table_html = f'''
+                            <table>
+                                <tr>
+                                    <td>
+                                        <p style='font-size: 16px;'>The image characterized as: <b>{row[9]}</b></p>
+                                        <p style='font-size: 16px;'>Length: <b>{row[5]}</b></p>
+                                        <p style='font-size: 16px;'>Width: <b>{row[4]}</b></p>
+                                        <p style='font-size: 16px;'>Positive Crack Probability: <b>{row[8]}</b></p>
+                                        <p style='font-size: 16px;'>Negative Crack Probability: <b>{row[7]}</b></p>
+                                        <p style='font-size: 16px;'>Location of Crack: <b>{row[10]}</b></p>
+                                        <p style='font-size: 16px;'>Name of Project: <b>{row[16]}</b></p>
+                                        <p style='font-size: 16px;'>Name of Folder: <b>{row[1]}</b></p>
+                                        <p style='font-size: 16px;'>Date Added: <b>{row[14]}</b></p>
+                                        <p style='font-size: 16px;'>Remarks: <b>{row[13]}</b></p>
+                                    </td>
+                                </tr>
+                            </table>
+                        '''
+                        cursor.setPosition(cursor.document().lastBlock().position())
+                        cursor.insertHtml("<p style='page-break-after:always;'>&nbsp;</p>")
+                        html = header_html + table_html
+                        cursor.insertImage(image_format)
+                        cursor.insertHtml(header_html)
+                        cursor.insertHtml(table_html)
+                        cursor.setPosition(0, QTextCursor.MoveAnchor)
+                        cursor.insertHtml("<br><br><br>")
+                        break
+                        # clear the QTextCursor to start a new page
+
+            # create a QPrinter to print the document
+            printer = QPrinter()
+            printer.setPageSize(QPrinter.Letter)
+            printer.setOrientation(QPrinter.Portrait)
+            printer.setOutputFormat(QPrinter.PdfFormat)
+            printer.setOutputFileName("preview.pdf")
+
+            # create a QPainter to paint the document onto the printer
+            painter = QPainter()
+            if painter.begin(printer):
+                doc.setPageSize(QSizeF(printer.pageRect().size()))
+                doc.drawContents(painter)
+                painter.end()
+
+            # preview the document using a QPrintPreviewDialog
+            preview = QPrintPreviewDialog(printer)
+            preview.paintRequested.connect(doc.print_)
+            preview.exec_()
+        except Exception as e:
+            print(e)
+
+    def closeEvent(self):
         self.view_folder_dialog.close()
 
-
     def add_new_image(self):
+        self.view_folder_dialog_orig.close()
+        self.view_folder_dialog.close()
         image_path = self.open_file_dialog()
+        image = cv2.imread(image_path)
+        # Save the image to a temporary file
+        temp_file_path = 'temp_image_original.jpg'
+        cv2.imwrite(temp_file_path, image)
         if image_path is not None:
             try:
-                self.load_dialog = self.loading()
-                self.load_dialog.show()
-                self.background_widget_results.show()
-
-                # Create a new thread for the image processing task
-                self.thread = ImageProcessingThread(image_path)
-                self.thread.start()
-                self.thread.finished.connect(lambda score: self.on_processing_finished(score))
-
-
+                self.background_widget.show()
+                segment_dialog = QtWidgets.QDialog(self.Mainwindow)
+                ui = Detect_Crack_Dialog(image_path, self.background_widget, self.history, self.myProjects,
+                                         self.Mainwindow)
+                ui.setupUi(segment_dialog)
+                x = (self.Mainwindow.width() - segment_dialog.width()) // 2
+                y = (self.Mainwindow.height() - segment_dialog.height()) // 2
+                segment_dialog.move(x, y)
+                segment_dialog.exec_()
             except Exception as e:
                 print(e)
         else:
             print("No file selected.")
-
-    def on_processing_finished(self, score):
-        # Update the GUI with the results of the image processing task
-        # Update the GUI with the results of the image processing task
-        self.load_dialog.close()
-        self.background_widget_results.hide()
-        if np.argmax(score) == 0:
-            try:
-                with open('Predicted_width.txt', 'w') as f:
-                    f.write("0")
-                with open('Predicted_height.txt', 'w') as f:
-                    f.write("0")
-            except FileNotFoundError:
-                print("The file does not exist.")
-            result_dialog = QtWidgets.QDialog(self.view_folder_dialog)
-            x = (self.view_folder_dialog.width() - self.view_folder_dialog.width()) // 2
-            y = (self.view_folder_dialog.height() - self.view_folder_dialog.height()) // 2
-            ui = Result_Dialog(self.view_folder_dialog, self.background_widget, self.history, self.myProjects)
-
-            ui.setupUi(result_dialog)
-            result_dialog.move(x, y)
-            result_dialog.show()
-            result_dialog.exec_()
-            selected_folder_vrFile = "selected_folder_vrFile.txt"
-            if os.path.exists(selected_folder_vrFile):
-                print("Result folder open")
-            else:
-                self.view_folder_dialog_orig.close()
-
-            self.view_folder_dialog.close()
-        else:
-            segment_dialog = QtWidgets.QDialog(self.view_folder_dialog)
-            ui = Ui_DialogSegment(self.background_widget, self.history, self.myProjects)
-            ui.setupUi(segment_dialog)
-            x = (self.view_folder_dialog.width() - segment_dialog.width()) // 2
-            y = (self.view_folder_dialog.height() - segment_dialog.height()) // 2
-            segment_dialog.move(x, y)
-            segment_dialog.exec_()
-            selected_folder_vrFile = "selected_folder_vrFile.txt"
-            if os.path.exists(selected_folder_vrFile):
-                print("Result folder open")
-            else:
-                self.view_folder_dialog_orig.close()
-
-            self.view_folder_dialog.close()
 
     def open_file_dialog(self):
         file_dialog = QFileDialog()
@@ -605,7 +642,7 @@ class view_result_dialog(object):
                 btn_label = QtWidgets.QLabel(button_name, widget)
                 btn_label.setWordWrap(True)
                 btn_label.setStyleSheet("\n"
-                                             "  background-color: transparent;  \n"
+                                        "  background-color: transparent;  \n"
                                         "                font: 700 9pt \\\"Franklin Gothic Medium\\\";\n"
                                         "                font-family: \\\'Franklin Gothic Medium\\\';\n"
                                         "               font-style: normal;\n"
@@ -630,6 +667,7 @@ class view_result_dialog(object):
                 hbox.setAlignment(Qt.AlignTop | Qt.AlignLeft)
         except Exception as e:
             print(e)
+
     def view_folder(self, image_id):
         print("Image ID: ", image_id)
         self.id = image_id
@@ -770,10 +808,10 @@ class view_result_dialog(object):
         self.verticalLayout.setObjectName("verticalLayout")
         self.label_process = QtWidgets.QLabel("Uploading...", self.widget)
         self.label_process.setStyleSheet(
-                                             "  background-color: transparent;  \n"
-                                         "font-size:30px;\n"
-                                         "color: #6c757d;\n"
-                                         "font-style: Inter;")
+            "  background-color: transparent;  \n"
+            "font-size:30px;\n"
+            "color: #6c757d;\n"
+            "font-style: Inter;")
         self.label_process.setScaledContents(True)
         self.label_process.setAlignment(QtCore.Qt.AlignBottom | QtCore.Qt.AlignHCenter)
         self.label_process.setWordWrap(True)
@@ -793,11 +831,9 @@ class view_result_dialog(object):
         self.label.setAlignment(QtCore.Qt.AlignCenter)
         self.label.setObjectName("label")
         self.label.setStyleSheet(
-                                             "  background-color: transparent;")
+            "  background-color: transparent;")
         self.horizontalLayout_2.addWidget(self.label)
         self.verticalLayout.addWidget(self.widget_2)
         self.horizontalLayout.addWidget(self.widget)
         Dialog.show()
         return Dialog
-
-

@@ -3,16 +3,18 @@ import sqlite3
 import sys
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import QSize, Qt, QTimer, pyqtSignal, QObject
-from PyQt5.QtGui import QIcon
+from PyQt5.QtCore import QSize, Qt, QTimer, pyqtSignal, QObject, QSizeF
+from PyQt5.QtGui import QIcon, QPainter, QTextImageFormat, QPixmap, QFont, QTextCharFormat, QTextCursor, QTextDocument
+from PyQt5.QtPrintSupport import QPrintPreviewDialog, QPrinter
 from PyQt5.QtWidgets import QPushButton, QHBoxLayout, QVBoxLayout, QSizePolicy, QScrollArea, QWidget, QLabel
 
 from view_results import view_result_dialog
 
 
 class view_folder_dialog(object):
-    def __init__(self, background_widget, history, projects):
+    def __init__(self, background_widget, history, projects, mainwindow):
         super(view_folder_dialog, self).__init__()
+        self.Mainwindow = mainwindow
         self.history = history
         self.myProjects = projects
         self.background_widget = background_widget
@@ -203,8 +205,32 @@ class view_folder_dialog(object):
         self.frame.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.frame.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame.setObjectName("frame")
-        self.horizontalLayout_3 = QtWidgets.QHBoxLayout(self.frame)
+        self.horizontalLayout_3 = QtWidgets.QVBoxLayout(self.frame)
         self.horizontalLayout_3.setObjectName("horizontalLayout_3")
+
+        self.print = QtWidgets.QPushButton("Print", self.frame)
+        self.print.setStyleSheet("#print{\n"
+                                 "height:40px;\n"
+                                 "font-weight:bold;\n"
+                                 "font-size:18px;\n"
+                                 "color:white;\n"
+                                 "background-color: #2E74A9;\n"
+                                 "border-top-left-radius :20px;\n"
+                                 "border-top-right-radius : 20px; \n"
+                                 "border-bottom-left-radius : 20px; \n"
+                                 "border-bottom-right-radius : 20px;\n"
+                                 "}\n"
+                                 "#print:hover{\n"
+                                 "color:#2E74A9;\n"
+                                 "border :2px solid #2E74A9;\n"
+                                 "background-color: white;\n"
+                                 "}\n"
+                                 "")
+        self.print.setFlat(False)
+        self.print.setObjectName("print")
+        self.print.clicked.connect(self.printer)
+        self.horizontalLayout_3.addWidget(self.print)
+
         self.back = QtWidgets.QPushButton("Back", self.frame)
         self.back.setStyleSheet("#back{\n"
                                 "height:40px;\n"
@@ -233,6 +259,109 @@ class view_folder_dialog(object):
 
         # Calling a function that fetch the folders of project
         self.fetch_folders_of_projects()
+
+    def printer(self):
+
+        dir_path = os.path.join(os.environ['APPDATA'], 'Crackterize')
+        if not os.path.exists(dir_path):
+            os.makedirs(dir_path)
+        db_path = os.path.join(dir_path, 'Projects.db')
+        conn = sqlite3.connect(db_path)
+        c = conn.cursor()
+        c.execute("SELECT * FROM Save_Files WHERE project_name = ? ORDER BY created_at DESC", (self.selected_item,))
+        rows = c.fetchall()
+
+        try:
+            printer = QPrinter()
+            printer.setPageSize(QPrinter.Letter)
+            printer.setOrientation(QPrinter.Portrait)
+            printer.setOutputFormat(QPrinter.PdfFormat)
+            printer.setOutputFileName("preview.pdf")
+
+            # create a QTextDocument to hold the text to be printed
+            doc = QTextDocument()
+            doc.setPageSize(QSizeF(792, 612))  # set page size to 11x8.5 inches (in points)
+            doc.setDocumentMargin(36)
+
+            # create a QTextCursor to insert text into the QTextDocument
+            cursor = QTextCursor(doc)
+
+            # loop through the fetched data and add each row to a separate page
+            for row in rows:
+                # image_data = row[15]
+                # pixmap = QPixmap()
+                # pixmap.loadFromData(image_data)
+                dir_path = os.path.join(os.environ['APPDATA'], 'Crackterize')
+                images_path = os.path.join(dir_path, 'Result Images')
+
+                if not os.path.exists(images_path):
+                    os.makedirs(images_path)
+
+                # save the image to a file with the id as the name
+                # file_path = os.path.join(images_path, f"{row[0]}.png")
+                # pixmap.save(file_path, "PNG")
+
+                # get all the image file names in the folder
+                file_names = [f for f in os.listdir(images_path) if os.path.isfile(os.path.join(images_path, f))]
+
+                # find the file name that matches the row ID
+                for file_name in file_names:
+                    if os.path.splitext(file_name)[0] == str(row[0]):
+                        # add the saved image to the document
+                        max_size = QSize(700, 450)
+                        image_format = QTextImageFormat()
+                        image_format.setWidth(max_size.width())
+                        image_format.setHeight(max_size.height())
+                        image_format.setName(os.path.join(images_path, file_name))
+                        header_html = "<h1 style='font-size: 18px;'>Crackterize Result</h1>"
+                        table_html = f'''
+                            <table>
+                                <tr>
+                                    <td>
+                                        <p style='font-size: 16px;'>The image characterized as: <b>{row[9]}</b></p>
+                                        <p style='font-size: 16px;'>Length: <b>{row[5]}</b></p>
+                                        <p style='font-size: 16px;'>Width: <b>{row[4]}</b></p>
+                                        <p style='font-size: 16px;'>Positive Crack Probability: <b>{row[8]}</b></p>
+                                        <p style='font-size: 16px;'>Negative Crack Probability: <b>{row[7]}</b></p>
+                                        <p style='font-size: 16px;'>Location of Crack: <b>{row[10]}</b></p>
+                                        <p style='font-size: 16px;'>Name of Project: <b>{row[16]}</b></p>
+                                        <p style='font-size: 16px;'>Name of Folder: <b>{row[1]}</b></p>
+                                        <p style='font-size: 16px;'>Date Added: <b>{row[14]}</b></p>
+                                        <p style='font-size: 16px;'>Remarks: <b>{row[13]}</b></p>
+                                    </td>
+                                </tr>
+                            </table>
+                        '''
+                        cursor.setPosition(cursor.document().lastBlock().position())
+                        cursor.insertHtml("<p style='page-break-after:always;'>&nbsp;</p>")
+                        cursor.insertImage(image_format)
+                        cursor.insertHtml(header_html)
+                        cursor.insertHtml(table_html)
+                        cursor.setPosition(0, QTextCursor.MoveAnchor)
+                        cursor.insertHtml("<br><br><br>")
+                        break
+                        # clear the QTextCursor to start a new page
+
+            # create a QPrinter to print the document
+            printer = QPrinter()
+            printer.setPageSize(QPrinter.Letter)
+            printer.setOrientation(QPrinter.Portrait)
+            printer.setOutputFormat(QPrinter.PdfFormat)
+            printer.setOutputFileName("preview.pdf")
+
+            # create a QPainter to paint the document onto the printer
+            painter = QPainter()
+            if painter.begin(printer):
+                doc.setPageSize(QSizeF(printer.pageRect().size()))
+                doc.drawContents(painter)
+                painter.end()
+
+            # preview the document using a QPrintPreviewDialog
+            preview = QPrintPreviewDialog(printer)
+            preview.paintRequested.connect(doc.print_)
+            preview.exec_()
+        except Exception as e:
+            print(e)
 
     def closeEvent(self):
         selected_folder_vrFile = "selected_folder_vrFile.txt"
@@ -321,6 +450,7 @@ class view_folder_dialog(object):
         self.horizontalLayout.setContentsMargins(20, -1, 20, -1)
         self.horizontalLayout.setSpacing(30)
         self.horizontalLayout.setObjectName("horizontalLayout")
+
         self.back_btn = QtWidgets.QPushButton(self.widget)
         self.back_btn.setText("Back")
         self.back_btn.setStyleSheet("#back_btn{\n"
@@ -476,7 +606,8 @@ class view_folder_dialog(object):
             result_dialog = QtWidgets.QDialog(self.view_folder_dialog_orig)
             x = (self.view_folder_dialog_orig.width() - self.view_folder_dialog_orig.width()) // 2
             y = (self.view_folder_dialog_orig.height() - self.view_folder_dialog_orig.height()) // 2
-            ui = view_result_dialog(self.background_widget, self.view_folder_dialog_orig, self.history, self.myProjects)
+            ui = view_result_dialog(self.background_widget, self.view_folder_dialog_orig, self.history, self.myProjects,
+                                    self.Mainwindow)
 
             ui.setupUi(result_dialog)
             result_dialog.move(x, y)
@@ -583,3 +714,14 @@ class view_folder_dialog(object):
         self.c.execute("SELECT * FROM Location_Folder WHERE id=?", (folder_id,))
         row = self.c.fetchone()
         return row
+
+
+if __name__ == "__main__":
+    import sys
+
+    app = QtWidgets.QApplication(sys.argv)
+    Dialog = QtWidgets.QDialog()
+    ui = view_folder_dialog(None, None, None, None)
+    ui.setupUi(Dialog)
+    Dialog.show()
+    sys.exit(app.exec_())

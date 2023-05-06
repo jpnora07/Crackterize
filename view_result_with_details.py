@@ -2,10 +2,11 @@ import os
 import sqlite3
 import sys
 
+import cv2
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import Qt, QByteArray, QSizeF
+from PyQt5.QtCore import Qt, QByteArray, QSizeF, QSize
 from PyQt5.QtGui import QPixmap, QImage, QTextDocument, QTextCursor, QPainter, QFont, QTextCharFormat, QTextImageFormat, \
-    QTextFrameFormat
+    QTextFrameFormat, QTextBlockFormat
 from PyQt5.QtPrintSupport import QPrinter, QPrintPreviewDialog
 from PyQt5.QtWidgets import QDialog, QMessageBox
 
@@ -19,10 +20,10 @@ class result_with_details(object):
         self.Dialog = Dialog
         data = self.fetch_save_files_of_projects()
         Dialog.setObjectName("Dialog")
-        Dialog.resize(700, 600)
+        Dialog.resize(920, 600)
         Dialog.setWindowFlags(Qt.FramelessWindowHint)
-        Dialog.setMinimumSize(QtCore.QSize(700, 600))
-        Dialog.setMaximumSize(QtCore.QSize(700, 600))
+        Dialog.setMinimumSize(QtCore.QSize(920, 600))
+        Dialog.setMaximumSize(QtCore.QSize(920, 600))
         Dialog.setStyleSheet("#Dialog{background:rgb(255, 255, 255)}")
         self.verticalLayout_6 = QtWidgets.QVBoxLayout(Dialog)
         self.verticalLayout_6.setContentsMargins(0, 0, 0, 0)
@@ -87,13 +88,15 @@ class result_with_details(object):
         self.horizontalLayout_2 = QtWidgets.QHBoxLayout(self.widget_4)
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
         self.widget_12 = QtWidgets.QWidget(self.widget_4)
-        self.widget_12.setMaximumSize(QtCore.QSize(340, 16777215))
+        self.widget_12.setMaximumSize(QtCore.QSize(598, 16777215))
         self.widget_12.setObjectName("widget_12")
         self.horizontalLayout_9 = QtWidgets.QHBoxLayout(self.widget_12)
         self.horizontalLayout_9.setObjectName("horizontalLayout_9")
         self.label_image = QtWidgets.QLabel(self.widget_12)
-        self.label_image.setStyleSheet("border: 1px solid grey;background-color: transparent;")
+        self.label_image.setStyleSheet("background-color: transparent;")
         self.label_image.setObjectName("label")
+        self.label_image.setMinimumSize(QtCore.QSize(570, 391))
+        self.label_image.setMaximumSize(QtCore.QSize(16777215, 16777215))
         self.horizontalLayout_9.addWidget(self.label_image)
         self.horizontalLayout_2.addWidget(self.widget_12)
         self.widget_6 = QtWidgets.QWidget(self.widget_4)
@@ -117,6 +120,34 @@ class result_with_details(object):
         self.concretecracked_2.setWordWrap(True)
         self.concretecracked_2.setObjectName("concretecracked_2")
         self.verticalLayout_2.addWidget(self.concretecracked_2)
+
+        self.widget_101 = QtWidgets.QWidget(self.widget_6)
+        self.widget_101.setObjectName("widget_10")
+        self.widget_101.setMinimumSize(QtCore.QSize(0, 40))
+        self.widget_101.setMaximumSize(QtCore.QSize(16777215, 50))
+        self.horizontalLayout_101 = QtWidgets.QHBoxLayout(self.widget_101)
+        self.horizontalLayout_101.setObjectName("horizontalLayout_10")
+        self.label_21 = QtWidgets.QLabel("Location of Crack:", self.widget_101)
+        self.label_21.setStyleSheet("#label_2{\n"
+                                   "  background-color: transparent;  \n"
+                                   "color: rgba(111, 75, 39, 0.77);\n"
+                                   "font-size: 13px;\n"
+                                   "font-weight: bold;\n"
+                                   "}")
+        self.label_21.setObjectName("label_2")
+        self.horizontalLayout_101.addWidget(self.label_21)
+        self.loc_lbl = QtWidgets.QLabel(self.widget_101)
+        self.loc_lbl.setStyleSheet("#loc_lbl{\n"
+                                     "  background-color: transparent;  \n"
+                                     "    color:  #555555;\n"
+                                     "font: bold;\n"
+                                     "    font-size: 15px}")
+        self.loc_lbl.setObjectName("loc_lbl")
+        self.loc_lbl.setWordWrap(True)
+        self.loc_lbl.setScaledContents(True)
+        self.horizontalLayout_101.addWidget(self.loc_lbl)
+        self.verticalLayout_2.addWidget(self.widget_101)
+
         self.widget_10 = QtWidgets.QWidget(self.widget_6)
         self.widget_10.setObjectName("widget_10")
         self.horizontalLayout_10 = QtWidgets.QHBoxLayout(self.widget_10)
@@ -139,6 +170,7 @@ class result_with_details(object):
         self.lengthlbl.setObjectName("lengthlbl")
         self.horizontalLayout_10.addWidget(self.lengthlbl)
         self.verticalLayout_2.addWidget(self.widget_10)
+
         self.widget_13 = QtWidgets.QWidget(self.widget_6)
         self.widget_13.setObjectName("widget_13")
         self.horizontalLayout_11 = QtWidgets.QHBoxLayout(self.widget_13)
@@ -205,6 +237,7 @@ class result_with_details(object):
         self.widgetPos_2.setObjectName("widgetPos_2")
         self.verticalLayout_3.addWidget(self.widgetPos_2)
         self.verticalLayout_2.addWidget(self.widget_15)
+
         self.widget_5 = QtWidgets.QWidget(self.widget_6)
         self.widget_5.setObjectName("widget_5")
         self.verticalLayout_4 = QtWidgets.QVBoxLayout(self.widget_5)
@@ -366,6 +399,7 @@ class result_with_details(object):
 
         if data:
             try:
+                self.id = data[0][0]
                 self.width = data[0][4]
                 self.length = data[0][5]
                 self.position = data[0][6]
@@ -380,28 +414,39 @@ class result_with_details(object):
                 self.date = data[0][14]
                 self.image = data[0][2]
                 self.image_orig = data[0][3]
-                # Convert the image data to QPixmap
-                byte_array = QByteArray(self.image)
-                self.pixmap = QPixmap()
-                self.pixmap.loadFromData(byte_array)
 
-                byte_array_orig = QByteArray(self.image_orig)
-                self.pixmap_orig = QPixmap()
-                self.pixmap_orig.loadFromData(byte_array_orig)
-                self.label_image.setAlignment(QtCore.Qt.AlignCenter)
-                self.label_image.setMinimumSize(QtCore.QSize(300, 300))
-                label_size = self.label_image.size()
-                scaled_pixmap = self.pixmap.scaled(label_size, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+                dir_path = os.path.join(os.environ['APPDATA'], 'Crackterize')
+                images_path = os.path.join(dir_path, 'Result Images')
 
-                scaled_pixmap_orig = self.pixmap_orig.scaled(label_size, Qt.KeepAspectRatio, Qt.SmoothTransformation)
-                scaled_pixmap_orig.save('image_for_doc.png')
-                self.label_image.setPixmap(scaled_pixmap)
-                self.widthlbl.setText(self.width + " mm")
+                if not os.path.exists(images_path):
+                    os.makedirs(images_path)
+
+                file_names = [f for f in os.listdir(images_path) if os.path.isfile(os.path.join(images_path, f))]
+                # Check if any matching files were found
+                for file_name in file_names:
+                    if os.path.splitext(file_name)[0] == str(self.id):
+                        # Read the first matching file
+                        self.image_path = os.path.join(images_path, file_name)
+                        self.image_print = cv2.imread(self.image_path)
+                        self.image_print = cv2.cvtColor(self.image_print, cv2.COLOR_BGR2RGB)
+                        print(file_name)
+                        print(self.id)
+
+                        # Show the image in a label
+                        if self.image_print is not None:
+                            self.update_image(self.image_print)
+                        else:
+                            print("Failed to read image:", self.image_path)
+                    else:
+                        print("No matching image found for id:", self.id)
+
+                self.widthlbl.setText(self.width)
                 self.position_lbl.setText(self.position)
-                self.lengthlbl.setText(self.length + " cm")
+                self.lengthlbl.setText(self.length)
                 self.concretecracked.setText("The image classified " + self.status + ".")
                 self.widgetPos_2.setText("Positive Crack Probability is " + self.crack + ".")
                 self.widgetNeg.setText("Negative Crack Probability is " + self.no_crack + ".")
+                self.loc_lbl.setText(self.loc)
             except Exception as e:
                 print(e)
         else:
@@ -433,16 +478,19 @@ class result_with_details(object):
         doc.setDocumentMargin(36)  # set margin to 0.5 inch (36 points)
         cursor = QTextCursor(doc)
 
-        # Load the image file
-        image_path = os.path.abspath("image_for_doc.png")
-        image = QImage(image_path)
-        if image.isNull():
-            print("Error: Could not load image")
-            return
-
-        # Insert the image into the document
-        pixmap = QPixmap.fromImage(image)
         try:
+            # Load the image file
+            image_path = os.path.abspath("screenshot.png")
+            image = QImage(self.image_path)
+            if image.isNull():
+                print("Error: Could not load image")
+                return
+
+            # Set a fixed size for the image format
+            max_size = QSize(700, 450)
+
+            # Insert the image into the document
+            pixmap = QPixmap.fromImage(image)
             if not pixmap.isNull():
                 # Add the title to the document
                 title_format = QTextCharFormat()
@@ -450,42 +498,62 @@ class result_with_details(object):
                 cursor.insertText("                              Crackterized Result", title_format)
                 cursor.insertBlock()
 
+                # Center the title
+                title_cursor = cursor.block().position()
+                title_block = cursor.document().findBlock(title_cursor)
+                title_block_format = QTextBlockFormat()
+                title_block_format.setAlignment(Qt.AlignCenter)
+                title_cursor = QTextCursor(title_block)
+                title_cursor.setBlockFormat(title_block_format)
+
                 image_format = QTextImageFormat()
-                image_format.setWidth(pixmap.width())
-                image_format.setHeight(pixmap.height())
-                image_format.setName(image_path)
+                image_format.setWidth(max_size.width())
+                image_format.setHeight(max_size.height())
+                image_format.setName(self.image_path)
 
-                # Create a QTextFrameFormat and set its properties
-                frame_format = QTextFrameFormat()
-                frame_format.setBorder(1)  # set border width to 1
-                frame_format.setBorderStyle(QTextFrameFormat.BorderStyle_Solid)  # set border style to solid
-                frame_format.setBorderBrush(Qt.black)  # set border color to black
-                frame_format.setPadding(5)  # set padding to 5
-                frame_format.setMargin(5)
+                # Create a QTextBlockFormat and set its properties
+                image_block_format = QTextBlockFormat()
+                image_block_format.setAlignment(Qt.AlignLeft)
+                cursor.insertBlock(image_block_format)
 
-                # Insert the image into a QTextFrame and set its format
-                frame = cursor.insertFrame(frame_format)
-                frame_cursor = QTextCursor(frame)
-                frame_cursor.insertImage(image_format, QTextFrameFormat.FloatRight)
+                # Insert the image into the document and set its format
+                cursor.insertImage(image_format)
         except Exception as e:
             print(e)
 
         # Create a QTextCharFormat object with the desired font properties
         font_format = QTextCharFormat()
-        font_format.setFont(QFont("Arial", 15))
-
+        font_format.setFont(QFont("Arial", 13))
+        bold_format = QTextCharFormat()
+        bold_format.setFont(QFont("Arial", 13))
+        bold_format.setFontWeight(QFont.Bold)
         # Add the data to the document
-        cursor.insertText(f"The image characterized as: {self.status}\n", font_format)
-        cursor.insertText(f"Length: {self.length}\n", font_format)
-        cursor.insertText(f"Width: {self.width}\n", font_format)
-        # cursor.insertText(f"Orientation: {self.position}\n", font_format)
-        cursor.insertText(f"Positive Crack Probability: {self.crack}\n", font_format)
-        cursor.insertText(f"Negative Crack Probability: {self.no_crack}\n", font_format)
-        cursor.insertText(f"Location of Crack: {self.loc}\n", font_format)
-        cursor.insertText(f"Crack Type: {self.type}\n", font_format)
-        cursor.insertText(f"Crack Progression: {self.prog}\n", font_format)
-        cursor.insertText(f"Remarks: {self.remarks_db}\n", font_format)
-        cursor.insertText(f"Date Added: {self.date}\n", font_format)
+        cursor.insertText("The image characterized as: ", font_format)
+        cursor.insertText(f"{self.status}\n\n", bold_format)
+
+        cursor.insertText("Length: ", font_format)
+        cursor.insertText(f"{self.length}\n\n", bold_format)
+
+        cursor.insertText("Width: ", font_format)
+        cursor.insertText(f"{self.width}\n\n", bold_format)
+
+        # cursor.insertText(f"Width: {self.width}\n\n", font_format)
+        # cursor.insertText(f"Orientation: {self.orient}\n", font_format)
+
+        cursor.insertText("Positive Crack Probability: ", font_format)
+        cursor.insertText(f"{self.crack}\n\n", bold_format)
+
+        cursor.insertText("Negative Crack Probability: ", font_format)
+        cursor.insertText(f"{self.no_crack}\n\n", bold_format)
+
+        cursor.insertText("Location of Crack: ", font_format)
+        cursor.insertText(f"{self.loc}\n\n", bold_format)
+
+        cursor.insertText("Date Added: ", font_format)
+        cursor.insertText(f"{self.date}\n\n", bold_format)
+
+        cursor.insertText("Remarks: ", font_format)
+        cursor.insertText(f"{self.remarks_db}\n\n", bold_format)
 
         painter = QPainter()
         if painter.begin(printer):
@@ -553,7 +621,7 @@ class result_with_details(object):
         self.label_2.setText(_translate("Dialog", "Length:"))
         self.label_3.setText(_translate("Dialog", "Width: "))
         self.widgetPosition.setText(_translate("Dialog", "Orientation:"))
-        self.view_details.setText(_translate("Dialog", "View Details"))
+        self.view_details.setText(_translate("Dialog", "Remarks"))
         self.update.setText(_translate("Dialog", "Update"))
 
     def closeEvent(self):
@@ -766,132 +834,11 @@ class result_with_details(object):
         self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.widget_6)
         self.verticalLayout_2.setContentsMargins(-1, 0, -1, -1)
         self.verticalLayout_2.setObjectName("verticalLayout_2")
-        self.concretecracked_2 = QtWidgets.QLabel("Details:", self.widget_6)
-        self.concretecracked_2.setStyleSheet("#concretecracked_2{\n"
-                                             "    \n"
-                                             "  background-color: transparent;  \n"
-                                             "color: #2E74A9;\n"
-                                             "font: bold;\n"
-                                             "border: 2px solid white;\n"
-                                             "font-size: 20px;\n"
-                                             "border-bottom-color: rgb(172, 172, 172);\n"
-                                             "}")
-        self.concretecracked_2.setAlignment(QtCore.Qt.AlignCenter)
-        self.concretecracked_2.setWordWrap(True)
-        self.concretecracked_2.setObjectName("concretecracked_2")
-        self.verticalLayout_2.addWidget(self.concretecracked_2)
-        self.widget_10 = QtWidgets.QWidget(self.widget_6)
-        self.widget_10.setObjectName("widget_10")
-        self.horizontalLayout_10 = QtWidgets.QHBoxLayout(self.widget_10)
-        self.horizontalLayout_10.setObjectName("horizontalLayout_10")
-        self.label_2 = QtWidgets.QLabel("Location of Crack:", self.widget_10)
-        self.label_2.setStyleSheet("#label_2{\n"
-                                   "  background-color: transparent;  \n"
 
-                                   "color: rgba(111, 75, 39, 0.77);\n"
-                                   "font-size: 13px;\n"
-                                   "font-weight: bold;\n"
-                                   "}")
-        self.label_2.setObjectName("label_2")
-        self.horizontalLayout_10.addWidget(self.label_2)
-        self.location_label = QtWidgets.QLabel(self.widget_10)
-        self.location_label.setMinimumSize(QtCore.QSize(134, 0))
-        self.location_label.setMaximumSize(QtCore.QSize(134, 16777215))
-        self.location_label.setStyleSheet("#location_label{\n"
-                                          "  background-color: transparent;  \n"
-
-                                          "    color:  #555555;\n"
-                                          "font: bold;\n"
-                                          "    font-size: 15px}")
-        self.location_label.setAlignment(QtCore.Qt.AlignCenter)
-        self.location_label.setWordWrap(True)
-        self.location_label.setObjectName("location_label")
-        self.horizontalLayout_10.addWidget(self.location_label)
-        self.verticalLayout_2.addWidget(self.widget_10)
-        self.widget_13 = QtWidgets.QWidget(self.widget_6)
-        self.widget_13.setObjectName("widget_13")
-        self.horizontalLayout_11 = QtWidgets.QHBoxLayout(self.widget_13)
-        self.horizontalLayout_11.setObjectName("horizontalLayout_11")
-        self.label_3 = QtWidgets.QLabel("Crack Type:", self.widget_13)
-        self.label_3.setStyleSheet("#label_3{\n"
-                                   "  background-color: transparent;  \n"
-                                   "color: rgba(111, 75, 39, 0.77);\n"
-                                   "font-size: 13px;\n"
-                                   "font-weight: bold;\n"
-                                   "}")
-        self.label_3.setObjectName("label_3")
-        self.horizontalLayout_11.addWidget(self.label_3)
-        self.type_label = QtWidgets.QLabel(self.widget_13)
-        self.type_label.setMinimumSize(QtCore.QSize(134, 0))
-        self.type_label.setMaximumSize(QtCore.QSize(134, 16777215))
-        self.type_label.setStyleSheet("#type_label{\n"
-                                      "  background-color: transparent;  \n"
-                                      "    color:  #555555;\n"
-                                      "font: bold;\n"
-                                      "    font-size: 15px;\n"
-                                      "}")
-        self.type_label.setAlignment(QtCore.Qt.AlignCenter)
-        self.type_label.setWordWrap(True)
-        self.type_label.setObjectName("type_label")
-        self.horizontalLayout_11.addWidget(self.type_label)
-        self.verticalLayout_2.addWidget(self.widget_13)
-        self.widget_11 = QtWidgets.QWidget(self.widget_6)
-        self.widget_11.setObjectName("widget_11")
-
-        self.horizontalLayout_13 = QtWidgets.QHBoxLayout(self.widget_11)
-        self.horizontalLayout_13.setObjectName("horizontalLayout_13")
-        self.widgetPosition = QtWidgets.QLabel("Crack Progression:", self.widget_11)
-        self.widgetPosition.setStyleSheet("#widgetPosition{\n"
-                                          "  background-color: transparent;  \n"
-                                          "color: rgba(111, 75, 39, 0.77);\n"
-                                          "font-size: 13px;\n"
-                                          "font-weight: bold;\n"
-                                          "}")
-        self.widgetPosition.setObjectName("widgetPosition")
-        self.horizontalLayout_13.addWidget(self.widgetPosition)
-        self.prog_label = QtWidgets.QLabel(self.widget_11)
-        self.prog_label.setMinimumSize(QtCore.QSize(134, 0))
-        self.prog_label.setMaximumSize(QtCore.QSize(134, 16777215))
-        self.prog_label.setStyleSheet("#prog_label{\n"
-                                      "  background-color: transparent;  \n"
-                                      "    color:  #555555;\n"
-                                      "font: bold;\n"
-                                      "    font-size: 15px;\n"
-                                      "}")
-        self.prog_label.setAlignment(QtCore.Qt.AlignCenter)
-        self.prog_label.setWordWrap(True)
-        self.prog_label.setObjectName("prog_label")
-        self.horizontalLayout_13.addWidget(self.prog_label)
-        self.verticalLayout_2.addWidget(self.widget_11)
-        self.widget_12 = QtWidgets.QWidget(self.widget_6)
-        self.widget_12.setObjectName("widget_12")
-        self.horizontalLayout_12 = QtWidgets.QHBoxLayout(self.widget_12)
-        self.horizontalLayout_12.setObjectName("horizontalLayout_12")
-        self.label_4 = QtWidgets.QLabel("Date Added:", self.widget_12)
-        self.label_4.setStyleSheet("#label_4{\n"
-                                   "  background-color: transparent;  \n"
-                                   "color: rgba(111, 75, 39, 0.77);\n"
-                                   "font-size: 13px;\n"
-                                   "font-weight: bold;\n"
-                                   "}")
-        self.label_4.setObjectName("label_4")
-        self.horizontalLayout_12.addWidget(self.label_4)
-        self.date_added = QtWidgets.QLabel(self.widget_12)
-        self.date_added.setMinimumSize(QtCore.QSize(134, 0))
-        self.date_added.setMaximumSize(QtCore.QSize(134, 16777215))
-        self.date_added.setStyleSheet("#date_added{\n"
-                                      "  background-color: transparent;  \n"
-
-                                      "    color:  #555555;\n"
-                                      "font: bold;\n"
-                                      "    font-size: 15px}")
-        self.date_added.setAlignment(QtCore.Qt.AlignCenter)
-        self.date_added.setWordWrap(True)
-        self.date_added.setObjectName("date_added")
-        self.horizontalLayout_12.addWidget(self.date_added)
-        self.verticalLayout_2.addWidget(self.widget_12)
         self.widget_15 = QtWidgets.QWidget(self.widget_6)
         self.widget_15.setObjectName("widget_15")
+        self.widget_15.setMinimumSize(QtCore.QSize(0, 300))
+        self.widget_15.setMaximumSize(QtCore.QSize(16777215, 16777215))
         self.verticalLayout_3 = QtWidgets.QVBoxLayout(self.widget_15)
         self.verticalLayout_3.setObjectName("verticalLayout_3")
         self.widget = QtWidgets.QWidget(self.widget_15)
@@ -905,29 +852,29 @@ class result_with_details(object):
         self.horizontalLayout_2.setContentsMargins(0, 0, 0, 0)
         self.horizontalLayout_2.setSpacing(0)
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
-        self.widgetPos_2 = QtWidgets.QLabel("Remarks:", self.widget)
+        self.widget_2 = QtWidgets.QWidget(self.widget)
+        self.widget_2.setObjectName("widget_2")
+        self.horizontalLayout_2.addWidget(self.widget_2)
+        self.widgetPos_2 = QtWidgets.QLabel("Remarks", self.widget)
         self.widgetPos_2.setMinimumSize(QtCore.QSize(180, 0))
         self.widgetPos_2.setMaximumSize(QtCore.QSize(180, 16777215))
         self.widgetPos_2.setStyleSheet("#widgetPos_2{\n"
                                        "  background-color: transparent;  \n"
                                        "color: rgba(111, 75, 39, 0.77);\n"
-                                       "font-size: 13px;\n"
+                                       "font-size: 20px;\n"
                                        "font-weight: bold;\n"
                                        "}")
         self.widgetPos_2.setAlignment(QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
         self.widgetPos_2.setWordWrap(True)
         self.widgetPos_2.setObjectName("widgetPos_2")
         self.horizontalLayout_2.addWidget(self.widgetPos_2)
-        self.widget_2 = QtWidgets.QWidget(self.widget)
-        self.widget_2.setObjectName("widget_2")
-        self.horizontalLayout_2.addWidget(self.widget_2)
+
         self.edit_remarks = QtWidgets.QPushButton(self.widget)
-        self.edit_remarks.setMinimumSize(QtCore.QSize(30, 23))
-        self.edit_remarks.setMaximumSize(QtCore.QSize(30, 23))
-        self.edit_remarks.setText("edit")
-        #icon = QtGui.QIcon()
-        #icon.addPixmap(QtGui.QPixmap("images/editor.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        #self.edit_remarks.setIcon(icon)
+        self.edit_remarks.setMinimumSize(QtCore.QSize(25, 25))
+        self.edit_remarks.setMaximumSize(QtCore.QSize(25, 25))
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap("images/edit_remarks.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.edit_remarks.setIcon(icon)
         self.edit_remarks.setIconSize(QtCore.QSize(20, 25))
         self.edit_remarks.setFlat(True)
         self.edit_remarks.setStyleSheet("#edit_remarks{\n"
@@ -947,8 +894,8 @@ class result_with_details(object):
         is_enabled = self.remarks.isEnabled()
         self.remarks.setEnabled(not is_enabled)
         self.edit_remarks.clicked.connect(self.edit_remarks_enable)
-        self.remarks.setMinimumSize(QtCore.QSize(0, 50))
-        self.remarks.setMaximumSize(QtCore.QSize(16777215, 50))
+        self.remarks.setMinimumSize(QtCore.QSize(0, 230))
+        self.remarks.setMaximumSize(QtCore.QSize(16777215, 16777215))
         self.remarks.setStyleSheet("#remarks{\n"
 
                                    "  background-color: transparent;  \n"
@@ -996,10 +943,6 @@ class result_with_details(object):
                 remarks = data[0][13]
                 date = data[0][14]
 
-                self.location_label.setText(loc)
-                self.type_label.setText(type)
-                self.prog_label.setText(prog)
-
                 new_remark = 'New_Remark.txt'
                 if os.path.isfile(new_remark):
                     with open(new_remark, 'r') as f:
@@ -1007,7 +950,6 @@ class result_with_details(object):
                         self.remarks.setText(self.input_txt)
                 else:
                     self.remarks.setText(remarks)
-                self.date_added.setText(date)
             except Exception as e:
                 print(e)
         else:
@@ -1258,3 +1200,26 @@ class result_with_details(object):
             print("Result folder open")
         else:
             self.background_widget.hide()
+
+    def update_image(self, image):
+        # Get the size of the label
+        self.label_image.setAlignment(QtCore.Qt.AlignCenter)
+        label_size = self.label_image.size()
+
+        # Convert the image to a QImage
+        height, width, channel = image.shape
+        bytes_per_line = 3 * width
+        q_image = QImage(image.data, width, height, bytes_per_line, QImage.Format_RGB888)
+
+        # Set the image on the label
+        pixmap = QPixmap(q_image)
+        self.label_image.setPixmap(pixmap.scaled(label_size, Qt.KeepAspectRatio, Qt.SmoothTransformation))
+if __name__ == "__main__":
+    import sys
+
+    app = QtWidgets.QApplication(sys.argv)
+    Dialog = QtWidgets.QDialog()
+    ui = result_with_details(None, None)
+    ui.setupUi(Dialog)
+    Dialog.show()
+    sys.exit(app.exec_())
