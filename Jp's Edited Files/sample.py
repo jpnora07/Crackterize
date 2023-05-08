@@ -1,80 +1,74 @@
-import os
-import sqlite3
-from PyQt5 import QtWidgets
+import sys
+from PyQt5.QtWidgets import QApplication, QDialog, QComboBox, QVBoxLayout, QScrollArea, QTableWidget, QTableWidgetItem, QPushButton
 
-class ExampleApp(QtWidgets.QWidget):
+
+class MyDialog(QDialog):
     def __init__(self):
         super().__init__()
+        self.setWindowTitle('ComboBox and ScrollArea Table')
+        self.setGeometry(100, 100, 500, 400)
 
-        # create the GUI elements
-        self.comboboxes = []
-        self.btn_fetch = QtWidgets.QPushButton('Fetch Data')
-        self.table = QtWidgets.QTableWidget()
+        # Create ComboBox
+        self.comboBox = QComboBox()
+        self.comboBox.addItem('Item 1')
+        self.comboBox.addItem('Item 2')
+        self.comboBox.addItem('Item 3')
+        self.comboBox.currentIndexChanged.connect(self.addItemToTable)
 
-        # set up the layout
-        layout = QtWidgets.QVBoxLayout()
-        for i in range(3): # add three comboboxes
-            combobox = QtWidgets.QComboBox()
-            self.comboboxes.append(combobox)
-            layout.addWidget(combobox)
-        layout.addWidget(self.btn_fetch)
-        layout.addWidget(self.table)
+        # Create ScrollArea
+        self.scrollArea = QScrollArea()
+        self.scrollArea.setWidgetResizable(True)
+        self.scrollAreaWidgetContents = QTableWidget()
+        self.scrollArea.setWidget(self.scrollAreaWidgetContents)
+        self.scrollAreaWidgetContents.setColumnCount(1)
+        self.scrollAreaWidgetContents.setHorizontalHeaderLabels(['Items'])
+
+        # Create Button
+        self.button = QPushButton('Print Items')
+        self.button.clicked.connect(self.printTableItems)
+
+        # Add widgets to layout
+        layout = QVBoxLayout()
+        layout.addWidget(self.comboBox)
+        layout.addWidget(self.scrollArea)
+        layout.addWidget(self.button)
+
         self.setLayout(layout)
 
-        # populate the comboboxes with data from the database
-        self.populate_comboboxes()
+    def addItemToTable(self, index):
+        # Get the selected item from the ComboBox
+        item = self.comboBox.itemText(index)
 
-        # connect the button to fetch data
-        self.btn_fetch.clicked.connect(self.fetch_data)
+        # Add the item and button to the table in the ScrollArea
+        rowCount = self.scrollAreaWidgetContents.rowCount()
+        self.scrollAreaWidgetContents.setRowCount(rowCount + 1)
+        newItem = QTableWidgetItem(item)
+        self.scrollAreaWidgetContents.setItem(rowCount, 0, newItem)
 
-    def populate_comboboxes(self):
-        # connect to the database
-        dir_path = os.path.join(os.environ['APPDATA'], 'Crackterize')
-        if not os.path.exists(dir_path):
-            os.makedirs(dir_path)
-        db_path = os.path.join(dir_path, '../Projects.db')
-        conn = sqlite3.connect(db_path)
-        c = conn.cursor()
+        button = QPushButton('Print Item')
+        button.clicked.connect(lambda _, i=rowCount: self.printItem(i))
+        self.scrollAreaWidgetContents.setCellWidget(rowCount, 1, button)
 
-        # get the distinct values for each column and add them to the corresponding combobox
-        for i in range(3):
-            column_name = f'column_{i}'
-            c.execute(f"SELECT DISTINCT {column_name} FROM Save_Files ORDER BY {column_name}")
-            values = [row[0] for row in c.fetchall()]
-            combobox = self.comboboxes[i]
-            combobox.addItems(values)
-        conn.close()
+    def printItem(self, row):
+        # Get the item from the selected row and print it
+        item = self.scrollAreaWidgetContents.item(row, 0)
+        print(item.text())
 
-    def fetch_data(self):
-        # get the selected values from the comboboxes
-        selected_values = [cb.currentText() for cb in self.comboboxes]
 
-        # connect to the database
-        conn = sqlite3.connect('../Projects.db')
-        c = conn.cursor()
+    def printTableItems(self):
+        # Store the items in a list
+        items = []
+        numRows = self.scrollAreaWidgetContents.rowCount()
+        for i in range(numRows):
+            item = self.scrollAreaWidgetContents.item(i, 0)
+            items.append(item.text())
 
-        # build the query based on the selected values
-        query = "SELECT * FROM Save_Files WHERE "
-        for i, value in enumerate(selected_values):
-            column_name = f'column_{i}'
-            query += f"{column_name} = '{value}' AND "
-        query = query[:-5] # remove the last 'AND'
-        query += "ORDER BY created_at DESC"
+        # Print the list of items
+        print(items)
 
-        # execute the query and populate the table with the results
-        c.execute(query)
-        rows = c.fetchall()
-        self.table.setRowCount(len(rows))
-        self.table.setColumnCount(len(rows[0]))
-        for i, row in enumerate(rows):
-            for j, value in enumerate(row):
-                item = QtWidgets.QTableWidgetItem(str(value))
-                self.table.setItem(i, j, item)
-
-        conn.close()
 
 if __name__ == '__main__':
-    app = QtWidgets.QApplication([])
-    ex = ExampleApp()
-    ex.show()
-    app.exec_()
+    app = QApplication(sys.argv)
+    dialog = MyDialog()
+    dialog.show()
+    sys.exit(app.exec_())

@@ -362,9 +362,6 @@ class view_result_dialog(object):
                                 </tr>
                             </table>
                         '''
-                        cursor.setPosition(cursor.document().lastBlock().position())
-                        cursor.insertHtml("<p style='page-break-after:always;'>&nbsp;</p>")
-                        html = header_html + table_html
                         cursor.insertImage(image_format)
                         cursor.insertHtml(header_html)
                         cursor.insertHtml(table_html)
@@ -608,7 +605,6 @@ class view_result_dialog(object):
                 byte_array = QByteArray(image)
                 pixmap = QPixmap()
                 pixmap.loadFromData(byte_array)
-                print(image)
                 widget = QtWidgets.QWidget(self.scroll_widget)
                 widget.setFixedSize(120, 140)
                 widget.setObjectName("widget")
@@ -781,7 +777,6 @@ class view_result_dialog(object):
         # fetch data from the database
         self.c.execute("SELECT * FROM Save_Files WHERE folder_name = ? ", (folder_name,))
         data = self.c.fetchall()
-        print(data)
         self.add_button_folder(data)
 
     def loading(self):

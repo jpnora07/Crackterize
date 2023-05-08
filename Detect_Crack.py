@@ -519,31 +519,55 @@ class Detect_Crack_Dialog(object):
         self.units.setEnabled(True)
         self.units.setMinimumSize(QtCore.QSize(0, 30))
         self.units.addItems(["Millimeter (mm)", "Centimeter (cm)", "Inch (in)", "Foot (ft)", "Yard (yd)", "Meter (m)"])
-        self.units.setStyleSheet("\n"
-                                 "#units{\n"
-                                 "font: 600 10pt \"Segoe UI\";\n"
-                                 "color:#4A3B28;\n"
-                                 "background: transparent;\n"
-                                 "}\n"
+        self.units.setStyleSheet("#units {\n"
+                                 "        border-radius: 10px;\n"
+                                 "        font-size: 18px;\n"
+                                 "        font-family: Arial;\n"
+                                 "color:rgb(144, 115, 87);"
+                                 "        background-color: #fff;\n"
+                                 "        border: 2px solid #aaa;\n"
+                                 "        padding: 2px;\n"
+                                 "padding-left:8px;\n"
+                                 "    }\n"
+                                 "\n"
                                  "#units::drop-down{\n"
-                                 "image:url(images/arrowdown.png);\n"
-                                 "width: 20px;\n"
-                                 "height: 20px;\n"
-                                 "margin-top:3px;\n"
+                                 " image:url(images/arrowdown.png);\n"
+                                 " width: 15px;\n"
+                                 " height: 15px;\n"
+                                 "padding: 6px;\n"
+                                 "}\n"
+                                 "#units::drop-down::pressed{\n"
+                                 " image:url(images/arrowup.png);\n"
+                                 "width: 15px;\n"
+                                 " height: 15px;\n"
+                                 "text-align: center;\n"
                                  "}\n"
                                  "#units QAbstractItemView {\n"
-                                 "background-color: rgba(255, 255, 255, 0.75);\n"
-                                 "padding: 2px;\n"
+                                 "background-color: rgb(255, 255, 255);\n"
                                  "outline: none;\n"
-                                 "}\n"
+                                 "color:rgb(144, 115, 87);"
+                                 " text-align: center;}\n"
+                                 "\n"
                                  "#units QAbstractItemView::item {\n"
-                                 "background-color: #FFFFFF;\n"
-                                 "color: #4A3B28;\n"
-                                 "text-align: center;\n"
-                                 "    }\n"
-                                 "#units.comboBoxClass QLineEdit {\n"
-                                 "    text-align: center;\n"
-                                 "}")
+                                 "background-color: #F4EBE6;\n"
+                                 " color: #4A3B28;\n"
+                                 "color:rgb(144, 115, 87);"
+                                 " text-align: center;\n"
+                                 "min-height: 35px; min-width: 50px;\n"
+                                 " border:0px;}\n"
+                                 "\n"
+                                 "#units QListView{\n"
+                                 "border: none;\n"
+                                 " font-weight:bold;\n"
+                                 "color:rgb(144, 115, 87);"
+                                 " text-align: center;}\n"
+                                 "#loc_box QListView::item{border:0px;\n"
+                                 "border-radius: 15px;\n"
+                                 "  padding:8px; \n"
+                                 "margin:5px;}\n"
+                                 "#units QListView::item:selected { \n"
+                                 "color: white; \n"
+                                 "background-color: #4A3B28}")
         self.units.setObjectName("units")
         self.units.setAutoFillBackground(False)
         self.horizontalLayout_4.addWidget(self.units)
@@ -952,10 +976,11 @@ class Detect_Crack_Dialog(object):
         _translate = QtCore.QCoreApplication.translate
         Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
         self.label_2.setText(_translate("Dialog", "Location of Crack: "))
-        #self.label_3.setText(_translate("Dialog", "Crack Type: "))
+        # self.label_3.setText(_translate("Dialog", "Crack Type: "))
 
-        #self.label_4.setText(_translate("Dialog", "Crack Progression: "))
-        self.label_6.setText(_translate("Dialog", "<html><head/><body><p align='center'>Distance between the camera and concrete:</p></body></html>"))
+        # self.label_4.setText(_translate("Dialog", "Crack Progression: "))
+        self.label_6.setText(_translate("Dialog",
+                                        "<html><head/><body><p align='center'>Distance between the camera and concrete:</p></body></html>"))
 
         self.pushButton.setToolTip(
             _translate("Dialog", "Please input the distance between the camera and the concrete surface in \n"

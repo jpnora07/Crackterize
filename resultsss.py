@@ -416,7 +416,7 @@ class result_new_dialog(object):
         if os.path.isfile(file_path_Width) and os.path.getsize(file_path_Width) > 0:
             with open(file_path_Width, 'r') as f:
                 self.width = f.read() + " mm"
-                self.widthlbl.setText(str(self.width) )
+                self.widthlbl.setText(str(self.width))
         else:
             self.width = "0 mm"
             self.widthlbl.setText(str(self.width))
@@ -805,7 +805,7 @@ class result_new_dialog(object):
         cursor.insertText("Width: ", font_format)
         cursor.insertText(f"{self.width}\n\n", bold_format)
 
-        #cursor.insertText(f"Width: {self.width}\n\n", font_format)
+        # cursor.insertText(f"Width: {self.width}\n\n", font_format)
         # cursor.insertText(f"Orientation: {self.orient}\n", font_format)
 
         cursor.insertText("Positive Crack Probability: ", font_format)
@@ -817,11 +817,11 @@ class result_new_dialog(object):
         cursor.insertText("Location of Crack: ", font_format)
         cursor.insertText(f"{self._selected_loc}\n\n", bold_format)
 
-        #cursor.insertText("Crack Type: ", font_format)
-        #cursor.insertText(f"{self._selected_type}\n\n", bold_format)
+        # cursor.insertText("Crack Type: ", font_format)
+        # cursor.insertText(f"{self._selected_type}\n\n", bold_format)
 
-        #cursor.insertText("Crack Progression: ", font_format)
-        #cursor.insertText(f"{self._selected_prog}\n\n", bold_format)
+        # cursor.insertText("Crack Progression: ", font_format)
+        # cursor.insertText(f"{self._selected_prog}\n\n", bold_format)
 
         cursor.insertText("Remarks: ", font_format)
         cursor.insertText(f"{remarks_new}\n\n", bold_format)
@@ -1742,7 +1742,7 @@ class result_new_dialog(object):
         except Exception as e:
             print(f"Error at closing {e}")
 
-    def save_image_to_appdata(self,row_id):
+    def save_image_to_appdata(self, row_id):
         ss_bytes = cv2.imread('screenshot.png')
         dir_path = os.path.join(os.environ['APPDATA'], 'Crackterize')
         images_path = os.path.join(dir_path, 'Result Images')
@@ -1946,7 +1946,8 @@ class result_new_dialog(object):
         file_names = ["Input_Distance.txt", "Negative_score.txt", "Orientation.txt", "Positive_score.txt",
                       "Predicted_Class_name.txt", "Predicted_height.txt", "Predicted_Score.txt", "Predicted_width.txt",
                       "Remarks_written.txt", "Selected_location_crack.txt", "Selected_progression_crack.txt",
-                      "Selected_type_crack.txt", "threshold_image.jpg"]
+                      "Selected_type_crack.txt", "threshold_image.jpg", "image_id.txt", "screenshot.png",
+                      "temp_image_original.jpg", "temp_image_result.jpg"]
 
         try:
             for file_name in file_names:

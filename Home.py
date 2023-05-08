@@ -329,7 +329,6 @@ class Ui_MainWindow(object):
             c = conn.cursor()
             c.execute("SELECT * FROM Save_Files ORDER BY created_at DESC")
             rows = c.fetchall()
-            print(rows)
             for row in rows:
                 status = str(row[9])
                 recent = str(row[14])
