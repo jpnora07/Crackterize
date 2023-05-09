@@ -52,10 +52,11 @@ class Ui_MainWindow(object):
         MainWindow.setWindowModality(QtCore.Qt.NonModal)#
         MainWindow.setEnabled(True)
         # MainWindow.setFixedSize(1000, 700)
-
+        screen_resolution = QDesktopWidget().screenGeometry()
+        width, height = screen_resolution.width(), screen_resolution.height()
         # MainWindow.resize(1000, 700)
-        MainWindow.setMinimumSize(QtCore.QSize(1000, 700))
-        MainWindow.setMaximumSize(QtCore.QSize(16777215, 16777215))
+        MainWindow.setMinimumSize(QtCore.QSize(width, height))
+        MainWindow.setMaximumSize(QtCore.QSize(width, height))
         MainWindow.setStyleSheet("#Crackterize{\n"
                                  "background-color: qlineargradient(spread:pad, x1:0.045, y1:0.261, x2:0.988636, y2:0.955, stop:0 rgba(235, 209, 196, 255), stop:1 rgba(255, 255, 255, 255));\n"
                                  "width: fit-content;\n"
@@ -1246,6 +1247,9 @@ class Ui_MainWindow(object):
                 with open('selected_project.txt', 'w') as f:
                     f.write(new_projects)
                 try:
+                    for row in rows:
+                        self.myProjects.addItem(row[0])
+                    self.myProjects.setEditText("My Projects")
                     folder_dialog = QtWidgets.QDialog(self.Mainwindow)
                     ui = view_folder_dialog(self.background_widget, self.history, self.myProjects, self.Mainwindow)
                     ui.setupUi(folder_dialog)
@@ -1255,10 +1259,7 @@ class Ui_MainWindow(object):
                     folder_dialog.exec_()
                 except Exception as e:
                     print(e)
-                for row in rows:
-                    self.myProjects.addItem(row[0])
 
-                self.myProjects.setEditText("My Projects")
             else:
                 # If the project name already exists, show a dialog message to inform the user
                 self.show_dialog_failed_save()

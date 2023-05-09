@@ -613,6 +613,7 @@ class view_folder_dialog(object):
         return row
     def editFolders(self):
         Dialog = QDialog()
+        self.editFolders_dialog = Dialog
         Dialog.setObjectName("Dialog")
         Dialog.setWindowFlags(Qt.FramelessWindowHint)
         Dialog.resize(493, 297)
@@ -665,14 +666,14 @@ class view_folder_dialog(object):
             self.c.execute("SELECT * FROM Location_Folder WHERE project_name = ?", (self.project_name,))
             rows = self.c.fetchall()
             for row in rows:
-                count = str(row[2])
+                fold_name = str(row[2])
                 id = str(row[0])
-                self.folder_names_cb.addItem(count)
-                self.folder_names_cb.currentIndexChanged.connect(lambda index, id=id: self.addItemToTable(index, id))
+                self.folder_names_cb.addItem(fold_name, [id, fold_name])
 
         except Exception as e:
             print(e)
 
+        self.folder_names_cb.currentIndexChanged.connect(self.addItemToTable)
         self.verticalLayout_3.addWidget(self.folder_names_cb)
         self.verticalLayout.addWidget(self.widget_4)
         self.widget_5 = QtWidgets.QWidget(self.widget_2)
@@ -798,16 +799,21 @@ class view_folder_dialog(object):
         self.horizontalLayout.addWidget(self.widget)
         Dialog.exec()
 
-    def addItemToTable(self, index, id):
-        # Get the selected item from the ComboBox
-        item = self.folder_names_cb.itemText(index)
-        # Add the item to the table in the ScrollArea
+    def addItemToTable(self):
+        # Get the selected item and id from the ComboBox
+        index = self.folder_names_cb.currentIndex()
+        item = self.folder_names_cb.currentText()
+        data = self.folder_names_cb.itemData(index)
+        id = data[0]
+        fold_name = data[1]
+
+        # Add the item and remove button to the table in the ScrollArea
         rowCount = self.tableWidget.rowCount()
         self.tableWidget.setRowCount(rowCount + 1)
-        newItem = QTableWidgetItem(item)
-        newItem.setData(Qt.UserRole, id)  # Set the id as a hidden item
-        self.tableWidget.setItem(rowCount, 0, newItem)
+        self.newItem = QTableWidgetItem(item)
+        self.newItem.setData(Qt.UserRole, [id,fold_name])
 
+        self.tableWidget.setItem(rowCount, 0, self.newItem)
         button = QPushButton()
         button.setMinimumSize(QtCore.QSize(0, 0))
         button.setMaximumSize(QtCore.QSize(16777215, 16777215))
@@ -818,41 +824,63 @@ class view_folder_dialog(object):
         button.clicked.connect(lambda _, i=rowCount: self.remove_item(i))
         self.tableWidget.setCellWidget(rowCount, 1, button)
 
-        # Print the id and the selected item
-        print(f"id: {id}, item: {item}")
 
     def remove_item(self, row):
         self.tableWidget.removeRow(row)
 
     def printTableItems(self):
-        # Store the items in a list
-        items = []
-        numRows = self.tableWidget.rowCount()
-        for i in range(numRows):
-            item = self.tableWidget.item(i, 0)
-            items.append(item.text())
+        try:
+            # Store the items in a list
+            items_with_id = []
+            items = []
+            numRows = self.tableWidget.rowCount()
+            for i in range(numRows):
+                item_id = self.tableWidget.item(i, 0).data(QtCore.Qt.UserRole)[0]
+                folder_name_orig = self.tableWidget.item(i, 0).data(QtCore.Qt.UserRole)[1]
+                item = self.tableWidget.item(i, 0).text()
+                items.append(item)
 
-        if len(items) == 0:
-            print("The list is empty!")
-        else:
-            print("The list contains items.")
+                item_dict = {'id': item_id, 'text': item, 'orig_text': folder_name_orig}
+                items_with_id.append(item_dict)
 
-        if self.radioButton_delete.isChecked() and len(items) > 0:
-            self.delete_folders(items)
-            print(self.radioButton_delete.text())
+            if len(items) == 0:
+                print("The list is empty!")
+            else:
+                print("The list contains items.")
 
-        elif self.radioButton_print.isChecked() and len(items) > 0:
-            self.printer(items)
+            if self.radioButton_delete.isChecked() and len(items) > 0:
+                self.confirm_delete(items)
 
-        elif self.radioButton_rename.isChecked() and len(items) > 0:
-            print(self.radioButton_rename.text())
+            elif self.radioButton_print.isChecked() and len(items) > 0:
+                self.printer(items)
 
-        else:
-            # Handle the case where none of the radio buttons are checked
-            print('No radio button is checked')
+            elif self.radioButton_rename.isChecked() and len(items_with_id) > 0:
+                column = self.tableWidget.currentColumn()
+                rowCount = self.tableWidget.rowCount()
+                for row in range(rowCount):
+                    item = self.tableWidget.item(row, column)
+                    if item and item.text() != "":
+                        print(f"Row {row}, Column {column}: {item.data(Qt.UserRole)} (Original), {item.text()} (New)")
 
-        # Print the list of items
-        print(items)
+                for item in items_with_id:
+                    self.c.execute("UPDATE Location_Folder SET folder_name=? WHERE id=?", (item['text'], item['id']))
+                    self.c.execute("UPDATE Save_Files SET folder_name=? WHERE folder_name=?", (item['text'], item['orig_text']))
+                self.conn.commit()
+                self.conn.close()
+                self.buttons.clear()
+                self.clear_layout(self.scroll_widget.layout())
+                self.fetch_folders_of_projects()
+                self.editFolders_dialog.close()
+
+            else:
+                icon_image = "images/warning.png"
+                message = "Please choose folder management options."
+                self.QMessage_Error_dialog(message, icon_image)
+
+            # Print the list of items
+            print(items)
+        except Exception as e:
+            print(e)
 
     def printer(self, folders):
         try:
@@ -863,8 +891,6 @@ class view_folder_dialog(object):
             conn = sqlite3.connect(db_path)
             c = conn.cursor()
 
-            # folders = ['efw', 'asfasf']
-
             # Create a comma-separated string of the folder names
             folders_string = ','.join(["'{}'".format(f) for f in folders])
 
@@ -872,7 +898,9 @@ class view_folder_dialog(object):
             rows = c.fetchall()
 
             if not rows:
-                print("No data found for the selected folders")
+                icon_image = "images/warning.png"
+                message = "Folder is empty."
+                self.QMessage_Error_dialog(message, icon_image)
             else:
                 try:
                     printer = QPrinter()
@@ -973,8 +1001,6 @@ class view_folder_dialog(object):
         conn = sqlite3.connect(db_path)
         c = conn.cursor()
 
-        # folders = ['efw', 'asfasf']
-
         # Create a comma-separated string of the folder names
         folders_string = ','.join(["'{}'".format(f) for f in folders])
 
@@ -984,13 +1010,257 @@ class view_folder_dialog(object):
         self.buttons.clear()
         self.clear_layout(self.scroll_widget.layout())
         self.fetch_folders_of_projects()
+        self.editFolders_dialog.close()
 
-if __name__ == "__main__":
-    import sys
+    def QMessage_Error_dialog(self, message, icon_image):
+        Dialog = QDialog()
+        Dialog.setObjectName("Dialog")
+        Dialog.resize(356, 155)
+        Dialog.setMinimumSize(QtCore.QSize(356, 155))
+        Dialog.setWindowFlags(Qt.FramelessWindowHint)
+        Dialog.setMaximumSize(QtCore.QSize(356, 155))
+        Dialog.setStyleSheet("#Dialog{background-color: rgb(255,255,255);border: 1px solid rgb(144,115,87);}")
+        self.horizontalLayout = QtWidgets.QHBoxLayout(Dialog)
+        self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
+        self.horizontalLayout.setObjectName("horizontalLayout")
+        self.widget = QtWidgets.QWidget(Dialog)
+        self.widget.setObjectName("widget")
+        self.verticalLayout = QtWidgets.QVBoxLayout(self.widget)
+        self.verticalLayout.setContentsMargins(0, 0, 0, 0)
+        self.verticalLayout.setSpacing(0)
+        self.verticalLayout.setObjectName("verticalLayout")
+        self.widget_5 = QtWidgets.QWidget(self.widget)
+        self.widget_5.setMinimumSize(QtCore.QSize(0, 40))
+        self.widget_5.setMaximumSize(QtCore.QSize(16777215, 40))
+        self.widget_5.setObjectName("widget_5")
+        self.horizontalLayout_5 = QtWidgets.QHBoxLayout(self.widget_5)
+        self.horizontalLayout_5.setContentsMargins(0, 0, 0, 0)
+        self.horizontalLayout_5.setSpacing(0)
+        self.horizontalLayout_5.setObjectName("horizontalLayout_5")
+        self.widget_6 = QtWidgets.QWidget(self.widget_5)
+        self.widget_6.setObjectName("widget_6")
+        self.horizontalLayout_5.addWidget(self.widget_6)
+        self.exit = QtWidgets.QPushButton(self.widget_5)
+        self.exit.setMinimumSize(QtCore.QSize(20, 20))
+        self.exit.setMaximumSize(QtCore.QSize(30, 30))
+        self.exit.setText("")
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap("images/exit.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.exit.setIcon(icon)
+        self.exit.setFlat(True)
+        self.exit.clicked.connect(Dialog.close)
+        self.exit.setObjectName("exit")
+        self.horizontalLayout_5.addWidget(self.exit)
+        self.verticalLayout.addWidget(self.widget_5)
+        self.widget_2 = QtWidgets.QWidget(self.widget)
+        self.widget_2.setObjectName("widget_2")
+        self.horizontalLayout_2 = QtWidgets.QHBoxLayout(self.widget_2)
+        self.horizontalLayout_2.setContentsMargins(25, 0, 20, -1)
+        self.horizontalLayout_2.setObjectName("horizontalLayout_2")
+        self.icon = QtWidgets.QLabel(self.widget_2)
+        self.icon.setMinimumSize(QtCore.QSize(50, 50))
+        self.icon.setMaximumSize(QtCore.QSize(50, 50))
+        self.icon.setPixmap(QtGui.QPixmap(icon_image))
+        self.icon.setScaledContents(True)
+        self.icon.setStyleSheet(
+            "  background-color: transparent; ")
+        self.icon.setAlignment(QtCore.Qt.AlignCenter)
+        self.icon.setWordWrap(True)
+        self.icon.setObjectName("icon")
+        self.horizontalLayout_2.addWidget(self.icon)
+        self.message = QtWidgets.QLabel(self.widget_2)
+        self.message.setText(message)
+        self.message.setStyleSheet("#message{\n"
+                                   "  background-color: transparent;  \n"
+                                   "font-family: \"Inter\";\n"
+                                   "font-size: 13pt; \n"
+                                   "color: #000000;\n"
+                                   "font: bold;\n"
+                                   "font-size: 13px;\n"
+                                   "}")
+        self.message.setScaledContents(True)
+        self.message.setWordWrap(True)
+        self.message.setObjectName("message")
+        self.horizontalLayout_2.addWidget(self.message)
+        self.verticalLayout.addWidget(self.widget_2)
+        self.widget_4 = QtWidgets.QWidget(self.widget)
+        self.widget_4.setObjectName("widget_4")
+        self.horizontalLayout_3 = QtWidgets.QHBoxLayout(self.widget_4)
+        self.horizontalLayout_3.setContentsMargins(0, 12, 12, 12)
+        self.horizontalLayout_3.setObjectName("horizontalLayout_3")
+        self.widget_3 = QtWidgets.QWidget(self.widget_4)
+        self.widget_3.setObjectName("widget_3")
+        self.horizontalLayout_3.addWidget(self.widget_3)
+        self.okBtn = QtWidgets.QPushButton("Okay", self.widget_4)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.okBtn.sizePolicy().hasHeightForWidth())
+        self.okBtn.setSizePolicy(sizePolicy)
+        self.okBtn.clicked.connect(Dialog.close)
+        self.okBtn.setMinimumSize(QtCore.QSize(20, 32))
+        self.okBtn.setMaximumSize(QtCore.QSize(100, 32))
+        self.okBtn.setStyleSheet("#okBtn{\n"
+                                 "font-weight:bold;\n"
+                                 "color: white;\n"
+                                 "background-color: #6F4B27;\n"
+                                 "font-family: Inter;\n"
+                                 "border-top-left-radius: 7px;\n"
+                                 "border-top-right-radius:7px;\n"
+                                 "border-bottom-left-radius: 7px;\n"
+                                 "border-bottom-right-radius: 7px;\n"
+                                 "text-align: center;\n"
+                                 "}\n"
+                                 "#okBtn:hover{\n"
+                                 "color: rgb(144,115,87);\n"
+                                 "border : 3px solid rgb(144,115,87);\n"
+                                 "background-color: white;\n"
+                                 "}\n"
+                                 "")
+        self.okBtn.setObjectName("okBtn")
+        self.horizontalLayout_3.addWidget(self.okBtn)
+        self.verticalLayout.addWidget(self.widget_4)
+        self.horizontalLayout.addWidget(self.widget)
+        Dialog.exec()
 
-    app = QtWidgets.QApplication(sys.argv)
-    Dialog = QtWidgets.QDialog()
-    ui = view_folder_dialog(None, None, None, None)
-    ui.setupUi(Dialog)
-    Dialog.show()
-    sys.exit(app.exec_())
+    def confirm_delete(self, items):
+        closeDialog = QDialog()
+        self.closeDialog = closeDialog
+        closeDialog.setWindowFlags(Qt.FramelessWindowHint)
+        closeDialog.setObjectName("Dialog")
+        closeDialog.setStyleSheet("#Dialog{background-color: rgb(255,255,255); border: 1px solid rgb(144,115,87);}")
+        closeDialog.resize(356, 155)
+        closeDialog.setMinimumSize(QtCore.QSize(356, 155))
+        closeDialog.setMaximumSize(QtCore.QSize(356, 155))
+        self.horizontalLayout = QtWidgets.QHBoxLayout(closeDialog)
+        self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
+        self.horizontalLayout.setObjectName("horizontalLayout")
+        self.widget = QtWidgets.QWidget(closeDialog)
+        self.widget.setObjectName("widget")
+        self.verticalLayout = QtWidgets.QVBoxLayout(self.widget)
+        self.verticalLayout.setContentsMargins(0, 0, 0, 0)
+        self.verticalLayout.setSpacing(0)
+        self.verticalLayout.setObjectName("verticalLayout")
+        self.widget_5 = QtWidgets.QWidget(self.widget)
+        self.widget_5.setMinimumSize(QtCore.QSize(0, 40))
+        self.widget_5.setMaximumSize(QtCore.QSize(16777215, 40))
+        self.widget_5.setObjectName("widget_5")
+        self.horizontalLayout_5 = QtWidgets.QHBoxLayout(self.widget_5)
+        self.horizontalLayout_5.setContentsMargins(0, 0, 0, 0)
+        self.horizontalLayout_5.setSpacing(0)
+        self.horizontalLayout_5.setObjectName("horizontalLayout_5")
+        self.widget_6 = QtWidgets.QWidget(self.widget_5)
+        self.widget_6.setObjectName("widget_6")
+        self.horizontalLayout_5.addWidget(self.widget_6)
+        self.exit = QtWidgets.QPushButton(self.widget_5)
+        self.exit.setMinimumSize(QtCore.QSize(20, 20))
+        self.exit.setMaximumSize(QtCore.QSize(30, 30))
+        self.exit.setText("")
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap("images/exit.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.exit.setIcon(icon)
+        self.exit.setFlat(True)
+        self.exit.setObjectName("exit")
+        self.exit.clicked.connect(closeDialog.close)
+        self.horizontalLayout_5.addWidget(self.exit)
+        self.verticalLayout.addWidget(self.widget_5)
+        self.widget_2 = QtWidgets.QWidget(self.widget)
+        self.widget_2.setObjectName("widget_2")
+        self.horizontalLayout_2 = QtWidgets.QHBoxLayout(self.widget_2)
+        self.horizontalLayout_2.setContentsMargins(25, 0, 20, -1)
+        self.horizontalLayout_2.setObjectName("horizontalLayout_2")
+        self.icon = QtWidgets.QLabel(self.widget_2)
+        self.icon.setMinimumSize(QtCore.QSize(50, 50))
+        self.icon.setMaximumSize(QtCore.QSize(50, 50))
+        self.icon.setPixmap(QtGui.QPixmap("images/question.png"))
+        self.icon.setScaledContents(True)
+        self.icon.setStyleSheet("#icon{\n"
+                                   "background-color: transparent;"
+                                   "}")
+        self.icon.setAlignment(QtCore.Qt.AlignCenter)
+        self.icon.setWordWrap(True)
+        self.icon.setObjectName("icon")
+        self.horizontalLayout_2.addWidget(self.icon)
+        self.message = QtWidgets.QLabel(self.widget_2)
+        self.message.setStyleSheet("#message{\n"
+                                   "background-color: transparent;"
+                                   "font-family: \"Inter\";\n"
+                                   "font-size: 13pt; \n"
+                                   "color: #000000;\n"
+                                   "font: bold;\n"
+                                   "font-size: 13px;\n"
+                                   "}")
+        self.message.setScaledContents(True)
+        self.message.setWordWrap(True)
+        self.message.setText("Are you sure you want to delete this record?")
+        self.message.setObjectName("message")
+        self.horizontalLayout_2.addWidget(self.message)
+        self.verticalLayout.addWidget(self.widget_2)
+        self.widget_4 = QtWidgets.QWidget(self.widget)
+        self.widget_4.setObjectName("widget_4")
+        self.horizontalLayout_3 = QtWidgets.QHBoxLayout(self.widget_4)
+        self.horizontalLayout_3.setContentsMargins(0, 12, 12, 12)
+        self.horizontalLayout_3.setObjectName("horizontalLayout_3")
+        self.widget_3 = QtWidgets.QWidget(self.widget_4)
+        self.widget_3.setObjectName("widget_3")
+        self.horizontalLayout_3.addWidget(self.widget_3)
+        self.Yes = QtWidgets.QPushButton("Yes", self.widget_4)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.Yes.sizePolicy().hasHeightForWidth())
+        self.Yes.setSizePolicy(sizePolicy)
+        self.Yes.setMinimumSize(QtCore.QSize(20, 32))
+        self.Yes.setMaximumSize(QtCore.QSize(100, 32))
+        self.Yes.clicked.connect(self.delete_folders(items))
+        self.Yes.setStyleSheet("#Yes{\n"
+                               "font-weight:bold;\n"
+                               "color:  #6F4B27;\n"
+                               "background-color: white;\n"
+                               "font-family: Inter;\n"
+                               "border-top-left-radius: 7px;\n"
+                               "border-top-right-radius:7px;\n"
+                               "border-bottom-left-radius: 7px;\n"
+                               "border-bottom-right-radius: 7px;\n"
+                               "text-align: center;\n"
+                               "border : 3px solid #6F4B27;\n"
+                               "}\n"
+                               "#Yes:hover{\n"
+                               "color: white;\n"
+                               "background-color: #6F4B27;\n"
+                               "}\n"
+                               "")
+        self.Yes.setObjectName("Yes")
+        self.horizontalLayout_3.addWidget(self.Yes)
+        self.No = QtWidgets.QPushButton("No", self.widget_4)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.No.sizePolicy().hasHeightForWidth())
+        self.No.setSizePolicy(sizePolicy)
+        self.No.clicked.connect(closeDialog.close)
+        self.No.setMinimumSize(QtCore.QSize(20, 32))
+        self.No.setMaximumSize(QtCore.QSize(100, 32))
+        self.No.setStyleSheet("#No{\n"
+                              "font-weight:bold;\n"
+                              "color: white;\n"
+                              "background-color: #6F4B27;\n"
+                              "font-family: Inter;\n"
+                              "border-top-left-radius: 7px;\n"
+                              "border-top-right-radius:7px;\n"
+                              "border-bottom-left-radius: 7px;\n"
+                              "border-bottom-right-radius: 7px;\n"
+                              "text-align: center;\n"
+                              "}\n"
+                              "#No:hover{\n"
+                              "color: #6F4B27;\n"
+                              "border : 3px solid #6F4B27;\n"
+                              "background-color: white;\n"
+                              "}\n"
+                              "")
+        self.No.setObjectName("No")
+        self.horizontalLayout_3.addWidget(self.No)
+        self.verticalLayout.addWidget(self.widget_4)
+        self.horizontalLayout.addWidget(self.widget)
+        closeDialog.exec()
+

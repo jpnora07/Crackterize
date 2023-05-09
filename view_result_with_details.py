@@ -774,7 +774,6 @@ class result_with_details(object):
             self.history.clear()  # This should work now
             self.c.execute("SELECT * FROM Save_Files ORDER BY created_at DESC")
             rows = self.c.fetchall()
-            print(rows)
             for row in rows:
                 status = str(row[9])
                 recent = str(row[14])
@@ -815,7 +814,6 @@ class result_with_details(object):
         # fetch data from the database
         self.c.execute("SELECT * FROM Save_Files WHERE id = ?", (result_id,))
         data = self.c.fetchall()
-        print(data)
         return data
 
     def view_details_function(self):
@@ -1214,12 +1212,3 @@ class result_with_details(object):
         # Set the image on the label
         pixmap = QPixmap(q_image)
         self.label_image.setPixmap(pixmap.scaled(label_size, Qt.KeepAspectRatio, Qt.SmoothTransformation))
-if __name__ == "__main__":
-    import sys
-
-    app = QtWidgets.QApplication(sys.argv)
-    Dialog = QtWidgets.QDialog()
-    ui = result_with_details(None, None)
-    ui.setupUi(Dialog)
-    Dialog.show()
-    sys.exit(app.exec_())

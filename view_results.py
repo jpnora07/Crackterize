@@ -395,28 +395,31 @@ class view_result_dialog(object):
         self.view_folder_dialog.close()
 
     def add_new_image(self):
-        self.view_folder_dialog_orig.close()
-        self.view_folder_dialog.close()
-        image_path = self.open_file_dialog()
-        image = cv2.imread(image_path)
-        # Save the image to a temporary file
-        temp_file_path = 'temp_image_original.jpg'
-        cv2.imwrite(temp_file_path, image)
-        if image_path is not None:
-            try:
-                self.background_widget.show()
-                segment_dialog = QtWidgets.QDialog(self.Mainwindow)
-                ui = Detect_Crack_Dialog(image_path, self.background_widget, self.history, self.myProjects,
-                                         self.Mainwindow)
-                ui.setupUi(segment_dialog)
-                x = (self.Mainwindow.width() - segment_dialog.width()) // 2
-                y = (self.Mainwindow.height() - segment_dialog.height()) // 2
-                segment_dialog.move(x, y)
-                segment_dialog.exec_()
-            except Exception as e:
-                print(e)
-        else:
-            print("No file selected.")
+        try:
+            image_path = self.open_file_dialog()
+            image = cv2.imread(image_path)
+            # Save the image to a temporary file
+            temp_file_path = 'temp_image_original.jpg'
+            cv2.imwrite(temp_file_path, image)
+            if image_path is not None:
+                try:
+                    self.view_folder_dialog_orig.close()
+                    self.view_folder_dialog.close()
+                    self.background_widget.show()
+                    segment_dialog = QtWidgets.QDialog(self.Mainwindow)
+                    ui = Detect_Crack_Dialog(image_path, self.background_widget, self.history, self.myProjects,
+                                             self.Mainwindow)
+                    ui.setupUi(segment_dialog)
+                    x = (self.Mainwindow.width() - segment_dialog.width()) // 2
+                    y = (self.Mainwindow.height() - segment_dialog.height()) // 2
+                    segment_dialog.move(x, y)
+                    segment_dialog.exec_()
+                except Exception as e:
+                    print(e)
+            else:
+                print("No file selected.")
+        except Exception as e:
+            print(e)
 
     def open_file_dialog(self):
         file_dialog = QFileDialog()
@@ -670,14 +673,10 @@ class view_result_dialog(object):
         try:
             with open('image_id.txt', 'w') as f:
                 f.write(str(self.id))
-            view_result_dialog = QtWidgets.QDialog(self.view_folder_dialog)
-            x = (self.view_folder_dialog.width() - self.view_folder_dialog.width()) // 2
-            y = (self.view_folder_dialog.height() - self.view_folder_dialog.height()) // 2
+            view_result_dialog = QtWidgets.QDialog(self.Mainwindow)
             ui = result_with_details(self.background_widget, self.history)
 
             ui.setupUi(view_result_dialog)
-            view_result_dialog.move(x, y)
-            view_result_dialog.show()
             view_result_dialog.exec_()
         except Exception as e:
             print(e)

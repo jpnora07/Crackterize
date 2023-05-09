@@ -1,74 +1,80 @@
-import sys
-from PyQt5.QtWidgets import QApplication, QDialog, QComboBox, QVBoxLayout, QScrollArea, QTableWidget, QTableWidgetItem, QPushButton
+from PyQt5 import QtCore, QtWidgets
 
 
-class MyDialog(QDialog):
+class Container(QtWidgets.QWidget):
+    def showEvent(self, event):
+        if not event.spontaneous():
+            self.setFocus()
+            # certain widgets might want to keep focus on tab
+            # so we delay the focusNextChild
+            QtCore.QTimer.singleShot(0, self.focusNextChild)
+
+    def focusNextPrevChild(self, isNext):
+        # keep tab focus on this widget
+        super().focusNextPrevChild(isNext)
+        return self.isAncestorOf(QtWidgets.QApplication.focusWidget())
+
+    def paintEvent(self, event):
+        # stylesheets set on QWidget subclasses need this
+        qp = QtWidgets.QStylePainter(self)
+        opt = QtWidgets.QStyleOption()
+        opt.initFrom(self)
+        qp.drawPrimitive(QtWidgets.QStyle.PE_Widget, opt)
+
+
+class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle('ComboBox and ScrollArea Table')
-        self.setGeometry(100, 100, 500, 400)
+        self.menuBar().addMenu('Test').addAction('Action')
+        self.stack = QtWidgets.QStackedWidget(self)
+        self.setCentralWidget(self.stack)
+        self.stack.layout().setStackingMode(QtWidgets.QStackedLayout.StackAll)
 
-        # Create ComboBox
-        self.comboBox = QComboBox()
-        self.comboBox.addItem('Item 1')
-        self.comboBox.addItem('Item 2')
-        self.comboBox.addItem('Item 3')
-        self.comboBox.currentIndexChanged.connect(self.addItemToTable)
+        table = QtWidgets.QTableWidget(20, 30)
+        self.stack.addWidget(table)
 
-        # Create ScrollArea
-        self.scrollArea = QScrollArea()
-        self.scrollArea.setWidgetResizable(True)
-        self.scrollAreaWidgetContents = QTableWidget()
-        self.scrollArea.setWidget(self.scrollAreaWidgetContents)
-        self.scrollAreaWidgetContents.setColumnCount(1)
-        self.scrollAreaWidgetContents.setHorizontalHeaderLabels(['Items'])
+        table.cellDoubleClicked.connect(self.showDialog)
 
-        # Create Button
-        self.button = QPushButton('Print Items')
-        self.button.clicked.connect(self.printTableItems)
+        self.resize(QtWidgets.QApplication.primaryScreen().size() * 2 / 3)
 
-        # Add widgets to layout
-        layout = QVBoxLayout()
-        layout.addWidget(self.comboBox)
-        layout.addWidget(self.scrollArea)
-        layout.addWidget(self.button)
+    def showDialog(self, row, column):
+        background = QtWidgets.QWidget(objectName='background')
+        background.setStyleSheet('''
+            #background {
+                background: rgba(64, 64, 64, 64);
+            }
+            Container {
+                background: palette(window);
+                border: 1px outset palette(window);
+                border-radius: 5px;
+            }
+        ''')
+        backLayout = QtWidgets.QVBoxLayout(background)
 
-        self.setLayout(layout)
+        container = Container()
+        backLayout.addWidget(container, alignment=QtCore.Qt.AlignCenter)
+        container.setAutoFillBackground(True)
+        layout = QtWidgets.QVBoxLayout(container)
+        layout.setContentsMargins(10, 10, 10, 10)
+        layout.setSpacing(20)
 
-    def addItemToTable(self, index):
-        # Get the selected item from the ComboBox
-        item = self.comboBox.itemText(index)
+        font = self.font()
+        font.setPointSize(font.pointSize() * 3)
+        layout.addWidget(QtWidgets.QLabel('Hello!', font=font, alignment=QtCore.Qt.AlignCenter))
+        layout.addWidget(QtWidgets.QLabel(
+            'You doubleclicked cell {}, {}'.format(row + 1, column + 1)))
+        button = QtWidgets.QPushButton('Close')
+        layout.addWidget(button)
 
-        # Add the item and button to the table in the ScrollArea
-        rowCount = self.scrollAreaWidgetContents.rowCount()
-        self.scrollAreaWidgetContents.setRowCount(rowCount + 1)
-        newItem = QTableWidgetItem(item)
-        self.scrollAreaWidgetContents.setItem(rowCount, 0, newItem)
+        self.centralWidget().addWidget(background)
+        self.centralWidget().setCurrentWidget(background)
 
-        button = QPushButton('Print Item')
-        button.clicked.connect(lambda _, i=rowCount: self.printItem(i))
-        self.scrollAreaWidgetContents.setCellWidget(rowCount, 1, button)
-
-    def printItem(self, row):
-        # Get the item from the selected row and print it
-        item = self.scrollAreaWidgetContents.item(row, 0)
-        print(item.text())
-
-
-    def printTableItems(self):
-        # Store the items in a list
-        items = []
-        numRows = self.scrollAreaWidgetContents.rowCount()
-        for i in range(numRows):
-            item = self.scrollAreaWidgetContents.item(i, 0)
-            items.append(item.text())
-
-        # Print the list of items
-        print(items)
+        # Important! you must always delete the widget when you don't need it
+        # anymore. Alternatively, hide it if you want to reuse it again later
+        button.clicked.connect(background.deleteLater)
 
 
-if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    dialog = MyDialog()
-    dialog.show()
-    sys.exit(app.exec_())
+app = QtWidgets.QApplication([])
+win = MainWindow()
+win.show()
+app.exec()

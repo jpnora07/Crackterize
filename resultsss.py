@@ -1534,7 +1534,7 @@ class result_new_dialog(object):
     def save_result_image_to_db(self):
         remarks_new = self.remarksbox.toPlainText()
         try:
-            with open("selected_project_in_result.txt", 'r') as f:
+            with open("selected_project.txt", 'r') as f:
                 self.project_name = f.read()
 
             orient = 'Orientation.txt'
@@ -1610,7 +1610,6 @@ class result_new_dialog(object):
             self.image_data_original = bytes(byte_array)
 
             ss_bytes = cv2.imread('screenshot.png')
-            # Convert the QImage to a QPixma
             self.image_data_ss_print = bytes(ss_bytes)
 
         except Exception as e:
@@ -1691,7 +1690,7 @@ class result_new_dialog(object):
                     self.image_data_original,
                     self.width,
                     self.lengthh,
-                    _orient,
+                    None,
                     self.Neg_score,
                     self.Pos_score,
                     self.status,
@@ -1711,7 +1710,6 @@ class result_new_dialog(object):
             self.myHistory.clear()  # This should work now
             c.execute("SELECT * FROM Save_Files ORDER BY created_at DESC")
             rows = c.fetchall()
-            print(rows)
             for row in rows:
                 status = str(row[9])
                 recent = str(row[14])
@@ -1947,7 +1945,7 @@ class result_new_dialog(object):
                       "Predicted_Class_name.txt", "Predicted_height.txt", "Predicted_Score.txt", "Predicted_width.txt",
                       "Remarks_written.txt", "Selected_location_crack.txt", "Selected_progression_crack.txt",
                       "Selected_type_crack.txt", "threshold_image.jpg", "image_id.txt", "screenshot.png",
-                      "temp_image_original.jpg", "temp_image_result.jpg"]
+                      "temp_image_original.jpg", "temp_image_result.jpg", "selected_folder_vrFile.txt", "image_id.txt", "selected_project.txt"]
 
         try:
             for file_name in file_names:
@@ -1976,14 +1974,3 @@ class result_new_dialog(object):
         self.label_12.setText(_translate("Dialog", "Width:"))
         self.printbtn.setText(_translate("Dialog", "Print"))
         self.savebtn.setText(_translate("Dialog", "Save"))
-
-
-if __name__ == "__main__":
-    import sys
-
-    app = QtWidgets.QApplication(sys.argv)
-    Dialog = QtWidgets.QDialog()
-    ui = result_new_dialog(None, None, None, None)
-    ui.setupUi(Dialog)
-    Dialog.show()
-    sys.exit(app.exec_())
