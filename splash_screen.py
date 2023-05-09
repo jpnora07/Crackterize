@@ -87,20 +87,6 @@ class SplashScreen(QWidget):
                 ui = Ui_MainWindow()
                 ui.setupUi(main_window)
 
-                # Get the size of the desktop screen
-                screen_size = QtWidgets.QDesktopWidget().screenGeometry(-1)
-
-                # Calculate the center point of the screen
-                center_point = screen_size.center()
-
-                # Set the geometry of the main window to be centered on the screen
-                main_window.setGeometry(
-                    center_point.x() - main_window.width() // 2,
-                    center_point.y() - main_window.height() // 2,
-                    main_window.width(),
-                    main_window.height()
-                )
-
                 # Show the main window
                 main_window.show()
 

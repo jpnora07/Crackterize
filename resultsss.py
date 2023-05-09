@@ -1534,17 +1534,13 @@ class result_new_dialog(object):
     def save_result_image_to_db(self):
         remarks_new = self.remarksbox.toPlainText()
         try:
-            with open("selected_project.txt", 'r') as f:
-                self.project_name = f.read()
-
-            orient = 'Orientation.txt'
-            if os.path.isfile(orient):
-                with open(orient, 'r') as f:
-                    _orient = f.read()
-                if not os.path.exists(orient):
-                    _orient = None
+            selected_project_from_folder = "selected_project.txt"
+            if os.path.exists(selected_project_from_folder):
+                with open(selected_project_from_folder, "r") as f:
+                    self.project_name1 = f.read()
             else:
-                _orient = None
+                with open("selected_project_in_result.txt", 'r') as f:
+                    self.project_name1 = f.read()
 
             selected_loc = 'Selected_location_crack.txt'
             if os.path.isfile(selected_loc):
@@ -1554,24 +1550,6 @@ class result_new_dialog(object):
                     _selected_loc = None
             else:
                 _selected_loc = None
-
-            selected_type = 'Selected_type_crack.txt'
-            if os.path.isfile(selected_type):
-                with open(selected_type, 'r') as f:
-                    _selected_type = f.read()
-                if not os.path.exists(selected_type):
-                    _selected_type = None
-            else:
-                _selected_type = None
-
-            selected_prog = 'Selected_progression_crack.txt'
-            if os.path.isfile(selected_prog):
-                with open(selected_prog, 'r') as f:
-                    _selected_prog = f.read()
-                if not os.path.exists(selected_prog):
-                    _selected_prog = None
-            else:
-                _selected_prog = None
 
         except Exception as e:
             print(f"Error at getting files {e}")
@@ -1695,12 +1673,12 @@ class result_new_dialog(object):
                     self.Pos_score,
                     self.status,
                     _selected_loc,
-                    _selected_type,
-                    _selected_prog,
+                    None,
+                    None,
                     remarks_new,
                     timestamp_str,
                     self.image_data_ss_print,
-                    self.project_name
+                    self.project_name1
                 ))
 
                 row_id = c.lastrowid

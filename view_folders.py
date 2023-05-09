@@ -40,8 +40,11 @@ class view_folder_dialog(object):
         self.widget.setObjectName("widget")
         self.horizontalLayout_2 = QtWidgets.QHBoxLayout(self.widget)
         self.horizontalLayout_2.setContentsMargins(20, -1, -1, -1)
+        self.horizontalLayout_2.setSpacing(3)
         self.horizontalLayout_2.setObjectName("verticalLayout_2")
         self.project_name_lbl = QtWidgets.QLabel(self.widget)
+        self.project_name_lbl.setMinimumSize(QtCore.QSize(1000, 0))
+        self.project_name_lbl.setMaximumSize(QtCore.QSize(16777215, 16777215))
         self.project_name_lbl.setStyleSheet("#project_name_lbl {\n"
                                             "font: 700 9pt \"Franklin Gothic Medium\";\n"
                                             "position: absolute;\n"
@@ -70,7 +73,7 @@ class view_folder_dialog(object):
                                           "color:#664323;\n"
                                           "font: 700 9pt \"Big Sky Regular\";\n"
                                           "margin-left:100px;\n"
-                                          "margin-right:30px;\n"
+                                          "margin-right:0px;\n"
                                           "border: none;"
                                           "border-radius:5px"
                                           "}"
@@ -86,6 +89,30 @@ class view_folder_dialog(object):
         self.addfolder_icon.clicked.connect(self.creating_new_Location)
         self.addfolder_icon.setObjectName("addfolder_icon")
         self.horizontalLayout_2.addWidget(self.addfolder_icon)
+
+        self.Settings = QtWidgets.QPushButton(self.widget)
+        self.Settings.setFlat(False)
+        self.Settings.setStyleSheet("#Settings{\n"
+                                    "padding:5px;\n"
+                                    "color:#664323;\n"
+                                    "font: 700 9pt \"Big Sky Regular\";\n"
+                                    "margin-left:0px;\n"
+                                    "margin-right:20px;\n"
+                                    "border: none;"
+                                    "border-radius:5px"
+                                    "}"
+                                    "#Settings::hover{\n"
+                                    "background-color:#CFD9E0;"
+                                    "border: none;"
+                                    "}"
+                                    )
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap("images/Settings.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.Settings.setIcon(icon)
+        self.Settings.setIconSize(QtCore.QSize(20, 20))
+        self.Settings.clicked.connect(self.settings)
+        self.Settings.setObjectName("Settings")
+        self.horizontalLayout_2.addWidget(self.Settings)
 
         self.verticalLayout.addWidget(self.widget)
         self.widget_3 = QtWidgets.QWidget(view_folder_dialog)
@@ -212,7 +239,7 @@ class view_folder_dialog(object):
         self.print.setStyleSheet("#print{\n"
                                  "height:40px;\n"
                                  "font-weight:bold;\n"
-                                 "font-size:18px;\n"
+                                 "font-size:15px;\n"
                                  "color:white;\n"
                                  "background-color: #2E74A9;\n"
                                  "border-top-left-radius :20px;\n"
@@ -611,6 +638,7 @@ class view_folder_dialog(object):
         self.c.execute("SELECT * FROM Location_Folder WHERE id=?", (folder_id,))
         row = self.c.fetchone()
         return row
+
     def editFolders(self):
         Dialog = QDialog()
         self.editFolders_dialog = Dialog
@@ -802,6 +830,8 @@ class view_folder_dialog(object):
     def addItemToTable(self):
         # Get the selected item and id from the ComboBox
         index = self.folder_names_cb.currentIndex()
+        if index == -1 and self.folder_names_cb.count() == 1:
+            index = 0
         item = self.folder_names_cb.currentText()
         data = self.folder_names_cb.itemData(index)
         id = data[0]
@@ -811,7 +841,7 @@ class view_folder_dialog(object):
         rowCount = self.tableWidget.rowCount()
         self.tableWidget.setRowCount(rowCount + 1)
         self.newItem = QTableWidgetItem(item)
-        self.newItem.setData(Qt.UserRole, [id,fold_name])
+        self.newItem.setData(Qt.UserRole, [id, fold_name])
 
         self.tableWidget.setItem(rowCount, 0, self.newItem)
         button = QPushButton()
@@ -823,7 +853,6 @@ class view_folder_dialog(object):
         button.setFlat(True)
         button.clicked.connect(lambda _, i=rowCount: self.remove_item(i))
         self.tableWidget.setCellWidget(rowCount, 1, button)
-
 
     def remove_item(self, row):
         self.tableWidget.removeRow(row)
@@ -864,7 +893,8 @@ class view_folder_dialog(object):
 
                 for item in items_with_id:
                     self.c.execute("UPDATE Location_Folder SET folder_name=? WHERE id=?", (item['text'], item['id']))
-                    self.c.execute("UPDATE Save_Files SET folder_name=? WHERE folder_name=?", (item['text'], item['orig_text']))
+                    self.c.execute("UPDATE Save_Files SET folder_name=? WHERE folder_name=?",
+                                   (item['text'], item['orig_text']))
                 self.conn.commit()
                 self.conn.close()
                 self.buttons.clear()
@@ -1005,6 +1035,15 @@ class view_folder_dialog(object):
         folders_string = ','.join(["'{}'".format(f) for f in folders])
 
         c.execute(f"DELETE FROM Location_Folder WHERE folder_name IN ({folders_string})")
+        self.history.clear()  # This should work now
+        c.execute("SELECT * FROM Save_Files ORDER BY created_at DESC")
+        rows = c.fetchall()
+        for row in rows:
+            status = str(row[9])
+            recent = str(row[14])
+            id = str(row[0])
+            self.history.addItem(status + " - " + recent, id)
+        self.history.setEditText("History")
         conn.commit()
         conn.close()
         self.buttons.clear()
@@ -1175,8 +1214,8 @@ class view_folder_dialog(object):
         self.icon.setPixmap(QtGui.QPixmap("images/question.png"))
         self.icon.setScaledContents(True)
         self.icon.setStyleSheet("#icon{\n"
-                                   "background-color: transparent;"
-                                   "}")
+                                "background-color: transparent;"
+                                "}")
         self.icon.setAlignment(QtCore.Qt.AlignCenter)
         self.icon.setWordWrap(True)
         self.icon.setObjectName("icon")
@@ -1264,3 +1303,178 @@ class view_folder_dialog(object):
         self.horizontalLayout.addWidget(self.widget)
         closeDialog.exec()
 
+    def settings(self):
+        with open('selected_project.txt', 'r') as f:
+            self.project_name = f.read()
+
+        Dialog = QDialog()
+        self.setting_dialog = Dialog
+        Dialog.setObjectName("Dialog")
+        Dialog.resize(340, 168)
+        self.horizontalLayout = QtWidgets.QHBoxLayout(Dialog)
+        self.horizontalLayout.setObjectName("horizontalLayout")
+        self.widget = QtWidgets.QWidget(Dialog)
+        self.widget.setObjectName("widget")
+        self.verticalLayout = QtWidgets.QVBoxLayout(self.widget)
+        self.verticalLayout.setObjectName("verticalLayout")
+        self.label_2 = QtWidgets.QLabel("Edit Project", self.widget)
+        self.label_2.setMinimumSize(QtCore.QSize(0, 20))
+        self.label_2.setMaximumSize(QtCore.QSize(16777215, 20))
+        self.label_2.setStyleSheet("#label_2{\n"
+                                   "    font: 900 12pt \"Segoe UI Black\";\n"
+                                   "    alignment: center;\n"
+                                   "    color: rgba(111, 75, 39, 0.77);\n"
+                                   "}")
+        self.label_2.setObjectName("label_2")
+        self.verticalLayout.addWidget(self.label_2)
+        self.widget_3 = QtWidgets.QWidget(self.widget)
+        self.widget_3.setMaximumSize(QtCore.QSize(16777215, 50))
+        self.widget_3.setObjectName("widget_3")
+        self.horizontalLayout_2 = QtWidgets.QHBoxLayout(self.widget_3)
+        self.horizontalLayout_2.setContentsMargins(20, 5, 20, 5)
+        self.horizontalLayout_2.setObjectName("horizontalLayout_2")
+        self.textEditrename = QtWidgets.QLineEdit(self.widget_3)
+        self.textEditrename.setText(self.project_name)
+        is_enabled = self.textEditrename.isEnabled()
+        self.textEditrename.setEnabled(not is_enabled)
+        self.textEditrename.setAlignment(QtCore.Qt.AlignCenter)
+        self.textEditrename.setStyleSheet("font-size: 15pt ;\n"
+                                          "border-style: solid; border-width: 2px; border-color: rgba(111, 75, 39, 0.77);")
+        self.textEditrename.setObjectName("textEditrename")
+
+        self.horizontalLayout_2.addWidget(self.textEditrename)
+        self.rename = QtWidgets.QPushButton(self.widget_3)
+        self.rename.setMinimumSize(QtCore.QSize(30, 30))
+        self.rename.setMaximumSize(QtCore.QSize(30, 30))
+        self.rename.setStyleSheet("#rename::hover{\n"
+                                  "background-color:#CFD9E0;\n"
+                                  "border: none;}")
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap("images/edit_remarks.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.rename.setIcon(icon)
+        self.rename.setIconSize(QtCore.QSize(50, 50))
+        self.rename.setAutoDefault(False)
+        self.rename.setFlat(True)
+        self.rename.setObjectName("rename")
+        self.rename.clicked.connect(self.edit_remarks_enable)
+        self.horizontalLayout_2.addWidget(self.rename)
+        self.verticalLayout.addWidget(self.widget_3)
+        self.widget_6 = QtWidgets.QWidget(self.widget)
+        self.widget_6.setMinimumSize(QtCore.QSize(0, 50))
+        self.widget_6.setMaximumSize(QtCore.QSize(16777215, 16777215))
+        self.widget_6.setSizeIncrement(QtCore.QSize(0, 200))
+        self.widget_6.setObjectName("widget_6")
+        self.horizontalLayout_3 = QtWidgets.QHBoxLayout(self.widget_6)
+        self.horizontalLayout_3.setContentsMargins(9, 0, 9, 0)
+        self.horizontalLayout_3.setSpacing(7)
+        self.horizontalLayout_3.setObjectName("horizontalLayout_3")
+        self.deletebtn = QtWidgets.QPushButton("Delete", self.widget_6)
+        self.deletebtn.setMinimumSize(QtCore.QSize(0, 30))
+        self.deletebtn.setMaximumSize(QtCore.QSize(16777215, 25))
+        self.deletebtn.clicked.connect(self.delete_project)
+        self.deletebtn.setStyleSheet("#deletebtn{\n"
+                                     "font-weight:bold;\n"
+                                     "color: white;\n"
+                                     "background-color: #6A6E72;\n"
+                                     "border-top-left-radius: 7px;\n"
+                                     "border-top-right-radius: 7px;\n"
+                                     "border-bottom-left-radius: 7px;\n"
+                                     "border-bottom-right-radius: 7px;\n"
+                                     "font-family: Inter;\n"
+                                     "font-size: 11px;\n"
+                                     "text-align: center;\n"
+                                     "}\n"
+                                     "#deletebtn:hover{\n"
+                                     "color: #6A6E72;\n"
+                                     "border : 3px solid#6A6E72;\n"
+                                     "background-color: white;\n"
+                                     "}\n"
+                                     "")
+        self.deletebtn.setObjectName("deletebtn")
+        self.horizontalLayout_3.addWidget(self.deletebtn)
+        self.okaybtn = QtWidgets.QPushButton("Ok", self.widget_6)
+        self.okaybtn.setMinimumSize(QtCore.QSize(0, 30))
+        self.okaybtn.setMaximumSize(QtCore.QSize(16777215, 25))
+        self.okaybtn.clicked.connect(self.rename_func)
+        self.okaybtn.setStyleSheet("#okaybtn{\n"
+                                   "font-weight:bold;\n"
+                                   "color: white;\n"
+                                   "background-color: #6F4B27;\n"
+                                   "border-top-left-radius: 7px;\n"
+                                   "border-top-right-radius: 7px;\n"
+                                   "border-bottom-left-radius: 7px;\n"
+                                   "border-bottom-right-radius: 7px;\n"
+                                   "font-family: Inter;\n"
+                                   "font-size: 11px;\n"
+                                   "text-align: center;\n"
+                                   "}\n"
+                                   "#okaybtn:hover{\n"
+                                   "color: rgb(144,115,87);\n"
+                                   "border : 3px solid rgb(144,115,87);\n"
+                                   "background-color: white;\n"
+                                   "}")
+        self.okaybtn.setObjectName("okaybtn")
+        self.horizontalLayout_3.addWidget(self.okaybtn)
+        self.verticalLayout.addWidget(self.widget_6)
+        self.horizontalLayout.addWidget(self.widget)
+        Dialog.exec()
+
+    def delete_project(self):
+        self.c.execute("DELETE FROM Projects WHERE project_name = ?", (self.project_name,))
+        self.c.execute("DELETE FROM Location_Folder WHERE project_name = ?", (self.project_name,))
+        self.c.execute("DELETE FROM Save_Files WHERE project_name = ?", (self.project_name,))
+        self.conn.commit()
+        self.myProjects.clear()
+        self.c.execute("SELECT project_name FROM Projects ORDER BY created_at DESC")
+        rows = self.c.fetchall()
+        for row in rows:
+            self.myProjects.addItem(row[0])
+        self.myProjects.setEditText("My Projects")
+
+        self.history.clear()
+        self.c.execute("SELECT * FROM Save_Files ORDER BY created_at DESC")
+        rowss = self.c.fetchall()
+        for row1 in rowss:
+            status = str(row1[9])
+            recent = str(row1[14])
+            id = str(row1[0])
+            self.history.addItem(status + " - " + recent, id)
+        self.history.setEditText("History")
+
+        self.conn.commit()
+        self.view_folder_dialog_orig.close()
+        self.setting_dialog.close()
+        self.background_widget.hide()
+    def edit_remarks_enable(self):
+        self.textEditrename.setEnabled(True)
+
+    def rename_func(self):
+        self.myProjects.clear()
+        self.c.execute("SELECT project_name FROM Projects ORDER BY created_at DESC")
+        rows = self.c.fetchall()
+        for row in rows:
+            self.myProjects.addItem(row[0])
+        self.myProjects.setEditText("My Projects")
+        try:
+            self.input_rename = self.textEditrename.text()
+            self.c.execute("UPDATE Projects SET project_name=? WHERE project_name=?", (self.input_rename, self.project_name))
+            self.c.execute("UPDATE Location_Folder SET project_name=? WHERE project_name=?", (self.input_rename, self.project_name))
+            self.c.execute("UPDATE Save_Files SET project_name=? WHERE project_name=?", (self.input_rename, self.project_name))
+            self.conn.commit()
+            with open('selected_project.txt', 'w') as f:
+                f.write(self.input_rename)
+            self.setting_dialog.close()
+            self.project_name_lbl.setText(self.input_rename)
+        except Exception as e:
+            print(e)
+
+
+if __name__ == "__main__":
+    import sys
+
+    app = QtWidgets.QApplication(sys.argv)
+    Dialog = QtWidgets.QDialog()
+    ui = view_folder_dialog(None, None, None, None)
+    ui.setupUi(Dialog)
+    Dialog.show()
+    sys.exit(app.exec_())

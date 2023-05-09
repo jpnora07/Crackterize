@@ -11,7 +11,7 @@ from keras.applications.resnet import ResNet50, preprocess_input, decode_predict
 
 import matplotlib.pyplot as plt
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import Qt, QTimer, QThread, pyqtSignal, QSize
+from PyQt5.QtCore import Qt, QTimer, QThread, pyqtSignal, QSize, QFile
 from PyQt5.QtGui import QIcon, QMouseEvent, QMovie, QPixmap
 from PyQt5.QtWidgets import QListView, QComboBox, QDialog, QFileDialog, QStyledItemDelegate, QScrollBar, \
     QAbstractItemView, QLineEdit, QFrame, QPushButton
@@ -1046,11 +1046,7 @@ class Ui_MainWindow(object):
 
     def upload_image(self):
 
-        selected_folder_vrFile = "selected_folder_vrFile.txt"
-        try:
-            os.remove(selected_folder_vrFile)
-        except FileNotFoundError:
-            print(f"{selected_folder_vrFile} already removed or does not exist")
+        self.delete_usedtext_file()
         image_path = self.open_file_dialog()
         if image_path is not None:
             try:
@@ -1558,6 +1554,28 @@ class Ui_MainWindow(object):
         self.horizontalLayout.addWidget(self.widget)
         Dialog.show()
         return Dialog
+
+    def delete_usedtext_file(self):
+        file_names = ["Input_Distance.txt", "Negative_score.txt", "Orientation.txt", "Positive_score.txt",
+                      "Predicted_Class_name.txt", "Predicted_height.txt", "Predicted_Score.txt", "Predicted_width.txt",
+                      "Remarks_written.txt", "Selected_location_crack.txt", "Selected_progression_crack.txt",
+                      "Selected_type_crack.txt", "threshold_image.jpg", "image_id.txt", "screenshot.png",
+                      "temp_image_original.jpg", "temp_image_result.jpg", "selected_folder_vrFile.txt", "image_id.txt", "selected_project.txt"]
+
+        try:
+            for file_name in file_names:
+                file = QFile(file_name)
+                if file.isOpen():
+                    print(f"{file_name} is open, closing file...")
+                    file.close()
+                try:
+                    os.remove(file_name)
+                except FileNotFoundError:
+                    print(f"{file_name} already removed or does not exist")
+
+
+        except OSError as e:
+            print(f"Error:{e.strerror}")
 
 
 if __name__ == "__main__":
