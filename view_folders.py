@@ -1011,9 +1011,13 @@ class view_folder_dialog(object):
                         print(f"Row {row}, Column {column}: {item.data(Qt.UserRole)} (Original), {item.text()} (New)")
 
                 for item in items_with_id:
-                    self.c.execute("UPDATE Location_Folder SET folder_name=? WHERE id=?", (item['text'], item['id']))
-                    self.c.execute("UPDATE Save_Files SET folder_name=? WHERE folder_name=?",
-                                   (item['text'], item['orig_text']))
+                    if self.table_exists(self.c, 'Location_Folder'):
+                        self.c.execute("UPDATE Location_Folder SET folder_name=? WHERE id=?",
+                                       (item['text'], item['id']))
+                    if self.table_exists(self.c, 'Save_Files'):
+                        self.c.execute("UPDATE Save_Files SET folder_name=? WHERE folder_name=?",
+                                       (item['text'], item['orig_text']))
+
                 self.conn.commit()
                 self.conn.close()
                 self.buttons.clear()
@@ -1542,9 +1546,12 @@ class view_folder_dialog(object):
         Dialog.exec()
 
     def delete_project(self):
-        self.c.execute("DELETE FROM Projects WHERE project_name = ?", (self.project_name,))
-        self.c.execute("DELETE FROM Location_Folder WHERE project_name = ?", (self.project_name,))
-        self.c.execute("DELETE FROM Save_Files WHERE project_name = ?", (self.project_name,))
+        if self.table_exists(self.c, "Projects"):
+            self.c.execute("DELETE FROM Projects WHERE project_name = ?", (self.project_name,))
+        if self.table_exists(self.c, "Location_Folder"):
+            self.c.execute("DELETE FROM Location_Folder WHERE project_name = ?", (self.project_name,))
+        if self.table_exists(self.c, "Save_Files"):
+            self.c.execute("DELETE FROM Save_Files WHERE project_name = ?", (self.project_name,))
         self.conn.commit()
         self.myProjects.clear()
         self.c.execute("SELECT project_name FROM Projects ORDER BY created_at DESC")
@@ -1567,19 +1574,27 @@ class view_folder_dialog(object):
         self.view_folder_dialog_orig.close()
         self.setting_dialog.close()
         self.background_widget.hide()
-
+    def table_exists(self, cursor, table_name):
+        self.c.execute("SELECT name FROM sqlite_master WHERE type='table' AND name=?", (table_name,))
+        return self.c.fetchone() is not None
     def edit_remarks_enable(self):
         self.textEditrename.setEnabled(True)
 
     def rename_func(self):
         try:
             self.input_rename = self.textEditrename.text()
-            self.c.execute("UPDATE Projects SET project_name=? WHERE project_name=?",
-                           (self.input_rename, self.project_name))
-            self.c.execute("UPDATE Location_Folder SET project_name=? WHERE project_name=?",
-                           (self.input_rename, self.project_name))
-            self.c.execute("UPDATE Save_Files SET project_name=? WHERE project_name=?",
-                           (self.input_rename, self.project_name))
+            if self.table_exists(self.c, 'Projects'):
+                self.c.execute("UPDATE Projects SET project_name=? WHERE project_name=?",
+                               (self.input_rename, self.project_name))
+
+            if self.table_exists(self.c, 'Location_Folder'):
+                self.c.execute("UPDATE Location_Folder SET project_name=? WHERE project_name=?",
+                               (self.input_rename, self.project_name))
+
+            if self.table_exists(self.c, 'Save_Files'):
+                self.c.execute("UPDATE Save_Files SET project_name=? WHERE project_name=?",
+                               (self.input_rename, self.project_name))
+
             self.conn.commit()
             with open('selected_project.txt', 'w') as f:
                 f.write(self.input_rename)
