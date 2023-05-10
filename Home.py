@@ -1,15 +1,7 @@
 import os
 import sqlite3
-import torch
 
 import cv2
-import numpy as np
-
-import tensorflow as tf
-from tensorflow import keras
-from keras.applications.resnet import ResNet50, preprocess_input, decode_predictions
-
-import matplotlib.pyplot as plt
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import Qt, QTimer, QThread, pyqtSignal, QSize, QFile
 from PyQt5.QtGui import QIcon, QMouseEvent, QMovie, QPixmap
@@ -51,12 +43,15 @@ class Ui_MainWindow(object):
         MainWindow.setWindowIcon(logo)
         MainWindow.setWindowModality(QtCore.Qt.NonModal)#
         MainWindow.setEnabled(True)
-        # MainWindow.setFixedSize(1000, 700)
-        screen_resolution = QDesktopWidget().screenGeometry()
-        width, height = screen_resolution.width(), screen_resolution.height()
+        #MainWindow.setFixedSize(1000, 700)
+        #screen_resolution = QDesktopWidget().screenGeometry()
+        #width, height = screen_resolution.width(), screen_resolution.height()
         # MainWindow.resize(1000, 700)
-        MainWindow.setMinimumSize(QtCore.QSize(width, height))
-        MainWindow.setMaximumSize(QtCore.QSize(width, height))
+        #MainWindow.setMinimumSize(QtCore.QSize(width, height))
+        #MainWindow.setMaximumSize(QtCore.QSize(width, height))
+        screen_resolution = QtWidgets.QApplication.desktop().screenGeometry()
+        width, height = screen_resolution.width(), screen_resolution.height()
+        MainWindow.resize(width, height)
         MainWindow.setStyleSheet("#Crackterize{\n"
                                  "background-color: qlineargradient(spread:pad, x1:0.045, y1:0.261, x2:0.988636, y2:0.955, stop:0 rgba(235, 209, 196, 255), stop:1 rgba(255, 255, 255, 255));\n"
                                  "width: fit-content;\n"

@@ -1,7 +1,8 @@
 import sys
 import time
 from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QProgressBar, QLabel, QFrame, QHBoxLayout, QVBoxLayout
+from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QProgressBar, QLabel, QFrame, QHBoxLayout, QVBoxLayout, \
+    QMainWindow
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtCore import Qt, QTimer
 
@@ -83,7 +84,7 @@ class SplashScreen(QWidget):
             time.sleep(1)
             try:
                 # Create an instance of the main window and show it
-                main_window = QtWidgets.QMainWindow()
+                main_window = QMainWindow()
                 ui = Ui_MainWindow()
                 ui.setupUi(main_window)
 
