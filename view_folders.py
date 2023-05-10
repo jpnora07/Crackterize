@@ -1449,12 +1449,6 @@ class view_folder_dialog(object):
         self.textEditrename.setEnabled(True)
 
     def rename_func(self):
-        self.myProjects.clear()
-        self.c.execute("SELECT project_name FROM Projects ORDER BY created_at DESC")
-        rows = self.c.fetchall()
-        for row in rows:
-            self.myProjects.addItem(row[0])
-        self.myProjects.setEditText("My Projects")
         try:
             self.input_rename = self.textEditrename.text()
             self.c.execute("UPDATE Projects SET project_name=? WHERE project_name=?", (self.input_rename, self.project_name))
@@ -1465,6 +1459,12 @@ class view_folder_dialog(object):
                 f.write(self.input_rename)
             self.setting_dialog.close()
             self.project_name_lbl.setText(self.input_rename)
+            self.myProjects.clear()
+            self.c.execute("SELECT project_name FROM Projects ORDER BY created_at DESC")
+            rows = self.c.fetchall()
+            for row in rows:
+                self.myProjects.addItem(row[0])
+            self.myProjects.setEditText("My Projects")
         except Exception as e:
             print(e)
 
