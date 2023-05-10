@@ -646,7 +646,7 @@ class view_folder_dialog(object):
         Dialog.setWindowFlags(Qt.FramelessWindowHint)
         Dialog.resize(493, 297)
         Dialog.setStyleSheet(
-            '''#Dialog{border: 1px solid grey;} ''')
+            '''#Dialog{border: 1px solid grey;background:rgb(255, 255, 255);} ''')
         self.horizontalLayout = QtWidgets.QHBoxLayout(Dialog)
         self.horizontalLayout.setContentsMargins(-1, -1, -1, 0)
         self.horizontalLayout.setObjectName("horizontalLayout")
@@ -674,12 +674,62 @@ class view_folder_dialog(object):
         self.label.setStyleSheet("#label{\n"
                                  "    font: 900 12pt \"Segoe UI Black\";\n"
                                  "    alignment: center;\n"
+                                 "background: transparent;"
                                  "    color: rgba(111, 75, 39, 0.77);\n"
                                  "}")
         self.label.setObjectName("label")
         self.verticalLayout_3.addWidget(self.label)
         self.folder_names_cb = QtWidgets.QComboBox(self.widget_4)
         self.folder_names_cb.setObjectName("folder_names_cb")
+        self.folder_names_cb.setStyleSheet("#folder_names_cb {\n"
+                                           "        border-radius: 10px;\n"
+                                           "        font-size: 18px;\n"
+                                           "        font-family: Arial;\n"
+                                           "color:rgb(144, 115, 87);"
+                                           "        background-color: #fff;\n"
+                                           "        border: 2px solid #aaa;\n"
+                                           "        padding: 2px;\n"
+                                           "padding-left:8px;\n"
+                                           "    }\n"
+                                           "\n"
+                                           "#folder_names_cb::drop-down{\n"
+                                           " image:url(images/arrowdown.png);\n"
+                                           " width: 15px;\n"
+                                           " height: 15px;\n"
+                                           "padding: 6px;\n"
+                                           "}\n"
+                                           "#folder_names_cb::drop-down::pressed{\n"
+                                           " image:url(images/arrowup.png);\n"
+                                           "width: 15px;\n"
+                                           " height: 15px;\n"
+                                           "text-align: center;\n"
+                                           "}\n"
+                                           "#folder_names_cb QAbstractItemView {\n"
+                                           "background-color: rgb(255, 255, 255);\n"
+                                           "outline: none;\n"
+                                           "color:rgb(144, 115, 87);"
+                                           " text-align: center;}\n"
+                                           "\n"
+                                           "#folder_names_cb QAbstractItemView::item {\n"
+                                           "background-color: #F4EBE6;\n"
+                                           " color: #4A3B28;\n"
+                                           "color:rgb(144, 115, 87);"
+                                           " text-align: center;\n"
+                                           "min-height: 35px; min-width: 50px;\n"
+                                           " border:0px;}\n"
+                                           "\n"
+                                           "#folder_names_cb QListView{\n"
+                                           "border: none;\n"
+                                           " font-weight:bold;\n"
+                                           "color:rgb(144, 115, 87);"
+                                           " text-align: center;}\n"
+                                           "#folder_names_cb QListView::item{border:0px;\n"
+                                           "border-radius: 15px;\n"
+                                           "  padding:8px; \n"
+                                           "margin:5px;}\n"
+                                           "#folder_names_cb QListView::item:selected { \n"
+                                           "color: white; \n"
+                                           "background-color: #4A3B28}")
         try:
             with open('selected_project.txt', 'r') as f:
                 self.project_name = f.read()
@@ -745,22 +795,91 @@ class view_folder_dialog(object):
         self.scrollArea = QtWidgets.QScrollArea(self.widget_7)
         self.scrollArea.setWidgetResizable(True)
         self.scrollArea.setObjectName("scrollArea")
+        self.scrollArea.setStyleSheet("#scrollArea {\n"
+                                      "background: transparent;\n"
+                                      "    border-top-left-radius: 10px;\n"
+                                      "    border-bottom-left-radius: 10px;\n"
+                                      "    border-top-right-radius: 10px;\n"
+                                      "    border-bottom-right-radius: 10px;\n"
+                                      "}\n"
+                                      "\n"
+                                      "#scrollArea QScrollBar:vertical {\n"
+                                      "    background-color: #c3c3c3;\n"
+                                      "    width: 15px;\n"
+                                      "    margin: 15px 3px 15px 3px;\n"
+                                      "    border: 1px transparent #2A2929;\n"
+                                      "    border-radius: 4px;\n"
+                                      "}\n"
+                                      "\n"
+                                      "#scrollArea QScrollBar:vertical:hover {\n"
+                                      "    width: 20px;\n"
+                                      "}\n"
+                                      "\n"
+                                      "#scrollArea QScrollBar::handle:vertical {\n"
+                                      "    background-color: #8c8c8c;\n"
+                                      "    min-height: 5px;\n"
+                                      "    border-radius: 4px;\n"
+                                      "}\n"
+                                      "\n"
+                                      "#scrollArea QScrollBar::sub-line:vertical {\n"
+                                      "    margin: 3px 0px 3px 0px;\n"
+                                      "    border-image: url(:/images/up_arrow_disabled.png);\n"
+                                      "    height: 10px;\n"
+                                      "    width: 10px;\n"
+                                      "    subcontrol-position: top;\n"
+                                      "    subcontrol-origin: margin;\n"
+                                      "}\n"
+                                      "\n"
+                                      "#scrollArea QScrollBar::add-line:vertical {\n"
+                                      "    margin: 3px 0px 3px 0px;\n"
+                                      "    border-image: url(:/images/down_arrow_disabled.png);\n"
+                                      "    height: 10px;\n"
+                                      "    width: 10px;\n"
+                                      "    subcontrol-position: bottom;\n"
+                                      "    subcontrol-origin: margin;\n"
+                                      "}\n"
+                                      "\n"
+                                      "#scrollArea QScrollBar::up-arrow:vertical,\n"
+                                      "#scrollArea QScrollBar::down-arrow:vertical {\n"
+                                      "    background: none;\n"
+                                      "}\n"
+                                      "\n"
+                                      "#scrollArea QScrollBar::add-page:vertical,\n"
+                                      "#scrollArea QScrollBar::sub-page:vertical {\n"
+                                      "    background: none;\n"
+                                      "}\n"
+                                      "")
         self.scrollAreaWidgetContents = QtWidgets.QWidget()
         self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 162, 151))
+        self.scrollAreaWidgetContents.setStyleSheet("#scrollAreaWidgetContents{\n"
+                                                    "background: transparent;\n"
+                                                    "color: #4A3B28;\n"
+                                                    "min-height: 35px; min-width: 50px;;\n"
+                                                    "                    \n"
+                                                    "}")
         self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
         self.horizontalLayout_5 = QtWidgets.QHBoxLayout(self.scrollAreaWidgetContents)
         self.horizontalLayout_5.setObjectName("horizontalLayout_5")
         self.tableWidget = QtWidgets.QTableWidget(self.scrollAreaWidgetContents)
-        self.tableWidget.setStyleSheet("#tableWidget{\n"
-                                       "border-style: solid; border-width: 2px; border-color: rgba(111, 75, 39, 0.77);;\n"
+        self.tableWidget.setStyleSheet("#tableWidget {"
+                                       "border-style: solid; border-width: 2px; border-color: rgba(111, 75, 39, 0.77);"
+                                       "background: transparent;"
+                                       "color: rgba(111, 75, 39, 0.77);"
+                                       "gridline-color: grey;"
+                                       "}"
+
+                                       "#tableWidget QHeaderView::section {"
+                                       "background: transparent;"
+                                       "color: rgba(111, 75, 39, 0.77);"
                                        "}")
+
         self.tableWidget.setObjectName("tableWidget")
         self.tableWidget.setColumnCount(2)
         self.tableWidget.setHorizontalHeaderLabels(['Folder Name', 'Remove'])
         self.tableWidget.horizontalHeader().resizeSection(0, 150)
-
         self.tableWidget.horizontalHeader().resizeSection(1, 50)
         self.tableWidget.horizontalHeader().setStretchLastSection(True)
+        self.tableWidget.verticalHeader().setVisible(False)
         self.horizontalLayout_5.addWidget(self.tableWidget, 0, QtCore.Qt.AlignHCenter)
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
         self.horizontalLayout_4.addWidget(self.scrollArea)
@@ -1309,8 +1428,10 @@ class view_folder_dialog(object):
 
         Dialog = QDialog()
         self.setting_dialog = Dialog
+        Dialog.setWindowFlags(Qt.FramelessWindowHint)
         Dialog.setObjectName("Dialog")
         Dialog.resize(340, 168)
+        Dialog.setStyleSheet("#Dialog{background-color: rgb(255,255,255); border: 1px solid rgb(144,115,87);}")
         self.horizontalLayout = QtWidgets.QHBoxLayout(Dialog)
         self.horizontalLayout.setObjectName("horizontalLayout")
         self.widget = QtWidgets.QWidget(Dialog)
@@ -1321,6 +1442,7 @@ class view_folder_dialog(object):
         self.label_2.setMinimumSize(QtCore.QSize(0, 20))
         self.label_2.setMaximumSize(QtCore.QSize(16777215, 20))
         self.label_2.setStyleSheet("#label_2{\n"
+                                   "background:transparent;"
                                    "    font: 900 12pt \"Segoe UI Black\";\n"
                                    "    alignment: center;\n"
                                    "    color: rgba(111, 75, 39, 0.77);\n"
@@ -1445,15 +1567,19 @@ class view_folder_dialog(object):
         self.view_folder_dialog_orig.close()
         self.setting_dialog.close()
         self.background_widget.hide()
+
     def edit_remarks_enable(self):
         self.textEditrename.setEnabled(True)
 
     def rename_func(self):
         try:
             self.input_rename = self.textEditrename.text()
-            self.c.execute("UPDATE Projects SET project_name=? WHERE project_name=?", (self.input_rename, self.project_name))
-            self.c.execute("UPDATE Location_Folder SET project_name=? WHERE project_name=?", (self.input_rename, self.project_name))
-            self.c.execute("UPDATE Save_Files SET project_name=? WHERE project_name=?", (self.input_rename, self.project_name))
+            self.c.execute("UPDATE Projects SET project_name=? WHERE project_name=?",
+                           (self.input_rename, self.project_name))
+            self.c.execute("UPDATE Location_Folder SET project_name=? WHERE project_name=?",
+                           (self.input_rename, self.project_name))
+            self.c.execute("UPDATE Save_Files SET project_name=? WHERE project_name=?",
+                           (self.input_rename, self.project_name))
             self.conn.commit()
             with open('selected_project.txt', 'w') as f:
                 f.write(self.input_rename)
