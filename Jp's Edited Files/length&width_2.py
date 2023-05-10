@@ -135,7 +135,7 @@ class Ui_MainWindow(object):
             # Get the path to the directory where the executable is run from
             app_path = getattr(sys, '_MEIPASS', None) or os.path.abspath('..')
             # Create the path to the view_folders.py file
-            view_result = os.path.join(app_path, '../result.py')
+            view_result = os.path.join(app_path, 'fromOldVersion/result.py')
             # Execute the view_folders.py file using QProcess
             process = QtCore.QProcess()
             process.start('python', [view_result])

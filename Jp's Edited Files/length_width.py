@@ -317,7 +317,7 @@ class Ui_MainWindow(object):
             app_path = getattr(sys, '_MEIPASS', None) or os.path.abspath('..')
 
             # Create the path to the result.py file
-            result_file_path = os.path.join(app_path, '../result.py')
+            result_file_path = os.path.join(app_path, 'fromOldVersion/result.py')
             # Execute the result.py file using QProcess
             process = QtCore.QProcess()
             process.start('python', [result_file_path])

@@ -1,22 +1,15 @@
 import os
 import sqlite3
-import sys
-from datetime import datetime
 from functools import partial
 
-import tensorflow as tf
 from PyQt5.QtPrintSupport import QPrintPreviewDialog, QPrinter
-from tensorflow import keras
 import cv2
-import numpy as np
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import Qt, QTimer, pyqtSignal, QByteArray, QThread, QSizeF, QSize
+from PyQt5.QtCore import Qt, QTimer, QByteArray, QSizeF, QSize
 from PyQt5.QtGui import QPixmap, QMovie, QPainter, QTextCursor, QTextImageFormat, QFont, QTextCharFormat, QTextDocument
 from PyQt5.QtWidgets import QHBoxLayout, QVBoxLayout, QScrollArea, QWidget, QFileDialog, QDialog, QFrame
 
 from Detect_Crack import Detect_Crack_Dialog
-from Segment_Image import Ui_DialogSegment
-from result import Result_Dialog
 from view_result_with_details import result_with_details
 
 

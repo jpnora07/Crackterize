@@ -120,13 +120,13 @@ class getWidth_of_crack(QThread):
                     width_mm = width * known_distance_cm / self.focal_length
                     crack_widths.append(width_mm)
 
-            with open('Input_Distance.txt', 'w') as f:
-                f.write(str(known_distance_cm))
             avg_width = sum(crack_widths) / len(crack_widths)
             avg_width_write = f"{avg_width:.2f}"
             print(f"Crack width: {avg_width:.2f} mm")
             with open('Predicted_width.txt', 'w') as f:
                 f.write(avg_width_write)
+            with open('Input_Distance.txt', 'w') as f:
+                f.write(str(known_distance_cm))
 
             self.finished.emit()
         except Exception as e:

@@ -751,7 +751,7 @@ class view_folder_dialog(object):
         except Exception as e:
             print(e)
 
-        self.folder_names_cb.currentIndexChanged.connect(self.addItemToTable)
+        self.folder_names_cb.activated.connect(self.addItemToTable)
         self.verticalLayout_3.addWidget(self.folder_names_cb)
         self.verticalLayout.addWidget(self.widget_4)
         self.widget_5 = QtWidgets.QWidget(self.widget_2)
@@ -956,13 +956,20 @@ class view_folder_dialog(object):
         id = data[0]
         fold_name = data[1]
 
+        # Check if the item is already in the table
+        rowCount = self.tableWidget.rowCount()
+        for row in range(rowCount):
+            existing_item = self.tableWidget.item(row, 0)
+            if existing_item and existing_item.data(Qt.UserRole)[0] == id:
+                return  # Skip adding the item if it's already in the table
+
         # Add the item and remove button to the table in the ScrollArea
         rowCount = self.tableWidget.rowCount()
         self.tableWidget.setRowCount(rowCount + 1)
-        self.newItem = QTableWidgetItem(item)
-        self.newItem.setData(Qt.UserRole, [id, fold_name])
+        newItem = QTableWidgetItem(item)
+        newItem.setData(Qt.UserRole, [id, fold_name])
 
-        self.tableWidget.setItem(rowCount, 0, self.newItem)
+        self.tableWidget.setItem(rowCount, 0, newItem)
         button = QPushButton()
         button.setMinimumSize(QtCore.QSize(0, 0))
         button.setMaximumSize(QtCore.QSize(16777215, 16777215))
@@ -975,6 +982,15 @@ class view_folder_dialog(object):
 
     def remove_item(self, row):
         self.tableWidget.removeRow(row)
+        # Update the row count
+        rowCount = self.tableWidget.rowCount()
+
+        # If there are no more rows, clear the table
+        if rowCount == 0:
+            self.tableWidget.clearContents()
+        else:
+            self.tableWidget.setRowCount(rowCount)
+
 
     def printTableItems(self):
         try:
@@ -1157,7 +1173,10 @@ class view_folder_dialog(object):
         # Create a comma-separated string of the folder names
         folders_string = ','.join(["'{}'".format(f) for f in folders])
 
-        c.execute(f"DELETE FROM Location_Folder WHERE folder_name IN ({folders_string})")
+        if self.table_exists(self.c, "Location_Folder"):
+            c.execute(f"DELETE FROM Location_Folder WHERE folder_name IN ({folders_string})")
+        if self.table_exists(self.c, "Save_Files"):
+            c.execute(f"DELETE FROM Save_Files WHERE folder_name IN ({folders_string})")
         self.history.clear()  # This should work now
         c.execute("SELECT * FROM Save_Files ORDER BY created_at DESC")
         rows = c.fetchall()
@@ -1574,6 +1593,7 @@ class view_folder_dialog(object):
         self.view_folder_dialog_orig.close()
         self.setting_dialog.close()
         self.background_widget.hide()
+
     def table_exists(self, cursor, table_name):
         self.c.execute("SELECT name FROM sqlite_master WHERE type='table' AND name=?", (table_name,))
         return self.c.fetchone() is not None

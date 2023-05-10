@@ -3,16 +3,14 @@ import sqlite3
 
 import cv2
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import Qt, QTimer, QThread, pyqtSignal, QSize, QFile
+from PyQt5.QtCore import Qt, QTimer, QSize, QFile
 from PyQt5.QtGui import QIcon, QMouseEvent, QMovie, QPixmap
 from PyQt5.QtWidgets import QListView, QComboBox, QDialog, QFileDialog, QStyledItemDelegate, QScrollBar, \
     QAbstractItemView, QLineEdit, QFrame, QPushButton
 
 from Detect_Crack import Detect_Crack_Dialog
-from Segment_Image import Ui_DialogSegment
 from calculatorButtons import cal_dialog
 from view_result_with_details import result_with_details
-from result import Result_Dialog
 from view_folders import view_folder_dialog
 
 
