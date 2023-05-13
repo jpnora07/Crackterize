@@ -66,7 +66,7 @@ class view_folder_dialog(object):
             self.project_name_lbl.setText(self.selected_item)
         self.horizontalLayout_2.addWidget(self.project_name_lbl)
 
-        self.addfolder_icon = QtWidgets.QPushButton("  Add Folder", self.widget)
+        self.addfolder_icon = QtWidgets.QPushButton("Add Folder", self.widget)
         self.addfolder_icon.setStyleSheet("#addfolder_icon{\n"
                                           "padding:5px;\n"
                                           "background-color:#E3E9ED;"
@@ -75,7 +75,7 @@ class view_folder_dialog(object):
                                           "margin-left:100px;\n"
                                           "margin-right:0px;\n"
                                           "border: none;"
-                                          "border-radius:5px"
+                                          "border-radius:15px"
                                           "}"
                                           "#addfolder_icon::hover{\n"
                                           "background-color:#CFD9E0;"
@@ -83,28 +83,28 @@ class view_folder_dialog(object):
                                           "}"
                                           )
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap("images/add_folder.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap("images/new_add_folder.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.addfolder_icon.setIcon(icon)
         self.addfolder_icon.setIconSize(QtCore.QSize(20, 20))
         self.addfolder_icon.clicked.connect(self.creating_new_Location)
         self.addfolder_icon.setObjectName("addfolder_icon")
         self.horizontalLayout_2.addWidget(self.addfolder_icon)
 
-        self.Settings = QtWidgets.QPushButton(self.widget)
-        self.Settings.setFlat(False)
+        self.Settings = QtWidgets.QPushButton("Manage Project", self.widget)
+        # self.Settings.setFlat(False)
         self.Settings.setStyleSheet("#Settings{\n"
-                                    "padding:5px;\n"
-                                    "color:#664323;\n"
-                                    "font: 700 9pt \"Big Sky Regular\";\n"
-                                    "margin-left:0px;\n"
-                                    "margin-right:20px;\n"
-                                    "border: none;"
-                                    "border-radius:5px"
-                                    "}"
-                                    "#Settings::hover{\n"
-                                    "background-color:#CFD9E0;"
-                                    "border: none;"
-                                    "}"
+                                          "padding:5px;\n"
+                                          "background-color:#E3E9ED;"
+                                          "color:#664323;\n"
+                                          "font: 700 9pt \"Big Sky Regular\";\n"
+                                          "margin-left:10px;\n"
+                                          "border: none;"
+                                          "border-radius:15px"
+                                          "}"
+                                          "#Settings::hover{\n"
+                                          "background-color:#CFD9E0;"
+                                          "border: none;"
+                                          "}"
                                     )
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap("images/Settings.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
@@ -135,7 +135,7 @@ class view_folder_dialog(object):
         button.setToolButtonStyle(QtCore.Qt.ToolButtonTextUnderIcon)
         button.setText("Create New Folder")
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap("images/new-folder.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap("images/new_add_folder.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         button.setIcon(icon)
         button.setIconSize(QtCore.QSize(90, 100))
         button.setAutoRaise(True)

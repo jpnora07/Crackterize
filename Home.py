@@ -542,10 +542,9 @@ class Ui_MainWindow(object):
 
         self.widget_4 = QtWidgets.QWidget(self.widget)
         self.widget_4.setObjectName("widget_4")
-
         # new
         self.horizontalLayout_3 = QtWidgets.QHBoxLayout(self.widget_4)
-        self.horizontalLayout_3.setContentsMargins(100, 20, 100, 20)
+        self.horizontalLayout_3.setContentsMargins(0, 20, 0, 20)
         self.horizontalLayout_3.setObjectName("horizontalLayout_3")
 
         self.widget_5 = QtWidgets.QWidget(self.widget_4)
@@ -557,64 +556,14 @@ class Ui_MainWindow(object):
         self.widget_5.setGraphicsEffect(effect)
         self.widget_5.setMaximumSize(QtCore.QSize(800, 170))
         self.widget_5.setStyleSheet("#widget_5{\n"
-                                    "background-color: #cfcec9;\n"
+                                    "background-color: #A8917B;\n"
                                     "border-radius:28px;\n"
                                     "}")
         self.widget_5.setObjectName("widget_5")
         self.horizontalLayout_4 = QtWidgets.QHBoxLayout(self.widget_5)
         self.horizontalLayout_4.setContentsMargins(0, 0, 0, 0)
         self.horizontalLayout_4.setObjectName("horizontalLayout_4")
-        self.widgetUpload = QtWidgets.QWidget(self.widget_5)
-        self.widgetUpload.setMinimumSize(QtCore.QSize(550, 0))
-        self.widgetUpload.setMaximumSize(QtCore.QSize(550, 170))
-        self.widgetUpload.setStyleSheet("#widgetUpload{\n"
-                                        "background-color: rgb(255, 255, 255);\n"
-                                        "border-radius:28px;\n"
-                                        "}\n"
-                                        "        \n"
-                                        "")
-        self.widgetUpload.setObjectName("widgetUpload")
-        self.verticalLayout_5 = QtWidgets.QVBoxLayout(self.widgetUpload)
-        self.verticalLayout_5.setContentsMargins(50, 30, 50, 30)
-        self.verticalLayout_5.setSpacing(0)
-        self.verticalLayout_5.setObjectName("verticalLayout_5")
-        self.uploadImg = QtWidgets.QPushButton("  Upload Image", self.widgetUpload)
-        self.uploadImg.clicked.connect(self.upload_image)
-        self.uploadImg.setIcon(QIcon('images/uploadIcon.png'))
-        self.uploadImg.setIconSize(QSize(17, 17))
-        self.uploadImg.setStyleSheet("#uploadImg{\n"
-                                     "height:40px;\n"
-                                     "font-weight:bold;\n"
-                                     "font-size:18px;\n"
-                                     "color:white;\n"
-                                     "background-color: rgb(144, 115, 87);\n"
-                                     "border-top-left-radius :20px;\n"
-                                     "border-top-right-radius : 20px; \n"
-                                     "border-bottom-left-radius : 20px; \n"
-                                     "border-bottom-right-radius : 20px;\n"
-                                     "}\n"
-                                     "#uploadImg:hover{\n"
-                                     "color:rgb(144, 115, 87);\n"
-                                     "border :2px solid rgb(144, 115, 87);\n"
-                                     "background-color: rgb(255, 255, 255);\n"
-                                     "}\n"
-                                     "")
-        self.uploadImg.setObjectName("uploadImg")
-        self.verticalLayout_5.addWidget(self.uploadImg)
-        self.create = QtWidgets.QPushButton("or create a new project", self.widgetUpload)
-        self.create.clicked.connect(self.creating_new_project)
-        self.create.setStyleSheet("#create{\n"
-                                  "font-weight:bold;\n"
-                                  " color:#363131;\n"
-                                  "background-color: rgb(255, 255, 255);\n"
-                                  "border :3px solid rgb(255, 255, 255);\n"
-                                  " }\n"
-                                  "#create:hover{\n"
-                                  "background-color:rgb(255, 255, 255);}\n"
-                                  "")
-        self.create.setObjectName("create")
-        self.verticalLayout_5.addWidget(self.create)
-        self.horizontalLayout_4.addWidget(self.widgetUpload)
+
         self.widgetUpload_2 = QtWidgets.QWidget(self.widget_5)
         self.widgetUpload_2.setStyleSheet("#widgetUpload{\n"
                                           "background-color: rgb(255, 255, 255);\n"
@@ -626,35 +575,34 @@ class Ui_MainWindow(object):
         self.verticalLayout_6 = QtWidgets.QVBoxLayout(self.widgetUpload_2)
         self.verticalLayout_6.setContentsMargins(30, 30, 30, 30)
         self.verticalLayout_6.setSpacing(0)
+
         self.verticalLayout_6.setObjectName("verticalLayout_6")
-        self.calLbl = QtWidgets.QPushButton("Concrete Calculator", self.widgetUpload_2)
-        self.calLbl.setStyleSheet("#calLbl{\n"
-                                  "font-weight:bold;\n"
-                                  " color:#363131;\n"
-                                  "background-color: #cfcec9;\n"
-                                  "border :3px solid #cfcec9;\n"
-                                  " }\n"
-                                  "#calLbl:hover{\n"
-                                  "background-color:#cfcec9;}\n"
-                                  "")
-        self.calLbl.setObjectName("calLbl")
-        self.verticalLayout_6.addWidget(self.calLbl)
+        self.widgetc = QtWidgets.QWidget(self.widgetUpload_2)
+        self.horizontalLayout_23 = QtWidgets.QHBoxLayout(self.widgetc)
+        self.horizontalLayout_23.setObjectName("horizontalLayout_2")
+        self.labelq = QtWidgets.QLabel(self.widgetc)
+        self.labelq.setMaximumSize(QtCore.QSize(50, 16777215))
+        self.labelq.setPixmap(QtGui.QPixmap("images/icons8-calculator-90.png"))
+        self.labelq.setScaledContents(True)
+        self.labelq.setWordWrap(True)
+        self.labelq.setObjectName("label")
+        self.horizontalLayout_23.addWidget(self.labelq)
+        self.verticalLayout_6.addWidget(self.widgetc)
         self.ButtonCal = QtWidgets.QPushButton("Calculator", self.widgetUpload_2)
         self.ButtonCal.setStyleSheet("#ButtonCal{\n"
                                      "height:40px;\n"
-                                     "font-weight:bold;\n"
+                                     "font-weight:600;\n"
                                      "font-size:18px;\n"
-                                     "color:white;\n"
-                                     "background-color: #818181;\n"
+                                     "color:rgb(144, 115, 87);\n"
+                                     "background-color: #ffffff;\n"
                                      "border-top-left-radius :20px;\n"
                                      "border-top-right-radius : 20px; \n"
                                      "border-bottom-left-radius : 20px; \n"
                                      "border-bottom-right-radius : 20px;\n"
                                      "}\n"
                                      "#ButtonCal:hover{\n"
-                                     "color:#818181;\n"
-                                     "border :2px solid #818181;\n"
-                                     "background-color: rgb(255, 255, 255);\n"
+                                     "color:#ffffff;\n"
+                                     "background-color: #603E1E;\n"
                                      "}\n"
                                      "")
         self.ButtonCal.setObjectName("ButtonCal")
@@ -663,10 +611,139 @@ class Ui_MainWindow(object):
         self.verticalLayout_6.addWidget(self.ButtonCal)
         self.horizontalLayout_4.addWidget(self.widgetUpload_2)
 
+        self.widgetUpload = QtWidgets.QWidget(self.widget_5)
+        self.widgetUpload.setMinimumSize(QtCore.QSize(375, 0))
+        self.widgetUpload.setMaximumSize(QtCore.QSize(400, 170))
+        self.widgetUpload.setStyleSheet("#widgetUpload{\n"
+                                        "background-color: rgb(255, 255, 255);\n"
+                                        "border-radius:28px;\n"
+                                        "}\n"
+                                        "        \n"
+                                        "")
+        self.widgetUpload.setObjectName("widgetUpload")
+        self.verticalLayout_5w = QtWidgets.QVBoxLayout(self.widgetUpload)
+        self.verticalLayout_5w.setContentsMargins(50, 45, 50, 25)
+        self.verticalLayout_5w.setSpacing(0)
+        self.verticalLayout_5w.setObjectName("verticalLayout_5")
+        self.uploadImg = QtWidgets.QPushButton(" Upload Image", self.widgetUpload)
+        self.uploadImg.setMinimumSize(QtCore.QSize(0, 50))
+        font = QtGui.QFont()
+        font.setPointSize(-1)
+        font.setBold(True)
+        self.uploadImg.setFont(font)
+        self.uploadImg.clicked.connect(self.upload_image)
+        self.uploadImg.setStyleSheet("#uploadImg{\n"
+                                     "height:40px;\n"
+                                     "font-weight:600;\n"
+                                     "font-size:22px;\n"
+                                     "color:white;\n"
+                                     "background-color: rgb(144, 115, 87);\n"
+                                     "border-top-left-radius :25px;\n"
+                                     "border-top-right-radius : 25px; \n"
+                                     "border-bottom-left-radius : 25px; \n"
+                                     "border-bottom-right-radius : 25px;\n"
+                                     "}\n"
+                                     "#uploadImg:hover{\n"
+                                     "color:#603E1E;\n"
+                                     "border :2px solid #603E1E;\n"
+                                     "background-color: rgb(255, 255, 255);\n"
+                                     "}\n"
+                                     "")
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap("images/icons8-image-file-add-48.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.uploadImg.setIcon(icon)
+        self.uploadImg.setIconSize(QtCore.QSize(23, 22))
+        self.uploadImg.setObjectName("uploadImg")
+        self.verticalLayout_5w.addWidget(self.uploadImg)
+
+        self.widget_2 = QtWidgets.QWidget(self.widgetUpload)
+        self.widget_2.setMinimumSize(QtCore.QSize(275, 40))
+        self.widget_2.setMaximumSize(QtCore.QSize(16777215, 40))
+        self.widget_2.setObjectName("widget_2")
+        self.horizontalLayout_5ww = QtWidgets.QHBoxLayout(self.widget_2)
+        self.horizontalLayout_5ww.setSpacing(0)
+        self.horizontalLayout_5ww.setObjectName("horizontalLayout_5")
+        self.label_3 = QtWidgets.QLabel("<html><head/><body><p align=\"right\">or create a</p></body></html>",
+                                        self.widget_2)
+        font = QtGui.QFont()
+        font.setPointSize(11)
+        self.label_3.setFont(font)
+        self.label_3.setObjectName("label_3")
+        self.horizontalLayout_5ww.addWidget(self.label_3)
+        self.create = QtWidgets.QPushButton("new project", self.widget_2)
+        font = QtGui.QFont()
+        font.setPointSize(11)
+        font.setBold(True)
+        self.create.setFont(font)
+        self.create.setFixedSize(95,22)
+        self.create.setStyleSheet("#create{\n"
+                                  "font-weight:bold;\n"
+                                  " color:rgb(144, 115, 87);\n"
+                                  "background-color: rgb(255, 255, 255);\n"
+                                  "border :3px solid rgb(255, 255, 255);\n"
+                                  " }\n"
+                                  "#create:hover{\n"
+                                  "background-color:rgb(255, 255, 255);\n"
+                                  "border-bottom :2px solid rgb(144, 115, 87);}\n"
+                                  "")
+        self.create.setObjectName("create")
+        self.create.clicked.connect(self.creating_new_project)
+        self.horizontalLayout_5ww.addWidget(self.create, 0, QtCore.Qt.AlignLeft)
+        self.verticalLayout_5w.addWidget(self.widget_2)
+        self.horizontalLayout_4.addWidget(self.widgetUpload)
+
+        self.widgetUpload_23 = QtWidgets.QWidget(self.widget_5)
+        self.widgetUpload_23.setStyleSheet("#widgetUpload{\n"
+                                           "background-color: rgb(255, 255, 255);\n"
+                                           "border-radius:28px;\n"
+                                           "}\n"
+                                           "        \n"
+                                           "")
+        self.widgetUpload_23.setObjectName("widgetUpload_2")
+        self.verticalLayout_63 = QtWidgets.QVBoxLayout(self.widgetUpload_23)
+        self.verticalLayout_63.setContentsMargins(30, 30, 30, 30)
+        self.verticalLayout_63.setSpacing(0)
+        self.verticalLayout_63.setObjectName("verticalLayout_6")
+
+        self.widget_75 = QtWidgets.QWidget(self.widgetUpload_23)
+        self.widget_75.setObjectName("widget_7")
+        self.horizontalLayout_65 = QtWidgets.QHBoxLayout(self.widget_75)
+        self.horizontalLayout_65.setObjectName("horizontalLayout_6")
+        self.label_25 = QtWidgets.QLabel(self.widget_75)
+        self.label_25.setMaximumSize(QtCore.QSize(50, 16777215))
+        self.label_25.setPixmap(QtGui.QPixmap("images/icons8-print-96.png"))
+        self.label_25.setScaledContents(True)
+        self.label_25.setWordWrap(True)
+        self.label_25.setObjectName("label_2")
+        self.horizontalLayout_65.addWidget(self.label_25)
+        self.verticalLayout_63.addWidget(self.widget_75)
+        self.print = QtWidgets.QPushButton("Print", self.widgetUpload_23)
+        self.print.setStyleSheet("#print{\n"
+                                 "height:40px;\n"
+                                 "font-weight:600;\n"
+                                 "font-size:18px;\n"
+                                 "color:rgb(144, 115, 87);\n"
+                                 "background-color: #ffffff;\n"
+                                 "border-top-left-radius :20px;\n"
+                                 "border-top-right-radius : 20px; \n"
+                                 "border-bottom-left-radius : 20px; \n"
+                                 "border-bottom-right-radius : 20px;\n"
+                                 "}\n"
+                                 "#print:hover{\n"
+                                 "color:#ffffff;\n"
+                                 "background-color: #603E1E;\n"
+                                 "}\n"
+                                 "")
+        self.print.setObjectName("print")
+        self.print.clicked.connect(self.ButtonCal_function)
+        self.verticalLayout_63.addWidget(self.print)
+        self.horizontalLayout_4.addWidget(self.widgetUpload_23)
+
         self.horizontalLayout_3.addWidget(self.widget_5)
         # new
 
         self.verticalLayout.addWidget(self.widget_4)
+
         self.horizontalLayout_2.addWidget(self.widget)
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
