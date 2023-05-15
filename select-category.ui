@@ -111,9 +111,93 @@ border-radius: 30px;
            </property>
            <layout class="QHBoxLayout" name="horizontalLayout_4">
             <item>
-             <widget class="QScrollArea" name="scrollArea">
+             <widget class="QScrollArea" name="scrollAreanew">
               <property name="styleSheet">
-               <string notr="true">
+               <string notr="true">QScrollBar:vertical
+    {
+        background-color: #c3c3c3;
+        width: 15px;
+        margin: 15px 3px 15px 3px;
+        border: 1px transparent #2A2929;
+        border-radius: 4px;
+    }
+
+    QScrollBar::handle:vertical
+    {
+        background-color: #8c8c8c;         /* #605F5F; */
+        min-height: 5px;
+        border-radius: 4px;
+    }
+
+    QScrollBar::sub-line:vertical
+    {
+        margin: 3px 0px 3px 0px;
+        border-image: url(:/images/up_arrow_disabled.png);        /* # &lt;-------- */
+        height: 10px;
+        width: 10px;
+        subcontrol-position: top;
+        subcontrol-origin: margin;
+    }
+
+    QScrollBar::add-line:vertical
+    {
+        margin: 3px 0px 3px 0px;
+        border-image: url(:/images/down_arrow_disabled.png);       /* # &lt;-------- */
+        height: 10px;
+        width: 10px;
+        subcontrol-position: bottom;
+        subcontrol-origin: margin;
+    }
+    QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical
+    {
+        background: none;
+    }
+
+    QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
+    {
+        background: none;
+    }</string>
+              </property>
+              <property name="widgetResizable">
+               <bool>true</bool>
+              </property>
+              <widget class="QWidget" name="scrollAreaWidgetContentsnew">
+               <property name="geometry">
+                <rect>
+                 <x>0</x>
+                 <y>0</y>
+                 <width>432</width>
+                 <height>432</height>
+                </rect>
+               </property>
+               <property name="styleSheet">
+                <string notr="true"/>
+               </property>
+               <layout class="QVBoxLayout" name="verticalLayout_4">
+                <property name="spacing">
+                 <number>0</number>
+                </property>
+                <item>
+                 <widget class="QScrollArea" name="scrollArea">
+                  <property name="styleSheet">
+                   <string notr="true">#scrollArea {
+background-color: #F4EBE6;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+QScrollArea viewport {
+    background-color: yellow; /* set the background color */
+}
+
+QScrollBar:vertical {
+    background-color: #c3c3c3;
+    width: 15px;
+    margin: 15px 3px 15px 3px;
+    border: 1px transparent #2A2929;
+    border-radius: 4px;
+}
 
 QScrollBar:vertical:hover {
     width: 20px;
@@ -153,873 +237,558 @@ QScrollBar::sub-page:vertical {
     background: none;
 }
 </string>
-              </property>
-              <property name="widgetResizable">
-               <bool>true</bool>
-              </property>
-              <widget class="QWidget" name="scrollAreaWidgetContents">
-               <property name="geometry">
-                <rect>
-                 <x>0</x>
-                 <y>0</y>
-                 <width>415</width>
-                 <height>488</height>
-                </rect>
-               </property>
-               <property name="styleSheet">
-                <string notr="true"/>
-               </property>
-               <layout class="QVBoxLayout" name="verticalLayout_4">
-                <property name="spacing">
-                 <number>0</number>
-                </property>
-                <item>
-                 <widget class="QWidget" name="widget_8" native="true">
-                  <layout class="QVBoxLayout" name="verticalLayout_5">
-                   <property name="spacing">
-                    <number>0</number>
+                  </property>
+                  <property name="widgetResizable">
+                   <bool>true</bool>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignCenter</set>
+                  </property>
+                  <widget class="QWidget" name="scrollAreaWidgetContents">
+                   <property name="geometry">
+                    <rect>
+                     <x>0</x>
+                     <y>0</y>
+                     <width>399</width>
+                     <height>1913</height>
+                    </rect>
                    </property>
-                   <property name="leftMargin">
-                    <number>0</number>
+                   <property name="minimumSize">
+                    <size>
+                     <width>50</width>
+                     <height>35</height>
+                    </size>
                    </property>
-                   <property name="rightMargin">
-                    <number>0</number>
-                   </property>
-                   <item>
-                    <widget class="QLabel" name="label_3">
-                     <property name="minimumSize">
-                      <size>
-                       <width>0</width>
-                       <height>40</height>
-                      </size>
-                     </property>
-                     <property name="maximumSize">
-                      <size>
-                       <width>16777215</width>
-                       <height>40</height>
-                      </size>
-                     </property>
-                     <property name="styleSheet">
-                      <string notr="true">#label_3{
-font-size: 18px;
-color: rgba(111, 75, 39, 0.77);
-font-weight: bold;}</string>
-                     </property>
-                     <property name="text">
-                      <string>  Projects</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item>
-                    <widget class="QWidget" name="projects_wdgt" native="true">
-                     <property name="minimumSize">
-                      <size>
-                       <width>0</width>
-                       <height>0</height>
-                      </size>
-                     </property>
-                     <property name="maximumSize">
-                      <size>
-                       <width>16777215</width>
-                       <height>16777215</height>
-                      </size>
-                     </property>
-                     <layout class="QVBoxLayout" name="verticalLayout_8">
-                      <item>
-                       <widget class="QWidget" name="project_chb_widget" native="true">
-                        <property name="minimumSize">
-                         <size>
-                          <width>0</width>
-                          <height>50</height>
-                         </size>
-                        </property>
-                        <property name="maximumSize">
-                         <size>
-                          <width>16777215</width>
-                          <height>50</height>
-                         </size>
-                        </property>
-                        <layout class="QHBoxLayout" name="horizontalLayout_12">
-                         <property name="spacing">
-                          <number>10</number>
-                         </property>
-                         <property name="leftMargin">
-                          <number>0</number>
-                         </property>
-                         <property name="topMargin">
-                          <number>0</number>
-                         </property>
-                         <property name="rightMargin">
-                          <number>0</number>
-                         </property>
-                         <property name="bottomMargin">
-                          <number>0</number>
-                         </property>
-                         <item>
-                          <widget class="QCheckBox" name="project_chb">
-                           <property name="minimumSize">
-                            <size>
-                             <width>0</width>
-                             <height>30</height>
-                            </size>
-                           </property>
-                           <property name="styleSheet">
-                            <string notr="true">#project_chb {border : 1px solid rgba(76,146,215,255);
-border-radius :15px;
-color:black;
-font-size:13px;
-}
-#project_chb::indicator{border : 2px solid rgba(76,146,215,255);
-width : 16px;
-height : 16px;
-border-radius :10px;
-margin-left:5px;}
-#project_chb::indicator:checked {
-background-color: rgba(76,146,215,255);
-}
-</string>
-                           </property>
-                           <property name="text">
-                            <string>CheckBox</string>
-                           </property>
-                           <property name="tristate">
-                            <bool>false</bool>
-                           </property>
-                          </widget>
-                         </item>
-                        </layout>
-                       </widget>
-                      </item>
-                     </layout>
-                    </widget>
-                   </item>
-                  </layout>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QWidget" name="folders_widget" native="true">
-                  <layout class="QVBoxLayout" name="verticalLayout_6">
-                   <property name="spacing">
-                    <number>0</number>
-                   </property>
-                   <property name="leftMargin">
-                    <number>0</number>
-                   </property>
-                   <property name="topMargin">
-                    <number>0</number>
-                   </property>
-                   <property name="rightMargin">
-                    <number>0</number>
-                   </property>
-                   <property name="bottomMargin">
-                    <number>0</number>
-                   </property>
-                   <item>
-                    <widget class="QWidget" name="widget_20" native="true">
-                     <property name="minimumSize">
-                      <size>
-                       <width>0</width>
-                       <height>40</height>
-                      </size>
-                     </property>
-                     <property name="maximumSize">
-                      <size>
-                       <width>16777215</width>
-                       <height>40</height>
-                      </size>
-                     </property>
-                     <layout class="QHBoxLayout" name="horizontalLayout_10">
-                      <property name="spacing">
-                       <number>5</number>
-                      </property>
-                      <property name="leftMargin">
-                       <number>0</number>
-                      </property>
-                      <property name="topMargin">
-                       <number>0</number>
-                      </property>
-                      <property name="rightMargin">
-                       <number>0</number>
-                      </property>
-                      <property name="bottomMargin">
-                       <number>0</number>
-                      </property>
-                      <item>
-                       <widget class="QLabel" name="label_4">
-                        <property name="minimumSize">
-                         <size>
-                          <width>0</width>
-                          <height>0</height>
-                         </size>
-                        </property>
-                        <property name="maximumSize">
-                         <size>
-                          <width>85</width>
-                          <height>16777215</height>
-                         </size>
-                        </property>
-                        <property name="styleSheet">
-                         <string notr="true">#label_4{
-font-size: 18px;
-color: rgba(111, 75, 39, 0.77);
-font-weight: bold;
-border-right:1px solid grey;
+                   <property name="styleSheet">
+                    <string notr="true">#scrollAreaWidgetContents{
+background-color: transparent;
+color: #4A3B28;
+min-height: 35px; min-width: 50px;;
+                    
 }</string>
-                        </property>
-                        <property name="text">
-                         <string> Folders</string>
-                        </property>
-                        <property name="scaledContents">
-                         <bool>true</bool>
-                        </property>
-                        <property name="wordWrap">
-                         <bool>true</bool>
-                        </property>
-                       </widget>
-                      </item>
-                      <item>
-                       <widget class="QPushButton" name="select_all_fold">
-                        <property name="maximumSize">
-                         <size>
-                          <width>50</width>
-                          <height>16777215</height>
-                         </size>
-                        </property>
-                        <property name="styleSheet">
-                         <string notr="true">#select_all_fold{color: rgba(76,146,215,255);}
-#select_all_fold::hover{border-bottom:1px solid  rgba(76,146,215,255);;}
-</string>
-                        </property>
-                        <property name="text">
-                         <string>Select All</string>
-                        </property>
-                        <property name="flat">
-                         <bool>true</bool>
-                        </property>
-                       </widget>
-                      </item>
-                      <item>
-                       <widget class="QLabel" name="label_11">
-                        <property name="minimumSize">
-                         <size>
-                          <width>10</width>
-                          <height>0</height>
-                         </size>
-                        </property>
-                        <property name="maximumSize">
-                         <size>
-                          <width>10</width>
-                          <height>16777215</height>
-                         </size>
-                        </property>
-                        <property name="font">
-                         <font>
-                          <pointsize>12</pointsize>
-                         </font>
-                        </property>
-                        <property name="styleSheet">
-                         <string notr="true">color: rgba(76,146,215,255);</string>
-                        </property>
-                        <property name="text">
-                         <string>∘</string>
-                        </property>
-                       </widget>
-                      </item>
-                      <item>
-                       <widget class="QPushButton" name="clear_all_fold">
-                        <property name="maximumSize">
-                         <size>
-                          <width>50</width>
-                          <height>16777215</height>
-                         </size>
-                        </property>
-                        <property name="styleSheet">
-                         <string notr="true">#clear_all_fold{color: rgba(76,146,215,255);}
-#clear_all_fold::hover{border-bottom:1px solid  rgba(76,146,215,255);;}
-</string>
-                        </property>
-                        <property name="text">
-                         <string>Clear all</string>
-                        </property>
-                        <property name="flat">
-                         <bool>true</bool>
-                        </property>
-                       </widget>
-                      </item>
-                      <item>
-                       <widget class="QWidget" name="widget_24" native="true">
-                        <layout class="QHBoxLayout" name="horizontalLayout_13">
-                         <property name="spacing">
-                          <number>20</number>
-                         </property>
-                        </layout>
-                       </widget>
-                      </item>
-                     </layout>
-                    </widget>
-                   </item>
-                   <item>
-                    <widget class="QWidget" name="widget_fo" native="true">
-                     <property name="minimumSize">
-                      <size>
-                       <width>0</width>
-                       <height>50</height>
-                      </size>
-                     </property>
-                     <property name="maximumSize">
-                      <size>
-                       <width>16777215</width>
-                       <height>16777215</height>
-                      </size>
-                     </property>
-                     <layout class="QVBoxLayout" name="verticalLayout_12">
-                      <item>
-                       <widget class="QWidget" name="folder_chb_widget" native="true">
-                        <property name="minimumSize">
-                         <size>
-                          <width>0</width>
-                          <height>50</height>
-                         </size>
-                        </property>
-                        <property name="maximumSize">
-                         <size>
-                          <width>16777215</width>
-                          <height>50</height>
-                         </size>
-                        </property>
-                        <layout class="QHBoxLayout" name="horizontalLayout_16">
-                         <property name="spacing">
-                          <number>10</number>
-                         </property>
-                         <property name="leftMargin">
-                          <number>0</number>
-                         </property>
-                         <property name="topMargin">
-                          <number>0</number>
-                         </property>
-                         <property name="rightMargin">
-                          <number>0</number>
-                         </property>
-                         <property name="bottomMargin">
-                          <number>0</number>
-                         </property>
-                         <item>
-                          <widget class="QCheckBox" name="folder_chb">
-                           <property name="minimumSize">
-                            <size>
-                             <width>0</width>
-                             <height>30</height>
-                            </size>
-                           </property>
-                           <property name="styleSheet">
-                            <string notr="true">#folder_chb {border : 1px solid rgba(76,146,215,255);
-border-radius :15px;
-color:black;
-font-size:13px;}
-#folder_chb::indicator{border : 2px solid rgba(76,146,215,255);
-width : 16px;
-height : 16px;
-border-radius :10px;
-margin-left:5px;}
-#folder_chb::indicator:checked {
-background-color: rgba(76,146,215,255);
-}
-</string>
-                           </property>
-                           <property name="text">
-                            <string>CheckBox</string>
-                           </property>
-                           <property name="tristate">
-                            <bool>false</bool>
-                           </property>
-                          </widget>
-                         </item>
-                        </layout>
-                       </widget>
-                      </item>
-                     </layout>
-                    </widget>
-                   </item>
-                  </layout>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QWidget" name="non_crack_widget" native="true">
-                  <layout class="QVBoxLayout" name="verticalLayout_7">
-                   <property name="spacing">
-                    <number>10</number>
                    </property>
-                   <property name="leftMargin">
-                    <number>0</number>
-                   </property>
-                   <property name="topMargin">
-                    <number>0</number>
-                   </property>
-                   <property name="rightMargin">
-                    <number>0</number>
-                   </property>
-                   <property name="bottomMargin">
-                    <number>0</number>
-                   </property>
-                   <item>
-                    <widget class="QWidget" name="widget_22" native="true">
-                     <property name="minimumSize">
-                      <size>
-                       <width>0</width>
-                       <height>40</height>
-                      </size>
-                     </property>
-                     <property name="maximumSize">
-                      <size>
-                       <width>16777215</width>
-                       <height>40</height>
-                      </size>
-                     </property>
-                     <layout class="QHBoxLayout" name="horizontalLayout_11">
-                      <property name="spacing">
-                       <number>5</number>
-                      </property>
-                      <property name="leftMargin">
-                       <number>0</number>
-                      </property>
-                      <property name="topMargin">
-                       <number>0</number>
-                      </property>
-                      <property name="rightMargin">
-                       <number>0</number>
-                      </property>
-                      <property name="bottomMargin">
-                       <number>0</number>
-                      </property>
-                      <item>
-                       <widget class="QLabel" name="label_5">
-                        <property name="minimumSize">
-                         <size>
-                          <width>0</width>
-                          <height>0</height>
-                         </size>
-                        </property>
-                        <property name="maximumSize">
-                         <size>
-                          <width>16777215</width>
-                          <height>16777215</height>
-                         </size>
-                        </property>
-                        <property name="styleSheet">
-                         <string notr="true">#label_5{
-font-size: 18px;
+                   <layout class="QVBoxLayout" name="verticalLayout_5">
+                    <property name="leftMargin">
+                     <number>15</number>
+                    </property>
+                    <property name="topMargin">
+                     <number>15</number>
+                    </property>
+                    <property name="rightMargin">
+                     <number>15</number>
+                    </property>
+                    <property name="bottomMargin">
+                     <number>15</number>
+                    </property>
+                    <item>
+                     <widget class="QWidget" name="widget_8" native="true">
+                      <layout class="QVBoxLayout" name="verticalLayout_6">
+                       <property name="spacing">
+                        <number>0</number>
+                       </property>
+                       <property name="leftMargin">
+                        <number>0</number>
+                       </property>
+                       <property name="rightMargin">
+                        <number>0</number>
+                       </property>
+                       <item>
+                        <widget class="QLabel" name="label_3">
+                         <property name="font">
+                          <font>
+                           <family>Segoe UI Black</family>
+                           <pointsize>17</pointsize>
+                           <italic>false</italic>
+                           <bold>false</bold>
+                          </font>
+                         </property>
+                         <property name="styleSheet">
+                          <string notr="true">#label_2{
+font: 150 17pt Segoe UI Black;
+alignment: center;
 color: rgba(111, 75, 39, 0.77);
-font-weight: bold;
-border-right:1px solid grey;
-}</string>
-                        </property>
-                        <property name="text">
-                         <string> Crack Inclusion / Exclusion</string>
-                        </property>
-                        <property name="scaledContents">
-                         <bool>true</bool>
-                        </property>
-                        <property name="wordWrap">
-                         <bool>true</bool>
-                        </property>
-                       </widget>
-                      </item>
-                      <item>
-                       <widget class="QPushButton" name="select_all">
-                        <property name="maximumSize">
-                         <size>
-                          <width>50</width>
-                          <height>16777215</height>
-                         </size>
-                        </property>
-                        <property name="styleSheet">
-                         <string notr="true">#select_all{color: rgba(76,146,215,255);}
-#select_all::hover{border-bottom:1px solid  rgba(76,146,215,255);;}
-</string>
-                        </property>
-                        <property name="text">
-                         <string>Select All</string>
-                        </property>
-                        <property name="flat">
-                         <bool>true</bool>
-                        </property>
-                       </widget>
-                      </item>
-                      <item>
-                       <widget class="QLabel" name="label_17">
-                        <property name="minimumSize">
-                         <size>
-                          <width>10</width>
-                          <height>0</height>
-                         </size>
-                        </property>
-                        <property name="maximumSize">
-                         <size>
-                          <width>10</width>
-                          <height>16777215</height>
-                         </size>
-                        </property>
-                        <property name="font">
-                         <font>
-                          <pointsize>12</pointsize>
-                         </font>
-                        </property>
-                        <property name="styleSheet">
-                         <string notr="true">color: rgba(76,146,215,255);</string>
-                        </property>
-                        <property name="text">
-                         <string>∘</string>
-                        </property>
-                       </widget>
-                      </item>
-                      <item>
-                       <widget class="QPushButton" name="clear_all">
-                        <property name="maximumSize">
-                         <size>
-                          <width>50</width>
-                          <height>16777215</height>
-                         </size>
-                        </property>
-                        <property name="styleSheet">
-                         <string notr="true">#clear_all{color: rgba(76,146,215,255);}
-#clear_all::hover{border-bottom:1px solid  rgba(76,146,215,255);;}
-</string>
-                        </property>
-                        <property name="text">
-                         <string>Clear all</string>
-                        </property>
-                        <property name="flat">
-                         <bool>true</bool>
-                        </property>
-                       </widget>
-                      </item>
-                     </layout>
-                    </widget>
-                   </item>
-                   <item>
-                    <widget class="QWidget" name="non_crack_2nd_widget" native="true">
-                     <property name="minimumSize">
-                      <size>
-                       <width>0</width>
-                       <height>40</height>
-                      </size>
-                     </property>
-                     <property name="maximumSize">
-                      <size>
-                       <width>16777215</width>
-                       <height>16777215</height>
-                      </size>
-                     </property>
-                     <layout class="QHBoxLayout" name="horizontalLayout_5">
-                      <item>
-                       <widget class="QWidget" name="non_crack_chb_widget" native="true">
-                        <property name="minimumSize">
-                         <size>
-                          <width>0</width>
-                          <height>50</height>
-                         </size>
-                        </property>
-                        <property name="maximumSize">
-                         <size>
-                          <width>16777215</width>
-                          <height>50</height>
-                         </size>
-                        </property>
-                        <layout class="QHBoxLayout" name="horizontalLayout_17">
-                         <property name="spacing">
-                          <number>10</number>
+                                 }</string>
                          </property>
-                         <property name="leftMargin">
-                          <number>0</number>
+                         <property name="text">
+                          <string>How To Use                     </string>
                          </property>
-                         <property name="topMargin">
-                          <number>0</number>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QLabel" name="label_6">
+                         <property name="styleSheet">
+                          <string notr="true">#label_6{
+font:  100 10pt &quot;Arial&quot;;
+letter-spacing: 1px;
+line-height: 3.5px;
+color: #4A3B28;}</string>
                          </property>
-                         <property name="rightMargin">
-                          <number>0</number>
+                         <property name="text">
+                          <string>&lt;b&gt;1.&lt;/b&gt; Upload a single image file that you want to analyze by clicking the &quot;Upload Image&quot; button on the main menu of the application.&lt;br&gt;&lt;br&gt;
+&lt;b&gt;2.&lt;/b&gt; Adjust the threshold of the uploaded image by dragging the slider to highlight the cracks in the image.&lt;br&gt;&lt;br&gt;
+&lt;b&gt;3.&lt;/b&gt; Input the distance between the camera and the subject when the image was taken.&lt;br&gt;&lt;br&gt;
+&lt;b&gt;4.&lt;/b&gt; Click the &quot;Denoise Image&quot; button to remove any unnecessary noise from the image.&lt;br&gt;&lt;br&gt;
+&lt;b&gt;5.&lt;/b&gt; Click the &quot;Measure the Crack&quot; button to analyze the image and detect the measurements of the crack.&lt;br&gt;&lt;br&gt;
+&lt;b&gt;6.&lt;/b&gt; The results page will display on the screen, indicating whether the image contains cracks or not. If there are cracks found, the measurements of the crack will also be displayed.&lt;br&gt;&lt;br&gt;
+&lt;b&gt;7.&lt;/b&gt; Click the &quot;Add Details&quot; button to provide additional information about the crack, including the Location of Crack, Crack Type, Crack Progression and Remarks which may contain any notes you want to include.&lt;br&gt;&lt;br&gt;
+&lt;b&gt;8.&lt;/b&gt; Choose where to save the results by clicking the &quot;Save&quot; button.&lt;br&gt;&lt;br&gt;
+&lt;b&gt;9.&lt;/b&gt; If desired, click the &quot;Print&quot; button to print or save a PDF copy of the results.&lt;br&gt;&lt;br&gt;
+&lt;b&gt;10.&lt;/b&gt; That's it! With these simple steps, you can quickly and easily use CRACKTERIZE to detect cracks on concrete surfaces.</string>
                          </property>
-                         <property name="bottomMargin">
-                          <number>0</number>
+                         <property name="scaledContents">
+                          <bool>false</bool>
                          </property>
-                         <item>
-                          <widget class="QCheckBox" name="non_crack_chb">
-                           <property name="minimumSize">
-                            <size>
-                             <width>0</width>
-                             <height>30</height>
-                            </size>
-                           </property>
-                           <property name="styleSheet">
-                            <string notr="true">#non_crack_chb {border : 1px solid rgba(76,146,215,255);
-border-radius :15px;
-color:black;
-font-size:13px;}
-#non_crack_chb::indicator{border : 2px solid rgba(76,146,215,255);
-width : 16px;
-height : 16px;
-border-radius :10px;
-margin-left:5px;}
-#non_crack_chb::indicator:checked {
-background-color: rgba(76,146,215,255);
-}
-</string>
-                           </property>
-                           <property name="text">
-                            <string>CheckBox</string>
-                           </property>
-                           <property name="tristate">
-                            <bool>false</bool>
-                           </property>
-                          </widget>
-                         </item>
-                        </layout>
-                       </widget>
-                      </item>
-                     </layout>
-                    </widget>
-                   </item>
-                  </layout>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QWidget" name="crack_loc_widget" native="true">
-                  <layout class="QVBoxLayout" name="verticalLayout_9">
-                   <property name="spacing">
-                    <number>10</number>
-                   </property>
-                   <property name="leftMargin">
-                    <number>0</number>
-                   </property>
-                   <property name="topMargin">
-                    <number>0</number>
-                   </property>
-                   <property name="rightMargin">
-                    <number>0</number>
-                   </property>
-                   <property name="bottomMargin">
-                    <number>0</number>
-                   </property>
-                   <item>
-                    <widget class="QWidget" name="widget_23" native="true">
-                     <property name="minimumSize">
-                      <size>
-                       <width>0</width>
-                       <height>40</height>
-                      </size>
-                     </property>
-                     <property name="maximumSize">
-                      <size>
-                       <width>16777215</width>
-                       <height>40</height>
-                      </size>
-                     </property>
-                     <layout class="QHBoxLayout" name="horizontalLayout_18">
-                      <property name="spacing">
-                       <number>5</number>
-                      </property>
-                      <property name="leftMargin">
-                       <number>0</number>
-                      </property>
-                      <property name="topMargin">
-                       <number>0</number>
-                      </property>
-                      <property name="rightMargin">
-                       <number>0</number>
-                      </property>
-                      <property name="bottomMargin">
-                       <number>0</number>
-                      </property>
-                      <item>
-                       <widget class="QLabel" name="label_6">
-                        <property name="minimumSize">
-                         <size>
-                          <width>0</width>
-                          <height>0</height>
-                         </size>
-                        </property>
-                        <property name="maximumSize">
-                         <size>
-                          <width>16777215</width>
-                          <height>16777215</height>
-                         </size>
-                        </property>
-                        <property name="styleSheet">
-                         <string notr="true">#label_6{
-font-size: 18px;
+                         <property name="alignment">
+                          <set>Qt::AlignJustify|Qt::AlignVCenter</set>
+                         </property>
+                         <property name="wordWrap">
+                          <bool>true</bool>
+                         </property>
+                         <property name="margin">
+                          <number>25</number>
+                         </property>
+                         <property name="indent">
+                          <number>-1</number>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QWidget" name="widget_9" native="true">
+                      <layout class="QVBoxLayout" name="verticalLayout_7">
+                       <property name="spacing">
+                        <number>0</number>
+                       </property>
+                       <property name="leftMargin">
+                        <number>0</number>
+                       </property>
+                       <property name="topMargin">
+                        <number>0</number>
+                       </property>
+                       <property name="rightMargin">
+                        <number>0</number>
+                       </property>
+                       <item>
+                        <widget class="QLabel" name="label_4">
+                         <property name="styleSheet">
+                          <string notr="true">#label_3{
+font: 150 17pt Segoe UI Black;
+alignment: center;
 color: rgba(111, 75, 39, 0.77);
-font-weight: bold;
-border-right:1px solid grey;
-}</string>
-                        </property>
-                        <property name="text">
-                         <string> Crack Location</string>
-                        </property>
-                        <property name="scaledContents">
-                         <bool>true</bool>
-                        </property>
-                        <property name="wordWrap">
-                         <bool>true</bool>
-                        </property>
-                       </widget>
-                      </item>
-                      <item>
-                       <widget class="QPushButton" name="select_all_loc">
-                        <property name="maximumSize">
-                         <size>
-                          <width>50</width>
-                          <height>16777215</height>
-                         </size>
-                        </property>
-                        <property name="styleSheet">
-                         <string notr="true">#select_all_loc{color: rgba(76,146,215,255);}
-#select_all_loc::hover{border-bottom:1px solid  rgba(76,146,215,255);;}
-</string>
-                        </property>
-                        <property name="text">
-                         <string>Select All</string>
-                        </property>
-                        <property name="flat">
-                         <bool>true</bool>
-                        </property>
-                       </widget>
-                      </item>
-                      <item>
-                       <widget class="QLabel" name="label_20">
-                        <property name="minimumSize">
-                         <size>
-                          <width>10</width>
-                          <height>0</height>
-                         </size>
-                        </property>
-                        <property name="maximumSize">
-                         <size>
-                          <width>10</width>
-                          <height>16777215</height>
-                         </size>
-                        </property>
-                        <property name="font">
-                         <font>
-                          <pointsize>12</pointsize>
-                         </font>
-                        </property>
-                        <property name="styleSheet">
-                         <string notr="true">color: rgba(76,146,215,255);</string>
-                        </property>
-                        <property name="text">
-                         <string>∘</string>
-                        </property>
-                       </widget>
-                      </item>
-                      <item>
-                       <widget class="QPushButton" name="clear_all_loc">
-                        <property name="maximumSize">
-                         <size>
-                          <width>50</width>
-                          <height>16777215</height>
-                         </size>
-                        </property>
-                        <property name="styleSheet">
-                         <string notr="true">#clear_all_loc{color: rgba(76,146,215,255);}
-#clear_all_loc::hover{border-bottom:1px solid  rgba(76,146,215,255);;}
-</string>
-                        </property>
-                        <property name="text">
-                         <string>Clear all</string>
-                        </property>
-                        <property name="flat">
-                         <bool>true</bool>
-                        </property>
-                       </widget>
-                      </item>
-                      <item>
-                       <widget class="QWidget" name="widget_12" native="true"/>
-                      </item>
-                     </layout>
-                    </widget>
-                   </item>
-                   <item>
-                    <widget class="QWidget" name="crack_loc_2nd_widget" native="true">
-                     <property name="minimumSize">
-                      <size>
-                       <width>0</width>
-                       <height>40</height>
-                      </size>
-                     </property>
-                     <property name="maximumSize">
-                      <size>
-                       <width>16777215</width>
-                       <height>16777215</height>
-                      </size>
-                     </property>
-                     <layout class="QHBoxLayout" name="horizontalLayout_6">
-                      <item>
-                       <widget class="QWidget" name="crack_loc_chb_widget" native="true">
-                        <property name="minimumSize">
-                         <size>
-                          <width>0</width>
-                          <height>50</height>
-                         </size>
-                        </property>
-                        <property name="maximumSize">
-                         <size>
-                          <width>16777215</width>
-                          <height>50</height>
-                         </size>
-                        </property>
-                        <layout class="QHBoxLayout" name="horizontalLayout_19">
-                         <property name="spacing">
-                          <number>10</number>
+                                 }</string>
                          </property>
-                         <property name="leftMargin">
-                          <number>0</number>
+                         <property name="text">
+                          <string>Creating New Projects &amp; Folders</string>
                          </property>
-                         <property name="topMargin">
-                          <number>0</number>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QLabel" name="label_5">
+                         <property name="styleSheet">
+                          <string notr="true">#label_4{
+font:  100 10pt &quot;Arial&quot;;
+letter-spacing: 1px;
+line-height: 3.5px;
+color: #4A3B28;}</string>
                          </property>
-                         <property name="rightMargin">
-                          <number>0</number>
+                         <property name="text">
+                          <string>&lt;b&gt;1.&lt;/b&gt; Click the &quot;Create Project&quot; button displayed on the main menu of the application.&lt;br&gt;&lt;br&gt;
+&lt;b&gt;2.&lt;/b&gt; Name your project based on the location where the images that will be saved inside it were taken for a more effective file management.&lt;br&gt;&lt;br&gt;
+&lt;b&gt;3.&lt;/b&gt; Inside your project, create folders to organize your files. You can name your folders based on your preferences. You can also create new folders within your 4, project anytime you want by selecting the &quot;New Folder&quot; button within the project.&lt;br&gt;&lt;br&gt;
+&lt;b&gt;4.&lt;/b&gt; You can upload an image into the folders you've created and it will automatically be processed and proceed to the application’s main function upon uploading or you can go back to the main menu and use the “Upload Image” button as it will give you the option to choose where to save the results. You can select an existing folder within your project, or create a new folder on the spot to save the results in it.&lt;br&gt;&lt;br&gt;
+&lt;b&gt;5.&lt;/b&gt; After using the main function, the app You can also create new folders within your project anytime you want by selecting the &quot;Create New Folder&quot; button within the project.&lt;br&gt;&lt;br&gt;
+&lt;b&gt;6.&lt;/b&gt; To access your projects and folders later, simply navigate to the main menu and select the project you want to view.&lt;br&gt;&lt;br&gt;
+&lt;b&gt;7.&lt;/b&gt; Enjoy using the app's project feature to keep your files organized and easily accessible!</string>
                          </property>
-                         <property name="bottomMargin">
-                          <number>0</number>
+                         <property name="alignment">
+                          <set>Qt::AlignJustify|Qt::AlignVCenter</set>
                          </property>
-                         <item>
-                          <widget class="QCheckBox" name="crack_loc_chb">
-                           <property name="minimumSize">
-                            <size>
-                             <width>0</width>
-                             <height>30</height>
-                            </size>
-                           </property>
-                           <property name="styleSheet">
-                            <string notr="true">#crack_loc_chb {border : 1px solid rgba(76,146,215,255);
-border-radius :15px;
-color:black;
-font-size:13px;}
-#crack_loc_chb::indicator{border : 2px solid rgba(76,146,215,255);
-width : 16px;
-height : 16px;
-border-radius :10px;
-margin-left:5px;}
-#crack_loc_chb::indicator:checked {
-background-color: rgba(76,146,215,255);
-}
-</string>
-                           </property>
-                           <property name="text">
-                            <string>CheckBox</string>
-                           </property>
-                           <property name="tristate">
-                            <bool>false</bool>
-                           </property>
-                          </widget>
-                         </item>
-                        </layout>
-                       </widget>
-                      </item>
-                     </layout>
-                    </widget>
-                   </item>
-                  </layout>
+                         <property name="wordWrap">
+                          <bool>true</bool>
+                         </property>
+                         <property name="margin">
+                          <number>25</number>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QWidget" name="widget_10" native="true">
+                      <layout class="QVBoxLayout" name="verticalLayout_8">
+                       <property name="spacing">
+                        <number>0</number>
+                       </property>
+                       <property name="leftMargin">
+                        <number>0</number>
+                       </property>
+                       <property name="topMargin">
+                        <number>0</number>
+                       </property>
+                       <property name="rightMargin">
+                        <number>0</number>
+                       </property>
+                       <item>
+                        <widget class="QLabel" name="label_7">
+                         <property name="styleSheet">
+                          <string notr="true">#label_7{
+font: 150 17pt Segoe UI Black;
+alignment: center;
+color: rgba(111, 75, 39, 0.77);
+                                 }</string>
+                         </property>
+                         <property name="text">
+                          <string>Calculator</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QLabel" name="label_8">
+                         <property name="font">
+                          <font>
+                           <family>Arial</family>
+                           <pointsize>10</pointsize>
+                           <italic>false</italic>
+                           <bold>false</bold>
+                           <underline>false</underline>
+                           <strikeout>false</strikeout>
+                           <stylestrategy>PreferAntialias</stylestrategy>
+                           <kerning>true</kerning>
+                          </font>
+                         </property>
+                         <property name="styleSheet">
+                          <string notr="true">#label_5{
+font:  100 10pt &quot;Arial&quot;;
+letter-spacing: 1px;
+line-height: 3.5px;
+color: #4A3B28;}</string>
+                         </property>
+                         <property name="text">
+                          <string>The calculator button in the main menu of the app provides access to different types of engineering-related calculators, such as Scientific Calculator, Stairs Calculator, Curb and Gutter Barrier Calculator, and others. These calculators can be used to perform quick calculations related to various engineering tasks and projects, without the need for a separate calculator app or tool.</string>
+                         </property>
+                         <property name="alignment">
+                          <set>Qt::AlignJustify|Qt::AlignVCenter</set>
+                         </property>
+                         <property name="wordWrap">
+                          <bool>true</bool>
+                         </property>
+                         <property name="margin">
+                          <number>25</number>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QWidget" name="widget_11" native="true">
+                      <layout class="QVBoxLayout" name="verticalLayout_9">
+                       <property name="leftMargin">
+                        <number>0</number>
+                       </property>
+                       <property name="topMargin">
+                        <number>0</number>
+                       </property>
+                       <property name="rightMargin">
+                        <number>0</number>
+                       </property>
+                       <property name="bottomMargin">
+                        <number>0</number>
+                       </property>
+                       <item>
+                        <widget class="QWidget" name="widget_12" native="true">
+                         <layout class="QVBoxLayout" name="verticalLayout_10">
+                          <property name="leftMargin">
+                           <number>0</number>
+                          </property>
+                          <property name="topMargin">
+                           <number>0</number>
+                          </property>
+                          <property name="rightMargin">
+                           <number>0</number>
+                          </property>
+                          <item>
+                           <widget class="QLabel" name="label_9">
+                            <property name="styleSheet">
+                             <string notr="true">#label_8{
+font: 150 17pt Segoe UI Black;
+alignment: center;
+color: rgba(111, 75, 39, 0.77);
+                                 }</string>
+                            </property>
+                            <property name="text">
+                             <string>Developers</string>
+                            </property>
+                           </widget>
+                          </item>
+                         </layout>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QWidget" name="widget_13" native="true">
+                         <property name="minimumSize">
+                          <size>
+                           <width>200</width>
+                           <height>0</height>
+                          </size>
+                         </property>
+                         <layout class="QHBoxLayout" name="horizontalLayout_5">
+                          <property name="leftMargin">
+                           <number>25</number>
+                          </property>
+                          <item>
+                           <widget class="QLabel" name="label_11">
+                            <property name="minimumSize">
+                             <size>
+                              <width>70</width>
+                              <height>70</height>
+                             </size>
+                            </property>
+                            <property name="maximumSize">
+                             <size>
+                              <width>70</width>
+                              <height>70</height>
+                             </size>
+                            </property>
+                            <property name="text">
+                             <string/>
+                            </property>
+                            <property name="pixmap">
+                             <pixmap>:/images/Ilagan.png</pixmap>
+                            </property>
+                            <property name="scaledContents">
+                             <bool>true</bool>
+                            </property>
+                           </widget>
+                          </item>
+                          <item>
+                           <widget class="QLabel" name="label_10">
+                            <property name="styleSheet">
+                             <string notr="true">#label_9{
+font: 150 14pt Segoe UI Black;
+alignment: center;
+color: rgba(111, 75, 39, 0.77);
+                                 }</string>
+                            </property>
+                            <property name="text">
+                             <string>Ilagan, Jayvee P.</string>
+                            </property>
+                            <property name="indent">
+                             <number>10</number>
+                            </property>
+                           </widget>
+                          </item>
+                         </layout>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QWidget" name="widget_14" native="true">
+                         <layout class="QHBoxLayout" name="horizontalLayout_6">
+                          <property name="leftMargin">
+                           <number>25</number>
+                          </property>
+                          <item>
+                           <widget class="QLabel" name="label_12">
+                            <property name="maximumSize">
+                             <size>
+                              <width>70</width>
+                              <height>70</height>
+                             </size>
+                            </property>
+                            <property name="text">
+                             <string/>
+                            </property>
+                            <property name="pixmap">
+                             <pixmap>:/newPrefix/Maiquez.png</pixmap>
+                            </property>
+                            <property name="scaledContents">
+                             <bool>true</bool>
+                            </property>
+                           </widget>
+                          </item>
+                          <item>
+                           <widget class="QLabel" name="label_13">
+                            <property name="styleSheet">
+                             <string notr="true">#label_10{
+font: 150 14pt Segoe UI Black;
+alignment: center;
+color: rgba(111, 75, 39, 0.77);
+                                 }</string>
+                            </property>
+                            <property name="text">
+                             <string>Maiquez, John Carlo M.</string>
+                            </property>
+                            <property name="indent">
+                             <number>10</number>
+                            </property>
+                           </widget>
+                          </item>
+                         </layout>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QWidget" name="widget_15" native="true">
+                         <layout class="QHBoxLayout" name="horizontalLayout_7">
+                          <property name="leftMargin">
+                           <number>25</number>
+                          </property>
+                          <item>
+                           <widget class="QLabel" name="label_14">
+                            <property name="minimumSize">
+                             <size>
+                              <width>70</width>
+                              <height>70</height>
+                             </size>
+                            </property>
+                            <property name="maximumSize">
+                             <size>
+                              <width>70</width>
+                              <height>70</height>
+                             </size>
+                            </property>
+                            <property name="text">
+                             <string/>
+                            </property>
+                            <property name="pixmap">
+                             <pixmap>:/images/Narvaez.png</pixmap>
+                            </property>
+                            <property name="scaledContents">
+                             <bool>true</bool>
+                            </property>
+                           </widget>
+                          </item>
+                          <item>
+                           <widget class="QLabel" name="label_15">
+                            <property name="styleSheet">
+                             <string notr="true">#label_14{
+font: 150 14pt Segoe UI Black;
+alignment: center;
+color: rgba(111, 75, 39, 0.77);
+                                 }</string>
+                            </property>
+                            <property name="text">
+                             <string>Narvaez, Allyza Mae A.</string>
+                            </property>
+                            <property name="indent">
+                             <number>10</number>
+                            </property>
+                           </widget>
+                          </item>
+                         </layout>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QWidget" name="widget_16" native="true">
+                         <property name="styleSheet">
+                          <string notr="true"/>
+                         </property>
+                         <layout class="QHBoxLayout" name="horizontalLayout_8">
+                          <property name="leftMargin">
+                           <number>25</number>
+                          </property>
+                          <item>
+                           <widget class="QLabel" name="label_16">
+                            <property name="minimumSize">
+                             <size>
+                              <width>70</width>
+                              <height>70</height>
+                             </size>
+                            </property>
+                            <property name="maximumSize">
+                             <size>
+                              <width>70</width>
+                              <height>70</height>
+                             </size>
+                            </property>
+                            <property name="styleSheet">
+                             <string notr="true">#label_15{border-bottom-radius:7px;}</string>
+                            </property>
+                            <property name="text">
+                             <string/>
+                            </property>
+                            <property name="pixmap">
+                             <pixmap>../../Downloads/Nora.png</pixmap>
+                            </property>
+                            <property name="scaledContents">
+                             <bool>true</bool>
+                            </property>
+                            <property name="wordWrap">
+                             <bool>true</bool>
+                            </property>
+                           </widget>
+                          </item>
+                          <item>
+                           <widget class="QLabel" name="label_17">
+                            <property name="styleSheet">
+                             <string notr="true">#label_16{
+font: 150 14pt Segoe UI Black;
+alignment: center;
+color: rgba(111, 75, 39, 0.77);
+                                 }</string>
+                            </property>
+                            <property name="text">
+                             <string>Nora, John Patrick B.</string>
+                            </property>
+                            <property name="indent">
+                             <number>10</number>
+                            </property>
+                           </widget>
+                          </item>
+                         </layout>
+                        </widget>
+                       </item>
+                      </layout>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QWidget" name="widget_17" native="true">
+                      <layout class="QHBoxLayout" name="horizontalLayout_9">
+                       <property name="topMargin">
+                        <number>0</number>
+                       </property>
+                       <property name="bottomMargin">
+                        <number>0</number>
+                       </property>
+                       <item>
+                        <widget class="QToolButton" name="toolButton">
+                         <property name="minimumSize">
+                          <size>
+                           <width>30</width>
+                           <height>30</height>
+                          </size>
+                         </property>
+                         <property name="styleSheet">
+                          <string notr="true">color:rgba(111, 75, 39, 0.77);</string>
+                         </property>
+                         <property name="text">
+                          <string>Press Esc to exit.</string>
+                         </property>
+                         <property name="icon">
+                          <iconset resource="images/images.qrc">
+                           <normaloff>:/images/asddas.png</normaloff>:/images/asddas.png</iconset>
+                         </property>
+                         <property name="iconSize">
+                          <size>
+                           <width>40</width>
+                           <height>40</height>
+                          </size>
+                         </property>
+                         <property name="toolButtonStyle">
+                          <enum>Qt::ToolButtonTextUnderIcon</enum>
+                         </property>
+                         <property name="autoRaise">
+                          <bool>true</bool>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
+                     </widget>
+                    </item>
+                   </layout>
+                  </widget>
                  </widget>
                 </item>
                </layout>
@@ -1068,7 +837,7 @@ background-color: rgba(76,146,215,255);
                <string/>
               </property>
               <property name="pixmap">
-               <pixmap>images/icons8-print-96.png</pixmap>
+               <pixmap>../../.designer/backup/images/icons8-print-96.png</pixmap>
               </property>
               <property name="alignment">
                <set>Qt::AlignBottom|Qt::AlignHCenter</set>

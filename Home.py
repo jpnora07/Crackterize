@@ -735,7 +735,7 @@ class Ui_MainWindow(object):
                                  "}\n"
                                  "")
         self.print.setObjectName("print")
-        self.print.clicked.connect(self.ButtonCal_function)
+        self.print.clicked.connect(self.print_filtering)
         self.verticalLayout_63.addWidget(self.print)
         self.horizontalLayout_4.addWidget(self.widgetUpload_23)
 
@@ -762,6 +762,18 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
+    def print_filtering(self):
+        try:
+            self.background_widget.show()
+            folder_dialog = QtWidgets.QDialog(self.Mainwindow)
+            ui = result_with_details(self.background_widget, self.history)
+            ui.setupUi(folder_dialog)
+            x = (self.Mainwindow.width() - folder_dialog.width()) // 2
+            y = (self.Mainwindow.height() - folder_dialog.height()) // 2
+            folder_dialog.move(x, y)
+            folder_dialog.exec_()
+        except Exception as e:
+            print(e)
     def how_and_help(self):
         try:
             Dialog = QDialog()
