@@ -668,6 +668,8 @@ class Ui_MainWindow(object):
         font = QtGui.QFont()
         font.setPointSize(11)
         self.label_3.setFont(font)
+        self.label_3.setMinimumSize(QtCore.QSize(112, 22))
+        self.label_3.setMaximumSize(QtCore.QSize(112, 22))
         self.label_3.setObjectName("label_3")
         self.horizontalLayout_5ww.addWidget(self.label_3)
         self.create = QtWidgets.QPushButton("new project", self.widget_2)
