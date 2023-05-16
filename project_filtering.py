@@ -17,14 +17,17 @@ from PyQt5.QtPrintSupport import QPrinter, QPrintPreviewDialog
 from PyQt5.QtWidgets import QCheckBox, QDialog
 
 
-class Ui_Dialog(object):
-    def __init__(self):
+class filter_print(object):
+    def __init__(self, background_widget):
         super().__init__()
+        self.background_widget = background_widget
         self.checkbox_list = []
 
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
-        Dialog.resize(718, 618)
+        Dialog.resize(850, 618)
+        Dialog.setWindowFlags(Qt.FramelessWindowHint)
+        Dialog.setStyleSheet("background-color:#FDF3e9;")
         self.horizontalLayout = QtWidgets.QHBoxLayout(Dialog)
         self.horizontalLayout.setObjectName("horizontalLayout")
         self.widget = QtWidgets.QWidget(Dialog)
@@ -50,10 +53,26 @@ class Ui_Dialog(object):
         self.label.setAlignment(QtCore.Qt.AlignCenter)
         self.label.setObjectName("label")
         self.horizontalLayout_2.addWidget(self.label)
+        self.widgetex = QtWidgets.QWidget(self.widget_3)
+        self.horizontalLayout_2.addWidget(self.widgetex)
+        self.exit_2 = QtWidgets.QPushButton(self.widget_3)
+        self.exit_2.setMinimumSize(QtCore.QSize(30, 30))
+        self.exit_2.setMaximumSize(QtCore.QSize(30, 30))
+        self.exit_2.setStyleSheet("border:none;")
+        self.exit_2.clicked.connect(Dialog.close)
+        self.exit_2.clicked.connect(self.background_widget.hide)
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap("images/exit.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.exit_2.setIcon(icon)
+        self.exit_2.setAutoDefault(True)
+        self.exit_2.setDefault(True)
+        self.exit_2.setFlat(True)
+        self.exit_2.setObjectName("exit_2")
+        self.horizontalLayout_2.addWidget(self.exit_2)
         self.verticalLayout.addWidget(self.widget_3)
         self.widget_2 = QtWidgets.QWidget(self.widget)
-        self.widget_2.setMinimumSize(QtCore.QSize(0, 450))
-        self.widget_2.setMaximumSize(QtCore.QSize(16777215, 450))
+        self.widget_2.setMinimumSize(QtCore.QSize(750, 450))
+        self.widget_2.setMaximumSize(QtCore.QSize(750, 450))
         self.widget_2.setStyleSheet("background-color: rgba(76,146,215,255);\n"
                                     "border-radius: 30px;")
         self.widget_2.setObjectName("widget_2")
@@ -958,7 +977,7 @@ if __name__ == "__main__":
 
     app = QtWidgets.QApplication(sys.argv)
     Dialog = QtWidgets.QDialog()
-    ui = Ui_Dialog()
+    ui = filter_print()
     ui.setupUi(Dialog)
     Dialog.show()
     sys.exit(app.exec_())

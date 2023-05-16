@@ -85,7 +85,7 @@ font-weight:600;
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="lineEdit">
+          <widget class="QLineEdit" name="rename_proj_LE">
            <property name="minimumSize">
             <size>
              <width>185</width>
@@ -115,7 +115,7 @@ border:1px solid grey;</string>
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton_2">
+          <widget class="QPushButton" name="save_proj">
            <property name="minimumSize">
             <size>
              <width>130</width>
@@ -129,14 +129,14 @@ border:1px solid grey;</string>
             </font>
            </property>
            <property name="styleSheet">
-            <string notr="true">#pushButton_2{
+            <string notr="true">#save_proj{
 background-color:
 #4a93d6;
 border-radius:10px;
 font-weight:600;
 color:white;
 }
-#pushButton_2::hover{
+#save_proj::hover{
 background-color:
 white;
 border:2px solid #4a93d6;
@@ -242,7 +242,7 @@ height: 15px;
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="lineEdit_2">
+          <widget class="QLineEdit" name="rename_fold_LE">
            <property name="minimumSize">
             <size>
              <width>185</width>
@@ -251,7 +251,7 @@ height: 15px;
            </property>
            <property name="maximumSize">
             <size>
-             <width>12</width>
+             <width>185</width>
              <height>16777215</height>
             </size>
            </property>
@@ -272,7 +272,7 @@ border:1px solid grey;</string>
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton_3">
+          <widget class="QPushButton" name="save_fold">
            <property name="minimumSize">
             <size>
              <width>130</width>
@@ -292,14 +292,14 @@ border:1px solid grey;</string>
             </font>
            </property>
            <property name="styleSheet">
-            <string notr="true">#pushButton_3{
+            <string notr="true">#save_fold{
 background-color:
 #4a93d6;
 border-radius:10px;
 font-weight:600;
 color:white;
 }
-#pushButton_3::hover{
+#save_fold::hover{
 background-color:
 white;
 border:2px solid #4a93d6;
@@ -353,6 +353,12 @@ color:#ff8889;
              <height>40</height>
             </size>
            </property>
+           <property name="maximumSize">
+            <size>
+             <width>185</width>
+             <height>16777215</height>
+            </size>
+           </property>
            <property name="styleSheet">
             <string notr="true">#del_folder_cb{border-radius:10px;
 font-weight:600;
@@ -368,7 +374,7 @@ height: 15px;
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton_4">
+          <widget class="QPushButton" name="del_fold">
            <property name="minimumSize">
             <size>
              <width>130</width>
@@ -382,14 +388,14 @@ height: 15px;
             </font>
            </property>
            <property name="styleSheet">
-            <string notr="true">#pushButton_4{
+            <string notr="true">#del_fold{
 background-color:
 #FF7B7B;
 border-radius:10px;
 font-weight:600;
 color:white;
 }
-#pushButton_4::hover{
+#del_fold::hover{
 background-color:
 white;
 border:2px solid #FF7B7B;
@@ -411,7 +417,7 @@ color:#FF7B7B;
           <widget class="QWidget" name="widget_10" native="true"/>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton_6">
+          <widget class="QPushButton" name="del_proj">
            <property name="minimumSize">
             <size>
              <width>185</width>
@@ -425,14 +431,14 @@ color:#FF7B7B;
             </size>
            </property>
            <property name="styleSheet">
-            <string notr="true">#pushButton_6{
+            <string notr="true">#del_proj{
 background-color:
 #FF7B7B;
 border-radius:10px;
 font-weight:600;
 color:white;
 }
-#pushButton_6::hover{
+#del_proj::hover{
 background-color:
 white;
 border:2px solid #FF7B7B;
@@ -440,12 +446,12 @@ color:#FF7B7B;
 }</string>
            </property>
            <property name="text">
-            <string>Delete current folder</string>
+            <string>Delete current project</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton_5">
+          <widget class="QPushButton" name="back">
            <property name="minimumSize">
             <size>
              <width>100</width>
@@ -459,14 +465,14 @@ color:#FF7B7B;
             </size>
            </property>
            <property name="styleSheet">
-            <string notr="true">#pushButton_5{
+            <string notr="true">#back{
 background-color:
 #6A6D72;
 border-radius:10px;
 font-weight:600;
 color:white;
 }
-#pushButton_5::hover{
+#back::hover{
 background-color:
 white;
 border:2px solid #6A6D72;

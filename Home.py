@@ -10,6 +10,7 @@ from PyQt5.QtWidgets import QListView, QComboBox, QDialog, QFileDialog, QStyledI
 
 from Detect_Crack import Detect_Crack_Dialog
 from calculatorButtons import cal_dialog
+from project_filtering import filter_print
 from view_result_with_details import result_with_details
 from view_folders import view_folder_dialog
 
@@ -39,14 +40,14 @@ class Ui_MainWindow(object):
         # Set the logo using an QIcon object
         logo = QIcon('images/main_icon.png')
         MainWindow.setWindowIcon(logo)
-        MainWindow.setWindowModality(QtCore.Qt.NonModal)#
+        MainWindow.setWindowModality(QtCore.Qt.NonModal)  #
         MainWindow.setEnabled(True)
-        #MainWindow.setFixedSize(1000, 700)
-        #screen_resolution = QDesktopWidget().screenGeometry()
-        #width, height = screen_resolution.width(), screen_resolution.height()
+        # MainWindow.setFixedSize(1000, 700)
+        # screen_resolution = QDesktopWidget().screenGeometry()
+        # width, height = screen_resolution.width(), screen_resolution.height()
         # MainWindow.resize(1000, 700)
-        #MainWindow.setMinimumSize(QtCore.QSize(width, height))
-        #MainWindow.setMaximumSize(QtCore.QSize(width, height))
+        # MainWindow.setMinimumSize(QtCore.QSize(width, height))
+        # MainWindow.setMaximumSize(QtCore.QSize(width, height))
         screen_resolution = QtWidgets.QApplication.desktop().screenGeometry()
         width, height = screen_resolution.width(), screen_resolution.height()
         MainWindow.resize(width, height)
@@ -112,8 +113,8 @@ class Ui_MainWindow(object):
         self.projects_icon.setMaximumSize(QtCore.QSize(30, 30))
         self.projects_icon.setGeometry(70, 15, 40, 70)
         self.projects_icon.setStyleSheet("\n"
-                                    "background: transparent;")
-        #howto_icon = QtGui.QIcon()
+                                         "background: transparent;")
+        # howto_icon = QtGui.QIcon()
         # howto_icon.addPixmap(QtGui.QPixmap("images/howtouse_icon.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         myprojects_icon = QPixmap("images/foler.png")
         scaled_pixmap = myprojects_icon.scaled(18, 18)
@@ -138,7 +139,6 @@ class Ui_MainWindow(object):
             print("Empty Projects! Users not yet add projects: ", e)
         self.myProjects.setEditText("My Projects")
 
-
         def handleSelection(text):
             # change back to default title after item is selected
 
@@ -146,6 +146,7 @@ class Ui_MainWindow(object):
             with open('selected_project.txt', 'w') as f:
                 f.write(text)
             try:
+                self.background_widget.setStyleSheet("background-color: rgba(0, 0, 0, 0.25);")
                 self.background_widget.show()
                 folder_dialog = QtWidgets.QDialog(self.Mainwindow)
                 ui = view_folder_dialog(self.background_widget, self.history, self.myProjects, self.Mainwindow)
@@ -220,7 +221,6 @@ class Ui_MainWindow(object):
     }
             """
         )
-
 
         scroll_bar = QScrollBar()
         view.setVerticalScrollBar(scroll_bar)
@@ -303,8 +303,8 @@ class Ui_MainWindow(object):
         self.history_icon.setMaximumSize(QtCore.QSize(30, 30))
         self.history_icon.setGeometry(300, 15, 40, 70)
         self.history_icon.setStyleSheet("\n"
-                                         "background: transparent;")
-        #history_icon = QtGui.QIcon()
+                                        "background: transparent;")
+        # history_icon = QtGui.QIcon()
         # howto_icon.addPixmap(QtGui.QPixmap("images/howtouse_icon.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         history_icon = QPixmap("images/history_icon.png")
         scaled_pixmap = history_icon.scaled(22, 22)
@@ -342,6 +342,7 @@ class Ui_MainWindow(object):
             with open('image_id.txt', 'w') as f:
                 f.write(id)
             try:
+                self.background_widget.setStyleSheet("background-color: rgba(0, 0, 0, 0.25);")
                 self.background_widget.show()
                 folder_dialog = QtWidgets.QDialog(self.Mainwindow)
                 ui = result_with_details(self.background_widget, self.history)
@@ -524,7 +525,6 @@ class Ui_MainWindow(object):
         self.how_btn.clicked.connect(self.how_and_help)
         self.horizontalLayout11.addWidget(self.how_btn)
 
-
         self.horizontalLayout.addWidget(self.how_widget)
 
         self.verticalLayout_3.addWidget(self.threeBtn)
@@ -675,7 +675,7 @@ class Ui_MainWindow(object):
         font.setPointSize(11)
         font.setBold(True)
         self.create.setFont(font)
-        self.create.setFixedSize(95,22)
+        self.create.setFixedSize(95, 22)
         self.create.setStyleSheet("#create{\n"
                                   "font-weight:bold;\n"
                                   " color:rgb(144, 115, 87);\n"
@@ -763,17 +763,19 @@ class Ui_MainWindow(object):
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def print_filtering(self):
+        self.background_widget.setStyleSheet("background-color: #FDF3e9;")
+        self.background_widget.show()
         try:
-            self.background_widget.show()
-            folder_dialog = QtWidgets.QDialog(self.Mainwindow)
-            ui = result_with_details(self.background_widget, self.history)
-            ui.setupUi(folder_dialog)
-            x = (self.Mainwindow.width() - folder_dialog.width()) // 2
-            y = (self.Mainwindow.height() - folder_dialog.height()) // 2
-            folder_dialog.move(x, y)
-            folder_dialog.exec_()
+            filter_print_dialog = QtWidgets.QDialog(self.Mainwindow)
+            ui = filter_print(self.background_widget)
+            ui.setupUi(filter_print_dialog)
+            x = (self.Mainwindow.width() - filter_print_dialog.width()) // 2
+            y = (self.Mainwindow.height() - filter_print_dialog.height()) // 2
+            filter_print_dialog.move(x, y)
+            filter_print_dialog.exec_()
         except Exception as e:
             print(e)
+
     def how_and_help(self):
         try:
             Dialog = QDialog()
@@ -879,16 +881,17 @@ class Ui_MainWindow(object):
             self.label_2.setObjectName("label_2")
             self.verticalLayout_5.addWidget(self.label_2)
             self.label_6 = QtWidgets.QLabel(self.widget_4)
-            self.label_6.setText("<b>1.</b> Upload a single image file that you want to analyze by clicking the \"Upload Image\" button on the main menu of the application.<br><br>\n"
-                                        "<b>2.</b> Adjust the threshold of the uploaded image by dragging the slider to highlight the cracks in the image.<br><br>\n"
-                                        "<b>3.</b> Input the distance between the camera and the subject when the image was taken.<br><br>\n"
-                                        "<b>4.</b> Click the \"Denoise Image\" button to remove any unnecessary noise from the image.<br><br>\n"
-                                        "<b>5.</b> Click the \"Measure the Crack\" button to analyze the image and detect the measurements of the crack.<br><br>\n"
-                                        "<b>6.</b> The results page will display on the screen, indicating whether the image contains cracks or not. If there are cracks found, the measurements of the crack will also be displayed.<br><br>\n"
-                                        "<b>7.</b> Click the \"Add Details\" button to provide additional information about the crack, including the Location of Crack, Crack Type, Crack Progression and Remarks which may contain any notes you want to include.<br><br>\n"
-                                        "<b>8.</b> Choose where to save the results by clicking the \"Save\" button.<br><br>\n"
-                                        "<b>9.</b> If desired, click the \"Print\" button to print or save a PDF copy of the results.<br><br>\n"
-                                        "<b>10.</b> That\'s it! With these simple steps, you can quickly and easily use CRACKTERIZE to detect cracks on concrete surfaces.")
+            self.label_6.setText(
+                "<b>1.</b> Upload a single image file that you want to analyze by clicking the \"Upload Image\" button on the main menu of the application.<br><br>\n"
+                "<b>2.</b> Adjust the threshold of the uploaded image by dragging the slider to highlight the cracks in the image.<br><br>\n"
+                "<b>3.</b> Input the distance between the camera and the subject when the image was taken.<br><br>\n"
+                "<b>4.</b> Click the \"Denoise Image\" button to remove any unnecessary noise from the image.<br><br>\n"
+                "<b>5.</b> Click the \"Measure the Crack\" button to analyze the image and detect the measurements of the crack.<br><br>\n"
+                "<b>6.</b> The results page will display on the screen, indicating whether the image contains cracks or not. If there are cracks found, the measurements of the crack will also be displayed.<br><br>\n"
+                "<b>7.</b> Click the \"Add Details\" button to provide additional information about the crack, including the Location of Crack, Crack Type, Crack Progression and Remarks which may contain any notes you want to include.<br><br>\n"
+                "<b>8.</b> Choose where to save the results by clicking the \"Save\" button.<br><br>\n"
+                "<b>9.</b> If desired, click the \"Print\" button to print or save a PDF copy of the results.<br><br>\n"
+                "<b>10.</b> That\'s it! With these simple steps, you can quickly and easily use CRACKTERIZE to detect cracks on concrete surfaces.")
             self.label_6.setStyleSheet("#label_6{\n"
                                        "font:  100 10pt \"Arial\";\n"
                                        "letter-spacing: 1px;\n"
@@ -1104,15 +1107,16 @@ class Ui_MainWindow(object):
             self.label_2.setText("How To Use                     ")
             self.label_3.setText("Creating New Projects & Folders")
             self.label_4.setText(
-                                            "<b>1.</b> Click the \"Create Project\" button displayed on the main menu of the application.<br><br>\n"
-                                            "<b>2.</b> Name your project based on the location where the images that will be saved inside it were taken for a more effective file management.<br><br>\n"
-                                            "<b>3.</b> Inside your project, create folders to organize your files. You can name your folders based on your preferences. You can also create new folders within your 4, project anytime you want by selecting the \"New Folder\" button within the project.<br><br>\n"
-                                            "<b>4.</b> You can upload an image into the folders you\'ve created and it will automatically be processed and proceed to the application’s main function upon uploading or you can go back to the main menu and use the “Upload Image” button as it will give you the option to choose where to save the results. You can select an existing folder within your project, or create a new folder on the spot to save the results in it.<br><br>\n"
-                                            "<b>5.</b> After using the main function, the app You can also create new folders within your project anytime you want by selecting the \"Create New Folder\" button within the project.<br><br>\n"
-                                            "<b>6.</b> To access your projects and folders later, simply navigate to the main menu and select the project you want to view.<br><br>\n"
-                                            "<b>7.</b> Enjoy using the app\'s project feature to keep your files organized and easily accessible!")
+                "<b>1.</b> Click the \"Create Project\" button displayed on the main menu of the application.<br><br>\n"
+                "<b>2.</b> Name your project based on the location where the images that will be saved inside it were taken for a more effective file management.<br><br>\n"
+                "<b>3.</b> Inside your project, create folders to organize your files. You can name your folders based on your preferences. You can also create new folders within your 4, project anytime you want by selecting the \"New Folder\" button within the project.<br><br>\n"
+                "<b>4.</b> You can upload an image into the folders you\'ve created and it will automatically be processed and proceed to the application’s main function upon uploading or you can go back to the main menu and use the “Upload Image” button as it will give you the option to choose where to save the results. You can select an existing folder within your project, or create a new folder on the spot to save the results in it.<br><br>\n"
+                "<b>5.</b> After using the main function, the app You can also create new folders within your project anytime you want by selecting the \"Create New Folder\" button within the project.<br><br>\n"
+                "<b>6.</b> To access your projects and folders later, simply navigate to the main menu and select the project you want to view.<br><br>\n"
+                "<b>7.</b> Enjoy using the app\'s project feature to keep your files organized and easily accessible!")
             self.label_7.setText("Calculator")
-            self.label_5.setText("The calculator button in the main menu of the app provides access to different types of engineering-related calculators, such as Curb and Gutter Barrier Calculator, Square Concrete Calculator, Hole/Round Footings Calculator and Circular Slab or Tube Calculator. These calculators can be used to perform quick calculations related to various engineering tasks and projects, without the need for a separate calculator app or tool.")
+            self.label_5.setText(
+                "The calculator button in the main menu of the app provides access to different types of engineering-related calculators, such as Curb and Gutter Barrier Calculator, Square Concrete Calculator, Hole/Round Footings Calculator and Circular Slab or Tube Calculator. These calculators can be used to perform quick calculations related to various engineering tasks and projects, without the need for a separate calculator app or tool.")
             self.label_8.setText("Developers")
             self.label_9.setText("Ilagan, Jayvee P.")
             self.label_10.setText("Maiquez, John Carlo M.")
@@ -1124,7 +1128,6 @@ class Ui_MainWindow(object):
 
     def close_how(self):
         self.background_widget.hide()
-        print("hahaha")
 
     def upload_image(self):
 
@@ -1136,9 +1139,11 @@ class Ui_MainWindow(object):
                 # Save the image to a temporary file
                 temp_file_path = 'temp_image_original.jpg'
                 cv2.imwrite(temp_file_path, image)
+                self.background_widget.setStyleSheet("background-color: rgba(0, 0, 0, 0.25);")
                 self.background_widget.show()
                 segment_dialog = QtWidgets.QDialog(self.Mainwindow)
-                ui = Detect_Crack_Dialog(image_path, self.background_widget, self.history, self.myProjects, self.Mainwindow)
+                ui = Detect_Crack_Dialog(image_path, self.background_widget, self.history, self.myProjects,
+                                         self.Mainwindow)
                 ui.setupUi(segment_dialog)
                 x = (self.Mainwindow.width() - segment_dialog.width()) // 2
                 y = (self.Mainwindow.height() - segment_dialog.height()) // 2
@@ -1345,6 +1350,7 @@ class Ui_MainWindow(object):
 
     def handleClicked(self):
         print("Combobox clicked")
+
     # Dialog Box for successfully saved project
     def show_dialog_success_save(self):
 
@@ -1571,6 +1577,8 @@ class Ui_MainWindow(object):
 
     def ButtonCal_function(self):
         try:
+
+            self.background_widget.setStyleSheet("background-color: rgba(0, 0, 0, 0.25);")
             self.background_widget.show()
             calculatorButtons = QtWidgets.QDialog(self.Mainwindow)
             ui = cal_dialog(self.background_widget)
@@ -1642,7 +1650,8 @@ class Ui_MainWindow(object):
                       "Predicted_Class_name.txt", "Predicted_height.txt", "Predicted_Score.txt", "Predicted_width.txt",
                       "Remarks_written.txt", "Selected_location_crack.txt", "Selected_progression_crack.txt",
                       "Selected_type_crack.txt", "threshold_image.jpg", "image_id.txt", "screenshot.png",
-                      "temp_image_original.jpg", "temp_image_result.jpg", "selected_folder_vrFile.txt", "image_id.txt", "selected_project.txt"]
+                      "temp_image_original.jpg", "temp_image_result.jpg", "selected_folder_vrFile.txt", "image_id.txt",
+                      "selected_project.txt"]
 
         try:
             for file_name in file_names:

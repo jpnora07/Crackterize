@@ -8,6 +8,7 @@ from PyQt5.QtPrintSupport import QPrintPreviewDialog, QPrinter
 from PyQt5.QtWidgets import QPushButton, QHBoxLayout, QVBoxLayout, QScrollArea, QWidget, QDialog, \
     QTableWidgetItem
 
+from manage_folder import mng_folder
 from view_results import view_result_dialog
 
 
@@ -110,7 +111,7 @@ class view_folder_dialog(object):
         icon.addPixmap(QtGui.QPixmap("images/Settings.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.Settings.setIcon(icon)
         self.Settings.setIconSize(QtCore.QSize(20, 20))
-        self.Settings.clicked.connect(self.settings)
+        self.Settings.clicked.connect(self.manage_folders)
         self.Settings.setObjectName("Settings")
         self.horizontalLayout_2.addWidget(self.Settings)
 
@@ -236,6 +237,7 @@ class view_folder_dialog(object):
         self.horizontalLayout_3.setObjectName("horizontalLayout_3")
 
         self.print = QtWidgets.QPushButton("Edit Folders", self.frame)
+        self.print.hide()
         self.print.setStyleSheet("#print{\n"
                                  "height:40px;\n"
                                  "font-weight:bold;\n"
@@ -422,6 +424,18 @@ class view_folder_dialog(object):
         self.verticalLayout.addWidget(self.widget_4)
         self.horizontalLayout_2.addWidget(self.widget_1)
         AddLocationDialog.exec()
+
+    def manage_folders(self):
+        try:
+            mngfolders = QtWidgets.QDialog(self.view_folder_dialog_orig)
+            ui = mng_folder()
+            ui.setupUi(mngfolders)
+            mngfolders.center()
+            mngfolders.show()
+            mngfolders.exec_()
+
+        except Exception as e:
+            print(e)
 
     def addNewButton_to_Db(self):
         # Get the text from the QTextEdit widget
