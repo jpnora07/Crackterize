@@ -6,7 +6,7 @@ from PyQt5.QtCore import QSize, Qt, QTimer, QSizeF
 from PyQt5.QtGui import QPainter, QTextImageFormat, QTextCursor, QTextDocument
 from PyQt5.QtPrintSupport import QPrintPreviewDialog, QPrinter
 from PyQt5.QtWidgets import QPushButton, QHBoxLayout, QVBoxLayout, QScrollArea, QWidget, QDialog, \
-    QTableWidgetItem
+    QTableWidgetItem, QFrame
 
 from manage_folder import mng_folder
 from view_results import view_result_dialog
@@ -70,6 +70,7 @@ class view_folder_dialog(object):
         self.addfolder_icon = QtWidgets.QPushButton("Add Folder", self.widget)
         self.addfolder_icon.setStyleSheet("#addfolder_icon{\n"
                                           "padding:5px;\n"
+                                          "padding-left:15px;"
                                           "background-color:#E3E9ED;"
                                           "color:#664323;\n"
                                           "font: 700 9pt \"Big Sky Regular\";\n"
@@ -284,6 +285,12 @@ class view_folder_dialog(object):
         self.horizontalLayout_3.addWidget(self.back)
         self.horizontalLayout_2.addWidget(self.frame)
         self.verticalLayout.addWidget(self.widget_2)
+
+        self.background_widget_folder = QFrame(view_folder_dialog)
+        self.background_widget_folder.setStyleSheet("background-color: rgba(0, 0, 0, 0.25);")
+        self.background_widget_folder.resize(view_folder_dialog.width(), view_folder_dialog.height())
+        self.background_widget_folder.hide()
+
         QtCore.QMetaObject.connectSlotsByName(view_folder_dialog)
 
         # Calling a function that fetch the folders of project
@@ -427,10 +434,14 @@ class view_folder_dialog(object):
 
     def manage_folders(self):
         try:
+            self.background_widget_folder.show()
             mngfolders = QtWidgets.QDialog(self.view_folder_dialog_orig)
-            ui = mng_folder()
+            x = (self.view_folder_dialog_orig.width() - self.view_folder_dialog_orig.width()) // 2
+            y = (self.view_folder_dialog_orig.height() - self.view_folder_dialog_orig.height()) // 2
+            ui = mng_folder(self.background_widget_folder)
+
             ui.setupUi(mngfolders)
-            mngfolders.center()
+            mngfolders.move(x, y)
             mngfolders.show()
             mngfolders.exec_()
 

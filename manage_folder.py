@@ -3,26 +3,42 @@ import sqlite3
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QDialog
+from PyQt5.QtWidgets import QDialog, QStyledItemDelegate, QListView
 
 class mng_folder(object):
+    def __init__(self, background_widget):
+        self.bg_widget = background_widget
     def setupUi(self, Dialog):
         self.Manage_Folder_Dialog = Dialog
         Dialog.setObjectName("Dialog")
         Dialog.setWindowFlags(Qt.FramelessWindowHint)
-        Dialog.setFixedSize(566, 415)
-        Dialog.setStyleSheet("background-color:white;")
+        Dialog.setFixedSize(700, 600)
+        Dialog.setAttribute(Qt.WA_TranslucentBackground)
         self.horizontalLayout = QtWidgets.QHBoxLayout(Dialog)
         self.horizontalLayout.setObjectName("horizontalLayout")
         self.widget = QtWidgets.QWidget(Dialog)
         self.widget.setObjectName("widget")
+        radius = 20
+        self.widget.setStyleSheet("""
+                            background-color:white;
+                            border-top-left-radius:{0}px;
+                            border-bottom-left-radius:{0}px;
+                            border-top-right-radius:{0}px;
+                            border-bottom-right-radius:{0}px;
+                            """.format(radius))
+        self.widget.setMinimumSize(QtCore.QSize(0, 0))
+        self.widget.setMaximumSize(QtCore.QSize(548, 397))
         self.verticalLayout = QtWidgets.QVBoxLayout(self.widget)
         self.verticalLayout.setObjectName("verticalLayout")
         self.widget_7 = QtWidgets.QWidget(self.widget)
         self.widget_7.setObjectName("widget_7")
+        self.widget_7.setMinimumSize(QtCore.QSize(0, 0))
+        self.widget_7.setMaximumSize(QtCore.QSize(8899, 58))
         self.horizontalLayout_2 = QtWidgets.QHBoxLayout(self.widget_7)
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
-        self.label = QtWidgets.QLabel("<html><head/><body><p align=\"center\">Choose an action for this project:</p></body></html>", self.widget_7)
+        self.label = QtWidgets.QLabel(
+            "<html><head/><body><p align=\"center\">Choose an action for this project:</p></body></html>",
+            self.widget_7)
         self.label.setStyleSheet("#label{\n"
                                  "height:40px;\n"
                                  "font-weight:600;\n"
@@ -38,7 +54,9 @@ class mng_folder(object):
         self.widget_2.setObjectName("widget_2")
         self.horizontalLayout_3 = QtWidgets.QHBoxLayout(self.widget_2)
         self.horizontalLayout_3.setObjectName("horizontalLayout_3")
-        self.label_2 = QtWidgets.QLabel("<html><head/><body><p align=\"center\"><span style=\" color:#3d3d3e;\">Rename current project</span></p></body></html>", self.widget_2)
+        self.label_2 = QtWidgets.QLabel(
+            "<html><head/><body><p align=\"center\"><span style=\" color:#3d3d3e;\">Rename current project</span></p></body></html>",
+            self.widget_2)
         self.label_2.setMinimumSize(QtCore.QSize(185, 0))
         self.label_2.setMaximumSize(QtCore.QSize(8899, 40))
         font = QtGui.QFont()
@@ -48,7 +66,8 @@ class mng_folder(object):
         self.label_2.setStyleSheet("#label_2{\n"
                                    "background-color:#e4e9ed;\n"
                                    "border-radius:10px;\n"
-                                   "font-weight:600;\n"
+                                   "font-size:12px;"
+                                   "font-weight:400;\n"
                                    "}")
         self.label_2.setScaledContents(True)
         self.label_2.setWordWrap(True)
@@ -57,13 +76,21 @@ class mng_folder(object):
         self.rename_proj_LE = QtWidgets.QLineEdit(self.widget_2)
         self.rename_proj_LE.setMinimumSize(QtCore.QSize(185, 40))
         self.rename_proj_LE.setMaximumSize(QtCore.QSize(32, 16777215))
+
+        self.rename_proj_LE.setAlignment(Qt.AlignCenter)
         font = QtGui.QFont()
         font.setPointSize(10)
         font.setBold(True)
         self.rename_proj_LE.setFont(font)
-        self.rename_proj_LE.setStyleSheet("border-radius:10px;\n"
-                                          "font-weight:600;\n"
-                                          "border:1px solid grey;")
+        self.rename_proj_LE.setStyleSheet(
+            "     border-radius: 10px;\n"
+            "        font-size: 12px;\n"
+            "        font-family: Arial;\n"
+            "font-weight:400;"
+            "        color:rgb(144, 115, 87);"
+            "        background-color: #fff;\n"
+            "        border: 2px solid #aaa;\n"
+            "        padding: 2px;\n")
         self.rename_proj_LE.setObjectName("rename_proj_LE")
         with open('selected_project.txt', 'r') as f:
             self.project_name = f.read()
@@ -79,7 +106,8 @@ class mng_folder(object):
                                      "background-color:\n"
                                      "#4a93d6;\n"
                                      "border-radius:10px;\n"
-                                     "font-weight:600;\n"
+                                     "font-size:12px;"
+                                     "font-weight:400;\n"
                                      "color:white;\n"
                                      "}\n"
                                      "#save_proj::hover{\n"
@@ -97,7 +125,9 @@ class mng_folder(object):
         self.horizontalLayout_4 = QtWidgets.QHBoxLayout(self.widget_5)
         self.horizontalLayout_4.setSpacing(4)
         self.horizontalLayout_4.setObjectName("horizontalLayout_4")
-        self.label_3 = QtWidgets.QLabel("<html><head/><body><p align=\"center\"><span style=\" color:#3d3d3e;\">Rename Folders</span></p></body></html>", self.widget_5)
+        self.label_3 = QtWidgets.QLabel(
+            "<html><head/><body><p align=\"center\"><span style=\" color:#3d3d3e;\">Rename Folders</span></p></body></html>",
+            self.widget_5)
         self.label_3.setMinimumSize(QtCore.QSize(185, 0))
         self.label_3.setMaximumSize(QtCore.QSize(8899, 40))
         font = QtGui.QFont()
@@ -109,23 +139,66 @@ class mng_folder(object):
                                    "background-color:\n"
                                    "#e4e9ed;\n"
                                    "border-radius:10px;\n"
-                                   "font-weight:600;\n"
+                                   "font-size:12px;"
+                                   "font-weight:400;\n"
                                    "}")
         self.label_3.setObjectName("label_3")
         self.horizontalLayout_4.addWidget(self.label_3)
         self.foldername_cb = QtWidgets.QComboBox(self.widget_5)
         self.foldername_cb.setMinimumSize(QtCore.QSize(185, 40))
-        self.foldername_cb.setMaximumSize(QtCore.QSize(32, 16777215))
-        self.foldername_cb.setStyleSheet("#foldername_cb{border-radius:10px;\n"
-                                         "font-weight:600;\n"
-                                         "border:1px solid grey;}\n"
+        self.foldername_cb.setMaximumSize(QtCore.QSize(185, 16777215))
+        self.foldername_cb.setStyleSheet("#foldername_cb {\n"
+                                         "        border-radius: 10px;\n"
+                                         "font-size:12px;"
+                                         "font-weight:400;\n"
+                                         "        font-family: Arial;\n"
+                                         "        color:rgb(144, 115, 87);"
+                                         "        border: 2px solid #aaa;\n"
+                                         "        padding: 2px;\n"
+                                         "padding-left:20px;\n"
+                                         "    }\n"
                                          "\n"
                                          "#foldername_cb::drop-down{\n"
-                                         "image:url(images/arrowdown.png);\n"
+                                         " image:url(images/arrowdown.png);\n"
                                          "margin:10px;\n"
                                          "width: 15px;\n"
                                          "height: 15px;\n"
-                                         "}")
+                                         "}\n"
+                                         "#foldername_cb::drop-down::pressed{\n"
+                                         " image:url(images/arrowup.png);\n"
+                                         "margin:10px;\n"
+                                         "width: 15px;\n"
+                                         "height: 15px;\n"
+                                         "text-align: center;\n"
+                                         "}\n"
+                                         "#foldername_cb QAbstractItemView {\n"
+                                         "background-color: rgb(228,233,237);\n"
+                                         "margin-top:5px;"
+                                         "outline: none;\n"
+                                         "color:rgb(144, 115, 87);"
+                                         "border-radius: 5px;\n"
+                                         " text-align: center;}\n"
+
+                                         "\n"
+                                         "#foldername_cb QAbstractItemView::item {\n"
+                                         " color: #4A3B28;\n"
+                                         "color:rgb(144, 115, 87);"
+                                         " text-align: center;\n"
+                                         "min-height: 10px; min-width: 10px;\n"
+                                         " border:0px;}\n"
+                                         "\n"
+                                         "#foldername_cb QListView{\n"
+                                         "border: none;\n"
+                                         " font-weight:bold;\n"
+                                         "color:rgb(144, 115, 87);"
+                                         " text-align: center;}\n"
+                                         "#foldername_cb QListView::item{border:0px;\n"
+                                         "border-radius: 5px;\n"
+                                         "  padding:8px; \n"
+                                         "margin:5px;}\n"
+                                         "#foldername_cb QListView::item:selected { \n"
+                                         "color: white; \n"
+                                         "background-color: #4A3B28}")
         self.foldername_cb.setObjectName("foldername_cb")
         dir_path = os.path.join(os.environ['APPDATA'], 'Crackterize')
         if not os.path.exists(dir_path):
@@ -135,8 +208,17 @@ class mng_folder(object):
         self.c = self.conn.cursor()
         self.c.execute("SELECT folder_name FROM Location_Folder WHERE project_name = ?", (self.project_name,))
         rows = self.c.fetchall()
+
+        delegate = QStyledItemDelegate(self.foldername_cb)
+        self.foldername_cb.setItemDelegate(delegate)
+        self.foldername_cb.setEditable(True)
+        self.foldername_cb.lineEdit().setReadOnly(True)
+        self.foldername_cb.lineEdit().setAlignment(Qt.AlignCenter)
+
+        self.foldername_cb.setEditText("My Projects")
         for row in rows:
             self.foldername_cb.addItem(row[0])
+
         self.foldername_cb.activated.connect(self.show_widget)
         self.horizontalLayout_4.addWidget(self.foldername_cb)
         self.foldername_cb_btn = QtWidgets.QPushButton(self.widget_2)
@@ -145,18 +227,19 @@ class mng_folder(object):
         self.foldername_cb_btn.setMinimumSize(QtCore.QSize(185, 40))
         self.foldername_cb_btn.setMaximumSize(QtCore.QSize(185, 16777215))
         self.foldername_cb_btn.setStyleSheet("#foldername_cb_btn{\n"
-                                     "background-color:\n"
-                                     "rgb(144, 115, 87);\n"
-                                     "border-radius:10px;\n"
-                                     "font-weight:600;\n"
-                                     "color:white;\n"
-                                     "}\n"
-                                     "#foldername_cb_btn::hover{\n"
-                                     "background-color:\n"
-                                     "white;\n"
-                                     "border:2px solid rgb(144, 115, 87);\n"
-                                     "color:rgb(144, 115, 87);\n"
-                                     "}")
+                                             "background-color:\n"
+                                             "rgb(144, 115, 87);\n"
+                                             "font-size:12px;"
+                                             "border-radius:10px;\n"
+                                             "font-weight:400;\n"
+                                             "color:white;\n"
+                                             "}\n"
+                                             "#foldername_cb_btn::hover{\n"
+                                             "background-color:\n"
+                                             "white;\n"
+                                             "border:2px solid rgb(144, 115, 87);\n"
+                                             "color:rgb(144, 115, 87);\n"
+                                             "}")
         self.horizontalLayout_4.addWidget(self.foldername_cb_btn)
 
         self.widget_8 = QtWidgets.QWidget(self.widget_5)
@@ -181,10 +264,17 @@ class mng_folder(object):
         font.setPointSize(10)
         font.setBold(True)
         self.rename_fold_LE.setFont(font)
-        self.rename_fold_LE.setStyleSheet("border-radius:10px;\n"
-                                          "font-weight:600;\n"
-                                          "border:1px solid grey;")
+        self.rename_fold_LE.setStyleSheet("        border-radius: 10px;\n"
+                                          "        font-size: 12px;\n"
+                                          "        font-family: Arial;\n"
+
+                                          "font-weight:400;"
+                                          "        color:rgb(144, 115, 87);"
+                                          "        background-color: #fff;\n"
+                                          "        border: 2px solid #aaa;\n"
+                                          "        padding: 2px;\n")
         self.rename_fold_LE.setObjectName("rename_fold_LE")
+        self.rename_fold_LE.setAlignment(Qt.AlignCenter)
         self.horizontalLayout_5.addWidget(self.rename_fold_LE)
         self.save_fold = QtWidgets.QPushButton("Save Changes", self.widget_6)
         self.save_fold.setMinimumSize(QtCore.QSize(130, 40))
@@ -198,7 +288,8 @@ class mng_folder(object):
                                      "background-color:\n"
                                      "#4a93d6;\n"
                                      "border-radius:10px;\n"
-                                     "font-weight:600;\n"
+                                     "font-size:12px;"
+                                     "font-weight:400;\n"
                                      "color:white;\n"
                                      "}\n"
                                      "#save_fold::hover{\n"
@@ -214,7 +305,8 @@ class mng_folder(object):
         self.widget_3.setObjectName("widget_3")
         self.horizontalLayout_6 = QtWidgets.QHBoxLayout(self.widget_3)
         self.horizontalLayout_6.setObjectName("horizontalLayout_6")
-        self.label_4 = QtWidgets.QLabel("<html><head/><body><p align=\"center\">Delete Folder</p></body></html>", self.widget_3)
+        self.label_4 = QtWidgets.QLabel("<html><head/><body><p align=\"center\">Delete Folder</p></body></html>",
+                                        self.widget_3)
         self.label_4.setFixedSize(QtCore.QSize(185, 40))
         font = QtGui.QFont()
         font.setPointSize(10)
@@ -224,7 +316,8 @@ class mng_folder(object):
                                    "background-color:#fff3f3;\n"
                                    "border: 1px solid #ff8889;\n"
                                    "border-radius:10px;\n"
-                                   "font-weight:600;\n"
+                                   "font-size:12px;"
+                                   "font-weight:400;\n"
                                    "color:#ff8889;\n"
                                    "}")
         self.label_4.setObjectName("label_4")
@@ -232,17 +325,64 @@ class mng_folder(object):
         self.del_folder_cb = QtWidgets.QComboBox(self.widget_3)
         self.del_folder_cb.setMinimumSize(QtCore.QSize(185, 40))
         self.del_folder_cb.setMaximumSize(QtCore.QSize(185, 16777215))
-        self.del_folder_cb.setStyleSheet("#del_folder_cb{border-radius:10px;\n"
-                                         "font-weight:600;\n"
-                                         "border:1px solid grey;}\n"
+        self.del_folder_cb.setStyleSheet("#del_folder_cb {\n"
+                                         "        border-radius: 10px;\n"
+                                         "font-size:12px;"
+                                         "font-weight:400;\n"
+                                         "        font-family: Arial;\n"
+                                         "        color:rgb(144, 115, 87);"
+                                         "        border: 2px solid #aaa;\n"
+                                         "        padding: 2px;\n"
+                                         "padding-left:20px;\n"
+                                         "    }\n"
                                          "\n"
                                          "#del_folder_cb::drop-down{\n"
-                                         "image:url(images/arrowdown.png);\n"
+                                         " image:url(images/arrowdown.png);\n"
                                          "margin:10px;\n"
                                          "width: 15px;\n"
                                          "height: 15px;\n"
-                                         "}")
+                                         "}\n"
+                                         "#del_folder_cb::drop-down::pressed{\n"
+                                         " image:url(images/arrowup.png);\n"
+                                         "margin:10px;\n"
+                                         "width: 15px;\n"
+                                         "height: 15px;\n"
+                                         "text-align: center;\n"
+                                         "}\n"
+                                         "#del_folder_cb QAbstractItemView {\n"
+                                         "background-color: rgb(228,233,237);\n"
+                                         "margin-top:5px;"
+                                         "outline: none;\n"
+                                         "color:rgb(144, 115, 87);"
+                                         "border-radius: 5px;\n"
+                                         " text-align: center;}\n"
+                                         
+                                         "\n"
+                                         "#del_folder_cb QAbstractItemView::item {\n"
+                                         " color: #4A3B28;\n"
+                                         "color:rgb(144, 115, 87);"
+                                         " text-align: center;\n"
+                                         "min-height: 10px; min-width: 10px;\n"
+                                         " border:0px;}\n"
+                                         "\n"
+                                         "#del_folder_cb QListView{\n"
+                                         "border: none;\n"
+                                         " font-weight:bold;\n"
+                                         "color:rgb(144, 115, 87);"
+                                         " text-align: center;}\n"
+                                         "#del_folder_cb QListView::item{border:0px;\n"
+                                         "border-radius: 5px;\n"
+                                         "  padding:8px; \n"
+                                         "margin:5px;}\n"
+                                         "#del_folder_cb QListView::item:selected { \n"
+                                         "color: white; \n"
+                                         "background-color: #4A3B28}")
         self.del_folder_cb.setObjectName("del_folder_cb")
+        delegate = QStyledItemDelegate(self.del_folder_cb)
+        self.del_folder_cb.setItemDelegate(delegate)
+        self.del_folder_cb.setEditable(True)
+        self.del_folder_cb.lineEdit().setReadOnly(True)
+        self.del_folder_cb.lineEdit().setAlignment(Qt.AlignCenter)
         for row in rows:
             self.del_folder_cb.addItem(row[0])
         self.del_folder_cb.activated.connect(self.show_del_button)
@@ -256,7 +396,8 @@ class mng_folder(object):
                                              "background-color:\n"
                                              "rgb(144, 115, 87);\n"
                                              "border-radius:10px;\n"
-                                             "font-weight:600;\n"
+                                             "font-size:12px;"
+                                             "font-weight:400;\n"
                                              "color:white;\n"
                                              "}\n"
                                              "#del_folder_cb_btn::hover{\n"
@@ -276,7 +417,8 @@ class mng_folder(object):
                                     "background-color:\n"
                                     "#FF7B7B;\n"
                                     "border-radius:10px;\n"
-                                    "font-weight:600;\n"
+                                    "font-size:12px;"
+                                    "font-weight:400;\n"
                                     "color:white;\n"
                                     "}\n"
                                     "#del_fold::hover{\n"
@@ -286,7 +428,10 @@ class mng_folder(object):
                                     "color:#FF7B7B;\n"
                                     "}")
         self.del_fold.setObjectName("del_fold")
-        self.del_fold.clicked.connect(self.confirm_delete)
+        if self.foldername_cb.count() == 0:
+            print("Combobox is empty")
+        else:
+            self.del_fold.clicked.connect(self.confirm_delete)
         self.horizontalLayout_6.addWidget(self.del_fold)
         self.verticalLayout.addWidget(self.widget_3)
         self.widget_4 = QtWidgets.QWidget(self.widget)
@@ -303,7 +448,8 @@ class mng_folder(object):
                                     "background-color:\n"
                                     "#FF7B7B;\n"
                                     "border-radius:10px;\n"
-                                    "font-weight:600;\n"
+                                    "font-size:12px;"
+                                    "font-weight:400;\n"
                                     "color:white;\n"
                                     "}\n"
                                     "#del_proj::hover{\n"
@@ -322,7 +468,8 @@ class mng_folder(object):
                                 "background-color:\n"
                                 "#6A6D72;\n"
                                 "border-radius:10px;\n"
-                                "font-weight:600;\n"
+                                "font-size:12px;"
+                                "font-weight:400;\n"
                                 "color:white;\n"
                                 "}\n"
                                 "#back::hover{\n"
@@ -332,6 +479,8 @@ class mng_folder(object):
                                 "color:#6A6D72;\n"
                                 "}")
         self.back.setObjectName("back")
+        self.back.clicked.connect(self.Manage_Folder_Dialog.close)
+        self.back.clicked.connect(self.bg_widget.hide)
         self.horizontalLayout_7.addWidget(self.back)
         self.verticalLayout.addWidget(self.widget_4)
         self.horizontalLayout.addWidget(self.widget)
@@ -403,7 +552,7 @@ class mng_folder(object):
             self.del_folder_cb_btn.hide()
             self.c.execute("SELECT folder_name FROM Location_Folder WHERE project_name = ?", (self.project_name,))
             rows = self.c.fetchall()
-            print(rows)
+            print("print", rows)
             for row in rows:
                 self.del_folder_cb.addItem(row[0])
                 self.foldername_cb.addItem(row[0])
@@ -713,6 +862,7 @@ class mng_folder(object):
                 self.c.execute("DELETE FROM Save_Files WHERE project_name = ?", (self.project_name,))
             self.conn.commit()
             self.Manage_Folder_Dialog.close()
+            self.bg_widget.hide()
         except Exception as e:
             print(e)
 
@@ -807,7 +957,6 @@ class mng_folder(object):
             # self.myProjects.setEditText("My Projects")
         except Exception as e:
             print(e)
-
 
 
 if __name__ == "__main__":
