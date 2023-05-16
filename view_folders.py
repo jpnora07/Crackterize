@@ -95,18 +95,18 @@ class view_folder_dialog(object):
         self.Settings = QtWidgets.QPushButton("Manage Project", self.widget)
         # self.Settings.setFlat(False)
         self.Settings.setStyleSheet("#Settings{\n"
-                                          "padding:5px;\n"
-                                          "background-color:#E3E9ED;"
-                                          "color:#664323;\n"
-                                          "font: 700 9pt \"Big Sky Regular\";\n"
-                                          "margin-left:10px;\n"
-                                          "border: none;"
-                                          "border-radius:15px"
-                                          "}"
-                                          "#Settings::hover{\n"
-                                          "background-color:#CFD9E0;"
-                                          "border: none;"
-                                          "}"
+                                    "padding:5px;\n"
+                                    "background-color:#E3E9ED;"
+                                    "color:#664323;\n"
+                                    "font: 700 9pt \"Big Sky Regular\";\n"
+                                    "margin-left:10px;\n"
+                                    "border: none;"
+                                    "border-radius:15px"
+                                    "}"
+                                    "#Settings::hover{\n"
+                                    "background-color:#CFD9E0;"
+                                    "border: none;"
+                                    "}"
                                     )
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap("images/Settings.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
@@ -438,7 +438,8 @@ class view_folder_dialog(object):
             mngfolders = QtWidgets.QDialog(self.view_folder_dialog_orig)
             x = (self.view_folder_dialog_orig.width() - self.view_folder_dialog_orig.width()) // 2
             y = (self.view_folder_dialog_orig.height() - self.view_folder_dialog_orig.height()) // 2
-            ui = mng_folder(self.background_widget_folder)
+            ui = mng_folder(self.background_widget_folder, self.myProjects, self.history, self.project_name_lbl,
+                            self.buttons, self.clear_layout, self.fetch_folders_of_projects, self.scroll_widget)
 
             ui.setupUi(mngfolders)
             mngfolders.move(x, y)
@@ -1015,7 +1016,6 @@ class view_folder_dialog(object):
             self.tableWidget.clearContents()
         else:
             self.tableWidget.setRowCount(rowCount)
-
 
     def printTableItems(self):
         try:
@@ -1597,6 +1597,7 @@ class view_folder_dialog(object):
         if self.table_exists(self.c, "Save_Files"):
             self.c.execute("DELETE FROM Save_Files WHERE project_name = ?", (self.project_name,))
         self.conn.commit()
+
         self.myProjects.clear()
         self.c.execute("SELECT project_name FROM Projects ORDER BY created_at DESC")
         rows = self.c.fetchall()
@@ -1622,6 +1623,7 @@ class view_folder_dialog(object):
     def table_exists(self, cursor, table_name):
         self.c.execute("SELECT name FROM sqlite_master WHERE type='table' AND name=?", (table_name,))
         return self.c.fetchone() is not None
+
     def edit_remarks_enable(self):
         self.textEditrename.setEnabled(True)
 

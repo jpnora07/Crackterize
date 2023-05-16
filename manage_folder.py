@@ -5,9 +5,19 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QDialog, QStyledItemDelegate, QListView
 
+
 class mng_folder(object):
-    def __init__(self, background_widget):
+    def __init__(self, background_widget, projects, history, proj_name_lbl, button, clear_layout,
+                 fetch_folders_of_projects, scroll_widget):
         self.bg_widget = background_widget
+        self.myProjects = projects
+        self.history = history
+        self.project_name_lbl = proj_name_lbl
+        self.clear_btn = button
+        self.clear_layout = clear_layout
+        self.fetch_folders_of_projects = fetch_folders_of_projects
+        self.scroll_widget = scroll_widget
+
     def setupUi(self, Dialog):
         self.Manage_Folder_Dialog = Dialog
         Dialog.setObjectName("Dialog")
@@ -215,7 +225,7 @@ class mng_folder(object):
         self.foldername_cb.lineEdit().setReadOnly(True)
         self.foldername_cb.lineEdit().setAlignment(Qt.AlignCenter)
 
-        self.foldername_cb.setEditText("My Projects")
+        self.foldername_cb.setEditText("")
         for row in rows:
             self.foldername_cb.addItem(row[0])
 
@@ -356,7 +366,7 @@ class mng_folder(object):
                                          "color:rgb(144, 115, 87);"
                                          "border-radius: 5px;\n"
                                          " text-align: center;}\n"
-                                         
+
                                          "\n"
                                          "#del_folder_cb QAbstractItemView::item {\n"
                                          " color: #4A3B28;\n"
@@ -552,13 +562,16 @@ class mng_folder(object):
             self.del_folder_cb_btn.hide()
             self.c.execute("SELECT folder_name FROM Location_Folder WHERE project_name = ?", (self.project_name,))
             rows = self.c.fetchall()
-            print("print", rows)
             for row in rows:
                 self.del_folder_cb.addItem(row[0])
                 self.foldername_cb.addItem(row[0])
-            self.closeDialog.close()
+
             self.conn.commit()
             self.conn.close()
+            self.clear_layout(self.scroll_widget.layout())
+            self.clear_btn.clear()
+            self.fetch_folders_of_projects()
+            self.closeDialog.close()
 
         except Exception as e:
             print(e)
@@ -863,6 +876,24 @@ class mng_folder(object):
             self.conn.commit()
             self.Manage_Folder_Dialog.close()
             self.bg_widget.hide()
+
+            self.myProjects.clear()
+            self.c.execute("SELECT project_name FROM Projects ORDER BY created_at DESC")
+            rows = self.c.fetchall()
+            for row in rows:
+                self.myProjects.addItem(row[0])
+            self.myProjects.setEditText("My Projects")
+
+            self.history.clear()
+            self.c.execute("SELECT * FROM Save_Files ORDER BY created_at DESC")
+            rowss = self.c.fetchall()
+            for row1 in rowss:
+                status = str(row1[9])
+                recent = str(row1[14])
+                id = str(row1[0])
+                self.history.addItem(status + " - " + recent, id)
+            self.history.setEditText("History")
+
         except Exception as e:
             print(e)
 
@@ -903,8 +934,12 @@ class mng_folder(object):
                 for row in rows:
                     self.foldername_cb.addItem(row[0])
                     self.del_folder_cb.addItem(row[0])
+
             self.conn.commit()
             self.conn.close()
+            self.clear_layout(self.scroll_widget.layout())
+            self.clear_btn.clear()
+            self.fetch_folders_of_projects()
 
         except Exception as e:
             print(e)
@@ -948,13 +983,15 @@ class mng_folder(object):
                     f.write(self.input_rename)
 
             self.conn.commit()
+
             # self.project_name_lbl.setText(self.input_rename)
-            # self.myProjects.clear()
-            # self.c.execute("SELECT project_name FROM Projects ORDER BY created_at DESC")
-            # rows = self.c.fetchall()
-            # for row in rows:
-            # self.myProjects.addItem(row[0])
-            # self.myProjects.setEditText("My Projects")
+            self.myProjects.clear()
+            self.c.execute("SELECT project_name FROM Projects ORDER BY created_at DESC")
+            rows = self.c.fetchall()
+            for row in rows:
+                self.myProjects.addItem(row[0])
+                self.myProjects.setEditText("My Projects")
+            self.project_name_lbl.setText(self.input_rename)
         except Exception as e:
             print(e)
 

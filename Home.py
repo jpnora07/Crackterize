@@ -675,7 +675,8 @@ class Ui_MainWindow(object):
         font.setPointSize(11)
         font.setBold(True)
         self.create.setFont(font)
-        self.create.setFixedSize(95, 22)
+        self.widget_2.setMinimumSize(QtCore.QSize(120, 22))
+        self.widget_2.setMaximumSize(QtCore.QSize(16777215, 22))
         self.create.setStyleSheet("#create{\n"
                                   "font-weight:bold;\n"
                                   " color:rgb(144, 115, 87);\n"
