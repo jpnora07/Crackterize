@@ -440,7 +440,7 @@ class view_folder_dialog(object):
             y = (self.view_folder_dialog_orig.height() - self.view_folder_dialog_orig.height()) // 2
             ui = mng_folder(self.background_widget_folder, self.myProjects, self.history, self.project_name_lbl,
                             self.buttons, self.clear_layout, self.fetch_folders_of_projects, self.scroll_widget)
-
+            # new
             ui.setupUi(mngfolders)
             mngfolders.move(x, y)
             mngfolders.show()
