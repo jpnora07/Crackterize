@@ -88,17 +88,37 @@ class result_with_details(object):
         self.horizontalLayout_2 = QtWidgets.QHBoxLayout(self.widget_4)
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
         self.widget_12 = QtWidgets.QWidget(self.widget_4)
+        self.widget_123 = QtWidgets.QWidget(self.widget_4)
         self.widget_12.setMaximumSize(QtCore.QSize(598, 16777215))
         self.widget_12.setObjectName("widget_12")
-        self.horizontalLayout_9 = QtWidgets.QHBoxLayout(self.widget_12)
+        self.horizontalLayout_9 = QtWidgets.QVBoxLayout(self.widget_12)
         self.horizontalLayout_9.setObjectName("horizontalLayout_9")
         self.label_image = QtWidgets.QLabel(self.widget_12)
         self.label_image.setStyleSheet("background-color: transparent;")
         self.label_image.setObjectName("label")
         self.label_image.setMinimumSize(QtCore.QSize(570, 391))
         self.label_image.setMaximumSize(QtCore.QSize(16777215, 16777215))
+
+        self.prepared_by = QtWidgets.QLabel(self.widget_12)
+
+        self.prepared_by.setMinimumSize(QtCore.QSize(0, 0))
+        self.prepared_by.setWordWrap(True)
+        self.prepared_by.setScaledContents(True)
+        self.prepared_by.setMaximumSize(QtCore.QSize(16777215, 20))
+        self.prepared_by.setStyleSheet("#label_6{\n"
+                                   "color: rgba(111, 75, 39, 0.77);\n"
+                                   "font-size: 15px;\n"
+                                   "background-color: transparent;\n"
+                                    "margin-left:12px;"
+                                   "}")
+        self.prepared_by.setObjectName("label_6")
+
+        self.widget_123.setMaximumSize(QtCore.QSize(16777215, 16777215))
         self.horizontalLayout_9.addWidget(self.label_image)
+        self.horizontalLayout_9.addWidget(self.prepared_by)
+        self.horizontalLayout_9.addWidget(self.widget_123)
         self.horizontalLayout_2.addWidget(self.widget_12)
+
         self.widget_6 = QtWidgets.QWidget(self.widget_4)
         self.widget_6.setMinimumSize(QtCore.QSize(280, 0))
         self.widget_6.setMaximumSize(QtCore.QSize(280, 16777215))
@@ -447,6 +467,7 @@ class result_with_details(object):
                 self.widgetPos_2.setText("Positive Crack Probability is " + self.crack + ".")
                 self.widgetNeg.setText("Negative Crack Probability is " + self.no_crack + ".")
                 self.loc_lbl.setText(self.loc)
+                self.prepared_by.setText("<b>Prepared By:</b> "+self.position)
             except Exception as e:
                 print(e)
         else:
@@ -1212,3 +1233,13 @@ class result_with_details(object):
         # Set the image on the label
         pixmap = QPixmap(q_image)
         self.label_image.setPixmap(pixmap.scaled(label_size, Qt.KeepAspectRatio, Qt.SmoothTransformation))
+
+if __name__ == "__main__":
+    import sys
+
+    app = QtWidgets.QApplication(sys.argv)
+    Dialog = QtWidgets.QDialog()
+    ui = result_with_details(None, None)
+    ui.setupUi(Dialog)
+    Dialog.show()
+    sys.exit(app.exec_())

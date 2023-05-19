@@ -472,14 +472,57 @@ class result_new_dialog(object):
                 self.status = f.read()
 
         self.verticalLayout_3.addWidget(self.widget_12)
+
+        self.widget_14 = QtWidgets.QWidget(self.widget_4)
+        self.widget_14.setMinimumSize(QtCore.QSize(0, 0))
+        self.widget_14.setMaximumSize(QtCore.QSize(16777215, 16777215))
+        self.widget_14.setObjectName("widget_14")
+        self.horizontalLayout_5 = QtWidgets.QVBoxLayout(self.widget_14)
+        self.horizontalLayout_5.setObjectName("horizontalLayout_5")
+        self.label_6 = QtWidgets.QLabel(self.widget_14)
+        self.label_6.setMinimumSize(QtCore.QSize(142, 0))
+        self.label_6.setWordWrap(True)
+        self.label_6.setScaledContents(True)
+        self.label_6.setMaximumSize(QtCore.QSize(142, 16777215))
+        self.label_6.setStyleSheet("#label_6{\n"
+                                   "color: rgba(111, 75, 39, 0.77);\n"
+                                   "font-size: 15px;\n"
+                                   "font-weight: bold;\n"
+                                   "background-color: transparent;\n"
+                                   "}")
+        self.label_6.setObjectName("label_6")
+        self.horizontalLayout_5.addWidget(self.label_6)
+
+        self.prepared_by = QtWidgets.QLineEdit(self.widget_6)
+        self.prepared_by.setPlaceholderText("Type your name here")
+        self.prepared_by.setMinimumSize(QtCore.QSize(185, 40))
+        self.prepared_by.setMaximumSize(QtCore.QSize(16777215, 16777215))
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        font.setBold(True)
+        self.prepared_by.setFont(font)
+        self.prepared_by.setStyleSheet("        border-radius: 10px;\n"
+                                       "        font-size: 12px;\n"
+                                       "        font-family: Arial;\n"
+
+                                       "font-weight:400;"
+                                       "        color:rgb(144, 115, 87);"
+                                       "        background-color: #fff;\n"
+                                       "        border: 2px solid #aaa;\n"
+                                       "        padding: 2px;\n")
+        self.prepared_by.setObjectName("prepared_by")
+        # self.prepared_by.setAlignment(Qt.AlignCenter)
+        self.horizontalLayout_5.addWidget(self.prepared_by)
+        self.verticalLayout_3.addWidget(self.widget_14)
+
         self.widget_21 = QtWidgets.QWidget(self.widget_4)
         self.widget_21.setObjectName("widget_21")
         self.horizontalLayout_15 = QtWidgets.QHBoxLayout(self.widget_21)
         self.horizontalLayout_15.setContentsMargins(-1, 20, -1, 5)
         self.horizontalLayout_15.setObjectName("horizontalLayout_15")
         self.printbtn = QtWidgets.QPushButton(self.widget_21)
-        self.printbtn.setMinimumSize(QtCore.QSize(0, 50))
-        self.printbtn.setMaximumSize(QtCore.QSize(16777215, 50))
+        self.printbtn.setMinimumSize(QtCore.QSize(0, 40))
+        self.printbtn.setMaximumSize(QtCore.QSize(16777215, 16777215))
         self.printbtn.setStyleSheet("#printbtn{\n"
                                     "background: #6F4B27;\n"
                                     "font-weight:bold;\n"
@@ -505,8 +548,8 @@ class result_new_dialog(object):
         self.horizontalLayout_12.setContentsMargins(-1, 0, -1, 10)
         self.horizontalLayout_12.setObjectName("horizontalLayout_12")
         self.savebtn = QtWidgets.QPushButton(self.widget_13)
-        self.savebtn.setMinimumSize(QtCore.QSize(0, 50))
-        self.savebtn.setMaximumSize(QtCore.QSize(16777215, 50))
+        self.savebtn.setMinimumSize(QtCore.QSize(0, 40))
+        self.savebtn.setMaximumSize(QtCore.QSize(16777215, 16777215))
         self.savebtn.setStyleSheet("#savebtn{\n"
                                    "background: #2E74A9;\n"
                                    "font-weight:bold;\n"
@@ -1532,6 +1575,7 @@ class result_new_dialog(object):
                 self.creating_new_folder()
 
     def save_result_image_to_db(self):
+        prepared_by = self.prepared_by.text()
         remarks_new = self.remarksbox.toPlainText()
         try:
             selected_project_from_folder = "selected_project.txt"
@@ -1668,7 +1712,7 @@ class result_new_dialog(object):
                     self.image_data_original,
                     self.width,
                     self.lengthh,
-                    None,
+                    prepared_by,
                     self.Neg_score,
                     self.Pos_score,
                     self.status,
@@ -1923,7 +1967,8 @@ class result_new_dialog(object):
                       "Predicted_Class_name.txt", "Predicted_height.txt", "Predicted_Score.txt", "Predicted_width.txt",
                       "Remarks_written.txt", "Selected_location_crack.txt", "Selected_progression_crack.txt",
                       "Selected_type_crack.txt", "threshold_image.jpg", "image_id.txt", "screenshot.png",
-                      "temp_image_original.jpg", "temp_image_result.jpg", "selected_folder_vrFile.txt", "image_id.txt", "selected_project.txt"]
+                      "temp_image_original.jpg", "temp_image_result.jpg", "selected_folder_vrFile.txt", "image_id.txt",
+                      "selected_project.txt"]
 
         try:
             for file_name in file_names:
@@ -1946,9 +1991,20 @@ class result_new_dialog(object):
         self.label_3.setText(_translate("Dialog", "Results"))
         self.remarks.setText(_translate("Dialog", "Remarks:"))
         self.label_4.setText(_translate("Dialog", "Location of crack:"))
-        self.label_6.setText(_translate("Dialog", "Crack Type:"))
+        self.label_6.setText(_translate("Dialog", "Prepared By:"))
         self.label_8.setText(_translate("Dialog", "Crack Progression:"))
         self.label_10.setText(_translate("Dialog", "Length:"))
         self.label_12.setText(_translate("Dialog", "Width:"))
         self.printbtn.setText(_translate("Dialog", "Print"))
         self.savebtn.setText(_translate("Dialog", "Save"))
+
+
+if __name__ == "__main__":
+    import sys
+
+    app = QtWidgets.QApplication(sys.argv)
+    Dialog = QtWidgets.QDialog()
+    ui = result_new_dialog(None, None, None, None)
+    ui.setupUi(Dialog)
+    Dialog.show()
+    sys.exit(app.exec_())

@@ -1001,7 +1001,7 @@ if __name__ == "__main__":
 
     app = QtWidgets.QApplication(sys.argv)
     Dialog = QtWidgets.QDialog()
-    ui = mng_folder()
+    ui = mng_folder(None, None, None, None,None, None, None, None)
     ui.setupUi(Dialog)
     Dialog.show()
     sys.exit(app.exec_())
