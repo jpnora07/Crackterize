@@ -975,7 +975,7 @@ class Detect_Crack_Dialog(object):
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
         Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
-        self.label_2.setText(_translate("Dialog", "Location of Crack: "))
+        self.label_2.setText(_translate("Dialog", "Location: "))
         # self.label_3.setText(_translate("Dialog", "Crack Type: "))
 
         # self.label_4.setText(_translate("Dialog", "Crack Progression: "))
