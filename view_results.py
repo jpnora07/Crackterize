@@ -238,6 +238,7 @@ class view_result_dialog(object):
                                  "")
         self.print.setFlat(False)
         self.print.setObjectName("print")
+        self.print.hide()
         self.print.clicked.connect(self.printer)
         self.horizontalLayout_3.addWidget(self.print)
 
