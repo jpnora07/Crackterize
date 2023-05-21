@@ -309,7 +309,10 @@ class filter_print(object):
         self.label_4.setObjectName("label_4")
         self.horizontalLayout_10.addWidget(self.label_4)
         self.select_all_fold = QtWidgets.QPushButton("Select All", self.widget_20)
-        self.select_all_fold.setMaximumSize(QtCore.QSize(50, 16777215))
+        font_metrics = QFontMetrics(self.select_all_fold.font())
+        # Get the width of the text
+        text_width = font_metrics.width(self.select_all_fold.text()) + 20
+        self.select_all_fold.setMaximumSize(QtCore.QSize(text_width, 16777215))
         self.select_all_fold.setStyleSheet("#select_all_fold{color: rgba(76,146,215,255);}\n"
                                            "#select_all_fold::hover{border-bottom:1px solid  rgba(76,146,215,255);;}\n"
                                            "")
@@ -381,7 +384,11 @@ class filter_print(object):
         self.horizontalLayout_11.addWidget(self.label_5)
         self.select_all = QtWidgets.QPushButton("Select All", self.widget_22)
         self.select_all.clicked.connect(self.mark_all_checkboxes_crack_i_e)
-        self.select_all.setMaximumSize(QtCore.QSize(50, 16777215))
+
+        font_metrics = QFontMetrics(self.select_all.font())
+        # Get the width of the text
+        text_width = font_metrics.width(self.select_all.text()) + 20
+        self.select_all.setMaximumSize(QtCore.QSize(text_width, 16777215))
         self.select_all.setStyleSheet("#select_all{color: rgba(76,146,215,255);}\n"
                                       "#select_all::hover{border-bottom:1px solid  rgba(76,146,215,255);;}\n"
                                       "")
@@ -481,8 +488,7 @@ class filter_print(object):
         self.horizontalLayout_18.setSpacing(5)
         self.horizontalLayout_18.setObjectName("horizontalLayout_18")
         self.label_6 = QtWidgets.QLabel(" Crack Location", self.widget_23)
-        self.label_6.setMinimumSize(QtCore.QSize(0, 0))
-        self.label_6.setMaximumSize(QtCore.QSize(16777215, 16777215))
+
         self.label_6.setStyleSheet("#label_6{\n"
                                    "font-size: 18px;\n"
                                    "color: rgba(111, 75, 39, 0.77);\n"
@@ -490,11 +496,14 @@ class filter_print(object):
                                    "border-right:1px solid grey;\n"
                                    "}")
         self.label_6.setScaledContents(True)
-        self.label_6.setWordWrap(True)
         self.label_6.setObjectName("label_6")
+        self.label_6.adjustSize()
         self.horizontalLayout_18.addWidget(self.label_6)
         self.select_all_loc = QtWidgets.QPushButton("Select All", self.widget_23)
-        self.select_all_loc.setMaximumSize(QtCore.QSize(50, 16777215))
+        font_metrics = QFontMetrics(self.select_all_loc.font())
+        # Get the width of the text
+        text_width = font_metrics.width(self.select_all_loc.text()) + 20
+        self.select_all_loc.setMaximumSize(QtCore.QSize(text_width, 16777215))
         self.select_all_loc.setStyleSheet("#select_all_loc{color: rgba(76,146,215,255);}\n"
                                           "#select_all_loc::hover{border-bottom:1px solid  rgba(76,146,215,255);;}\n"
                                           "")
