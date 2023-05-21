@@ -1,48 +1,33 @@
-from PyQt5.QtWidgets import QCalendarWidget, QDateEdit, QApplication
-from PyQt5 import QtGui, QtWidgets
+from PyQt5.QtWidgets import QApplication, QMainWindow, QDialog, QVBoxLayout, QPushButton
+import sys
 
-class CustomDateEdit(QDateEdit):
-    def __init__(self, parent=None):
-        super().__init__(parent)
-        self.setCalendarPopup(True)
+class MainWindow(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.initUI()
 
-        calendar_widget = QCalendarWidget(self)
-        font = QtGui.QFont()
-        font.setPointSize(6)
-        calendar_widget.setFont(font)
-        calendar_widget.setSelectionMode(QtWidgets.QCalendarWidget.SingleSelection)
-        calendar_widget.setHorizontalHeaderFormat(QtWidgets.QCalendarWidget.SingleLetterDayNames)
-        calendar_widget.setVerticalHeaderFormat(QtWidgets.QCalendarWidget.NoVerticalHeader)
-        calendar_widget.setNavigationBarVisible(True)
-        calendar_widget.setStyleSheet('''
-            QWidget#qt_calendar_navigationbar {
-                color: red;
-            }
-            QToolButton#qt_calendar_prevmonth {
-                qproperty-iconSize: 15px;
-                qproperty-icon: url(images/previous.png);
-            }
-            QToolButton#qt_calendar_nextmonth {
-                qproperty-iconSize: 15px;
-                qproperty-icon: url(images/next.png);
-            }
-            QToolButton#qt_calendar_month {
-                color: blue;
-            }
-            QToolButton#qt_calendar_year {
-                color: blue;
-            }
-        ''')
+    def initUI(self):
+        self.setWindowTitle('Main Window')
+        self.setGeometry(100, 100, 400, 300)
+        self.maximizeButton = QPushButton('Maximize', self)
+        self.maximizeButton.clicked.connect(self.maximizeDialog)
+        self.setCentralWidget(self.maximizeButton)
 
-        self.setCalendarWidget(calendar_widget)
+    def maximizeDialog(self):
+        dialog = QDialog(self)
+        dialog.setWindowTitle('Dialog')
+        dialog.setLayout(QVBoxLayout())
+        dialog.layout().addWidget(QPushButton('Close', dialog))
+        dialog.layout().addWidget(QPushButton('Center', dialog))
+        dialog.show()
 
+        if self.isMaximized():
+            desktop = QApplication.desktop()
+            screenRect = desktop.availableGeometry(desktop.primaryScreen())
+            dialog.move(screenRect.center() - dialog.rect().center())
 
 if __name__ == '__main__':
-    import sys
-
     app = QApplication(sys.argv)
-
-    date_edit = CustomDateEdit()
-    date_edit.show()
-
+    mainWindow = MainWindow()
+    mainWindow.show()
     sys.exit(app.exec_())

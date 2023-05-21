@@ -595,6 +595,7 @@ class view_result_dialog(object):
         try:
             for row in data:
                 button_name = str(row[9])
+                loc_name = str(row[10])
                 image_id = row[0]
                 image = row[3]
                 # Convert the image data to QPixmap
@@ -631,7 +632,7 @@ class view_result_dialog(object):
                     "}\n"
                     "")
                 verticalLayout.addWidget(btn)
-                btn_label = QtWidgets.QLabel(button_name, widget)
+                btn_label = QtWidgets.QLabel(loc_name + " " + button_name, widget)
                 btn_label.setWordWrap(True)
                 btn_label.setStyleSheet("\n"
                                         "  background-color: transparent;  \n"

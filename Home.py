@@ -43,14 +43,14 @@ class Ui_MainWindow(object):
         MainWindow.setWindowModality(QtCore.Qt.NonModal)  #
         MainWindow.setEnabled(True)
         # MainWindow.setFixedSize(1000, 700)
-        # screen_resolution = QDesktopWidget().screenGeometry()
-        # width, height = screen_resolution.width(), screen_resolution.height()
-        # MainWindow.resize(1000, 700)
-        # MainWindow.setMinimumSize(QtCore.QSize(width, height))
-        # MainWindow.setMaximumSize(QtCore.QSize(width, height))
-        screen_resolution = QtWidgets.QApplication.desktop().screenGeometry()
+        screen_resolution = QDesktopWidget().screenGeometry()
         width, height = screen_resolution.width(), screen_resolution.height()
-        MainWindow.resize(width, height)
+        # MainWindow.resize(16777215, 16777215)
+        MainWindow.setMinimumSize(QtCore.QSize(width, height))
+        MainWindow.setMaximumSize(QtCore.QSize(16777215, 16777215))
+        #screen_resolution = QtWidgets.QApplication.desktop().screenGeometry()
+        #width, height = screen_resolution.width(), screen_resolution.height()
+        #MainWindow.resize(width, height)
         MainWindow.setStyleSheet("#Crackterize{\n"
                                  "background-color: qlineargradient(spread:pad, x1:0.045, y1:0.261, x2:0.988636, y2:0.955, stop:0 rgba(235, 209, 196, 255), stop:1 rgba(255, 255, 255, 255));\n"
                                  "width: fit-content;\n"

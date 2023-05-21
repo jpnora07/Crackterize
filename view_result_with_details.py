@@ -492,6 +492,7 @@ class result_with_details(object):
             printer.setPageSize(QPrinter.Letter)
             printer.setOrientation(QPrinter.Landscape)
             printer.setOutputFormat(QPrinter.PdfFormat)
+            printer.setOutputFileName("preview.pdf")
 
             # create a QTextDocument to hold the text to be printed
             doc = QTextDocument()
@@ -918,7 +919,7 @@ class result_with_details(object):
         self.edit_remarks.setObjectName("edit_remarks")
         self.horizontalLayout_2.addWidget(self.edit_remarks)
         self.verticalLayout_3.addWidget(self.widget)
-        self.remarks = QtWidgets.QLineEdit(self.widget_15)
+        self.remarks = QtWidgets.QTextEdit(self.widget_15)
         # Toggle QLineEdit widget between enabled/disabled
         is_enabled = self.remarks.isEnabled()
         self.remarks.setEnabled(not is_enabled)
@@ -987,7 +988,11 @@ class result_with_details(object):
 
     def edit_remarks_enable(self):
         # Enable the QLineEdit
-        self.remarks.setEnabled(True)
+        try:
+            self.remarks.setEnabled(True)
+            self.remarks.setWordWrap(True)
+        except Exception as e:
+            print(e)
 
     def edit_remarks_function(self):
         try:

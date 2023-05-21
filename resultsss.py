@@ -782,6 +782,7 @@ class result_new_dialog(object):
             printer.setPageSize(QPrinter.Letter)
             printer.setOrientation(QPrinter.Landscape)
             printer.setOutputFormat(QPrinter.PdfFormat)
+            printer.setOutputFileName("preview.pdf")
 
             # create a QTextDocument to hold the text to be printed
             doc = QTextDocument()
@@ -1975,7 +1976,7 @@ class result_new_dialog(object):
         Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
         self.label_3.setText(_translate("Dialog", "Results"))
         self.remarks.setText(_translate("Dialog", "Remarks:"))
-        self.label_4.setText(_translate("Dialog", "Location of crack:"))
+        self.label_4.setText(_translate("Dialog", "Location:"))
         self.label_6.setText(_translate("Dialog", "Prepared By:"))
         self.label_8.setText(_translate("Dialog", "Crack Progression:"))
         self.label_10.setText(_translate("Dialog", "Length:"))
