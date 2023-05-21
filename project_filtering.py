@@ -3,9 +3,11 @@ import os
 import sqlite3
 from datetime import datetime
 
+import cv2
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import QSizeF, QSize, Qt
-from PyQt5.QtGui import QFontMetrics, QTextCursor, QPainter, QTextImageFormat, QTextDocument, QFont, QTextFrameFormat
+from PyQt5.QtCore import QSizeF, QSize, Qt, QDate
+from PyQt5.QtGui import QFontMetrics, QTextCursor, QPainter, QTextImageFormat, QTextDocument, QFont, QTextFrameFormat, \
+    QImage, QPixmap, QTextBlockFormat
 from PyQt5.QtPrintSupport import QPrinter, QPrintPreviewDialog
 from PyQt5.QtWidgets import QCheckBox, QDialog, QDateEdit, QCalendarWidget, QHeaderView, QTableView
 
@@ -109,7 +111,7 @@ class filter_print(object):
         self.exit_2.setMaximumSize(QtCore.QSize(30, 30))
         self.exit_2.setStyleSheet("border:none;")
         self.exit_2.clicked.connect(Dialog.close)
-        # self.exit_2.clicked.connect(self.background_widget.hide)
+        self.exit_2.clicked.connect(self.background_widget.hide)
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap("images/exit.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.exit_2.setIcon(icon)
@@ -626,8 +628,11 @@ class filter_print(object):
             "color: #5C5C5C;\n"
             "font-weight: 400;"
             "margin-right:5px;")
+
+        current_date = QDate.currentDate()
         self.date_edit_from = CustomDateEdit(self.widget_2datepicker)
         self.date_edit_from.setCalendarPopup(True)
+        self.date_edit_from.setDate(current_date)
         self.date_edit_from.setObjectName("from")
         self.date_edit_from.setMinimumSize(QtCore.QSize(0, 30))
         self.date_edit_from.setMaximumSize(QtCore.QSize(150, 30))
@@ -660,6 +665,7 @@ class filter_print(object):
             "margin-right:5px;")
         self.date_edit_to = CustomDateEdit(self.widget_2datepicker)
         self.date_edit_to.setCalendarPopup(True)
+        self.date_edit_to.setDate(current_date)
         self.date_edit_to.setMinimumSize(QtCore.QSize(0, 30))
         self.date_edit_to.setMaximumSize(QtCore.QSize(150, 30))
         self.date_edit_to.setObjectName("to")
@@ -842,9 +848,12 @@ class filter_print(object):
                 icon_image = "images/warning.png"
                 message = "Choose the location of a crack."
                 self.QMessage_Error_dialog(message, icon_image)
+            elif len(pre_by.strip()) == 0:
+                icon_image = "images/warning.png"
+                message = "Please input your name."
+                self.QMessage_Error_dialog(message, icon_image)
             else:
-
-                query = f"SELECT * FROM Save_Files WHERE folder_name IN ({folders_string}) AND Status IN ({i_e_string}) AND selected_loc IN ({loc_string}) AND created_at BETWEEN '{date_text_from} 00:00:00' AND '{date_text_to} 23:59:59' "
+                query = f"SELECT * FROM Save_Files WHERE folder_name IN ({folders_string}) AND Status IN ({i_e_string}) AND selected_loc IN ({loc_string}) AND created_at BETWEEN '{date_text_from} 00:00:00' AND '{date_text_to} 23:59:59' ORDER BY created_at DESC"
                 c.execute(query)
                 rows = c.fetchall()
 
@@ -853,6 +862,7 @@ class filter_print(object):
                     message = "Folder is empty or your selected category is not in the folder."
                     self.QMessage_Error_dialog(message, icon_image)
                 else:
+
                     try:
                         printer = QPrinter()
                         printer.setPageSize(QPrinter.Letter)
@@ -865,10 +875,9 @@ class filter_print(object):
                         doc.setDocumentMargin(50)
 
                         # create the table HTML including the specified columns
-                        table_html = f'''
-                        <h2 style="text-align: center; color: #543F24; font-family: Arial, sans-serif; font-weight: bold; font-size: 54px;">
-                            <img src="images/Crackterize_doc.png" alt="Your Image" style="width: 50px; height: 30px;"> 
-                        </h2>
+                        table_html = f''' <h2 style="text-align: center; color: #543F24; font-family: Arial, 
+                        sans-serif; font-weight: bold; font-size: 54px;"> <img src="images/Crackterize_doc.png" 
+                        alt="Your Image" style="width: 50px; height: 30px;"> </h2> 
 
                         <table border="1" cellpadding="5" style="border-collapse: collapse;">
                             <tr>
@@ -885,9 +894,10 @@ class filter_print(object):
                                 <th>Prepared By:</th>
                             </tr>
                         '''
-
                         # loop through the fetched data and add each row to the table
                         for row in rows:
+                            date_obj = datetime.strptime(row[14], '%Y-%m-%d %H:%M:%S')
+                            formatted_date = date_obj.strftime('%I:%M%p · %m/%d/%Y')
                             # add a row to the table with the row data
                             row_html = f'''
                                 <tr>
@@ -899,37 +909,33 @@ class filter_print(object):
                                     <td style="text-align: center;">{row[8]}</td>
                                     <td style="text-align: center;">{row[7]}</td>
                                     <td style="text-align: center;">{row[10]}</td>
-                                    <td style="text-align: center;">{row[14]}</td>
+                                    <td style="text-align: center;">{formatted_date}</td>
                                     <td style="text-align: center;">{row[13]}</td>
                                     <td style="text-align: center;">{row[6]}</td>
                                 </tr>
                             '''
                             table_html += row_html
                         timestamp = datetime.now()
-                        timestamp_str = timestamp.strftime('%Y-%m-%d %H:%M:%S')
+                        # Format the timestamp string
+                        hour = timestamp.strftime('%I')
+                        minute = timestamp.strftime('%M')
+                        period = timestamp.strftime('%p').lower()
+                        month = timestamp.strftime('%m')
+                        day = timestamp.strftime('%d')
+                        year = timestamp.strftime('%Y')
+                        timestamp_str = f"{hour}:{minute}{period} · {month}/{day}/{year}"
                         footer_html = f'''
-                                <table cellpadding="5" style="border-collapse: collapse;">
+                                <table width = "100%" position = "fixed" bottom = "0" "cellpadding="5" style="border-collapse: collapse;" >
                                     <tr>
                                         <td style="text-align: left; font-size: 18px; color: #3F2A15;"><b>Prepared By:</b> {pre_by} </td>
-                                    <td></td><td></td><td></td><td></td> <td></td><td></td><td></td><td></td><td></td>
-                                    <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>
-                                    <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td> <td></td><td></td><td></td><td></td><td></td>
-                                    
-                                    <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td> <td></td><td></td><td></td><td></td><td></td>
-                                    
-                                        <td style="text-align: left; font-size: 18px; color: #3F2A15;">{timestamp_str}</td> </tr> </table> 
-        
+                                        <td style="text-align: right; font-size: 18px; color: #3F2A15;">{timestamp_str}</td> </tr> </table> 
                         '''
 
+                        cursor = QTextCursor(doc)
                         # close the table HTML
                         table_html += '</table>'
-
                         doc.setHtml(table_html)
-
-                        cursor = QTextCursor(doc)
-                        cursor.movePosition(QTextCursor.End)
                         cursor.insertHtml(footer_html)
-
                         painter = QPainter()
                         if painter.begin(printer):
                             doc.setPageSize(QSizeF(printer.pageRect().size()))

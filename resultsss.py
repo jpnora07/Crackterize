@@ -6,7 +6,7 @@ import cv2
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import Qt, QSize, QSizeF, QIODevice, QBuffer, QByteArray, QTimer, QFile
 from PyQt5.QtGui import QImage, QPixmap, QTextCharFormat, QTextFrameFormat, QTextCursor, QFont, QTextImageFormat, \
-    QTextBlockFormat, QTextDocument, QPainter
+    QTextBlockFormat, QTextDocument, QPainter, QTextLength
 from PyQt5.QtPrintSupport import QPrinter, QPrintPreviewDialog
 from PyQt5.QtWidgets import QVBoxLayout, QWidget, QHBoxLayout, QPushButton, QScrollArea, QLabel, QDialog
 
@@ -776,110 +776,95 @@ class result_new_dialog(object):
         else:
             self.orient = None  # set orient to None if the file does not exist
 
-        printer = QPrinter()
-        printer.setPageSize(QPrinter.Letter)
-        printer.setOrientation(QPrinter.Portrait)
-        printer.setOutputFormat(QPrinter.PdfFormat)
-        printer.setOutputFileName("preview.pdf")
-
-        doc = QTextDocument()
-        doc.setPageSize(QSizeF(792, 612))  # set page size to 11x8.5 inches (in points)
-        doc.setDocumentMargin(36)  # set margin to 0.5 inch (36 points)
-        cursor = QTextCursor(doc)
-
         try:
-            # Load the image file
+            prepared_by = self.prepared_by.text()
+            printer = QPrinter()
+            printer.setPageSize(QPrinter.Letter)
+            printer.setOrientation(QPrinter.Landscape)
+            printer.setOutputFormat(QPrinter.PdfFormat)
+
+            # create a QTextDocument to hold the text to be printed
+            doc = QTextDocument()
+            doc.setPageSize(QSizeF(printer.pageRect().size()))  # set page size to match printer's page rect
+            doc.setDocumentMargin(50)
+            # create the table HTML including the specified columns
+            table_html = f'''
+                       <h2 style="text-align: center; color: #543F24; font-family: Arial, sans-serif; font-weight: bold; font-size: 54px;">
+                           <img src="images/Crackterize_doc.png" alt="Your Image" style="width: 50px; height: 30px;"> 
+                       </h2>
+    
+                       <table width= "100%" border="1" cellpadding="5" style="border-collapse: collapse;">
+                           <tr>
+                               <th>Assessment</th>
+                               <th>Length</th>
+                               <th>Width</th>
+                               <th>Positive Crack Probability</th>
+                               <th>Negative Crack Probability</th>
+                               <th>Location</th>
+                               <th>Remarks</th>
+                               <th>Prepared By:</th>
+                           </tr>
+                       '''
+            row_html = f'''
+                                           <tr>
+                                               <td style="text-align: center;">{self.status}</td>
+                                               <td style="text-align: center;">{self.lengthh}</td>
+                                               <td style="text-align: center;">{self.width}</td>
+                                               <td style="text-align: center;">{self.Pos_score}</td>
+                                               <td style="text-align: center;">{self.Neg_score}</td>
+                                               <td style="text-align: center;">{self._selected_loc}</td>
+                                               <td style="text-align: center;">{remarks_new}</td>
+                                               <td style="text-align: center;">{prepared_by}</td>
+                                           </tr>
+                                       '''
+            table_html += row_html
+            timestamp = datetime.now()
+            # Format the timestamp string
+            hour = timestamp.strftime('%I')
+            minute = timestamp.strftime('%M')
+            period = timestamp.strftime('%p').lower()
+            month = timestamp.strftime('%m')
+            day = timestamp.strftime('%d')
+            year = timestamp.strftime('%Y')
+            timestamp_str = f"{hour}:{minute}{period} · {month}/{day}/{year}"
+            footer_html = f'''
+                               <table width = "100%" cellpadding="5" style="border-collapse: collapse;" >
+                                   <tr>
+                                       <td style="text-align: left; font-size: 18px; color: #3F2A15;"><b>Prepared By:</b> {prepared_by} </td>
+                                  
+                                       <td style="text-align: right; font-size: 18px; color: #3F2A15;">{timestamp_str}</td> </tr> </table> 
+                       '''
+            cursor = QTextCursor(doc)
             image_path = os.path.abspath("screenshot.png")
-            image = QImage(image_path)
-            if image.isNull():
-                print("Error: Could not load image")
-                return
-
-            # Set a fixed size for the image format
             max_size = QSize(700, 450)
+            table_html += '</table>'
+            doc.setHtml(table_html)
 
-            # Insert the image into the document
-            pixmap = QPixmap.fromImage(image)
+            image_format = QTextImageFormat()
+            image_format.setWidth(max_size.width())
+            image_format.setHeight(max_size.height())
+            image_format.setName(image_path)
 
-            if not pixmap.isNull():
-                # Add the title to the document
-                title_format = QTextCharFormat()
-                title_format.setFont(QFont("Arial", 20, QFont.Bold))
-                cursor.insertText("                              Crackterized Result", title_format)
-                cursor.insertBlock()
+            # Create a QTextBlockFormat and set its properties
+            image_block_format = QTextBlockFormat()
+            image_block_format.setAlignment(Qt.AlignCenter)
+            cursor.insertBlock(image_block_format)
+            cursor.movePosition(QTextCursor.End)
+            cursor.insertImage(image_format)
+            cursor.insertHtml(footer_html)
 
-                # Center the title
-                title_cursor = cursor.block().position()
-                title_block = cursor.document().findBlock(title_cursor)
-                title_block_format = QTextBlockFormat()
-                title_block_format.setAlignment(Qt.AlignCenter)
-                title_cursor = QTextCursor(title_block)
-                title_cursor.setBlockFormat(title_block_format)
+            painter = QPainter()
+            if painter.begin(printer):
+                doc.setPageSize(QSizeF(printer.pageRect().size()))
+                doc.drawContents(painter)
+                painter.end()
 
-                image_format = QTextImageFormat()
-                image_format.setWidth(max_size.width())
-                image_format.setHeight(max_size.height())
-                image_format.setName(image_path)
-
-                # Create a QTextBlockFormat and set its properties
-                image_block_format = QTextBlockFormat()
-                image_block_format.setAlignment(Qt.AlignLeft)
-                cursor.insertBlock(image_block_format)
-
-                # Insert the image into the document and set its format
-                cursor.insertImage(image_format)
-
+            # preview the document using a QPrintPreviewDialog
+            preview = QPrintPreviewDialog(printer)
+            preview.paintRequested.connect(doc.print_)
+            preview.exec_()
         except Exception as e:
-            print("printpreviewDialog", e)
-
-        # Create a QTextCharFormat object with the desired font properties
-        font_format = QTextCharFormat()
-        font_format.setFont(QFont("Arial", 13))
-        bold_format = QTextCharFormat()
-        bold_format.setFont(QFont("Arial", 13))
-        bold_format.setFontWeight(QFont.Bold)
-        # Add the data to the document
-        cursor.insertText("The image characterized as: ", font_format)
-        cursor.insertText(f"{self.status}\n\n", bold_format)
-
-        cursor.insertText("Length: ", font_format)
-        cursor.insertText(f"{self.lengthh}\n\n", bold_format)
-
-        cursor.insertText("Width: ", font_format)
-        cursor.insertText(f"{self.width}\n\n", bold_format)
-
-        # cursor.insertText(f"Width: {self.width}\n\n", font_format)
-        # cursor.insertText(f"Orientation: {self.orient}\n", font_format)
-
-        cursor.insertText("Positive Crack Probability: ", font_format)
-        cursor.insertText(f"{self.Pos_score}\n\n", bold_format)
-
-        cursor.insertText("Negative Crack Probability: ", font_format)
-        cursor.insertText(f"{self.Neg_score}\n\n", bold_format)
-
-        cursor.insertText("Location of Crack: ", font_format)
-        cursor.insertText(f"{self._selected_loc}\n\n", bold_format)
-
-        # cursor.insertText("Crack Type: ", font_format)
-        # cursor.insertText(f"{self._selected_type}\n\n", bold_format)
-
-        # cursor.insertText("Crack Progression: ", font_format)
-        # cursor.insertText(f"{self._selected_prog}\n\n", bold_format)
-
-        cursor.insertText("Remarks: ", font_format)
-        cursor.insertText(f"{remarks_new}\n\n", bold_format)
-
-        # cursor.insertText(f"Date Added: {self.date}\n", font_format)
-
-        painter = QPainter()
-        if painter.begin(printer):
-            doc.setPageSize(QSizeF(printer.pageRect().size()))
-            doc.drawContents(painter)
-            painter.end()
-
-        preview = QPrintPreviewDialog(printer)
-        preview.paintRequested.connect(doc.print_)
-        preview.exec_()
+            print(e)
 
     def original_img_show(self, image):
         # Get the size of the label

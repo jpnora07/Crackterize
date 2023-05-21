@@ -980,7 +980,8 @@ class Detect_Crack_Dialog(object):
 
         # self.label_4.setText(_translate("Dialog", "Crack Progression: "))
         self.label_6.setText(_translate("Dialog",
-                                        "<html><head/><body><p align='center'>Distance between the camera and concrete:</p></body></html>"))
+                                        "<html><head/><body><p align='center'>Distance between the camera and "
+                                        "concrete:</p></body></html>"))
 
         self.pushButton.setToolTip(
             _translate("Dialog", "Please input the distance between the camera and the concrete surface in \n"
