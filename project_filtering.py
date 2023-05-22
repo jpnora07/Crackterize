@@ -918,7 +918,7 @@ class filter_print(object):
                             provides an evaluation of <span style="color: #907458;">{i_e}</span><br>
                             at <span style="color: #907458;">{locc}</span><br>
                             from <span style="color: #907458;">{date_text_from_f}</span> to <span style="color: #907458;">{date_text_to_f}</span>.
-                            </b></p>
+                            <br></b></p>
                          </h3> 
                         
                         <table border="1" cellpadding="5" style="border-collapse: collapse;">

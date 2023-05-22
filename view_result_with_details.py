@@ -526,7 +526,7 @@ class result_with_details(object):
                             at <span style="color: #907458;">{
                         self.loc}</span> saved on <span style="color: #907458;">{
                         formatted_date}</span>.
-                            </b></p>
+                            <br></b></p>
                          </h2> 
                          
             <table border="1" cellpadding="5" style="border-collapse: collapse;">
