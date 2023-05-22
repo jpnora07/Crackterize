@@ -487,6 +487,15 @@ class result_with_details(object):
             self.background_widget.hide()
 
     def printpreviewDialog(self):
+        mapping = {
+            'No Detected Crack': 'image without detected cracks',
+            'Contains Crack': 'image with detected cracks'
+        }
+        mapped_i_e = mapping.get(self.status, self.status)
+        datetime_obj = datetime.strptime(self.date, "%Y-%m-%d %H:%M:%S")
+
+        # Format the datetime object as "05/19/2023"
+        formatted_date = datetime_obj.strftime("%m/%d/%Y")
         try:
             printer = QPrinter()
             printer.setPageSize(QPrinter.Letter)
@@ -504,7 +513,22 @@ class result_with_details(object):
             <h2 style="text-align: center; color: #543F24; font-family: Arial, sans-serif; font-weight: bold; font-size: 54px;">
                 <img src="images/Crackterize_doc.png" alt="Your Image" style="width: 50px; height: 30px;"> 
             </h2>
-
+            
+            <h2 style="text-align: center;font-weight: bold;font-family: Inter; margin-left:10px;margin-right:10px; color: #555555; font-family: Inter;"> 
+                         
+                             <p style="  font-weight: bold; font-size: 102px;font-family: Inter;" ><b>
+                            Crack Assessment Report for <span style="color: #907458;">{
+                        self.prog_name}</span> project,<br> 
+                            located in the <span style="color: #907458;">{
+                        self.fold_name}</span> folder,<br> 
+                            provides an evaluation of <span style="color: #907458;">{
+                        mapped_i_e}</span><br> 
+                            at <span style="color: #907458;">{
+                        self.loc}</span> saved on <span style="color: #907458;">{
+                        formatted_date}</span>.
+                            </b></p>
+                         </h2> 
+                         
             <table border="1" cellpadding="5" style="border-collapse: collapse;">
                 <tr>
                     <th>Project Name</th>
@@ -530,7 +554,7 @@ class result_with_details(object):
                                     <td style="text-align: center;">{self.crack}</td>
                                     <td style="text-align: center;">{self.no_crack}</td>
                                     <td style="text-align: center;">{self.loc}</td>
-                                    <td style="text-align: center;">{self.date}</td>
+                                    <td style="text-align: center;">{formatted_date}</td>
                                     <td style="text-align: center;">{self.remarks_db}</td>
                                     <td style="text-align: center;">{self.position}</td>
                                 </tr>

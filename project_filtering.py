@@ -111,7 +111,7 @@ class filter_print(object):
         self.exit_2.setMaximumSize(QtCore.QSize(30, 30))
         self.exit_2.setStyleSheet("border:none;")
         self.exit_2.clicked.connect(Dialog.close)
-        self.exit_2.clicked.connect(self.background_widget.hide)
+        # self.exit_2.clicked.connect(self.background_widget.hide)
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap("images/exit.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.exit_2.setIcon(icon)
@@ -240,6 +240,7 @@ class filter_print(object):
             col_count = 0
             for row in rows:
                 project_name = str(row[1])
+                self.proj_name = project_name
                 # Create a checkbox for each project and set its properties
                 project_chb = QtWidgets.QRadioButton(self.projects_wdgt)
                 self.project_chb = project_chb
@@ -817,7 +818,9 @@ class filter_print(object):
 
         date_text_to = selected_date_to.toString("yyyy-MM-dd")
         date_text_from = selected_date_from.toString("yyyy-MM-dd")
-        print(date_text_from)
+
+        date_text_to_f = selected_date_to.toString("MM/dd/yyyy")
+        date_text_from_f = selected_date_from.toString("MM/dd/yyyy")
 
         checked_folders = [folders.text() for folders in self.checkbox_list if folders.isChecked()]
         checked_i_e = [i_e.text() for i_e in self.non_crack_chb_list if i_e.isChecked()]
@@ -884,11 +887,40 @@ class filter_print(object):
                         doc.setPageSize(QSizeF(printer.pageRect().size()))  # set page size to match printer's page rect
                         doc.setDocumentMargin(50)
 
-                        # create the table HTML including the specified columns
-                        table_html = f''' <h2 style="text-align: center; color: #543F24; font-family: Arial, 
-                        sans-serif; font-weight: bold; font-size: 54px;"> <img src="images/Crackterize_doc.png" 
-                        alt="Your Image" style="width: 50px; height: 30px;"> </h2> 
+                        if len(checked_loc) == 1:
+                            locc = checked_loc[0].strip("''")
+                        elif len(checked_loc) == 2:
+                            locc = f"{checked_loc[:-1][0].strip('[]')} <span style='color: #555555;'> and </span> {checked_loc[-1]}"
+                        else:
+                            locc = f"{', '.join(checked_loc[:-1])}<span style='color: #555555;'>, and </span>{checked_loc[-1]}"
 
+                        if len(checked_folders) == 1:
+                            fold = checked_folders[0].strip("''")
+                        elif len(checked_folders) == 2:
+                            fold = f"{checked_folders[:-1][0].strip('[]')} <span style='color: #555555;'> and </span> {checked_folders[-1]}"
+                        else:
+                            fold = f"{', '.join(checked_folders[:-1])}<span style='color: #555555;'>, and </span>{checked_folders[-1]}"
+
+                        if len(checked_i_e) == 1:
+                            i_e = checked_i_e[0].strip("''")
+                        else:
+                            i_e = f"{checked_i_e[:-1][0].strip('[]')} <span style='color: #555555;'> and </span> {checked_i_e[-1]}"
+
+                        # create the table HTML including the specified columns
+                        table_html = f''' <h2 style="text-align: center; color: #543F24; font-family: Inter; font-weight: bold; font-size: 54px;"> <img src="images/Crackterize_doc.png" 
+                        alt="Your Image" style="width: 50px; height: 30px;"> </h2> 
+                        
+                        <h3 style="text-align: center;font-weight: bold;font-family: Inter; margin-left:10px;margin-right:10px; color: #555555; font-family: Inter;"> 
+                        
+                         <p style="  font-weight: bold; font-size: 102px;font-family: Inter;" ><b>Summary of Crack Assessment Reports for <span style="color: #907458;">{
+                        self.proj_name}</span> project,<br>
+                            located in the <span style="color: #907458;">{fold}</span> folder/s,<br>
+                            provides an evaluation of <span style="color: #907458;">{i_e}</span><br>
+                            at <span style="color: #907458;">{locc}</span><br>
+                            from <span style="color: #907458;">{date_text_from_f}</span> to <span style="color: #907458;">{date_text_to_f}</span>.
+                            </b></p>
+                         </h3> 
+                        
                         <table border="1" cellpadding="5" style="border-collapse: collapse;">
                             <tr>
                                 <th>Project Name</th>
