@@ -111,7 +111,7 @@ class filter_print(object):
         self.exit_2.setMaximumSize(QtCore.QSize(30, 30))
         self.exit_2.setStyleSheet("border:none;")
         self.exit_2.clicked.connect(Dialog.close)
-        # self.exit_2.clicked.connect(self.background_widget.hide)
+        self.exit_2.clicked.connect(self.background_widget.hide)
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap("images/exit.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.exit_2.setIcon(icon)
